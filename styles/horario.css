@@ -21,56 +21,20 @@ body {
   color: #bfd4e9;
   font-family: "Roboto";
   display: flex;
-  width: 1800px;
-  height: 900px;
+  height: 100dvh;
   justify-content: center;
   flex-direction: column;
-  overflow:auto;
-  overflow-x: hidden;
-
 }
 
 main {
   display: flex;
   justify-content: center;
   align-items: center;
-  /*background-image: url(../img/Calendario_Escolar_2ºDAM_24-25.jpg);*/
+  background-image: url(../img/Calendario_Escolar_2ºDAM_24-25.jpg.png);
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   height: 90%;
-
-}
-
-#horario{
-  display: flex;
-  position: fixed;
-  justify-content: center;
-  align-items: center;
-  width: 737px;
-  height: 878px;
-  top: 40px;
-  user-select: none;
-  -webkit-user-drag: none;
-  border-radius: 30px;
-  box-shadow: -2px 1px 32px 0px rgba(0,0,0,0.75);
--webkit-box-shadow: -2px 1px 32px 0px rgba(0,0,0,0.75);
--moz-box-shadow: -2px 1px 32px 0px rgba(0,0,0,0.75);
-}
-
-nav{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: auto;
-  gap: 20vw;
-}
-
-nav a {
-  display: flex;
-  position: fixed;
-
 }
 
 nav a span {
