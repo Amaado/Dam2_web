@@ -8,12 +8,19 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  cursor: none;
+  user-select: none; 
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: none;
 }
 
 a:link,
 a:visited {
   text-decoration: none;
   color: currentColor;
+  
 }
 
 body {
@@ -24,6 +31,58 @@ body {
   height: 100dvh;
   justify-content: center;
   flex-direction: column;
+  animation:  animate 1s infinite;
+  cursor: none;
+}
+
+#customCursor {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out;
+  z-index: 100;
+  transform: translate(-18px, -18px);
+}
+
+#customCursor.clicked {
+  width: 60px;
+  height: 60px;
+  transform: translate(-28px, -28px); /* Ajuste según el nuevo tamaño */
+}
+
+
+#customCursorPurpleish {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out;
+  z-index: 100;
+  transform: translate(-18px, -18px);
+  visibility: visible;
+}
+
+#customCursorPurpleish.clicked {
+  width: 60px;
+  height: 60px;
+  transform: translate(-28px, -28px); /* Ajuste según el nuevo tamaño */
+}
+
+@keyframes animate {
+  0%{
+    cursor: url("cursor/00.gif");
+  }
+
+  50%{
+    cursor: url("cursor/50.gif");
+  }
+
+  100%{
+    cursor: url("cursor/00.gif");
+  }
 }
 
 nav {
@@ -42,7 +101,7 @@ nav a:hover {
   background-color: #333c4a9d;
 }
 
-.box {
+.boxx {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,6 +112,7 @@ nav a:hover {
 }
 
 .card {
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -64,35 +124,60 @@ nav a:hover {
   border-radius: 15px;
   text-align: center;
   min-width: 550px;
+  overflow: hidden; /* Para evitar que el pseudo-elemento se salga de los bordes */
+  transition: transform 2s; /* Solo la transición del scale */
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("img/g_sistemas_empresariales_exp2.jpg.png");
+  background-size: cover;
+  opacity: 0;
+  filter: blur(0); /* Empieza sin desenfoque */
+  transition: opacity 0.5s, filter 1.5s; /* Transición tanto para la opacidad como para el desenfoque */
+  z-index: -1; /* Mantiene el fondo detrás del contenido */
 }
 
 .card:hover {
   animation-name: animacion;
   animation-duration: 2s;
   animation-fill-mode: forwards;
-  background-image: linear-gradient(260deg, #5a6679ad, #20262e13);
 }
 
-.contenedor {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 15px;
-  padding-right: 20px;
-  gap: 10px;
-  border: 1px solid grey;
-  border-radius: 15px;
-  text-align: center;
-  min-width: 550px;
+.card:hover::before {
+  opacity: 0.3; /* Al hacer hover, el fondo se vuelve visible */
+  filter: blur(1px); /* Aplica desenfoque progresivo al fondo */
 }
 
-.contenedor:hover {
-  animation-name: animacion;
-  animation-duration: 2s;
-  animation-fill-mode: forwards;
-  background-image: linear-gradient(260deg, #5a6679ad, #20262e13);
+.card1::before {
+  background-image: url("img/g_datos_ext2.png");
 }
+
+.card2::before {
+  background-image: url("img/g_moviles_ext2.png");
+}
+
+.card3::before {
+  background-image: url("img/g_empresas_ext2.png");
+}
+
+.card4::before {
+  background-image: url("img/g_interfaces_exp2.png");
+}
+
+.card5::before {
+  background-image: url("img/g_servicios_y_procesos_exp2.png");
+}
+
+.card6::before {
+  background-image: url("img/g_sistemas_empresariales_exp2.png");
+}
+
 
 @keyframes animacion {
   0% {
@@ -106,7 +191,23 @@ nav a:hover {
   100% {
     transform: scale(1.02);
   }
+}
 
+
+
+
+.img {
+  margin-right: 70px;
+  width: 20%;
+}
+
+div.img img {
+  height: 90px;
+  border-radius: 5px;
+}
+
+#title {
+  font-size: 24px;
 }
 
 
@@ -478,18 +579,4 @@ nav a:hover {
   padding: 0;
   cursor: pointer;
   opacity: 20%;
-}
-
-.img {
-  margin-right: 70px;
-  width: 20%;
-}
-
-div.img img {
-  height: 90px;
-  border-radius: 5px;
-}
-
-#title {
-  font-size: 24px;
 }

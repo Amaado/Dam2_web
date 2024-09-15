@@ -14,6 +14,59 @@ a:link,
 a:visited {
   text-decoration: none;
   color: currentColor;
+  width: 45px;
+  height: 45px;
+  position: absolute;
+  left: 50px;
+  border-radius: 50px;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  cursor: none;
+  user-select: none; 
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: none;
+}
+
+#customCursor {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out;
+  z-index: 100;
+  transform: translate(-18px, -18px);
+}
+
+#customCursor.clicked {
+  width: 60px;
+  height: 60px;
+  transform: translate(-28px, -28px); /* Ajuste según el nuevo tamaño */
+}
+
+
+#customCursorPurpleish {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out;
+  z-index: 100;
+  transform: translate(-18px, -18px);
+  visibility: visible;
+}
+
+#customCursorPurpleish.clicked {
+  width: 60px;
+  height: 60px;
+  transform: translate(-28px, -28px); /* Ajuste según el nuevo tamaño */
 }
 
 body {
@@ -30,7 +83,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url(../img/Calendario_Escolar_2ºDAM_24-25.jpg.png);
+  background-image: url("../img/Calendario_Escolar.png");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -39,7 +92,7 @@ main {
 
 nav a span {
   padding: 10px;
-  margin-left: 100px;
+  left: 100px;
   border-radius: 100px;
 }
 
