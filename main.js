@@ -170,11 +170,19 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('a').forEach(link => {
         link.addEventListener('mouseenter', playHoverAudio);
       });
-      
-      // Añadir un event listener a todos los elementos .material-icons-round
-      document.querySelectorAll('.material-icons-round').forEach(icon => {
-        icon.addEventListener('mouseenter', playHoverAudio);
+
+
+      document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('mouseleave', playHoverAudio);
       });
+      
+      // Añadir un event listener a todos los elementos <a>
+      document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('mouseleave', playHoverAudio);
+      });
+    
+
+
 });
 
 
