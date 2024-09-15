@@ -153,10 +153,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const hoverAudio = new Audio('img/sfx_sound1.mp3'); // Reemplaza con la URL de tu archivo de audio
 
-      // Añadir un event listener a todos los elementos con la clase .card
+      // Función para reproducir el audio
       function playHoverAudio() {
         hoverAudio.currentTime = 0; // Reiniciar el audio desde el principio
-        hoverAudio.play();
+        hoverAudio.play().catch(error => {
+          console.error('No se pudo reproducir el audio:', error);
+        });
       }
       
       // Añadir un event listener a todos los elementos con la clase .card
@@ -168,9 +170,10 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('a').forEach(link => {
         link.addEventListener('mouseenter', playHoverAudio);
       });
-
-      document.querySelectorAll('.material-icons-round').forEach(link => {
-        link.addEventListener('mouseenter', playHoverAudio);
+      
+      // Añadir un event listener a todos los elementos .material-icons-round
+      document.querySelectorAll('.material-icons-round').forEach(icon => {
+        icon.addEventListener('mouseenter', playHoverAudio);
       });
 });
 
