@@ -33,6 +33,10 @@ a:visited {
   touch-action: none;
 }
 
+body{
+  overflow: hidden;
+}
+
 #customCursor {
   position: absolute;
   width: 40px;

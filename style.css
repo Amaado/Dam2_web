@@ -20,7 +20,7 @@ a:link,
 a:visited {
   text-decoration: none;
   color: currentColor;
-  
+  position: relative;
 }
 
 body {
@@ -33,6 +33,8 @@ body {
   flex-direction: column;
   animation:  animate 1s infinite;
   cursor: none;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
 }
 
 #customCursor {
@@ -74,6 +76,24 @@ body {
   height: 60px;
   transform: translate(-28px, -28px); /* Ajuste según el nuevo tamaño */
 }
+
+
+.svg-oval {
+  position: absolute;
+  left: 67%;
+  transform: translate(-50%, -120px);
+  opacity: 0%;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: -10;
+  filter: brightness(1000) blur(50px);
+  /*backdrop-filter: blur(20px);*/
+}
+
+.show {
+  opacity: 10%;
+}
+
 
 @keyframes animate {
   0%{

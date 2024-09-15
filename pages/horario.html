@@ -146,6 +146,34 @@
         }, 8000);
       }
 
+
+
+      const pageLoadAudio = new Audio('../img/sfx_sound2.mp3'); // Reemplaza con la URL de tu archivo de audio
+
+      // Función para manejar la reproducción de audio
+      function playPageLoadAudio() {
+        pageLoadAudio.play().catch(error => {
+          console.error('Error al intentar reproducir el audio:', error);
+        });
+      }
+
+      // Reproducir el audio cuando la página se carga
+      window.addEventListener('load', playPageLoadAudio);
+
+
+      const hoverAudio = new Audio('../img/sfx_sound1.mp3'); // Reemplaza con la URL de tu archivo de audio
+
+      // Añadir un event listener a todos los elementos con la clase .card
+      function playHoverAudio() {
+        hoverAudio.currentTime = 0; // Reiniciar el audio desde el principio
+        hoverAudio.play();
+      }
+      
+      // Añadir un event listener a todos los elementos con la clase .card
+      document.querySelectorAll('.material-icons-round').forEach(card => {
+        card.addEventListener('mouseenter', playHoverAudio);
+      });
+    
     </script>
   </body>
 </html>
