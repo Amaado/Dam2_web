@@ -1,13 +1,86 @@
 document.addEventListener('DOMContentLoaded', function() {
     var cursor = document.getElementById('customCursor');
     var cursorPurpleish = document.getElementById('customCursorPurpleish');
+    let checkbox = document.getElementById("toggle");
+    let body = document.body;
+    let cards = document.querySelectorAll(".card");
+    let card
+    let buttons  = document.querySelectorAll("button");
+    let button
+    const horario = document.getElementById("horario");
+    let oval = this.querySelector('.svg-oval');
 
 
-	setTimeout(function() {
-		cursorPurpleish.style.opacity = '1%';
-		
-	}, 1);
+    checkbox.checked = localStorage.getItem("checkboxStatus") === 'true';
+    
+    // Aplicar el tema correspondiente según el estado del checkbox
+    function applyTheme() {
+        if (checkbox.checked) {
+            console.log("Tema claro");
+            body.style.backgroundColor = '#dddcb0'; // Color claro
+            body.style.color = "#313842";
+            cards.forEach(card => {
+              card.style.borderColor = '#242e3ccb'; // Cambia el color del borde a #bfd4e9
+            });
+            buttons.forEach(button => {
+              button.style.backgroundColor = '#dddcb0'; // Cambia el color del borde a #bfd4e9
+            });
+            //oval.style.filter = 'brightness(0%) blur(10px)';
+        } else {
+            console.log("Tema oscuro");
+            body.style.backgroundColor = '#1c2128'; // Color oscuro (inicial)
+            body.style.color = "#bfd4e9";
+            cards.forEach(card => {
+              card.style.borderColor = 'grey'; // Cambia el color del borde a #bfd4e9
+            });
+            buttons.forEach(button => {
+              button.style.backgroundColor = '#262b31'; // Cambia el color del borde a #bfd4e9
+            });
+            //oval.style.filter = 'brightness(100%) blur(50px)';
 
+        }
+    }
+
+    // Llamar a applyTheme al cargar la página para aplicar el tema guardado
+    applyTheme();
+
+    // Guardar el estado del checkbox en Local Storage cuando cambie su valor
+    checkbox.addEventListener('change', () => {
+        localStorage.setItem('checkboxStatus', checkbox.checked);
+        applyTheme(); // Aplicar el tema de acuerdo al nuevo estado
+    });
+
+
+    horario.addEventListener('mouseenter', function() {
+      if (checkbox.checked) {
+        console.log("Tema claro");
+        horario.style.backgroundColor = '#c4c389';
+        
+      }else {
+        console.log("Tema oscuro");
+        horario.style.backgroundColor = '#333c4a9d';
+
+      }
+      ; // Color de fondo al hacer hover
+    });
+
+    // Restaurar el color de fondo cuando el cursor sale del elemento
+    horario.addEventListener('mouseleave', function() {
+      horario.style.backgroundColor = '#333c4a00';
+      
+    });
+
+    
+
+
+
+
+
+
+    setTimeout(function() {
+      cursorPurpleish.style.opacity = '1%';
+      
+    }, 1);
 
     if (cursor && cursorPurpleish) {
         document.addEventListener('mousemove', function(e) {
@@ -95,7 +168,6 @@ document.addEventListener('DOMContentLoaded', function() {
         oval.setAttribute("cy", "62.5");
         oval.setAttribute("rx", "500");
         oval.setAttribute("ry", "62.5");
-        oval.setAttribute("fill", "white");
         oval.setAttribute("opacity", "0"); // Inicialmente invisible
         
         svg.appendChild(oval);
@@ -180,108 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('a').forEach(link => {
         link.addEventListener('mouseleave', playHoverAudio);
       });
-    
 
-
-});
-
-      var canvas = document.getElementById('myCanvas');
-      var context = canvas.getContext('2d');
-	  var colors = [ "#544F66", "#B27887", "#B27887","#544F66","#544F66","#E2CCC1"];	
-	  var fps = 15;
-	  var now;
-	  var then = Date.now();
-	  var num = 2;
-	  var delta;
-	  var tamanho = 50;
-	  var ismobile = false;
-	 	  var varpi = 2 * Math.PI;
-	  var interval = 1000/fps;
-	  var objforDraw = new Array();
-	  
-		$(document).ready(function() {
-    window.requestAnimFrame = (function() {
-        return window.requestAnimationFrame || window
-            .webkitRequestAnimationFrame || window.mozRequestAnimationFrame ||
-            window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-            function(callback) {
-                return window.setTimeout(callback,
-                    1000 / fps)
-            }
-    })();
-    window.cancelRequestAnimFrame = (function() {
-        return window.cancelAnimationFrame || window.webkitCancelRequestAnimationFrame ||
-            window.mozCancelRequestAnimationFrame ||
-            window.oCancelRequestAnimationFrame ||
-            window.msCancelRequestAnimationFrame ||
-            clearTimeout
-    })();
-    var ShadowObject = function(color) {
-        this.x = ((Math.random() * canvas.width) + 10);
-        this.y = ((Math.random() * canvas.height) + 10);
-        this.color = color;
-        this.size = tamanho;
-        this.dirX = Math.random() < 0.5 ? -1 : 1;
-        this.dirY = Math.random() < 0.5 ? -1 : 1;
-        this.checkIsOut = function() {
-            if ((this.x > canvas.width + (this.size /
-                    2)) || (this.x < 0 - (this.size /
-                    2))) {
-                this.dirX = this.dirX * -1
-            };
-            if ((this.y > canvas.height + (this.size /
-                    2)) || (this.y < 0 - (this.size /
-                    2))) {
-                this.dirY = this.dirY * -1
-            }
-        };
-        this.move = function() {
-		
-            this.x += this.dirX*2;
-            this.y += this.dirY*2
-			
-        }
-    };
-
-    function draw() {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-		var len = objforDraw.length;
-        for (i = 0; i < len; i++) {
-            context.beginPath();
-            context.arc(objforDraw[i].x, objforDraw[i].y, objforDraw[i].size, 0, varpi, false);
-            context.fillStyle = objforDraw[i].color;
-            context.shadowColor = objforDraw[i].color;
-			if(ismobile == false){
-            context.shadowBlur = 50;
-            context.shadowOffsetX = 0;
-            context.shadowOffsetY = 0;
-			}
-            context.fill();
-            objforDraw[i].checkIsOut();
-            objforDraw[i].move()
-        }
-    };
-
-    function animloop() {
-        requestAnimFrame(animloop);
-        now = Date.now();
-        delta = now - then;
-        if (delta > interval) {
-            draw();
-            then = now - (delta % interval)
-        }
-    };
-    document.body.onload = function(e) {
-        for (i = 0; i < colors.length * num; i++) {
-            var color = ((i >= colors.length) ? colors[(i -
-                colors.length)] : colors[i]);
-            objforDraw.push(new ShadowObject(color))
-        };
-        animloop()
-    };
-
-
-    
 });
 
 
