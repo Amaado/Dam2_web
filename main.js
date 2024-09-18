@@ -7,8 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let card
     let buttons  = document.querySelectorAll("button");
     let button
-    const horario = document.getElementById("horario");
+    let horario = document.getElementById("horario");
+    let flecha = document.getElementById("flecha");
     let oval = this.querySelector('.svg-oval');
+
 
 
     checkbox.checked = localStorage.getItem("checkboxStatus") === 'true';
@@ -16,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Aplicar el tema correspondiente según el estado del checkbox
     function applyTheme() {
         if (checkbox.checked) {
-            console.log("Tema claro");
+            //console.log("Tema claro");
             body.style.backgroundColor = '#dddcb0'; // Color claro
             body.style.color = "#313842";
             cards.forEach(card => {
@@ -25,9 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
             buttons.forEach(button => {
               button.style.backgroundColor = '#dddcb0'; // Cambia el color del borde a #bfd4e9
             });
-            //oval.style.filter = 'brightness(0%) blur(10px)';
         } else {
-            console.log("Tema oscuro");
+            //console.log("Tema oscuro");
             body.style.backgroundColor = '#1c2128'; // Color oscuro (inicial)
             body.style.color = "#bfd4e9";
             cards.forEach(card => {
@@ -36,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
             buttons.forEach(button => {
               button.style.backgroundColor = '#262b31'; // Cambia el color del borde a #bfd4e9
             });
-            //oval.style.filter = 'brightness(100%) blur(50px)';
 
         }
     }
@@ -51,30 +51,40 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    horario.addEventListener('mouseenter', function() {
-      if (checkbox.checked) {
-        console.log("Tema claro");
-        horario.style.backgroundColor = '#c4c389';
-        
-      }else {
-        console.log("Tema oscuro");
-        horario.style.backgroundColor = '#333c4a9d';
-
-      }
-      ; // Color de fondo al hacer hover
-    });
-
-    // Restaurar el color de fondo cuando el cursor sale del elemento
-    horario.addEventListener('mouseleave', function() {
-      horario.style.backgroundColor = '#333c4a00';
-      
-    });
-
     
+    if (horario) {
+      horario.addEventListener('mouseenter', function() {
+          if (checkbox.checked) {
+              //console.log("Tema claro");
+              horario.style.backgroundColor = '#edeba4';
+          } else {
+              //console.log("Tema oscuro");
+              horario.style.backgroundColor = '#333c4a9d';
+          }
+      });
+  
+      horario.addEventListener('mouseleave', function() {
+          horario.style.backgroundColor = '#333c4a00';
+      });
+  }
 
 
+  if (flecha) {
+    flecha.addEventListener('mouseenter', function() {
+        if (checkbox.checked) {
+            //console.log("Tema claro");
+            flecha.style.backgroundColor = '#edeba4';
+        } else {
+            //console.log("Tema oscuro");
+            flecha.style.backgroundColor = '#333c4a9d';
+        }
+    });
 
-
+    flecha.addEventListener('mouseleave', function() {
+      flecha.style.backgroundColor = '#333c4a00';
+    });
+  }
+    
 
 
     setTimeout(function() {
@@ -83,42 +93,46 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1);
 
     if (cursor && cursorPurpleish) {
-        document.addEventListener('mousemove', function(e) {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            cursorPurpleish.style.left = e.clientX + 'px';
-            cursorPurpleish.style.top = e.clientY + 'px';
-        });
+      document.addEventListener('mousemove', function(e) {
+          cursor.style.left = e.clientX + 'px';
+          cursor.style.top = e.clientY + 'px';
+          cursorPurpleish.style.left = e.clientX + 'px';
+          cursorPurpleish.style.top = e.clientY + 'px';
+      });
 
-        document.addEventListener('mousedown', function() {
-            cursor.classList.add('clicked');
-            cursorPurpleish.classList.add('clicked');
-        });
-        
-        document.addEventListener('mouseup', function() {
-            cursor.classList.remove('clicked');
-            cursorPurpleish.classList.remove('clicked');
-        });
+      document.addEventListener('mousedown', function() {
+          cursor.classList.add('clicked');
+          cursorPurpleish.classList.add('clicked');
+      });
+      
+      document.addEventListener('mouseup', function() {
+          cursor.classList.remove('clicked');
+          cursorPurpleish.classList.remove('clicked');
+      });
 
-		document.addEventListener('mouseover', function(e) {
-			if (e.target.tagName === 'A' || e.target.closest('.card')  || e.target.closest('.material-icons-round')) {
-                cursorPurpleish.style.opacity = '100%';
-				//cursorPurpleish.style.visibility = 'visible';
-				//cursor.style.visibility = 'hidden';
-			}
-		});
-		
-		document.addEventListener('mouseout', function(e) {
-			if (e.target.tagName === 'A' || e.target.closest('.card')  || e.target.closest('.material-icons-round')) {
-                cursorPurpleish.style.opacity = '1%';
-				//cursorPurpleish.style.visibility = 'hidden';
-				//cursor.style.visibility = 'visible';
-			}
-		});
-		
-    } else {
-        console.error('Elementos de cursor no encontrados en el DOM.');
+  document.addEventListener('mouseover', function(e) {
+    if (e.target.tagName === 'A' || e.target.closest('.card')
+        || e.target.closest('.material-icons-round')  || e.target.closest('.background')
+        || e.target.closest('.sun-moon')) {
+              cursorPurpleish.style.opacity = '100%';
+      //cursorPurpleish.style.visibility = 'visible';
+      //cursor.style.visibility = 'hidden';
     }
+  });
+  
+  document.addEventListener('mouseout', function(e) {
+    if (e.target.tagName === 'A' || e.target.closest('.card')
+        || e.target.closest('.material-icons-round')  || e.target.closest('.background')
+        || e.target.closest('.sun-moon')) {
+              cursorPurpleish.style.opacity = '1%';
+      //cursorPurpleish.style.visibility = 'hidden';
+      //cursor.style.visibility = 'visible';
+    }
+  });
+  
+  } else {
+      console.error('Elementos de cursor no encontrados en el DOM.');
+  }
 
 
 
@@ -221,16 +235,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-      
+      let hoverAudio;
 
-      const hoverAudio = new Audio('img/sfx_sound1.mp3'); // Reemplaza con la URL de tu archivo de audio
+      function loadAudio() {
+        const audioTest = new Audio('img/sfx_sound1.mp3');
+    
+        audioTest.onerror = function() {
+            // Si falla la primera ruta, intenta la segunda
+            hoverAudio = new Audio('../img/sfx_sound1.mp3');
+            console.log('Usando la ruta ../img/sfx_sound1.mp3');
+        };
+    
+        audioTest.oncanplaythrough = function() {
+            // Si la primera ruta es correcta
+            hoverAudio = audioTest;
+            console.log('Usando la ruta img/sfx_sound1.mp3');
+        };
+    
+        audioTest.load(); // Inicia la carga del audio para verificar la ruta
+    }
+    
+    // Llamamos a la función para cargar el audio
+    loadAudio();
+
 
       // Función para reproducir el audio
       function playHoverAudio() {
         hoverAudio.currentTime = 0; // Reiniciar el audio desde el principio
-        hoverAudio.play().catch(error => {
-          console.error('No se pudo reproducir el audio:', error);
-        });
       }
       
       // Añadir un event listener a todos los elementos con la clase .card
