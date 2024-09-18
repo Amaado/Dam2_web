@@ -754,8 +754,8 @@ div.img img {
 
 .switch input:checked ~ .sun-moon {
   left: calc(100% - 4rem);
-  background: #F5EC59;
-  border-color: #E7C65C;
+  background: #eee98f;
+  border-color: #ebcc65;
   transform: rotate(-25deg);
 }
 
@@ -796,5 +796,5 @@ div.img img {
 
 .switch input:checked ~ .background {
   border: 0.25rem solid #c4c389;
-  background: linear-gradient(to right, #c4c389 0%, #edeba4 100%);
+  background: linear-gradient(to right, #cbca8f 0%, #edeba4 100%);
 }
