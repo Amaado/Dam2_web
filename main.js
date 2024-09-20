@@ -1,90 +1,90 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var cursor = document.getElementById('customCursor');
-    var cursorPurpleish = document.getElementById('customCursorPurpleish');
-    let checkbox = document.getElementById("toggle");
-    let body = document.body;
-    let cards = document.querySelectorAll(".card");
-    let card
-    let buttons  = document.querySelectorAll("button");
-    let button
-    let horario = document.getElementById("horario");
-    let flecha = document.getElementById("flecha");
-    let oval = this.querySelector('.svg-oval');
+  var cursor = document.getElementById('customCursor');
+  var cursorPurpleish = document.getElementById('customCursorPurpleish');
+  let checkbox = document.getElementById("toggle");
+  let body = document.body;
+  let cards = document.querySelectorAll(".card");
+  let card
+  let buttons  = document.querySelectorAll("button");
+  let button
+  let horario = document.getElementById("horario");
+  let flecha = document.getElementById("flecha");
+  let oval = this.querySelector('.svg-oval');
 
-    if (window.location.pathname.endsWith("horario.html")) {
-      let a = document.getElementById("a");
-      let escText = document.getElementById("escText");
-      let esc = document.getElementById("esc");
-      let esc2 = document.getElementById("esc2");
-    }else{
-      console.log("Error carga ESC");
-    }
+  if (window.location.pathname.endsWith("horario.html")) {
+    let a = document.getElementById("a");
+    let escText = document.getElementById("escText");
+    let esc = document.getElementById("esc");
+    let esc2 = document.getElementById("esc2");
+  }else{
+    console.log("Error carga ESC");
+  }
 
 
 
-    checkbox.checked = localStorage.getItem("checkboxStatus") === 'true';
-    
-    // Aplicar el tema correspondiente según el estado del checkbox
-    function applyTheme() {
-        if (checkbox.checked) {
-            //console.log("Tema claro");
-            body.style.backgroundColor = '#dddcb0'; // Color claro
-            body.style.color = "#313842";
-            cards.forEach(card => {
-              card.style.borderColor = '#242e3ccb'; // Cambia el color del borde a #bfd4e9
-            });
-            buttons.forEach(button => {
-              button.style.backgroundColor = '#dddcb0'; // Cambia el color del borde a #bfd4e9
-            });
+  checkbox.checked = localStorage.getItem("checkboxStatus") === 'true';
+  
+  // Aplicar el tema correspondiente según el estado del checkbox
+  function applyTheme() {
+      if (checkbox.checked) {
+          //console.log("Tema claro");
+          body.style.backgroundColor = '#dddcb0'; // Color claro
+          body.style.color = "#313842";
+          cards.forEach(card => {
+            card.style.borderColor = '#242e3ccb'; // Cambia el color del borde a #bfd4e9
+          });
+          buttons.forEach(button => {
+            button.style.backgroundColor = '#dddcb0'; // Cambia el color del borde a #bfd4e9
+          });
 
-            if (window.location.pathname.endsWith("horario.html")) {
-              a.classList.add("aDay");
-              escText.classList.add("escTextDay");
-              esc.classList.add("escDay");
-              esc2.classList.add("esc2Day");
+          if (window.location.pathname.endsWith("horario.html")) {
+            a.classList.add("aDay");
+            escText.classList.add("escTextDay");
+            esc.classList.add("escDay");
+            esc2.classList.add("esc2Day");
 
-              a.classList.remove("aNight");
-              escText.classList.remove("escTextNight");
-              esc.classList.remove("escNight");
-              esc2.classList.remove("esc2Night");
-            }else{
-              console.log("Error carga esc Day");
-            }
-        } else {
-            //console.log("Tema oscuro");
-            body.style.backgroundColor = '#1c2128'; // Color oscuro (inicial)
-            body.style.color = "#bfd4e9";
-            cards.forEach(card => {
-              card.style.borderColor = 'grey'; // Cambia el color del borde a #bfd4e9
-            });
-            buttons.forEach(button => {
-              button.style.backgroundColor = '#262b31'; // Cambia el color del borde a #bfd4e9
-            });
+            a.classList.remove("aNight");
+            escText.classList.remove("escTextNight");
+            esc.classList.remove("escNight");
+            esc2.classList.remove("esc2Night");
+          }else{
+            console.log("Error carga esc Day");
+          }
+      } else {
+          //console.log("Tema oscuro");
+          body.style.backgroundColor = '#1c2128'; // Color oscuro (inicial)
+          body.style.color = "#bfd4e9";
+          cards.forEach(card => {
+            card.style.borderColor = 'grey'; // Cambia el color del borde a #bfd4e9
+          });
+          buttons.forEach(button => {
+            button.style.backgroundColor = '#262b31'; // Cambia el color del borde a #bfd4e9
+          });
 
-            if (window.location.pathname.endsWith("horario.html")) {
-              a.classList.add("aNight");
-              escText.classList.add("escTextNight");
-              esc.classList.add("escNight");
-              esc2.classList.add("esc2Night");
-              
-              a.classList.remove("aDay");
-              escText.classList.remove("escTextDay");
-              esc.classList.remove("escDay");
-              esc2.classList.remove("esc2Day");
-            }else{
-              console.log("Error carga esc Night");
-            }
-        }
-    }
+          if (window.location.pathname.endsWith("horario.html")) {
+            a.classList.add("aNight");
+            escText.classList.add("escTextNight");
+            esc.classList.add("escNight");
+            esc2.classList.add("esc2Night");
+            
+            a.classList.remove("aDay");
+            escText.classList.remove("escTextDay");
+            esc.classList.remove("escDay");
+            esc2.classList.remove("esc2Day");
+          }else{
+            console.log("Error carga esc Night");
+          }
+      }
+  }
 
-    // Llamar a applyTheme al cargar la página para aplicar el tema guardado
-    applyTheme();
+  // Llamar a applyTheme al cargar la página para aplicar el tema guardado
+  applyTheme();
 
-    // Guardar el estado del checkbox en Local Storage cuando cambie su valor
-    checkbox.addEventListener('change', () => {
-        localStorage.setItem('checkboxStatus', checkbox.checked);
-        applyTheme(); // Aplicar el tema de acuerdo al nuevo estado
-    });
+  // Guardar el estado del checkbox en Local Storage cuando cambie su valor
+  checkbox.addEventListener('change', () => {
+      localStorage.setItem('checkboxStatus', checkbox.checked);
+      applyTheme(); // Aplicar el tema de acuerdo al nuevo estado
+  });
 
 
     

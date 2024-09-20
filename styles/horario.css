@@ -26,7 +26,7 @@
 body {
   background-color: #1c2128;
   
-  /*background-color: #dddcb0;*/
+ 
   color: #bfd4e9;
   font-family: "Roboto";
   display: flex;
@@ -37,6 +37,7 @@ body {
   cursor: none;
   overflow: hidden;
 }
+
 
 #customCursor {
   position: absolute;
@@ -76,16 +77,6 @@ body {
   width: 60px;
   height: 60px;
   transform: translate(-28px, -28px); /* Ajuste según el nuevo tamaño */
-}
-
-body {
-  background-color: #1c2128;
-  color: #bfd4e9;
-  font-family: "Roboto";
-  display: flex;
-  height: 100dvh;
-  justify-content: center;
-  flex-direction: column;
 }
 
 main {
@@ -937,4 +928,10 @@ nav a span:hover {
   /* Los mismos estilos que ya tienes para el hover de día */
   transform: scaleX(1.03) scaleY(0.97);
   top: 3px;
+}
+
+
+
+.no-transition * {
+  transition: none !important;
 }
