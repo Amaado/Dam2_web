@@ -11,6 +11,15 @@ document.addEventListener('DOMContentLoaded', function() {
     let flecha = document.getElementById("flecha");
     let oval = this.querySelector('.svg-oval');
 
+    if (window.location.pathname.endsWith("horario.html")) {
+      let a = document.getElementById("a");
+      let escText = document.getElementById("escText");
+      let esc = document.getElementById("esc");
+      let esc2 = document.getElementById("esc2");
+    }else{
+      console.log("Error carga ESC");
+    }
+
 
 
     checkbox.checked = localStorage.getItem("checkboxStatus") === 'true';
@@ -27,6 +36,20 @@ document.addEventListener('DOMContentLoaded', function() {
             buttons.forEach(button => {
               button.style.backgroundColor = '#dddcb0'; // Cambia el color del borde a #bfd4e9
             });
+
+            if (window.location.pathname.endsWith("horario.html")) {
+              a.classList.add("aDay");
+              escText.classList.add("escTextDay");
+              esc.classList.add("escDay");
+              esc2.classList.add("esc2Day");
+
+              a.classList.remove("aNight");
+              escText.classList.remove("escTextNight");
+              esc.classList.remove("escNight");
+              esc2.classList.remove("esc2Night");
+            }else{
+              console.log("Error carga esc Day");
+            }
         } else {
             //console.log("Tema oscuro");
             body.style.backgroundColor = '#1c2128'; // Color oscuro (inicial)
@@ -38,6 +61,19 @@ document.addEventListener('DOMContentLoaded', function() {
               button.style.backgroundColor = '#262b31'; // Cambia el color del borde a #bfd4e9
             });
 
+            if (window.location.pathname.endsWith("horario.html")) {
+              a.classList.add("aNight");
+              escText.classList.add("escTextNight");
+              esc.classList.add("escNight");
+              esc2.classList.add("esc2Night");
+              
+              a.classList.remove("aDay");
+              escText.classList.remove("escTextDay");
+              esc.classList.remove("escDay");
+              esc2.classList.remove("esc2Day");
+            }else{
+              console.log("Error carga esc Night");
+            }
         }
     }
 
@@ -66,6 +102,33 @@ document.addEventListener('DOMContentLoaded', function() {
       horario.addEventListener('mouseleave', function() {
           horario.style.backgroundColor = '#333c4a00';
       });
+  }
+
+  if (window.location.pathname.endsWith("horario.html")) {
+// Detectar la tecla "Esc" y activar el efecto hover
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Escape") {
+      // Agregar clases que simulan el hover
+      a.classList.add("aNight-hover"); // Si estás en modo noche, aplica la clase que activa el hover
+      escText.classList.add("escTextNight-hover");
+      esc.classList.add("escNight-hover");
+
+      // Si estás en modo día, aplica las clases correspondientes
+      a.classList.add("aDay-hover");
+      escText.classList.add("escTextDay-hover");
+      esc.classList.add("escDay-hover");
+      // Después de 0.5s, realizar la acción de clic en el enlace
+      setTimeout(() => {
+          // Remover el efecto hover
+          a.classList.remove("aNight-hover", "aDay-hover");
+          escText.classList.remove("escTextNight-hover", "escTextDay-hover");
+          esc.classList.remove("escNight-hover", "escDay-hover");
+          // Simular el clic en el enlace <a>
+          a.click();
+      }, 175);
+  }
+});
+
   }
 
 
