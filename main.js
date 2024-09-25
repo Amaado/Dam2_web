@@ -369,6 +369,29 @@ document.addEventListener("keydown", function (event) {
         link.addEventListener('mouseleave', playHoverAudio);
       });
 
+
+      // Seleccionar los elementos
+      const flechaa = document.getElementById('flechaa');
+      const skinsContainer = document.getElementById('skinsContainer');
+
+      // Función para añadir la clase "active" cuando se hace hover sobre cualquiera de los dos
+      function addSkinsActive() {
+        flechaa.classList.add('active');
+        skinsContainer.classList.add('active');
+      }
+
+      // Función para remover la clase "active" cuando se deja de hacer hover
+      function removeSkinsActive() {
+        flechaa.classList.remove('active');
+        skinsContainer.classList.remove('active');
+      }
+
+      // Escuchar los eventos de hover en ambos elementos
+      flechaa.addEventListener('mouseenter', addSkinsActive);
+      flechaa.addEventListener('mouseleave', removeSkinsActive);
+      skinsContainer.addEventListener('mouseenter', addSkinsActive);
+      skinsContainer.addEventListener('mouseleave', removeSkinsActive);
+
 });
 
 
