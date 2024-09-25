@@ -10,6 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
   let horario = document.getElementById("horario");
   let flecha = document.getElementById("flecha");
   let oval = this.querySelector('.svg-oval');
+  const flechaa = document.getElementById('flechaa');
+  const skinsContainer = document.getElementById('skinsContainer');
+  const flechaHitbloxPlus = document.getElementById('flechaHitbloxPlus');
+  let allESC = document.querySelector('nav');
+  
 
   if (window.location.pathname.endsWith("horario.html")) {
     let a = document.getElementById("a");
@@ -54,10 +59,15 @@ document.addEventListener('DOMContentLoaded', function() {
           if(window.location.pathname.endsWith("horario.html")){
             cursor.src = "../img/cursors/cccc_veraniego.gif";
             cursorPurpleish.src = "../img/cursors/cccc_veraniegoPurpleish.gif";
+
+            flechaa.src = "../img/flechaDay.png";
           }else{
             cursor.src = "img/cursors/cccc_veraniego.gif";
             cursorPurpleish.src = "img/cursors/cccc_veraniegoPurpleish.gif";
+
+            flechaa.src = "img/flechaDay.png";
           }
+
 
       } else {
           //console.log("Tema oscuro");
@@ -87,9 +97,13 @@ document.addEventListener('DOMContentLoaded', function() {
           if(window.location.pathname.endsWith("horario.html")){
             cursor.src = "../img/cursors/cccc.gif";
             cursorPurpleish.src = "../img/cursors/ccccPurpleish.gif";
+
+            flechaa.src = "../img/flechaNight.png";
           }else{
             cursor.src = "img/cursors/cccc.gif";
             cursorPurpleish.src = "img/cursors/ccccPurpleish.gif";
+
+            flechaa.src = "../img/flechaNight.png";
           }
       }
   }
@@ -198,7 +212,7 @@ document.addEventListener("keydown", function (event) {
   document.addEventListener('mouseover', function(e) {
     if (e.target.tagName === 'A' || e.target.closest('.card')
         || e.target.closest('.material-icons-round')  || e.target.closest('.background')
-        || e.target.closest('.sun-moon') || e.target.closest('span')) {
+        || e.target.closest('.sun-moon') || e.target.closest('span') || e.target.closest('#flechaa')) {
               cursorPurpleish.style.opacity = '100%';
       //cursorPurpleish.style.visibility = 'visible';
       //cursor.style.visibility = 'hidden';
@@ -208,7 +222,7 @@ document.addEventListener("keydown", function (event) {
   document.addEventListener('mouseout', function(e) {
     if (e.target.tagName === 'A' || e.target.closest('.card')
         || e.target.closest('.material-icons-round')  || e.target.closest('.background')
-        || e.target.closest('.sun-moon')  || e.target.closest('span')) {
+        || e.target.closest('.sun-moon')  || e.target.closest('span') || e.target.closest('#flechaa')) {
               cursorPurpleish.style.opacity = '1%';
       //cursorPurpleish.style.visibility = 'hidden';
       //cursor.style.visibility = 'visible';
@@ -370,27 +384,38 @@ document.addEventListener("keydown", function (event) {
       });
 
 
-      // Seleccionar los elementos
-      const flechaa = document.getElementById('flechaa');
-      const skinsContainer = document.getElementById('skinsContainer');
 
-      // Función para añadir la clase "active" cuando se hace hover sobre cualquiera de los dos
-      function addSkinsActive() {
+
+
+      function addSkinsMenuActive() {
         flechaa.classList.add('active');
         skinsContainer.classList.add('active');
-      }
+        flechaHitbloxPlus.classList.add('active');  // Usar classList.add
 
+        if (window.location.pathname.endsWith("horario.html")) {
+        allESC.style.marginLeft = "10vw"
+        }
+      }
+      
       // Función para remover la clase "active" cuando se deja de hacer hover
-      function removeSkinsActive() {
+      function removeSkinsMenuActive() {
         flechaa.classList.remove('active');
         skinsContainer.classList.remove('active');
-      }
+        flechaHitbloxPlus.classList.remove('active');  // Usar classList.remove
 
+        if (window.location.pathname.endsWith("horario.html")) {
+          allESC.style.marginLeft = "0vw"
+        }
+      }
+      
       // Escuchar los eventos de hover en ambos elementos
-      flechaa.addEventListener('mouseenter', addSkinsActive);
-      flechaa.addEventListener('mouseleave', removeSkinsActive);
-      skinsContainer.addEventListener('mouseenter', addSkinsActive);
-      skinsContainer.addEventListener('mouseleave', removeSkinsActive);
+      flechaa.addEventListener('mouseenter', addSkinsMenuActive);
+      flechaa.addEventListener('mouseleave', removeSkinsMenuActive);
+      skinsContainer.addEventListener('mouseenter', addSkinsMenuActive);
+      skinsContainer.addEventListener('mouseleave', removeSkinsMenuActive);
+      flechaHitbloxPlus.addEventListener('mouseenter', addSkinsMenuActive);
+      flechaHitbloxPlus.addEventListener('mouseleave', removeSkinsMenuActive);
+      
 
 });
 

@@ -25,7 +25,6 @@ a:visited {
 
 body {
   background-color: #1c2128;
-  
   color: #bfd4e9;
   font-family: "Roboto";
   display: flex;
@@ -827,8 +826,24 @@ div.img img {
   left: 11vw;
   transform: rotate(270deg) rotateX(0deg) translateY(-13vw);
   transition: transform 0.75s ease;
+  z-index: 2;
 }
 
 #flechaa.active {
   transform: rotate(270deg) rotateX(180deg) translateY(-0.75vw);
+}
+
+#flechaHitbloxPlus{
+  background-color: transparent;
+  position: fixed;
+  width: 1vw;
+  height: 100vh;
+  transition: transform 0.5s ease;
+  transform: translateX(0vw);
+  z-index: 1;
+}
+
+#flechaHitbloxPlus.active {
+  transform: translateX(10vw);
+
 }
