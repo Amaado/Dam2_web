@@ -41,7 +41,7 @@ body {
 
 #customCursor {
   position: absolute;
-  width: 40px;
+  width: 47px;
   height: 40px;
   border-radius: 50%;
   pointer-events: none;
@@ -54,15 +54,15 @@ body {
 }
 
 #customCursor.clicked {
-  width: 60px;
+  width: 70px;
   height: 60px;
-  transform: translate(-28px, -28px); /* Ajuste según el nuevo tamaño */
+  transform: translate(-29px, -29px); /* Ajuste según el nuevo tamaño */
 }
 
 
 #customCursorPurpleish {
   position: absolute;
-  width: 40px;
+  width: 47px;
   height: 40px;
   border-radius: 50%;
   pointer-events: none;
@@ -74,10 +74,11 @@ body {
 }
 
 #customCursorPurpleish.clicked {
-  width: 60px;
+  width: 70px;
   height: 60px;
-  transform: translate(-28px, -28px); /* Ajuste según el nuevo tamaño */
+  transform: translate(-29px, -29px); /* Ajuste según el nuevo tamaño */
 }
+
 
 main {
   display: flex;

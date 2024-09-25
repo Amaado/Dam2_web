@@ -55,7 +55,7 @@ body {
 #customCursor.clicked {
   width: 70px;
   height: 60px;
-  transform: translate(-28px, -28px); /* Ajuste según el nuevo tamaño */
+  transform: translate(-29px, -29px); /* Ajuste según el nuevo tamaño */
 }
 
 
@@ -75,7 +75,7 @@ body {
 #customCursorPurpleish.clicked {
   width: 70px;
   height: 60px;
-  transform: translate(-28px, -28px); /* Ajuste según el nuevo tamaño */
+  transform: translate(-29px, -29px); /* Ajuste según el nuevo tamaño */
 }
 
 

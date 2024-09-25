@@ -50,6 +50,15 @@ document.addEventListener('DOMContentLoaded', function() {
           }else{
             console.log("Error carga esc Day");
           }
+
+          if(window.location.pathname.endsWith("horario.html")){
+            cursor.src = "../img/cursors/cccc_veraniego.gif";
+            cursorPurpleish.src = "../img/cursors/cccc_veraniegoPurpleish.gif";
+          }else{
+            cursor.src = "img/cursors/cccc_veraniego.gif";
+            cursorPurpleish.src = "img/cursors/cccc_veraniegoPurpleish.gif";
+          }
+
       } else {
           //console.log("Tema oscuro");
           body.style.backgroundColor = '#1c2128'; // Color oscuro (inicial)
@@ -73,6 +82,14 @@ document.addEventListener('DOMContentLoaded', function() {
             esc2.classList.remove("esc2Day");
           }else{
             console.log("Error carga esc Night");
+          }
+
+          if(window.location.pathname.endsWith("horario.html")){
+            cursor.src = "../img/cursors/cccc.gif";
+            cursorPurpleish.src = "../img/cursors/ccccPurpleish.gif";
+          }else{
+            cursor.src = "img/cursors/cccc.gif";
+            cursorPurpleish.src = "img/cursors/ccccPurpleish.gif";
           }
       }
   }
