@@ -48,7 +48,7 @@ body {
   z-index: 100;
   transform: translate(-18px, -18px);
   visibility: visible;
-  opacity: 100%;
+  opacity: 1%;
 
 }
 
@@ -69,7 +69,7 @@ body {
   z-index: 100;
   transform: translate(-18px, -18px);
   visibility: visible;
-  opacity: 100%;
+  opacity: 1%;
 }
 
 #customCursorPurpleish.clicked {
@@ -796,4 +796,22 @@ div.img img {
 .switch input:checked ~ .background {
   border: 0.25rem solid #c4c389;
   background: linear-gradient(to right, #cbca8f 0%, #edeba4 100%);
+}
+
+
+#skinsContainer{
+  position:fixed;
+  width: 10vw;
+  height: 100vh;
+  background-color:black;
+  border-right: 2px solid grey;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+#flecha{
+  width: 30px;
+  height: 30px;
 }

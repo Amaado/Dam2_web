@@ -172,8 +172,13 @@ document.addEventListener("keydown", function (event) {
       
     }, 1);
 
+    let soloInicio = 0;
     if (cursor && cursorPurpleish) {
       document.addEventListener('mousemove', function(e) {
+          soloInicio++;
+          if(soloInicio == 1){
+            cursor.style.opacity = "100%";
+          }
           cursor.style.left = e.clientX + 'px';
           cursor.style.top = e.clientY + 'px';
           cursorPurpleish.style.left = e.clientX + 'px';
@@ -193,7 +198,7 @@ document.addEventListener("keydown", function (event) {
   document.addEventListener('mouseover', function(e) {
     if (e.target.tagName === 'A' || e.target.closest('.card')
         || e.target.closest('.material-icons-round')  || e.target.closest('.background')
-        || e.target.closest('.sun-moon')) {
+        || e.target.closest('.sun-moon') || e.target.closest('span')) {
               cursorPurpleish.style.opacity = '100%';
       //cursorPurpleish.style.visibility = 'visible';
       //cursor.style.visibility = 'hidden';
@@ -203,7 +208,7 @@ document.addEventListener("keydown", function (event) {
   document.addEventListener('mouseout', function(e) {
     if (e.target.tagName === 'A' || e.target.closest('.card')
         || e.target.closest('.material-icons-round')  || e.target.closest('.background')
-        || e.target.closest('.sun-moon')) {
+        || e.target.closest('.sun-moon')  || e.target.closest('span')) {
               cursorPurpleish.style.opacity = '1%';
       //cursorPurpleish.style.visibility = 'hidden';
       //cursor.style.visibility = 'visible';
