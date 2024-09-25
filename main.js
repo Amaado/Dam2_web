@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
             cursor.src = "img/cursors/cccc.gif";
             cursorPurpleish.src = "img/cursors/ccccPurpleish.gif";
 
-            flechaa.src = "../img/flechaNight.png";
+            flechaa.src = "img/flechaNight.png";
           }
       }
   }
