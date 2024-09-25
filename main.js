@@ -27,6 +27,15 @@ document.addEventListener('DOMContentLoaded', function() {
             buttons.forEach(button => {
               button.style.backgroundColor = '#dddcb0'; // Cambia el color del borde a #bfd4e9
             });
+
+            if(horario){
+              cursor.src = "../img/cursors/cccc_veraniego.gif";
+              cursorPurpleish.src = "../img/cursors/cccc_veraniegoPurpleish.gif";
+            }else{
+              cursor.src = "img/cursors/cccc.gif";
+              cursorPurpleish.src = "img/cursors/cccc_veraniegoPurpleish.gif";
+            }
+
         } else {
             //console.log("Tema oscuro");
             body.style.backgroundColor = '#1c2128'; // Color oscuro (inicial)
@@ -38,6 +47,14 @@ document.addEventListener('DOMContentLoaded', function() {
               button.style.backgroundColor = '#262b31'; // Cambia el color del borde a #bfd4e9
             });
 
+            if(horario){
+              cursor.src = "../img/cursors/cccc.gif";
+              cursorPurpleish.src = "../img/cursors/ccccPurpleish.gif";
+            }else{
+              cursor.src = "img/cursors/cccc.gif";
+              cursorPurpleish.src = "img/cursors/ccccPurpleish.gif";
+            }
+            
         }
     }
 
