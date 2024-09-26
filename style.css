@@ -798,19 +798,45 @@ div.img img {
 }
 
 
+
+
+
 #skinsContainer {
+  background: #1c2128;
+  background: linear-gradient(180deg,#1c2128 0%, #737f8b 80%);
+  background: -webkit-linear-gradient(180deg,#1c2128 0%, #737f8b 80%);
+  background: -moz-linear-gradient(180deg,#1c2128 0%, #737f8b 80%);
   position: fixed;
   width: 10vw;
   height: 100vh;
-  background-color: black;
-  border-right: 2px solid grey;
   align-items: center;
-  justify-content: center;
+  justify-content: top;
   display: flex;
   flex-direction: column;
   transition: transform 0.5s ease;
   transform: translateX(-10vw);
+  gap: 20px;
+  overflow-y:auto;
+  overflow-x: hidden;
+}
 
+/* Scroll personalizado para WebKit (Chrome, Safari) */
+#skinsContainer::-webkit-scrollbar {
+  width: 10px; /* Anchura del scrollbar */
+}
+
+#skinsContainer::-webkit-scrollbar-thumb {
+  background-color: #737f8b; /* Color del "thumb" (la parte que se desplaza) */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+#skinsContainer::-webkit-scrollbar-track {
+  background-color: transparent; /* Color de fondo del track (donde se mueve el thumb) */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+#skinsContainer::-webkit-scrollbar-thumb:hover {
+  background-color: #bfd4e9; /* Color del "thumb" al pasar el ratón encima */
 }
 
 #skinsContainer.active {
@@ -819,11 +845,11 @@ div.img img {
 }
 
 #flechaa {
-  width: 2.5vw;
-  height: 10vh;
+  width: 2%;
+  height: 7%;
   position: fixed;
   top: 37vh;
-  left: 11vw;
+  left: 12vw;
   transform: rotate(270deg) rotateX(0deg) translateY(-13vw);
   transition: transform 0.75s ease;
   z-index: 2;
@@ -847,3 +873,168 @@ div.img img {
   transform: translateX(10vw);
 
 }
+
+
+.titulo{
+  position: relative;
+  display: flex;
+  width: 30px;
+  height: 120px;
+  font-size: 40px;
+  font-weight: bold;
+  transform: scaleY(2) translateX(-40px) translateY(20px);
+
+}
+
+.coinsContainer{
+  position: relative;
+  display: flex;
+}
+
+.hr{
+  position: relative;
+  display: flex;
+  min-height: 2px;
+  width: 80%;
+  background-color: #bfd4e9;
+  margin-top: 70px;
+}
+
+
+.skinContainerFirst{
+  margin-top: 40px;
+}
+
+.skinContainer{
+  background-color: transparent;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: top;
+  width: 90%;
+  height: 243px;
+  border: 2px solid #bfd4e9;
+  border-radius: 2vh;
+}
+
+.skinContainerBackdropFilter{
+  backdrop-filter: blur(50px);
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: top;
+  width: 100%;
+  height: 243px;
+  border-radius: 2vh;
+  border: 2px solid #bfd4e9;
+  z-index: -20;
+}
+
+.skinContainerLock{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: top;
+  width: 100%;
+  height: 243px;
+  border-radius: 2vh;
+  border: 2px solid #bfd4e9;
+  z-index: 1000;
+  background-color: rgba(119, 119, 119, 0.342);
+  backdrop-filter: blur(2px);
+}
+
+.skinPortada{
+  position: relative;
+  display: flex;
+  width: 450px;
+  height: 350px;
+  top: -60px;
+
+}
+
+.tituloSkin{
+  position: relative;
+  display: flex;
+  top: -130px;
+  font-weight: bold;
+}
+
+.releaseDate{
+  position: relative;
+  display: flex;
+  top: -118px;
+  font-style: italic;
+  font-size: 14px;
+  opacity: 80%;
+}
+
+.tier{
+  position: relative;
+  display: flex;
+  top: -115px;
+  font-weight: bold;
+  font-size: 14px;
+  opacity: 80%;
+}
+
+.buttonThemeContainer{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 10%;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  height: 29px;
+  top: -104px;
+}
+
+.buttonTheme{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  width: 100%;
+  height: 29px;
+  border-radius: 5px;
+  z-index: 2;
+}
+
+.buttonThemeNight {
+  border-bottom-left-radius: 15px;
+  background-color: lightblue;
+  z-index: 2;
+
+}
+
+.buttonThemeNight:hover {
+  background-color: rgb(0, 191, 255);
+}
+
+.buttonThemeDay {
+  border-bottom-right-radius: 15px;
+  background-color: lightblue;
+  z-index: 2;
+
+}
+
+.buttonThemeDay:hover {
+  background-color: rgb(236, 17, 17);
+}
+
+
+
+.buttonThemeImg{
+  position: relative;
+  display: flex;
+  padding: 4px;
+  width: 25px;
+  height: 25px;
+}
+
+
