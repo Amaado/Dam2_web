@@ -803,9 +803,9 @@ div.img img {
 
 #skinsContainer {
   background: #1c2128;
-  background: linear-gradient(180deg,#1c2128 0%, #737f8b 80%);
-  background: -webkit-linear-gradient(180deg,#1c2128 0%, #737f8b 80%);
-  background: -moz-linear-gradient(180deg,#1c2128 0%, #737f8b 80%);
+  background: linear-gradient(180deg,#1c2128 10%, #737f8b 200%);
+  background: -webkit-linear-gradient(180deg,#1c2128 10%, #737f8b 200%);
+  background: -moz-linear-gradient(180deg,#1c2128 10%, #737f8b 200%);
   position: fixed;
   width: 10vw;
   height: 100vh;
@@ -845,10 +845,10 @@ div.img img {
 }
 
 #flechaa {
-  width: 2%;
-  height: 7%;
+  width: 40px;
+  height: 80px;
   position: fixed;
-  top: 37vh;
+  top: calc(50vh - 20px);
   left: 12vw;
   transform: rotate(270deg) rotateX(0deg) translateY(-13vw);
   transition: transform 0.75s ease;
@@ -913,22 +913,28 @@ div.img img {
   align-items: center;
   justify-content: top;
   width: 90%;
-  height: 243px;
+  min-height: 275px;
   border: 2px solid #bfd4e9;
-  border-radius: 2vh;
+  border-radius: 25px;
+  overflow: visible;
+}
+
+@media screen and (max-width: 1600px) {
+  .skinContainer {
+    overflow: hidden; /* Aplica overflow: hidden solo cuando el ancho es menor o igual a 1600px */
+  }
 }
 
 .skinContainerBackdropFilter{
-  backdrop-filter: blur(50px);
+  backdrop-filter: blur(20px);
   position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: top;
   width: 100%;
-  height: 243px;
-  border-radius: 2vh;
-  border: 2px solid #bfd4e9;
+  min-height: 100%;
+  border-radius: 25px;
   z-index: -20;
 }
 
@@ -939,13 +945,23 @@ div.img img {
   align-items: center;
   justify-content: top;
   width: 100%;
-  height: 243px;
-  border-radius: 2vh;
-  border: 2px solid #bfd4e9;
-  z-index: 1000;
+  min-height: 100%;
+  border-radius: 25px;
   background-color: rgba(119, 119, 119, 0.342);
   backdrop-filter: blur(2px);
+  filter: saturate(0);
+  z-index: 10;
 }
+
+.candado{
+  position: absolute;
+  z-index: 20;
+  width: 100px;
+  height: auto;
+  margin-top: 45px;
+}
+
+
 
 .skinPortada{
   position: relative;
@@ -961,24 +977,79 @@ div.img img {
   display: flex;
   top: -130px;
   font-weight: bold;
+  white-space: nowrap;
 }
 
 .releaseDate{
   position: relative;
   display: flex;
-  top: -118px;
+  top: -119px;
   font-style: italic;
   font-size: 14px;
   opacity: 80%;
+  white-space: nowrap;
+}
+
+.priceContainer{
+  width: 80%;
+  height: 20px;
+  font-size: 14px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  top: -115px;
+}
+
+.price{
+  color: #e9e02c;
+  font-size: 14px;
+  font-weight: bold;
+  text-shadow: 0px 0px 5px rgb(255, 223, 43);
+}
+
+.priceNormal{
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.coin{
+  width: 20px;
+  height: 20px;
+  margin-left: -3px;
+  margin-top: -1px;
+  z-index: 1;
+}
+
+.coinBlur{
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  filter: blur(5px);
+  margin-left: 67px;
+  margin-top: -1px;
+  opacity: 65%;
+
+
+
+  visibility: hidden;
 }
 
 .tier{
   position: relative;
   display: flex;
-  top: -115px;
+  top: -110px;
   font-weight: bold;
   font-size: 14px;
   opacity: 80%;
+  padding: 3px;
+  padding-left: 6px;
+  padding-right: 5px;
+  border-radius: 4px;
+  color: white;
+  background-color: rgb(106, 23, 106);
 }
 
 .buttonThemeContainer{
@@ -990,7 +1061,7 @@ div.img img {
   justify-content: center;
   width: 90%;
   height: 29px;
-  top: -104px;
+  top: -97px;
 }
 
 .buttonTheme{
@@ -1007,24 +1078,24 @@ div.img img {
 
 .buttonThemeNight {
   border-bottom-left-radius: 15px;
-  background-color: lightblue;
+  background-color: #bfd4e9b7;
   z-index: 2;
 
 }
 
 .buttonThemeNight:hover {
-  background-color: rgb(0, 191, 255);
+  background-color: #bfd4e9f0;
 }
 
 .buttonThemeDay {
   border-bottom-right-radius: 15px;
-  background-color: lightblue;
+  background-color: #e9ddbfb3;
   z-index: 2;
 
 }
 
 .buttonThemeDay:hover {
-  background-color: rgb(236, 17, 17);
+  background-color: #e9ddbfee;
 }
 
 
