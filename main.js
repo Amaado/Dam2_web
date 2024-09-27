@@ -8,13 +8,16 @@ document.addEventListener('DOMContentLoaded', function() {
   let buttons  = document.querySelectorAll("button");
   let button
   let horario = document.getElementById("horario");
-  let flecha = document.getElementById("flecha");
   let oval = this.querySelector('.svg-oval');
   const flechaa = document.getElementById('flechaa');
   const skinsContainer = document.getElementById('skinsContainer');
   const flechaHitbloxPlus = document.getElementById('flechaHitbloxPlus');
   let allESC = document.querySelector('nav');
+
   
+
+
+  /* CAMBIOS DE ESTILO CUANDO CAMBIO DE TEMA */
 
   if (window.location.pathname.endsWith("horario.html")) {
     let a = document.getElementById("a");
@@ -25,21 +28,18 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("Error carga ESC");
   }
 
-
-
   checkbox.checked = localStorage.getItem("checkboxStatus") === 'true';
   
-  // Aplicar el tema correspondiente según el estado del checkbox
   function applyTheme() {
       if (checkbox.checked) {
           //console.log("Tema claro");
-          body.style.backgroundColor = '#dddcb0'; // Color claro
+          body.style.backgroundColor = '#dddcb0';
           body.style.color = "#313842";
           cards.forEach(card => {
-            card.style.borderColor = '#242e3ccb'; // Cambia el color del borde a #bfd4e9
+            card.style.borderColor = '#242e3ccb';
           });
           buttons.forEach(button => {
-            button.style.backgroundColor = '#dddcb0'; // Cambia el color del borde a #bfd4e9
+            button.style.backgroundColor = '#dddcb0';
           });
 
           if (window.location.pathname.endsWith("horario.html")) {
@@ -71,13 +71,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
       } else {
           //console.log("Tema oscuro");
-          body.style.backgroundColor = '#1c2128'; // Color oscuro (inicial)
+          body.style.backgroundColor = '#1c2128';
           body.style.color = "#bfd4e9";
           cards.forEach(card => {
-            card.style.borderColor = 'grey'; // Cambia el color del borde a #bfd4e9
+            card.style.borderColor = 'grey';
           });
           buttons.forEach(button => {
-            button.style.backgroundColor = '#262b31'; // Cambia el color del borde a #bfd4e9
+            button.style.backgroundColor = '#262b31';
           });
 
           if (window.location.pathname.endsWith("horario.html")) {
@@ -108,78 +108,61 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   }
 
-  // Llamar a applyTheme al cargar la página para aplicar el tema guardado
+
   applyTheme();
 
-  // Guardar el estado del checkbox en Local Storage cuando cambie su valor
   checkbox.addEventListener('change', () => {
       localStorage.setItem('checkboxStatus', checkbox.checked);
-      applyTheme(); // Aplicar el tema de acuerdo al nuevo estado
+      applyTheme();
   });
 
-
-    
-    if (horario) {
-      horario.addEventListener('mouseenter', function() {
-          if (checkbox.checked) {
-              //console.log("Tema claro");
-              horario.style.backgroundColor = '#edeba4';
-          } else {
-              //console.log("Tema oscuro");
-              horario.style.backgroundColor = '#333c4a9d';
-          }
-      });
-  
-      horario.addEventListener('mouseleave', function() {
-          horario.style.backgroundColor = '#333c4a00';
-      });
-  }
-
-  if (window.location.pathname.endsWith("horario.html")) {
-// Detectar la tecla "Esc" y activar el efecto hover
-document.addEventListener("keydown", function (event) {
-  if (event.key === "Escape") {
-      // Agregar clases que simulan el hover
-      a.classList.add("aNight-hover"); // Si estás en modo noche, aplica la clase que activa el hover
-      escText.classList.add("escTextNight-hover");
-      esc.classList.add("escNight-hover");
-
-      // Si estás en modo día, aplica las clases correspondientes
-      a.classList.add("aDay-hover");
-      escText.classList.add("escTextDay-hover");
-      esc.classList.add("escDay-hover");
-      // Después de 0.5s, realizar la acción de clic en el enlace
-      setTimeout(() => {
-          // Remover el efecto hover
-          a.classList.remove("aNight-hover", "aDay-hover");
-          escText.classList.remove("escTextNight-hover", "escTextDay-hover");
-          esc.classList.remove("escNight-hover", "escDay-hover");
-          // Simular el clic en el enlace <a>
-          a.click();
-      }, 175);
-  }
-});
-
-  }
-
-
-  if (flecha) {
-    flecha.addEventListener('mouseenter', function() {
+  if (horario) {
+    horario.addEventListener('mouseenter', function() {
         if (checkbox.checked) {
             //console.log("Tema claro");
-            flecha.style.backgroundColor = '#edeba4';
+            horario.style.backgroundColor = '#edeba4';
         } else {
             //console.log("Tema oscuro");
-            flecha.style.backgroundColor = '#333c4a9d';
+            horario.style.backgroundColor = '#333c4a9d';
         }
     });
 
-    flecha.addEventListener('mouseleave', function() {
-      flecha.style.backgroundColor = '#333c4a00';
+    horario.addEventListener('mouseleave', function() {
+        horario.style.backgroundColor = '#333c4a00';
     });
   }
+
+
+
+
+  /* EFECTO HOVER A ESC CUANDO event.key === "Escape" */
+
+  if (window.location.pathname.endsWith("horario.html")) {
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+
+            a.classList.add("aNight-hover");
+            escText.classList.add("escTextNight-hover");
+            esc.classList.add("escNight-hover");
+
+            a.classList.add("aDay-hover");
+            escText.classList.add("escTextDay-hover");
+            esc.classList.add("escDay-hover");
+            setTimeout(() => {
+                a.classList.remove("aNight-hover", "aDay-hover");
+                escText.classList.remove("escTextNight-hover", "escTextDay-hover");
+                esc.classList.remove("escNight-hover", "escDay-hover");
+                a.click();
+            }, 175);
+        }
+      });
+    }
     
 
+
+
+
+    /* CUSTOM CURSOR ADJUSTMENTS */
 
     setTimeout(function() {
       cursorPurpleish.style.opacity = '1%';
@@ -197,6 +180,7 @@ document.addEventListener("keydown", function (event) {
           cursor.style.top = e.clientY + 'px';
           cursorPurpleish.style.left = e.clientX + 'px';
           cursorPurpleish.style.top = e.clientY + 'px';
+          //console.log(e.clientX + 'left ' + e.clientY + 'top ');
       });
 
       document.addEventListener('mousedown', function() {
@@ -235,19 +219,17 @@ document.addEventListener("keydown", function (event) {
 
 
 
+    /* CREAR ILUMINACION TEMA OSCURO / OVAL */
 
-    // Función para crear un óvalo SVG
-    function createOval() {
+  function createOval() {
         const svgNS = "http://www.w3.org/2000/svg";
         
-        // Crear el SVG
         const svg = document.createElementNS(svgNS, "svg");
         svg.setAttribute("width", "1200");
         svg.setAttribute("height", "125");
-        svg.setAttribute("viewBox", "0 0 1200 125"); // Asegúrate de que el viewBox coincide con el tamaño del SVG
+        svg.setAttribute("viewBox", "0 0 1200 125");
         svg.setAttribute("class", "svg-oval");
         
-        // Crear la máscara
         const defs = document.createElementNS(svgNS, "defs");
         const mask = document.createElementNS(svgNS, "mask");
         mask.setAttribute("id", "oval-mask");
@@ -263,34 +245,30 @@ document.addEventListener("keydown", function (event) {
         defs.appendChild(mask);
         svg.appendChild(defs);
         
-        // Añadir la imagen con la máscara y el blend mode
         const image = document.createElementNS(svgNS, "image");
-        image.setAttribute("href", "img/noise.png"); // Reemplaza con la URL de tu imagen
+        image.setAttribute("href", "img/noise.png");
         image.setAttribute("x", "0");
         image.setAttribute("y", "0");
         image.setAttribute("width", "1000");
         image.setAttribute("height", "125");
-        image.setAttribute("mask", "url(#oval-mask)"); // Aplicar la máscara
-        image.style.mixBlendMode = "darken"; // Ajusta el blend mode según tus necesidades
+        image.setAttribute("mask", "url(#oval-mask)");
+        image.style.mixBlendMode = "darken";
         
         svg.appendChild(image);
         
-        // Crear el óvalo
         const oval = document.createElementNS(svgNS, "ellipse");
         oval.setAttribute("cx", "500");
         oval.setAttribute("cy", "62.5");
         oval.setAttribute("rx", "500");
         oval.setAttribute("ry", "62.5");
-        oval.setAttribute("opacity", "0"); // Inicialmente invisible
+        oval.setAttribute("opacity", "0");
         
         svg.appendChild(oval);
         
         return svg;
     }
   
-      // Función para manejar el evento de hover (mouseenter y mouseleave)
       document.querySelectorAll('a').forEach((link, index) => {
-        // Verificar si el índice es 0, para omitir el primer <a>
         if (index === 0) return;
       
         let ovalTimeout;
@@ -298,18 +276,15 @@ document.addEventListener("keydown", function (event) {
         link.addEventListener('mouseenter', function() {
           let oval = this.querySelector('.svg-oval');
       
-          // Si el óvalo ya existe, simplemente restauramos su opacidad
           if (oval) {
             clearTimeout(ovalTimeout);
             oval.classList.add('show');
           } else {
-            // Crear un nuevo óvalo si no existe
             oval = createOval();
             
             this.appendChild(oval);
       
-            // Forzar reflujo para que la transición de opacidad funcione
-            requestAnimationFrame(() => {
+           requestAnimationFrame(() => {
               oval.classList.add('show');
             });
           }
@@ -320,19 +295,18 @@ document.addEventListener("keydown", function (event) {
           if (oval) {
             oval.classList.remove('show');
             
-            // Establecer un temporizador para eliminar el óvalo después de la transición
             ovalTimeout = setTimeout(() => {
               if (oval) {
                 this.removeChild(oval);
               }
-            }, 400); // Coincide con la duración de la transición
+            }, 400);
           }
         });
       });
 
 
 
-
+        /* AUDIO FUNCTIONS */
 
       let hoverAudio;
 
@@ -340,75 +314,72 @@ document.addEventListener("keydown", function (event) {
         const audioTest = new Audio('img/sfx_sound1.mp3');
     
         audioTest.onerror = function() {
-            // Si falla la primera ruta, intenta la segunda
             hoverAudio = new Audio('../img/sfx_sound1.mp3');
             console.log('Usando la ruta ../img/sfx_sound1.mp3');
         };
     
         audioTest.oncanplaythrough = function() {
-            // Si la primera ruta es correcta
             hoverAudio = audioTest;
             console.log('Usando la ruta img/sfx_sound1.mp3');
         };
     
-        audioTest.load(); // Inicia la carga del audio para verificar la ruta
+        audioTest.load();
     }
     
-    // Llamamos a la función para cargar el audio
     loadAudio();
 
-
-      // Función para reproducir el audio
       function playHoverAudio() {
-        hoverAudio.currentTime = 0; // Reiniciar el audio desde el principio
+        hoverAudio.currentTime = 0;
       }
       
-      // Añadir un event listener a todos los elementos con la clase .card
       document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('mouseenter', playHoverAudio);
       });
       
-      // Añadir un event listener a todos los elementos <a>
       document.querySelectorAll('a').forEach(link => {
         link.addEventListener('mouseenter', playHoverAudio);
       });
-
 
       document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('mouseleave', playHoverAudio);
       });
       
-      // Añadir un event listener a todos los elementos <a>
       document.querySelectorAll('a').forEach(link => {
         link.addEventListener('mouseleave', playHoverAudio);
       });
 
 
 
-
+      /* ACTIVAR MENU-SKINS */
 
       function addSkinsMenuActive() {
         flechaa.classList.add('active');
         skinsContainer.classList.add('active');
-        flechaHitbloxPlus.classList.add('active');  // Usar classList.add
+        flechaHitbloxPlus.classList.add('active');
 
         if (window.location.pathname.endsWith("horario.html")) {
         allESC.style.marginLeft = "10vw"
         }
+
+        if (window.location.pathname.endsWith("index.html")) {
+          coinsContainer.style.marginLeft = "10vw"
+        }
       }
       
-      // Función para remover la clase "active" cuando se deja de hacer hover
       function removeSkinsMenuActive() {
         flechaa.classList.remove('active');
         skinsContainer.classList.remove('active');
-        flechaHitbloxPlus.classList.remove('active');  // Usar classList.remove
+        flechaHitbloxPlus.classList.remove('active');
 
         if (window.location.pathname.endsWith("horario.html")) {
           allESC.style.marginLeft = "0vw"
         }
+
+        if (window.location.pathname.endsWith("index.html")) {
+          coinsContainer.style.marginLeft = "0vw"
+        }
       }
       
-      // Escuchar los eventos de hover en ambos elementos
       flechaa.addEventListener('mouseenter', addSkinsMenuActive);
       flechaa.addEventListener('mouseleave', removeSkinsMenuActive);
       skinsContainer.addEventListener('mouseenter', addSkinsMenuActive);
@@ -416,6 +387,103 @@ document.addEventListener("keydown", function (event) {
       flechaHitbloxPlus.addEventListener('mouseenter', addSkinsMenuActive);
       flechaHitbloxPlus.addEventListener('mouseleave', removeSkinsMenuActive);
       
+
+
+
+      /* DESBLOQUEO CANDADO */
+
+let coinsContainer = document.querySelector('.coinsContainer');
+let coinsIhave = parseInt(coinsContainer.textContent);
+let isUnlocking = false;
+let candados = document.querySelectorAll(".candado");
+
+candados.forEach(candado => {
+    candado.src = "img/lock.png";
+
+    let skinContainer = candado.closest('.skinContainer');
+    let skinContainerLock = skinContainer.querySelector('.skinContainerLock');
+    let skinContainerNotVisible = skinContainer.querySelector('.skinContainerNotVisible');
+
+    let priceElement = skinContainerNotVisible.querySelector('.price');
+    let price = parseInt(priceElement.textContent);
+
+    candado.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price));
+    skinContainerNotVisible.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price));
+    
+    setNormalPrice(skinContainer, price);
+  });
+
+
+  function setNormalPrice(skinContainer, price) {
+    // Obtener el contenedor del precio normal
+    let priceNormalElement = skinContainer.querySelector('.priceNormal');
+    
+    // Actualizar el contenido de `priceNormal` con el valor de `price`
+    if (priceNormalElement) {
+        priceNormalElement.textContent = price;
+    }
+  }
+
+function searchUnlockingStatus(candado, skinContainerLock,skinContainerNotVisible, price) {
+    if (isUnlocking) return;
+
+    if (coinsIhave >= price) {
+        isUnlocking = true;
+        unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price);
+    } else {
+        lockedAnimation(candado);
+    }
+}
+
+function unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price) {
+    candado.src = "img/lock.gif";
+    candado.style.pointerEvents = "none";
+    skinContainerLock.style.pointerEvents = "none";
+
+    coinsIhave -= price;
+
+    document.querySelector('.coinsContainer').textContent = coinsIhave;
+
+    setTimeout(() => {
+        candado.style.opacity = "0%";
+        skinContainerLock.style.opacity = "0%";
+        skinContainerLock.style.visibility = "hidden";
+        skinContainerNotVisible.style.opacity = "0%";
+        skinContainerNotVisible.style.visibility = "hidden";
+        isUnlocking = false;
+    }, 1100);
+}
+
+function lockedAnimation(candado) {
+    candado.style.transition = "margin 0.1s ease, filter 0.2s ease";
+    candado.style.marginLeft = "0.75vw";
+    candado.style.filter = "blur(0.7px)";
+
+    setTimeout(() => {
+        candado.style.marginLeft = "0";
+        candado.style.marginRight = "0.75vw";
+        candado.style.filter = "blur(0.7px)";
+
+        setTimeout(() => {
+            candado.style.marginLeft = "0.75vw";
+            candado.style.marginRight = "0";
+            candado.style.filter = "blur(0.7px)";
+
+            setTimeout(() => {
+                candado.style.marginLeft = "0";
+                candado.style.filter = "none";
+            }, 100);
+        }, 100);
+    }, 100);
+}
+
+      
+      
+      
+      
+
+
+
 
 });
 

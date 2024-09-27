@@ -875,6 +875,17 @@ div.img img {
 }
 
 
+.coinsContainer{
+  position: absolute;
+  display: flex;
+  width: 400px;
+  height: 50px;
+  top: 0;
+  left: 0;
+  transition: margin-left 0.5s ease;
+  font-size: 25px;
+}
+
 .titulo{
   position: relative;
   display: flex;
@@ -884,11 +895,6 @@ div.img img {
   font-weight: bold;
   transform: scaleY(2) translateX(-40px) translateY(20px);
 
-}
-
-.coinsContainer{
-  position: relative;
-  display: flex;
 }
 
 .hr{
@@ -913,10 +919,12 @@ div.img img {
   align-items: center;
   justify-content: top;
   width: 90%;
-  min-height: 275px;
+  min-height: 280px;
+  max-height: 280px;
   border: 2px solid #bfd4e9;
   border-radius: 25px;
   overflow: visible;
+  z-index: 20;
 }
 
 @media screen and (max-width: 1600px) {
@@ -951,16 +959,36 @@ div.img img {
   backdrop-filter: blur(2px);
   filter: saturate(0);
   z-index: 10;
+  transition: opacity 0.2s ease;
+  opacity: 100%;
 }
 
-.candado{
+.candado {
   position: absolute;
   z-index: 20;
   width: 100px;
   height: auto;
-  margin-top: 45px;
+  margin-top: 55px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  opacity: 100%;
+  animation-name: lockBalancing;
+  animation-duration: 2.5s;
+  animation-iteration-count: infinite;
 }
 
+@keyframes lockBalancing {
+  0% {
+    transform: translateY(-7px) rotate(0deg); /* Balanceo hacia arriba */
+  }
+
+  50% {
+    transform: translateY(0px) rotate(1deg); /* Centro con ligera rotación */
+  }
+
+  100% {
+    transform: translateY(-7px) rotate(0deg); /* Balanceo hacia arriba */
+  }
+}
 
 
 .skinPortada{
@@ -976,6 +1004,7 @@ div.img img {
   position: relative;
   display: flex;
   top: -130px;
+  font-size: 20px;
   font-weight: bold;
   white-space: nowrap;
 }
@@ -983,12 +1012,42 @@ div.img img {
 .releaseDate{
   position: relative;
   display: flex;
-  top: -119px;
+  top: -123px;
   font-style: italic;
   font-size: 14px;
   opacity: 80%;
   white-space: nowrap;
 }
+
+.skinContainerNotVisible{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: top;
+    width: 100%;
+    min-height: 100%;
+    border-radius: 25px;
+    z-index: 10;
+    transition: opacity 0.2s ease;
+}
+
+.priceContainerNotVisible{
+  width: 120px;
+  height: 20px;
+  font-size: 14px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin-top: 173px;
+  color: #e9e02c;
+  outline: 2px solid #e9e02c8a;
+  border-radius: 20px;
+}
+
 
 .priceContainer{
   width: 80%;
@@ -1000,7 +1059,7 @@ div.img img {
   justify-content: center;
   align-items: center;
   gap: 5px;
-  top: -115px;
+  top: -120px;
 }
 
 .price{
@@ -1031,10 +1090,6 @@ div.img img {
   margin-left: 67px;
   margin-top: -1px;
   opacity: 65%;
-
-
-
-  visibility: hidden;
 }
 
 .tier{
@@ -1062,6 +1117,7 @@ div.img img {
   width: 90%;
   height: 29px;
   top: -97px;
+
 }
 
 .buttonTheme{
@@ -1078,7 +1134,8 @@ div.img img {
 
 .buttonThemeNight {
   border-bottom-left-radius: 15px;
-  background-color: #bfd4e9b7;
+  background-color: #bfd4e9a9;
+  transition: background-color 0.2s;
   z-index: 2;
 
 }
@@ -1089,7 +1146,8 @@ div.img img {
 
 .buttonThemeDay {
   border-bottom-right-radius: 15px;
-  background-color: #e9ddbfb3;
+  background-color: #e9ddbfad;
+  transition: background-color 0.2s;
   z-index: 2;
 
 }
