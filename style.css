@@ -4,6 +4,14 @@
   --img: url("img/Cc2.png");
 }
 
+@font-face {
+  font-family: 'verti';
+  src: url('img/verti.ttf') format('woff2'),
+       url('img/verti.ttf') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -871,7 +879,7 @@ div.img img {
 
 #flechaHitbloxPlus.active {
   transform: translateX(10vw);
-
+  width: 30vw;
 }
 
 
@@ -891,10 +899,9 @@ div.img img {
   display: flex;
   width: 30px;
   height: 120px;
-  font-size: 40px;
+  font-size: 30px;
   font-weight: bold;
-  transform: scaleY(2) translateX(-40px) translateY(20px);
-
+  font-family: "verti";
 }
 
 .hr{

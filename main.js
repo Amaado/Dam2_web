@@ -196,7 +196,8 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('mouseover', function(e) {
     if (e.target.tagName === 'A' || e.target.closest('.card')
         || e.target.closest('.material-icons-round')  || e.target.closest('.background')
-        || e.target.closest('.sun-moon') || e.target.closest('span') || e.target.closest('#flechaa')) {
+        || e.target.closest('.sun-moon') || e.target.closest('span') || e.target.closest('#flechaa')
+        || e.target.closest('.buttonTheme')) {
               cursorPurpleish.style.opacity = '100%';
       //cursorPurpleish.style.visibility = 'visible';
       //cursor.style.visibility = 'hidden';
@@ -206,7 +207,8 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('mouseout', function(e) {
     if (e.target.tagName === 'A' || e.target.closest('.card')
         || e.target.closest('.material-icons-round')  || e.target.closest('.background')
-        || e.target.closest('.sun-moon')  || e.target.closest('span') || e.target.closest('#flechaa')) {
+        || e.target.closest('.sun-moon')  || e.target.closest('span') || e.target.closest('#flechaa')
+        || e.target.closest('.buttonTheme')) {
               cursorPurpleish.style.opacity = '1%';
       //cursorPurpleish.style.visibility = 'hidden';
       //cursor.style.visibility = 'visible';
@@ -219,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-    /* CREAR ILUMINACION TEMA OSCURO / OVAL */
+    /* CREAR ILUMINACION TEMA OSCURO / OVALO */
 
   function createOval() {
         const svgNS = "http://www.w3.org/2000/svg";
@@ -390,6 +392,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
+      
       /* DESBLOQUEO CANDADO */
 
 let coinsContainer = document.querySelector('.coinsContainer');
@@ -415,10 +419,8 @@ candados.forEach(candado => {
 
 
   function setNormalPrice(skinContainer, price) {
-    // Obtener el contenedor del precio normal
     let priceNormalElement = skinContainer.querySelector('.priceNormal');
     
-    // Actualizar el contenido de `priceNormal` con el valor de `price`
     if (priceNormalElement) {
         priceNormalElement.textContent = price;
     }
@@ -430,7 +432,7 @@ function searchUnlockingStatus(candado, skinContainerLock,skinContainerNotVisibl
     if (coinsIhave >= price) {
         isUnlocking = true;
         unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price);
-    } else {
+    }if (coinsIhave >= price) {
         lockedAnimation(candado);
     }
 }
