@@ -899,9 +899,13 @@ div.img img {
   display: flex;
   width: 30px;
   height: 120px;
-  font-size: 30px;
-  font-weight: bold;
-  font-family: "verti";
+  font-size: 36px;
+  transform-origin: top;
+  line-height: 1;
+  transform: scaleY(5) translateX(-40px) translateY(20px);
+  font-family: 'verti';
+  top:-120px;
+
 }
 
 .hr{
