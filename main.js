@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
         allESC.style.marginLeft = "10vw";
         }
 
-        if (window.location.pathname.endsWith("index.html")) {
+        if (window.location.pathname.endsWith("/")) {
           coinsContainer.style.marginLeft = "10vw";
           console.log("HOLA");
         }
