@@ -366,7 +366,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (window.location.pathname.endsWith("/")) {
           coinsContainer.style.marginLeft = "10vw";
-          console.log("HOLA");
         }
       }
       
@@ -379,8 +378,8 @@ document.addEventListener('DOMContentLoaded', function() {
           allESC.style.marginLeft = "0vw"
         }
 
-        if (window.location.pathname.endsWith("index.html")) {
-          coinsContainer.style.marginLeft = "0vw"
+        if (window.location.pathname.endsWith("/")) {
+          coinsContainer.style.marginLeft = "0vw";
         }
       }
       
@@ -427,16 +426,16 @@ candados.forEach(candado => {
     }
   }
 
-function searchUnlockingStatus(candado, skinContainerLock,skinContainerNotVisible, price) {
-    if (isUnlocking) return;
+  function searchUnlockingStatus(candado, skinContainerLock,skinContainerNotVisible, price) {
+      if (isUnlocking) return;
 
-    if (coinsIhave >= price) {
-        isUnlocking = true;
-        unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price);
-    }if (coinsIhave >= price) {
-        lockedAnimation(candado);
-    }
-}
+      if (coinsIhave >= price) {
+          isUnlocking = true;
+          unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price);
+      }else if(coinsIhave < price) {
+          lockedAnimation(candado);
+      }
+  }
 
 function unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price) {
     candado.src = "img/lock.gif";

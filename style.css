@@ -937,11 +937,12 @@ div.img img {
   border-radius: 25px;
   overflow: visible;
   z-index: 20;
+  background-color: rgb(255, 0, 208);
 }
 
 @media screen and (max-width: 1600px) {
   .skinContainer {
-    overflow: hidden; /* Aplica overflow: hidden solo cuando el ancho es menor o igual a 1600px */
+    overflow: hidden;
   }
 }
 
@@ -1129,7 +1130,6 @@ div.img img {
   width: 90%;
   height: 29px;
   top: -97px;
-
 }
 
 .buttonTheme{
@@ -1148,7 +1148,7 @@ div.img img {
   border-bottom-left-radius: 15px;
   background-color: #bfd4e9a9;
   transition: background-color 0.2s;
-  z-index: 2;
+  z-index: 3;
 
 }
 
@@ -1160,7 +1160,7 @@ div.img img {
   border-bottom-right-radius: 15px;
   background-color: #e9ddbfad;
   transition: background-color 0.2s;
-  z-index: 2;
+  z-index: 3;
 
 }
 
