@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const skinsContainer = document.getElementById('skinsContainer');
   const flechaHitbloxPlus = document.getElementById('flechaHitbloxPlus');
   let allESC = document.querySelector('nav');
-
+  let coinsContainer = document.querySelector('.coinsContainer');
+  let coinsIhave = parseInt(coinsContainer.textContent);
   
 
 
@@ -360,11 +361,12 @@ document.addEventListener('DOMContentLoaded', function() {
         flechaHitbloxPlus.classList.add('active');
 
         if (window.location.pathname.endsWith("horario.html")) {
-        allESC.style.marginLeft = "10vw"
+        allESC.style.marginLeft = "10vw";
         }
 
         if (window.location.pathname.endsWith("index.html")) {
-          coinsContainer.style.marginLeft = "10vw"
+          coinsContainer.style.marginLeft = "10vw";
+          console.log("HOLA");
         }
       }
       
@@ -396,8 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       /* DESBLOQUEO CANDADO */
 
-let coinsContainer = document.querySelector('.coinsContainer');
-let coinsIhave = parseInt(coinsContainer.textContent);
+
 let isUnlocking = false;
 let candados = document.querySelectorAll(".candado");
 
