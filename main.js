@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const skinsContainer = document.getElementById('skinsContainer');
   const flechaHitbloxPlus = document.getElementById('flechaHitbloxPlus');
   let allESC = document.querySelector('nav');
+  let coinLabel = document.querySelector('.coinLabel');
   let coinsContainer = document.querySelector('.coinsContainer');
   let coinsIhave = parseInt(coinsContainer.textContent);
   
@@ -364,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
         allESC.style.marginLeft = "10vw";
         }
 
-        if (window.location.pathname.endsWith("/")) {
+        if (skinsContainer.classList.contains('active')) {
           coinsContainer.style.marginLeft = "10vw";
         }
       }
@@ -378,7 +379,7 @@ document.addEventListener('DOMContentLoaded', function() {
           allESC.style.marginLeft = "0vw"
         }
 
-        if (window.location.pathname.endsWith("/")) {
+        if (!skinsContainer.classList.contains('active')) {
           coinsContainer.style.marginLeft = "0vw";
         }
       }
@@ -437,55 +438,59 @@ candados.forEach(candado => {
       }
   }
 
-function unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price) {
-    candado.src = "img/lock.gif";
-    candado.style.pointerEvents = "none";
-    skinContainerLock.style.pointerEvents = "none";
+  function unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price) {
+      candado.src = "img/lock.gif";
+      candado.style.pointerEvents = "none";
+      skinContainerLock.style.pointerEvents = "none";
 
-    coinsIhave -= price;
+      coinsIhave -= price;
 
-    document.querySelector('.coinsContainer').textContent = coinsIhave;
+      document.querySelector('.coinLabel').textContent = coinsIhave;
 
-    setTimeout(() => {
-        candado.style.opacity = "0%";
-        skinContainerLock.style.opacity = "0%";
-        skinContainerLock.style.visibility = "hidden";
-        skinContainerNotVisible.style.opacity = "0%";
-        skinContainerNotVisible.style.visibility = "hidden";
-        isUnlocking = false;
-    }, 1100);
-}
+      setTimeout(() => {
+          candado.style.opacity = "0%";
+          skinContainerLock.style.opacity = "0%";
+          skinContainerLock.style.visibility = "hidden";
+          skinContainerNotVisible.style.opacity = "0%";
+          skinContainerNotVisible.style.visibility = "hidden";
+          isUnlocking = false;
+      }, 1100);
+  }
 
-function lockedAnimation(candado) {
-    candado.style.transition = "margin 0.1s ease, filter 0.2s ease";
-    candado.style.marginLeft = "0.75vw";
-    candado.style.filter = "blur(0.7px)";
+  function lockedAnimation(candado) {
+      candado.style.transition = "margin 0.1s ease, filter 0.2s ease";
+      candado.style.marginLeft = "0.75vw";
+      candado.style.filter = "blur(0.7px)";
 
-    setTimeout(() => {
-        candado.style.marginLeft = "0";
-        candado.style.marginRight = "0.75vw";
-        candado.style.filter = "blur(0.7px)";
+      setTimeout(() => {
+          candado.style.marginLeft = "0";
+          candado.style.marginRight = "0.75vw";
+          candado.style.filter = "blur(0.7px)";
 
-        setTimeout(() => {
-            candado.style.marginLeft = "0.75vw";
-            candado.style.marginRight = "0";
-            candado.style.filter = "blur(0.7px)";
+          setTimeout(() => {
+              candado.style.marginLeft = "0.75vw";
+              candado.style.marginRight = "0";
+              candado.style.filter = "blur(0.7px)";
 
-            setTimeout(() => {
-                candado.style.marginLeft = "0";
-                candado.style.filter = "none";
-            }, 100);
-        }, 100);
-    }, 100);
-}
+              setTimeout(() => {
+                  candado.style.marginLeft = "0";
+                  candado.style.filter = "none";
+              }, 100);
+          }, 100);
+      }, 100);
+  }
 
       
       
       
       
+    /* CLICK PARA FARMEAR MONEDAS */
 
-
-
+    function incrementCoins() {
+        coinsIhave++;
+        coinLabel.textContent = coinsIhave;
+    }
+    document.addEventListener('click', incrementCoins);
 
 });
 
