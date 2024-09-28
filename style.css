@@ -936,8 +936,6 @@ div.img img {
   border: 2px solid #bfd4e9;
   border-radius: 25px;
   overflow: visible;
-  z-index: 20;
-  background-color: rgb(255, 0, 208);
 }
 
 @media screen and (max-width: 1600px) {
