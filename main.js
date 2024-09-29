@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let coinsIhave = parseInt(coinsContainer.textContent);
   let idLogeado;
   let helloMessage = document.getElementById("helloMessage");
+  const checkboxLogin = document.getElementById('stayLoged');
 
 
   /* CAMBIOS DE ESTILO CUANDO CAMBIO DE TEMA */
@@ -452,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
- /* LOGIN */
+ /* goToLOGIN */
     let isAnimatingLogin = false;
 
     loginButton.addEventListener("click", function() {
@@ -495,23 +496,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     document.querySelector('.formRowCheckbox').addEventListener('click', function() {
-      const checkbox = document.getElementById('stayLoged');
-      checkbox.checked = !checkbox.checked;
+      checkboxLogin.checked = !checkboxLogin.checked;
     });
 
     
     loginSubmit.addEventListener('click', async function() {
+      errorLabelLogin.textContent = "";
+      errorLabelLogin.style.color = "#bfd4e9";
+      campoNameLogin.style.color = "#1c2128";
+      campoPasswordLogin.style.outline = '4px solid #bfd4e9';
+      
       try {
         const idLogeado = await verificarUsuarioInicioSesion(campoNameLogin.value, campoPasswordLogin.value);  // Espera a que la promesa se resuelva
-        helloMessage.textContent = "Id: " + idLogeado;
-        console.log(idLogeado);
-        
-        // Si no se encuentra el usuario, evita continuar con las demás operaciones
-        if (idLogeado === 0) {
-          helloMessage.textContent = "Nombre de usuario o contraseña incorrectos";
+
+        if (campoNameLogin.value.trim() === '' || campoPasswordLogin.value.trim() === '') {
+          errorLabelLogin.textContent = "All the information must be filled.";
+          errorLabelLogin.style.color = "red";
+          
+          if (campoNameLogin.value.trim() === '') {
+            campoNameLogin.style.color = "red";
+            campoNameLogin.style.outline = '4px solid red';
+          }
+
+          if (campoPasswordLogin.value.trim() === '') {
+            campoPasswordLogin.style.color = "red";
+            campoPasswordLogin.style.outline = '4px solid red';
+          }
+        }else if (idLogeado === 0) {
+          errorLabelLogin.textContent = "Username or password incorrect.";
+          errorLabelLogin.style.color = "red";
+          campoPasswordLogin.style.color = "red";
+          campoPasswordLogin.style.outline = '4px solid red';
+          campoNameLogin.style.color = "red";
+          campoNameLogin.style.outline = '4px solid red';
           return;
         }
-    
+
+        helloMessage.textContent = "Id: " + idLogeado;
+        console.log(idLogeado);
+
         // Si el usuario es válido, continúa con las demás operaciones
         const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
         const skinsUnlockLogeado = await obtenerSkinsUnlockDeUsuario(idLogeado);
@@ -524,19 +547,66 @@ document.addEventListener('DOMContentLoaded', function() {
         // Obtenemos el nombre del usuario por su ID y lo mostramos en el helloMessage
         const nombrePorId = await obtenerUsuarioPorId(idLogeado);
         helloMessage.textContent += " Nombre: " + nombrePorId;
+
+
+        if (checkboxLogin.checked) {
+          localStorage.setItem('sesionIniciada', 'true');
+          localStorage.setItem('idLogeado', idLogeado);
+        } else {
+          localStorage.removeItem('sesionIniciada');
+          localStorage.removeItem('idLogeado');
+        }
+
+        loginScreen.click();
     
       } catch (error) {
         console.error("Error durante el inicio de sesión:", error);
         helloMessage.textContent = "Error en el servidor. Inténtalo de nuevo más tarde.";
       }
     });
+
+
+
+  window.addEventListener('load', async function() {  // Añadir 'async' aquí
+      const sesionIniciada = localStorage.getItem('sesionIniciada');
+      const idLogeado = localStorage.getItem('idLogeado');
+    
+      console.log("Sesión iniciada:", sesionIniciada);
+      console.log("ID logeado:", idLogeado);
+
+      if (sesionIniciada) {
+          try {
+
+              /*Crear logout */
+
+
+              /*config */
+
+              helloMessage.textContent = "Id: " + idLogeado;
+              console.log(idLogeado);
+      
+              const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
+              const skinsUnlockLogeado = await obtenerSkinsUnlockDeUsuario(idLogeado);
+              helloMessage.textContent += " Monedas: " + monedasLogeado;
+              helloMessage.textContent += " Skins: " + skinsUnlockLogeado;
+      
+              const nombrePorId = await obtenerUsuarioPorId(idLogeado);
+              helloMessage.textContent += " Nombre: " + nombrePorId;
+
+            
+          } catch (error) {
+              console.error("Error durante el inicio de sesión automático:", error);
+          }
+      }
+  });
+  
     
     
 
     
     
 
-    /* SINGIN */
+    /* goToSINGIN */
 
 
     let isAnimatingSingin = false;
