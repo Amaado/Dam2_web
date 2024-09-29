@@ -8,10 +8,6 @@
   </head>
   
   <body>
-    <nav>
-      <a draggable="false" id="horario" href="pages/horario.html">Horario</a>
-    </nav>
-
     <div class="container">
       <div class="switch">
         <label for="toggle">
@@ -22,11 +18,13 @@
         </label>
       </div>
     </div>
-
+    
     <div class="coinsContainer">
       <img class="coinsContainerCoin" src="img/coin.png" draggable="false"/>
       <div class="coinLabel">600</div>
     </div>
+
+    <div id="helloMessage">How are you doing Andrés?</div>
 
 
     <div id="skinsContainer">
@@ -265,6 +263,56 @@
       </a>
     </div>
 
+    <nav>
+      <a draggable="false" id="horario" href="pages/horario.html">Horario</a>
+      <a draggable="false" id="loginButton">Login</a>
+      <a draggable="false" id="singinButton">Sing-in</a>
+    </nav>
+
+    <div id="loginScreen">
+      <div id="loginContainer">
+        <div class="formTittle">Login</div>
+          <div class="formContainer">
+            <div class="formRow">
+              <div class="formLabel">Name:</div>
+              <input type="text" placeholder="Name..." id="campoNameLogin"/>
+            </div>
+            <div class="formRow">
+              <div class="formLabel">Password:</div>
+              <input type="password" placeholder="Password..." id="campoPasswordLogin"/>
+            </div>
+            <div class="formRowCheckbox">
+              <input type="checkbox" id="stayLoged">
+              <div class="formLabelCheckbox">Stay loged</div>
+            </div>
+            <div id="errorLabelLogin"></div>
+            <div id="loginSubmit">Submit</div>
+          </div>
+      </div>
+    </div>
+    
+    <div id="singinScreen">
+      <div id="singinContainer">
+        <div class="formTittle">Sing-in</div>
+          <div class="formContainer">
+            <div class="formRow2">
+              <div class="formLabel">Name:</div>
+              <input type="text" placeholder="Name..." id="campoNameRegister"/>
+            </div>
+            <div class="formRow2">
+              <div class="formLabel">Password:</div>
+              <input type="password" placeholder="Password..." id="campoPasswordRegister"/>
+            </div>
+            <div class="formRow2">
+              <div class="formLabel">Rep Password:</div>
+              <input type="password" placeholder="Repeat password..." id="campoPasswordRepeatRegister"/>
+            </div>
+            <div id="errorLabelSingin"></div>
+            <div id="singinSubmit">Submit</div>
+          </div>
+      </div>
+    </div>
+
     <button
       class="ButtonCc1"
       onclick="mostrarImagen('Cc1', [0.5, 0.5], [1000,2000,3000])"
@@ -329,6 +377,7 @@
 
     <img id="Cc8" src="img/Cc/Cc8.png" alt="Imagen a pantalla completa" />
     <img id="Cc8preview" src="img/Cc/Cc8.png" alt="Imagen preview boton" />
+
 
     <script>
       function mostrarImagen(imageId, opacity, times) {
