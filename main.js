@@ -31,7 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
   let coinLabel = document.querySelector('.coinLabel');
   let coinsContainer = document.querySelector('.coinsContainer');
   let coinsIhave = parseInt(coinsContainer.textContent);
-  
+  let idLogeado;
+  let helloMessage = document.getElementById("helloMessage");
 
 
   /* CAMBIOS DE ESTILO CUANDO CAMBIO DE TEMA */
@@ -184,6 +185,237 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
 
+  /* FUNCIONES CONECTAR DATABASE */
+
+  const supabaseUrl = 'https://jlinrmkailmfvzjkdfni.supabase.co/rest/v1/usuario';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsaW5ybWthaWxtZnZ6amtkZm5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc1MzMwNjUsImV4cCI6MjA0MzEwOTA2NX0.0BmL21nXr61WxALojF7kRk7glhB522Ss87zbBVzpSPo';
+  
+  // Verificar si el usuario existe por nombre
+  async function existeUsuario(nombre) {
+    const url = `${supabaseUrl}?nombre=eq.${nombre}`;
+  
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+  
+    const data = await response.json();
+  
+    return data.length > 0; // Devuelve true si existe, false si no
+  }
+  
+  
+  // Obtener el último id de la tabla usuario
+  async function obtenerUltimoId() {
+    const url = `${supabaseUrl}?select=id&order=id.desc&limit=1`;
+  
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+  
+    const data = await response.json();
+  
+    if (data.length > 0) {
+      return data[0].id;  // Devolver el último id
+    } else {
+      return 0;  // Si no hay registros, devolver 0
+    }
+  }
+  
+  
+  // Registrar un nuevo usuario con id autoincrementado manualmente
+  async function registrarUsuario(nombre, password, coins, skinsUnlock) {
+    try {
+      const ultimoId = await obtenerUltimoId();  // Obtener el último id
+      const nuevoId = ultimoId + 1;  // Incrementar el id
+  
+      const nuevoUsuario = {
+        id: nuevoId,                 // Incluir el nuevo id manualmente
+        nombre: nombre,
+        password: password,
+        coins: parseInt(coins),       // Convertir coins a entero si es necesario
+        skinsUnlock: skinsUnlock
+      };
+  
+      const addResponse = await fetch(supabaseUrl, {
+        method: 'POST',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(nuevoUsuario)
+      });
+  
+      if (addResponse.ok) {
+        const data = await addResponse.json();
+        console.log('Usuario agregado con éxito:', data);
+        return data;
+      } else {
+        const errorData = await addResponse.text();
+        console.error('Error al agregar el usuario:', errorData);
+        throw new Error('Error en el registro del usuario');
+      }
+    } catch (error) {
+      console.log('Error en el registro de usuario:', error);
+    }
+  }
+  
+  
+  
+  async function verificarUsuarioInicioSesion(nombre, password) {
+    // Usamos directamente supabaseUrl ya que incluye '/rest/v1/usuario'
+    const url = `${supabaseUrl}?nombre=eq.${encodeURIComponent(nombre)}&password=eq.${encodeURIComponent(password)}`;
+  
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+  
+    const data = await response.json();
+  
+    if (data.length > 0) {
+      return parseInt(data[0].id, 10);  // Devuelve el id del usuario si se encuentra
+    } else {
+      return 0;  // Devuelve 0 si no se encuentra al usuario
+    }
+  }
+  
+  
+  
+  
+  
+  // 3. Obtener las monedas (coins) de un usuario por id
+  async function obtenerMonedasDeUsuario(id) {
+    const url = `${supabaseUrl}?id=eq.${id}`;
+  
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+  
+    const data = await response.json();
+  
+    if (data.length > 0) {
+      return data[0].coins;  // Devuelve el valor de coins
+    } else {
+      console.error('Usuario no encontrado');
+      return null;
+    }
+  }
+  
+  // 4. Obtener skinsUnlock de un usuario por id
+  async function obtenerSkinsUnlockDeUsuario(id) {
+    const url = `${supabaseUrl}?id=eq.${id}`;
+  
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+  
+    const data = await response.json();
+  
+    if (data.length > 0) {
+      return data[0].skinsUnlock;  // Devuelve el valor de skinsUnlock
+    } else {
+      console.error('Usuario no encontrado');
+      return null;
+    }
+  }
+  
+  // 5. Actualizar las monedas (coins) de un usuario por id
+  async function actualizarMonedasDeUsuario(id, nuevasMonedas) {
+    const url = `${supabaseUrl}?id=eq.${id}`;
+  
+    const actualizarMonedas = { coins: nuevasMonedas };
+  
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(actualizarMonedas)
+    });
+  
+    if (response.ok) {
+      console.log('Monedas actualizadas correctamente:', await response.json());
+    } else {
+      console.error('Error al actualizar las monedas:', response.statusText);
+    }
+  }
+  
+  // 6. Actualizar skinsUnlock de un usuario por id
+  async function actualizarSkinsUnlockDeUsuario(id, nuevoSkinsUnlock) {
+    const url = `${supabaseUrl}?id=eq.${id}`;
+  
+    const actualizarSkins = { skinsUnlock: nuevoSkinsUnlock };
+  
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(actualizarSkins)
+    });
+  
+    if (response.ok) {
+      console.log('SkinsUnlock actualizado correctamente:', await response.json());
+    } else {
+      console.error('Error al actualizar skinsUnlock:', response.statusText);
+    }
+  }
+  
+  
+  // 7. Obtener un usuario por id
+  async function obtenerUsuarioPorId(id) {
+    // Construimos la URL para buscar al usuario por su ID
+    const url = `${supabaseUrl}?id=eq.${id}`;
+  
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+  
+    const data = await response.json();
+  
+    if (data.length > 0) {
+      return data[0].nombre;  // Devuelve el nombre del usuario si se encuentra
+    } else {
+      console.error('Usuario no encontrado');
+      return null;  // Devuelve null si no se encuentra el usuario
+    }
+  }
+  
+
 
 
  /* LOGIN */
@@ -232,6 +464,38 @@ document.addEventListener('DOMContentLoaded', function() {
       const checkbox = document.getElementById('stayLoged');
       checkbox.checked = !checkbox.checked;
     });
+
+    
+    loginSubmit.addEventListener('click', async function() {
+      try {
+        const idLogeado = await verificarUsuarioInicioSesion(campoNameLogin.value, campoPasswordLogin.value);  // Espera a que la promesa se resuelva
+        console.log(idLogeado);
+        
+        // Si no se encuentra el usuario, evita continuar con las demás operaciones
+        if (idLogeado === 0) {
+          helloMessage.textContent = "Nombre de usuario o contraseña incorrectos";
+          return;
+        }
+    
+        // Si el usuario es válido, continúa con las demás operaciones
+        const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
+        const skinsUnlockLogeado = await obtenerSkinsUnlockDeUsuario(idLogeado);
+    
+        // Actualizamos monedas y skins desbloqueados
+        await actualizarMonedasDeUsuario(idLogeado, "777");
+        await actualizarSkinsUnlockDeUsuario(idLogeado, "1LLL");
+    
+        // Obtenemos el nombre del usuario por su ID y lo mostramos en el helloMessage
+        const nombrePorId = await obtenerUsuarioPorId(idLogeado);
+        helloMessage.textContent = nombrePorId;
+    
+      } catch (error) {
+        console.error("Error durante el inicio de sesión:", error);
+        helloMessage.textContent = "Error en el servidor. Inténtalo de nuevo más tarde.";
+      }
+    });
+    
+    
 
     
     
@@ -331,13 +595,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
         } else {
           // Verificar si el usuario ya existe
-          const existeUsuario = await verificarUsuarioPorNombre(campoNameRegister.value);
-          
-          if (existeUsuario) {
-            errorLabelSingin.textContent = "The user already exists.";
-            errorLabelSingin.style.color = "red";
-            campoNameRegister.style.color = "red";
-            campoNameRegister.style.outline = '4px solid red';
+          const usuarioExiste = await existeUsuario(campoNameRegister.value); // Cambiado a `usuarioExiste`
+            
+          if (usuarioExiste) { // Cambiado a `usuarioExiste`
+              errorLabelSingin.textContent = "El usuario ya existe.";
+              errorLabelSingin.style.color = "red";
+              campoNameRegister.style.color = "red";
+              campoNameRegister.style.outline = '4px solid red';
           } else {
             // Restablecer los estilos si todo es correcto
             errorLabelSingin.textContent = "";
@@ -762,229 +1026,3 @@ candados.forEach(candado => {
     
 
 });
-
-
-
-
-const supabaseUrl = 'https://jlinrmkailmfvzjkdfni.supabase.co/rest/v1/usuario';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsaW5ybWthaWxtZnZ6amtkZm5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc1MzMwNjUsImV4cCI6MjA0MzEwOTA2NX0.0BmL21nXr61WxALojF7kRk7glhB522Ss87zbBVzpSPo';
-
-// Verificar si el usuario existe por nombre
-async function verificarUsuarioPorNombre(nombre) {
-  const url = `${supabaseUrl}?nombre=eq.${nombre}`;
-
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-      'Content-Type': 'application/json'
-    }
-  });
-
-  const data = await response.json();
-
-  return data.length > 0; // Devuelve true si existe, false si no
-}
-
-
-// Obtener el último id de la tabla usuario
-async function obtenerUltimoId() {
-  const url = `${supabaseUrl}?select=id&order=id.desc&limit=1`;
-
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-      'Content-Type': 'application/json'
-    }
-  });
-
-  const data = await response.json();
-
-  if (data.length > 0) {
-    return data[0].id;  // Devolver el último id
-  } else {
-    return 0;  // Si no hay registros, devolver 0
-  }
-}
-
-
-// Registrar un nuevo usuario con id autoincrementado manualmente
-async function registrarUsuario(nombre, password, coins, skinsUnlock) {
-  try {
-    const ultimoId = await obtenerUltimoId();  // Obtener el último id
-    const nuevoId = ultimoId + 1;  // Incrementar el id
-
-    const nuevoUsuario = {
-      id: nuevoId,                 // Incluir el nuevo id manualmente
-      nombre: nombre,
-      password: password,
-      coins: parseInt(coins),       // Convertir coins a entero si es necesario
-      skinsUnlock: skinsUnlock
-    };
-
-    const addResponse = await fetch(supabaseUrl, {
-      method: 'POST',
-      headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(nuevoUsuario)
-    });
-
-    if (addResponse.ok) {
-      const data = await addResponse.json();
-      console.log('Usuario agregado con éxito:', data);
-      return data;
-    } else {
-      const errorData = await addResponse.text();
-      console.error('Error al agregar el usuario:', errorData);
-      throw new Error('Error en el registro del usuario');
-    }
-  } catch (error) {
-    console.log('Error en el registro de usuario:', error);
-  }
-}
-
-
-
-// 2. Verificar el inicio de sesión (devolver el id si las credenciales son correctas, si no, devolver 0)
-async function verificarUsuarioInicioSesion(nombre, password) {
-  const url = `${supabaseUrl}?nombre=eq.${nombre}&password=eq.${password}`;
-
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-      'Content-Type': 'application/json'
-    }
-  });
-
-  const data = await response.json();
-
-  if (data.length > 0) {
-    return data[0].id;  // Devuelve el id del usuario si coincide
-  } else {
-    return 0;  // Devuelve 0 si no coincide
-  }
-}
-
-// 3. Obtener las monedas (coins) de un usuario por id
-async function obtenerMonedasDeUsuario(id) {
-  const url = `${supabaseUrl}?id=eq.${id}`;
-
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-      'Content-Type': 'application/json'
-    }
-  });
-
-  const data = await response.json();
-
-  if (data.length > 0) {
-    return data[0].coins;  // Devuelve el valor de coins
-  } else {
-    console.error('Usuario no encontrado');
-    return null;
-  }
-}
-
-// 4. Obtener skinsUnlock de un usuario por id
-async function obtenerSkinsUnlockDeUsuario(id) {
-  const url = `${supabaseUrl}?id=eq.${id}`;
-
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-      'Content-Type': 'application/json'
-    }
-  });
-
-  const data = await response.json();
-
-  if (data.length > 0) {
-    return data[0].skinsUnlock;  // Devuelve el valor de skinsUnlock
-  } else {
-    console.error('Usuario no encontrado');
-    return null;
-  }
-}
-
-// 5. Actualizar las monedas (coins) de un usuario por id
-async function actualizarMonedasDeUsuario(id, nuevasMonedas) {
-  const url = `${supabaseUrl}?id=eq.${id}`;
-
-  const actualizarMonedas = { coins: nuevasMonedas };
-
-  const response = await fetch(url, {
-    method: 'PATCH',
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(actualizarMonedas)
-  });
-
-  if (response.ok) {
-    console.log('Monedas actualizadas correctamente:', await response.json());
-  } else {
-    console.error('Error al actualizar las monedas:', response.statusText);
-  }
-}
-
-// 6. Actualizar skinsUnlock de un usuario por id
-async function actualizarSkinsUnlockDeUsuario(id, nuevoSkinsUnlock) {
-  const url = `${supabaseUrl}?id=eq.${id}`;
-
-  const actualizarSkins = { skinsUnlock: nuevoSkinsUnlock };
-
-  const response = await fetch(url, {
-    method: 'PATCH',
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(actualizarSkins)
-  });
-
-  if (response.ok) {
-    console.log('SkinsUnlock actualizado correctamente:', await response.json());
-  } else {
-    console.error('Error al actualizar skinsUnlock:', response.statusText);
-  }
-}
-
-
-// 7. Obtener un usuario por id
-async function obtenerUsuarioPorId(id) {
-  const url = `${supabaseUrl}?id=eq.${id}`;
-
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-      'Content-Type': 'application/json'
-    }
-  });
-
-  const data = await response.json();
-
-  if (data.length > 0) {
-    return data[0];  // Devuelve el objeto del usuario si se encuentra
-  } else {
-    console.error('Usuario no encontrado');
-    return null; // Devuelve null si no se encuentra el usuario
-  }
-}
