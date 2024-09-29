@@ -347,73 +347,107 @@ document.addEventListener('DOMContentLoaded', function() {
   // 5. Actualizar las monedas (coins) de un usuario por id
   async function actualizarMonedasDeUsuario(id, nuevasMonedas) {
     const url = `${supabaseUrl}?id=eq.${id}`;
-  
     const actualizarMonedas = { coins: nuevasMonedas };
-  
-    const response = await fetch(url, {
-      method: 'PATCH',
-      headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(actualizarMonedas)
-    });
-  
-    if (response.ok) {
-      console.log('Monedas actualizadas correctamente:', await response.json());
-    } else {
-      console.error('Error al actualizar las monedas:', response.statusText);
+
+    try {
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'apikey': supabaseKey,
+                'Authorization': `Bearer ${supabaseKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(actualizarMonedas)
+        });
+
+        // Comprobar si la respuesta fue exitosa
+        if (!response.ok) {
+            const errorData = await response.text(); // Obtener la respuesta de error como texto
+            console.error('Error al actualizar las monedas:', response.statusText, errorData);
+            throw new Error('Error en la actualización de monedas: ' + response.statusText);
+        }
+
+        // Intenta parsear la respuesta JSON
+        const data = await response.json();
+        console.log('Monedas actualizadas correctamente:', data);
+    } catch (error) {
+        console.error('Error al actualizar las monedas:', error);
     }
-  }
+}
+
   
   // 6. Actualizar skinsUnlock de un usuario por id
   async function actualizarSkinsUnlockDeUsuario(id, nuevoSkinsUnlock) {
     const url = `${supabaseUrl}?id=eq.${id}`;
-  
     const actualizarSkins = { skinsUnlock: nuevoSkinsUnlock };
-  
-    const response = await fetch(url, {
-      method: 'PATCH',
-      headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(actualizarSkins)
-    });
-  
-    if (response.ok) {
-      console.log('SkinsUnlock actualizado correctamente:', await response.json());
-    } else {
-      console.error('Error al actualizar skinsUnlock:', response.statusText);
+
+    try {
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'apikey': supabaseKey,
+                'Authorization': `Bearer ${supabaseKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(actualizarSkins)
+        });
+
+        // Comprobar si la respuesta fue exitosa
+        if (!response.ok) {
+            const errorData = await response.text(); // Obtener la respuesta de error como texto
+            console.error('Error al actualizar skinsUnlock:', response.statusText, errorData);
+            throw new Error('Error en la actualización de skinsUnlock: ' + response.statusText);
+        }
+
+        const data = await response.json(); // Parsear respuesta JSON
+        console.log('SkinsUnlock actualizado correctamente:', data);
+    } catch (error) {
+        console.error('Error al actualizar skinsUnlock:', error);
     }
-  }
+}
   
   
   // 7. Obtener un usuario por id
   async function obtenerUsuarioPorId(id) {
+    // Comprobamos si el ID es válido
+    if (!id) {
+        console.error('ID no proporcionado');
+        return null;
+    }
+
     // Construimos la URL para buscar al usuario por su ID
     const url = `${supabaseUrl}?id=eq.${id}`;
-  
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Content-Type': 'application/json'
-      }
-    });
-  
-    const data = await response.json();
-  
-    if (data.length > 0) {
-      return data[0].nombre;  // Devuelve el nombre del usuario si se encuentra
-    } else {
-      console.error('Usuario no encontrado');
-      return null;  // Devuelve null si no se encuentra el usuario
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'apikey': supabaseKey,
+                'Authorization': `Bearer ${supabaseKey}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        // Verificamos si la respuesta es exitosa
+        if (!response.ok) {
+            console.error('Error en la solicitud:', response.statusText);
+            return null; // Manejo de error
+        }
+
+        const data = await response.json();
+
+        // Verificamos si encontramos un usuario
+        if (data.length > 0) {
+            return data[0].nombre;  // Devuelve el nombre del usuario si se encuentra
+        } else {
+            console.error('Usuario no encontrado');
+            return null;  // Devuelve null si no se encuentra el usuario
+        }
+    } catch (error) {
+        console.error('Error al realizar la solicitud:', error);
+        return null; // Devuelve null en caso de error en la solicitud
     }
-  }
+}
   
 
 
@@ -469,6 +503,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loginSubmit.addEventListener('click', async function() {
       try {
         const idLogeado = await verificarUsuarioInicioSesion(campoNameLogin.value, campoPasswordLogin.value);  // Espera a que la promesa se resuelva
+        helloMessage.textContent = "Id: " + idLogeado;
         console.log(idLogeado);
         
         // Si no se encuentra el usuario, evita continuar con las demás operaciones
@@ -480,14 +515,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Si el usuario es válido, continúa con las demás operaciones
         const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
         const skinsUnlockLogeado = await obtenerSkinsUnlockDeUsuario(idLogeado);
-    
-        // Actualizamos monedas y skins desbloqueados
-        await actualizarMonedasDeUsuario(idLogeado, "777");
-        await actualizarSkinsUnlockDeUsuario(idLogeado, "1LLL");
+        helloMessage.textContent += " Monedas: " + monedasLogeado; // Para agregar sin sobreescribir
+        helloMessage.textContent += " Skins: " + skinsUnlockLogeado;
+
+        /*await actualizarMonedasDeUsuario(idLogeado, "777");
+        await actualizarSkinsUnlockDeUsuario(idLogeado, "1LLL");*/
     
         // Obtenemos el nombre del usuario por su ID y lo mostramos en el helloMessage
         const nombrePorId = await obtenerUsuarioPorId(idLogeado);
-        helloMessage.textContent = nombrePorId;
+        helloMessage.textContent += " Nombre: " + nombrePorId;
     
       } catch (error) {
         console.error("Error durante el inicio de sesión:", error);
