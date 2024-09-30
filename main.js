@@ -83,6 +83,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   applyTheme();
 
+  /* DESHABILITAR SKINS Y MONEDAS SI NO HAY INCICIO DE SESION */
+  
+
+
   /* ESTILOS HOVER PARA <a>HORARIO <a>LOGIN <a>REGISTER*/
 
   checkbox.addEventListener('change', () => {
