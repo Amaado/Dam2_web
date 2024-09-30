@@ -387,34 +387,44 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
   
   // 6. Actualizar skinsUnlock de un usuario por id
-  async function actualizarSkinsUnlockDeUsuario(id, nuevoSkinsUnlock) {
-    const url = `${supabaseUrl}?id=eq.${id}`;
-    const actualizarSkins = { skinsUnlock: nuevoSkinsUnlock };
-
-    try {
-        const response = await fetch(url, {
-            method: 'PATCH',
-            headers: {
-                'apikey': supabaseKey,
-                'Authorization': `Bearer ${supabaseKey}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(actualizarSkins)
-        });
-
-        // Comprobar si la respuesta fue exitosa
-        if (!response.ok) {
-            const errorData = await response.text(); // Obtener la respuesta de error como texto
-            console.error('Error al actualizar skinsUnlock:', response.statusText, errorData);
-            throw new Error('Error en la actualización de skinsUnlock: ' + response.statusText);
-        }
-
-        const data = await response.json(); // Parsear respuesta JSON
-        console.log('SkinsUnlock actualizado correctamente:', data);
-    } catch (error) {
-        console.error('Error al actualizar skinsUnlock:', error);
+  async function actualizarSkinsUnlockDeUsuario(idLogin, nuevoSkinsUnlock) {
+    if (!nuevoSkinsUnlock || typeof nuevoSkinsUnlock !== 'string') {
+      console.error('El valor de nuevoSkinsUnlock no es válido:', nuevoSkinsUnlock);
+      return;
     }
-}
+  
+    const url = `${supabaseUrl}?id=eq.${idLogin}`;
+    const actualizarSkins = { skinsUnlock: nuevoSkinsUnlock };
+  
+    try {
+      const response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify(actualizarSkins),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Error al actualizar skinsUnlock:', response.statusText, errorData);
+        throw new Error('Error en la actualización de skinsUnlock: ' + response.statusText);
+      }
+  
+      const data = await response.json();
+      console.log('SkinsUnlock actualizado correctamente:', data);
+      return data;
+    } catch (error) {
+      console.error('Error al actualizar skinsUnlock:', error);
+    }
+  }
+  
+
+
+
   
   
   // 7. Obtener un usuario por id
@@ -756,29 +766,147 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
 
 
-    /* ACTUALIZAR SKINS */
+/* ACTUALIZAR SKINS */
 
-  async function actualizarSkins(idLogeado) {
-    try {
-        const skinsUnlock = await obtenerSkinsUnlockDeUsuario(idLogeado);
-        actualizarSkinsPorClick(skinsUnlock);
-
-    } catch (error) {
-        console.error("Error durante ACTUALIZAR SKINS:", error);
-    }
+async function actualizarSkins(idLogeado) {
+  try {
+      const skinsUnlock = await obtenerSkinsUnlockDeUsuario(idLogeado);
+      quitarCandadosIniciales(skinsUnlock);
+  } catch (error) {
+      console.error("Error durante ACTUALIZAR SKINS:", error);
   }
+}
 
-  function actualizarSkinsPorClick(codigo) {
-    const candados = document.querySelectorAll('.candado');
-    
-    // Iteramos sobre cada carácter del código y el índice correspondiente
-    codigo.split('').forEach((caracter, index) => {
-      if (caracter === '1' && candados[index]) {  // Si el carácter es '1' y el candado existe
-        candados[index].click();  // Simula un clic en el candado
+function quitarCandadosIniciales(codigo) {
+  const candados = document.querySelectorAll('.candado');
+
+  codigo.split('').forEach((caracter, index) => {
+      if (caracter === '1' && candados[index]) {
+          const candado = candados[index];
+          const skinContainer = candado.closest('.skinContainer');
+          const skinContainerLock = skinContainer.querySelector('.skinContainerLock');
+          const skinContainerNotVisible = skinContainer.querySelector('.skinContainerNotVisible');
+
+          // Quitamos el candado sin costo
+          candado.style.opacity = "0%";
+          skinContainerLock.style.opacity = "0%";
+          skinContainerLock.style.visibility = "hidden";
+          skinContainerNotVisible.style.opacity = "0%";
+          skinContainerNotVisible.style.visibility = "hidden";
       }
-    });
-  }
+  });
+}
 
+let isUnlocking = false;
+
+const idLogeado = localStorage.getItem('idLogeado');
+if (!idLogeado) {
+  console.error("No se encontró idLogeado en localStorage");
+}
+
+async function manejarCandados() {
+  const candados = document.querySelectorAll(".candado");
+
+  for (let [index, candado] of candados.entries()) {
+      candado.src = "img/lock.png";
+
+      let skinContainer = candado.closest('.skinContainer');
+      let skinContainerLock = skinContainer.querySelector('.skinContainerLock');
+      let skinContainerNotVisible = skinContainer.querySelector('.skinContainerNotVisible');
+
+      let priceElement = skinContainerNotVisible.querySelector('.price');
+      let price = parseInt(priceElement.textContent);
+
+      try {
+          const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
+
+          candado.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, index, idLogeado));
+          skinContainerNotVisible.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, index, idLogeado));
+
+          setNormalPrice(skinContainer, price);
+      } catch (error) {
+          console.error("Error al obtener las monedas:", error);
+      }
+  }
+}
+
+function setNormalPrice(skinContainer, price) {
+  let priceNormalElement = skinContainer.querySelector('.priceNormal');
+
+  if (priceNormalElement) {
+      priceNormalElement.textContent = price;
+  }
+}
+
+async function searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, skinIndex, idLogeado) {
+  if (isUnlocking) return;
+
+  let monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
+
+  if (monedasLogeado >= price) {
+      isUnlocking = true;
+      await unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado, skinIndex);
+  } else {
+      lockedAnimation(candado);
+  }
+}
+
+async function unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado, skinIndex) {
+  candado.src = "img/lock.gif";
+  candado.style.pointerEvents = "none";
+  skinContainerLock.style.pointerEvents = "none";
+
+  monedasLogeado -= price;
+  await actualizarMonedasUsuario(idLogeado, monedasLogeado);
+
+  document.querySelector('.coinLabel').textContent = monedasLogeado;
+
+  setTimeout(async () => {
+      candado.style.opacity = "0%";
+      skinContainerLock.style.opacity = "0%";
+      skinContainerLock.style.visibility = "hidden";
+      skinContainerNotVisible.style.opacity = "0%";
+      skinContainerNotVisible.style.visibility = "hidden";
+      isUnlocking = false;
+
+      await actualizarSkinsUnlockDeUsuario(idLogeado, skinIndex);
+  }, 1100);
+}
+
+function lockedAnimation(candado) {
+  candado.style.transition = "margin 0.1s ease, filter 0.2s ease";
+  candado.style.marginLeft = "0.75vw";
+  candado.style.filter = "blur(0.7px)";
+
+  setTimeout(() => {
+      candado.style.marginLeft = "0";
+      candado.style.marginRight = "0.75vw";
+      candado.style.filter = "blur(0.7px)";
+
+      setTimeout(() => {
+          candado.style.marginLeft = "0.75vw";
+          candado.style.marginRight = "0";
+          candado.style.filter = "blur(0.7px)";
+
+          setTimeout(() => {
+              candado.style.marginLeft = "0";
+              candado.style.filter = "none";
+          }, 100);
+      }, 100);
+  }, 100);
+}
+
+
+// Inicializamos los candados y actualizamos las skins desbloqueadas
+manejarCandados();
+actualizarSkins(idLogeado);
+
+
+
+
+
+
+  
 
       /* CLICK PARA FARMEAR MONEDAS 
 
@@ -1053,7 +1181,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
       
       /* DESBLOQUEO CANDADO */
-
+/*
 
 // Asegúrate de que idLogeado esté definido antes de usarlo.
 let isUnlocking = false;
@@ -1065,9 +1193,10 @@ if (!idLogeado) {
 }
 
 // Función asincrónica para manejar el desbloqueo de candados
-async function manejarCandados() {
+async function manejarCandados(sonCandadosSinRestricciones) {
     let isUnlocking = false;
     let candados = document.querySelectorAll(".candado");
+    let sonCandadosSinRestriccioness = this.sonCandadosSinRestricciones;
 
     for (let candado of candados) {
         candado.src = "img/lock.png";
@@ -1083,8 +1212,13 @@ async function manejarCandados() {
             // Coloca await dentro de una función async
             const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
 
-            candado.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado));
-            skinContainerNotVisible.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado));
+            
+            if(sonCandadosSinRestriccioness){
+              unlockAnimationNoRestrict(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado);
+            }else{
+              candado.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado));
+              skinContainerNotVisible.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado));
+            }
 
             setNormalPrice(skinContainer, price);
         } catch (error) {
@@ -1092,6 +1226,32 @@ async function manejarCandados() {
         }
     }
 }
+
+async function unlockAnimationNoRestrict(){
+
+  if (isUnlocking) return;
+
+  if (monedasLogeado >= price) {
+      isUnlocking = true;
+      candado.src = "img/lock.gif";
+      candado.style.pointerEvents = "none";
+      skinContainerLock.style.pointerEvents = "none";
+
+    
+      setTimeout(() => {
+          candado.style.opacity = "0%";
+          skinContainerLock.style.opacity = "0%";
+          skinContainerLock.style.visibility = "hidden";
+          skinContainerNotVisible.style.opacity = "0%";
+          skinContainerNotVisible.style.visibility = "hidden";
+          isUnlocking = false;
+      }, 1100);
+  } else if (monedasLogeado < price) {
+      lockedAnimation(candado);
+  }
+}
+
+
 
 function setNormalPrice(skinContainer, price) {
     let priceNormalElement = skinContainer.querySelector('.priceNormal');
@@ -1111,6 +1271,9 @@ async function searchUnlockingStatus(candado, skinContainerLock, skinContainerNo
         lockedAnimation(candado);
     }
 }
+
+
+
 
 async function unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado) {
     candado.src = "img/lock.gif";
@@ -1158,11 +1321,11 @@ function lockedAnimation(candado) {
 }
 
 // Llamar a la función para manejar los candados
-manejarCandados();
+manejarCandados(false);
 
 
       
-      
+      */
   
 
     
