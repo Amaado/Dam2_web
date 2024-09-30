@@ -711,16 +711,31 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       }
     }
     
-    
-    document.addEventListener('click', function() {
+    document.addEventListener('click', function(event) {
       const idLogeado = parseInt(localStorage.getItem('idLogeado'));
-      if (idLogeado) {
-        incrementCoins(idLogeado);
-      } else {
-        console.error("Usuario no logeado.");
+      
+      // Verificar si el usuario está en el menú de skins
+      if (!isInSkinsMenu()) {
+        if (idLogeado) {
+          incrementCoins(idLogeado);
+        } else {
+          console.error("Usuario no logeado.");
+        }
       }
     });
-
+    
+    // Función para verificar si el usuario está en el menú de skins
+    function isInSkinsMenu() {
+      // Obtenemos el contenedor del menú de skins por su ID
+      const skinsMenu = document.getElementById('skinsContainer');
+      
+      // Verificamos si el menú de skins tiene la clase 'active'
+      if (skinsMenu && skinsMenu.classList.contains('active')) {
+        return true;  // Si tiene la clase 'active', estamos en el menú de skins
+      }
+    
+      return false;  // No estamos en el menú de skins
+    }
 
 
 
@@ -798,7 +813,13 @@ async function manejarCandados(idLogeado, skinsUnlock) {
     let skinContainerNotVisible = skinContainer.querySelector('.skinContainerNotVisible');
 
     let priceElement = skinContainerNotVisible.querySelector('.price');
-    let price = parseInt(priceElement.textContent);
+    let price;  // Declaramos la variable fuera del if-else
+    
+    if (priceElement.textContent === "FREE") {
+      price = 0;  // Asignamos 0 si el texto es "FREE"
+    } else {
+      price = parseInt(priceElement.textContent);  // Convertimos el precio en número si no es "FREE"
+    }
 
     // Comprobar si la skin está desbloqueada
     if (skinsUnlock[index] === '1') {
@@ -858,10 +879,10 @@ async function unlockAnimation(candado, skinContainerLock, skinContainerNotVisib
 
   // Restar el precio y actualizar en la base de datos
   monedasLogeado -= price;
-  await actualizarMonedasUsuario(idLogeado, monedasLogeado);
 
   // Actualizar el contador de monedas en la interfaz
   document.querySelector('.coinLabel').textContent = monedasLogeado;
+  await actualizarMonedasUsuario(idLogeado, monedasLogeado);
 
   setTimeout(async () => {
     // Ocultar y deshabilitar eventos de puntero
