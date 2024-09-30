@@ -30,9 +30,12 @@ document.addEventListener('DOMContentLoaded', function() {
   let allESC = document.querySelector('nav');
   let coinLabel = document.querySelector('.coinLabel');
   let coinsContainer = document.querySelector('.coinsContainer');
-  let coinsIhave = parseInt(coinsContainer.textContent);
+  if (!window.location.pathname.endsWith("horario.html")) {
+    let coinsIhave = parseInt(coinsContainer.textContent);
+  }
   let helloMessage = document.getElementById("helloMessage");
   const checkboxLogin = document.getElementById('stayLoged');
+  let logoutButton = document.getElementById("logoutButton");
 
 
   /* CAMBIOS DE ESTILO CUANDO CAMBIO DE TEMA */
@@ -49,81 +52,93 @@ document.addEventListener('DOMContentLoaded', function() {
   checkbox.checked = localStorage.getItem("checkboxStatus") === 'true';
   
   function applyTheme() {
-      if (checkbox.checked) {
-          //console.log("Tema claro");
-          body.style.backgroundColor = '#dddcb0';
-          body.style.color = "#313842";
-          cards.forEach(card => {
-            card.style.borderColor = '#242e3ccb';
-          });
-          buttons.forEach(button => {
-            button.style.backgroundColor = '#dddcb0';
-          });
-
-          if (window.location.pathname.endsWith("horario.html")) {
-            a.classList.add("aDay");
-            escText.classList.add("escTextDay");
-            esc.classList.add("escDay");
-            esc2.classList.add("esc2Day");
-
-            a.classList.remove("aNight");
-            escText.classList.remove("escTextNight");
-            esc.classList.remove("escNight");
-            esc2.classList.remove("esc2Night");
-          }else{
-            console.log("Error carga esc Day");
-          }
-
-          if(window.location.pathname.endsWith("horario.html")){
-            cursor.src = "../img/cursors/cccc_veraniego.gif";
-            cursorPurpleish.src = "../img/cursors/cccc_veraniegoPurpleish.gif";
-
-            flechaa.src = "../img/flechaDay.png";
-          }else{
-            cursor.src = "img/cursors/cccc_veraniego.gif";
-            cursorPurpleish.src = "img/cursors/cccc_veraniegoPurpleish.gif";
-
-            flechaa.src = "img/flechaDay.png";
-          }
-
-
+    if (checkbox.checked) {
+      // Light theme settings
+      body.style.backgroundColor = '#dddcb0';
+      body.style.color = "#313842";
+      cards.forEach(card => {
+        card.style.borderColor = '#242e3ccb';
+      });
+      buttons.forEach(button => {
+        button.style.backgroundColor = '#dddcb0';
+      });
+  
+      if (window.location.pathname.endsWith("horario.html")) {
+        // Theme-specific classes
+        a.classList.add("aDay");
+        escText.classList.add("escTextDay");
+        esc.classList.add("escDay");
+        esc2.classList.add("esc2Day");
+  
+        a.classList.remove("aNight");
+        escText.classList.remove("escTextNight");
+        esc.classList.remove("escNight");
+        esc2.classList.remove("esc2Night");
       } else {
-          //console.log("Tema oscuro");
-          body.style.backgroundColor = '#1c2128';
-          body.style.color = "#bfd4e9";
-          cards.forEach(card => {
-            card.style.borderColor = 'grey';
-          });
-          buttons.forEach(button => {
-            button.style.backgroundColor = '#262b31';
-          });
-
-          if (window.location.pathname.endsWith("horario.html")) {
-            a.classList.add("aNight");
-            escText.classList.add("escTextNight");
-            esc.classList.add("escNight");
-            esc2.classList.add("esc2Night");
-            
-            a.classList.remove("aDay");
-            escText.classList.remove("escTextDay");
-            esc.classList.remove("escDay");
-            esc2.classList.remove("esc2Day");
-          }else{
-            console.log("Error carga esc Night");
-          }
-
-          if(window.location.pathname.endsWith("horario.html")){
-            cursor.src = "../img/cursors/cccc.gif";
-            cursorPurpleish.src = "../img/cursors/ccccPurpleish.gif";
-
-            flechaa.src = "../img/flechaNight.png";
-          }else{
-            cursor.src = "img/cursors/cccc.gif";
-            cursorPurpleish.src = "img/cursors/ccccPurpleish.gif";
-
-            flechaa.src = "img/flechaNight.png";
-          }
+        console.log("Error carga esc Day");
       }
+  
+      if (window.location.pathname.endsWith("horario.html")) {
+        if (cursor && cursorPurpleish) {
+          cursor.src = "../img/cursors/cccc_veraniego.gif";
+          cursorPurpleish.src = "../img/cursors/cccc_veraniegoPurpleish.gif";
+        }
+        if (flechaa) {
+          flechaa.src = "../img/flechaDay.png";
+        }
+      } else {
+        if (cursor && cursorPurpleish) {
+          cursor.src = "img/cursors/cccc_veraniego.gif";
+          cursorPurpleish.src = "img/cursors/cccc_veraniegoPurpleish.gif";
+        }
+        if (flechaa) {
+          flechaa.src = "img/flechaDay.png";
+        }
+      }
+  
+    } else {
+      // Dark theme settings
+      body.style.backgroundColor = '#1c2128';
+      body.style.color = "#bfd4e9";
+      cards.forEach(card => {
+        card.style.borderColor = 'grey';
+      });
+      buttons.forEach(button => {
+        button.style.backgroundColor = '#262b31';
+      });
+  
+      if (window.location.pathname.endsWith("horario.html")) {
+        a.classList.add("aNight");
+        escText.classList.add("escTextNight");
+        esc.classList.add("escNight");
+        esc2.classList.add("esc2Night");
+  
+        a.classList.remove("aDay");
+        escText.classList.remove("escTextDay");
+        esc.classList.remove("escDay");
+        esc2.classList.remove("esc2Day");
+      } else {
+        console.log("Error carga esc Night");
+      }
+  
+      if (window.location.pathname.endsWith("horario.html")) {
+        if (cursor && cursorPurpleish) {
+          cursor.src = "../img/cursors/cccc.gif";
+          cursorPurpleish.src = "../img/cursors/ccccPurpleish.gif";
+        }
+        if (flechaa) {
+          flechaa.src = "../img/flechaNight.png";
+        }
+      } else {
+        if (cursor && cursorPurpleish) {
+          cursor.src = "img/cursors/cccc.gif";
+          cursorPurpleish.src = "img/cursors/ccccPurpleish.gif";
+        }
+        if (flechaa) {
+          flechaa.src = "img/flechaNight.png";
+        }
+      }
+    }
   }
 
 
@@ -381,51 +396,6 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 }
 
 
-
-
-
-
-  
-  // 6. Actualizar skinsUnlock de un usuario por id
-  async function actualizarSkinsUnlockDeUsuario(idLogin, nuevoSkinsUnlock) {
-    if (!nuevoSkinsUnlock || typeof nuevoSkinsUnlock !== 'string') {
-      console.error('El valor de nuevoSkinsUnlock no es válido:', nuevoSkinsUnlock);
-      return;
-    }
-  
-    const url = `${supabaseUrl}?id=eq.${idLogin}`;
-    const actualizarSkins = { skinsUnlock: nuevoSkinsUnlock };
-  
-    try {
-      const response = await fetch(url, {
-        method: 'PATCH',
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation',
-        },
-        body: JSON.stringify(actualizarSkins),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error('Error al actualizar skinsUnlock:', response.statusText, errorData);
-        throw new Error('Error en la actualización de skinsUnlock: ' + response.statusText);
-      }
-  
-      const data = await response.json();
-      console.log('SkinsUnlock actualizado correctamente:', data);
-      return data;
-    } catch (error) {
-      console.error('Error al actualizar skinsUnlock:', error);
-    }
-  }
-  
-
-
-
-  
   
   // 7. Obtener un usuario por id
   async function obtenerUsuarioPorId(id) {
@@ -524,38 +494,45 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
     
     loginSubmit.addEventListener('click', async function() {
+      // Reiniciar mensajes de error y estilos
       errorLabelLogin.textContent = "";
       errorLabelLogin.style.color = "#bfd4e9";
       campoNameLogin.style.color = "#1c2128";
       campoPasswordLogin.style.outline = '4px solid #bfd4e9';
-      
+    
+      // Validar campos vacíos antes de continuar
+      if (campoNameLogin.value.trim() === '' || campoPasswordLogin.value.trim() === '') {
+        errorLabelLogin.textContent = "All the information must be filled.";
+        errorLabelLogin.style.color = "red";
+    
+        if (campoNameLogin.value.trim() === '') {
+          campoNameLogin.style.color = "red";
+          campoNameLogin.style.outline = '4px solid red';
+        }
+    
+        if (campoPasswordLogin.value.trim() === '') {
+          campoPasswordLogin.style.color = "red";
+          campoPasswordLogin.style.outline = '4px solid red';
+        }
+        return; // Salir de la función si hay campos vacíos
+      }
+    
       try {
-        const idLogeado = await verificarUsuarioInicioSesion(campoNameLogin.value, campoPasswordLogin.value);  // Espera a que la promesa se resuelva
-
-        if (campoNameLogin.value.trim() === '' || campoPasswordLogin.value.trim() === '') {
-          errorLabelLogin.textContent = "All the information must be filled.";
-          errorLabelLogin.style.color = "red";
-          
-          if (campoNameLogin.value.trim() === '') {
-            campoNameLogin.style.color = "red";
-            campoNameLogin.style.outline = '4px solid red';
-          }
-
-          if (campoPasswordLogin.value.trim() === '') {
-            campoPasswordLogin.style.color = "red";
-            campoPasswordLogin.style.outline = '4px solid red';
-          }
-        }else if (idLogeado === 0) {
+        // Intentar verificar las credenciales
+        const idLogeado = await verificarUsuarioInicioSesion(campoNameLogin.value, campoPasswordLogin.value);
+    
+        if (idLogeado === 0) {
+          // Credenciales incorrectas
           errorLabelLogin.textContent = "Username or password incorrect.";
           errorLabelLogin.style.color = "red";
           campoPasswordLogin.style.color = "red";
           campoPasswordLogin.style.outline = '4px solid red';
           campoNameLogin.style.color = "red";
           campoNameLogin.style.outline = '4px solid red';
-          return;
+          return; // Salir de la función si las credenciales son incorrectas
         }
-
-
+    
+        // Inicio de sesión exitoso, actualizar información del usuario
         if (checkboxLogin.checked) {
           localStorage.setItem('sesionAutomatica', 'true');
           localStorage.setItem('idLogeado', idLogeado);
@@ -563,7 +540,15 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           localStorage.removeItem('sesionAutomatica');
           localStorage.removeItem('idLogeado');
         }
+    
+        // Actualizar información en la interfaz
+        await actualizarHelloMessage(idLogeado);
+        await actualizarMonedas(idLogeado);
+        await cargarSkins(idLogeado);
+    
+        actualizarEstadoElementosSesion();
 
+        // Cerrar el formulario de inicio de sesión
         loginScreen.click();
     
       } catch (error) {
@@ -571,6 +556,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         helloMessage.textContent = "Error en el servidor. Inténtalo de nuevo más tarde.";
       }
     });
+    
   
     
     
@@ -711,23 +697,22 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
   /* GUARDAR SESION LOCALSTORAGE */
 
   window.addEventListener('load', async function() {
-      const sesionAutomatica = localStorage.getItem('sesionAutomatica');
-      const idLogeado = localStorage.getItem('idLogeado');
-
-      if (sesionAutomatica) {
-          try {
-
-              /*Crear logout */
-
-              actualizarHelloMessage(idLogeado);
-              actualizarMonedas(idLogeado);
-              actualizarSkins(idLogeado);
-
-            
-          } catch (error) {
-              console.error("Error durante el inicio de sesión automático:", error);
-          }
+    const sesionAutomatica = localStorage.getItem('sesionAutomatica');
+    const idLogeado = localStorage.getItem('idLogeado');
+  
+    if (sesionAutomatica && idLogeado) {
+      try {
+        // Actualizar información del usuario
+        await actualizarHelloMessage(idLogeado);
+        await actualizarMonedas(idLogeado);
+        await cargarSkins(idLogeado);
+      } catch (error) {
+        console.error("Error durante el inicio de sesión automático:", error);
       }
+    }
+  
+    // Actualizar estado de los elementos según la sesión
+    actualizarEstadoElementosSesion();
   });
 
 
@@ -736,6 +721,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
   async function actualizarHelloMessage(idLogeado) {
     try {
         const nombrePorId = await obtenerUsuarioPorId(idLogeado);
+        helloMessage.textContent = "";
         helloMessage.textContent += "Hola, " + capitalizeFirstLetter(nombrePorId);
       
     } catch (error) {
@@ -766,14 +752,26 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
 
 
+
 /* ACTUALIZAR SKINS */
+
+// Función para cargar y manejar skins
+async function cargarSkins(idLogeado) {
+  if (!idLogeado) {
+    console.error("No se encontró idLogeado");
+    return;
+  }
+
+  await actualizarSkins(idLogeado);
+  await manejarCandados(idLogeado);
+}
 
 async function actualizarSkins(idLogeado) {
   try {
-      const skinsUnlock = await obtenerSkinsUnlockDeUsuario(idLogeado);
-      quitarCandadosIniciales(skinsUnlock);
+    const skinsUnlock = await obtenerSkinsUnlockDeUsuario(idLogeado);
+    quitarCandadosIniciales(skinsUnlock);
   } catch (error) {
-      console.error("Error durante ACTUALIZAR SKINS:", error);
+    console.error("Error durante ACTUALIZAR SKINS:", error);
   }
 }
 
@@ -781,52 +779,58 @@ function quitarCandadosIniciales(codigo) {
   const candados = document.querySelectorAll('.candado');
 
   codigo.split('').forEach((caracter, index) => {
-      if (caracter === '1' && candados[index]) {
-          const candado = candados[index];
-          const skinContainer = candado.closest('.skinContainer');
-          const skinContainerLock = skinContainer.querySelector('.skinContainerLock');
-          const skinContainerNotVisible = skinContainer.querySelector('.skinContainerNotVisible');
+    if (caracter === '1' && candados[index]) {
+      const candado = candados[index];
+      const skinContainer = candado.closest('.skinContainer');
+      const skinContainerLock = skinContainer.querySelector('.skinContainerLock');
+      const skinContainerNotVisible = skinContainer.querySelector('.skinContainerNotVisible');
 
-          // Quitamos el candado sin costo
-          candado.style.opacity = "0%";
-          skinContainerLock.style.opacity = "0%";
-          skinContainerLock.style.visibility = "hidden";
-          skinContainerNotVisible.style.opacity = "0%";
-          skinContainerNotVisible.style.visibility = "hidden";
-      }
+      // Quitamos el candado sin costo
+      candado.style.opacity = "0%";
+      skinContainerLock.style.opacity = "0%";
+      skinContainerLock.style.visibility = "hidden";
+      skinContainerNotVisible.style.opacity = "0%";
+      skinContainerNotVisible.style.visibility = "hidden";
+    }
   });
 }
 
 let isUnlocking = false;
 
-const idLogeado = localStorage.getItem('idLogeado');
+// Obtener idLogeado desde localStorage o desde donde corresponda
+let idLogeado = localStorage.getItem('idLogeado');
 if (!idLogeado) {
   console.error("No se encontró idLogeado en localStorage");
 }
 
-async function manejarCandados() {
+// Función para manejar los candados de las skins
+async function manejarCandados(idLogeado) {
+  if (!idLogeado) {
+    console.error("No se encontró idLogeado");
+    return;
+  }
+
   const candados = document.querySelectorAll(".candado");
 
   for (let [index, candado] of candados.entries()) {
-      candado.src = "img/lock.png";
+    candado.src = "img/lock.png";
 
-      let skinContainer = candado.closest('.skinContainer');
-      let skinContainerLock = skinContainer.querySelector('.skinContainerLock');
-      let skinContainerNotVisible = skinContainer.querySelector('.skinContainerNotVisible');
+    let skinContainer = candado.closest('.skinContainer');
+    let skinContainerLock = skinContainer.querySelector('.skinContainerLock');
+    let skinContainerNotVisible = skinContainer.querySelector('.skinContainerNotVisible');
 
-      let priceElement = skinContainerNotVisible.querySelector('.price');
-      let price = parseInt(priceElement.textContent);
+    let priceElement = skinContainerNotVisible.querySelector('.price');
+    let price = parseInt(priceElement.textContent);
 
-      try {
-          const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
+    try {
+      // Agregamos los event listeners para el desbloqueo
+      candado.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, index, idLogeado));
+      skinContainerNotVisible.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, index, idLogeado));
 
-          candado.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, index, idLogeado));
-          skinContainerNotVisible.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, index, idLogeado));
-
-          setNormalPrice(skinContainer, price);
-      } catch (error) {
-          console.error("Error al obtener las monedas:", error);
-      }
+      setNormalPrice(skinContainer, price);
+    } catch (error) {
+      console.error("Error al manejar los candados:", error);
+    }
   }
 }
 
@@ -834,7 +838,7 @@ function setNormalPrice(skinContainer, price) {
   let priceNormalElement = skinContainer.querySelector('.priceNormal');
 
   if (priceNormalElement) {
-      priceNormalElement.textContent = price;
+    priceNormalElement.textContent = price;
   }
 }
 
@@ -844,10 +848,10 @@ async function searchUnlockingStatus(candado, skinContainerLock, skinContainerNo
   let monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
 
   if (monedasLogeado >= price) {
-      isUnlocking = true;
-      await unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado, skinIndex);
+    isUnlocking = true;
+    await unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado, skinIndex);
   } else {
-      lockedAnimation(candado);
+    lockedAnimation(candado);
   }
 }
 
@@ -856,21 +860,70 @@ async function unlockAnimation(candado, skinContainerLock, skinContainerNotVisib
   candado.style.pointerEvents = "none";
   skinContainerLock.style.pointerEvents = "none";
 
+  // Restamos el precio y actualizamos en la base de datos
   monedasLogeado -= price;
   await actualizarMonedasUsuario(idLogeado, monedasLogeado);
 
+  // Actualizamos el contador de monedas en la interfaz
   document.querySelector('.coinLabel').textContent = monedasLogeado;
 
   setTimeout(async () => {
-      candado.style.opacity = "0%";
-      skinContainerLock.style.opacity = "0%";
-      skinContainerLock.style.visibility = "hidden";
-      skinContainerNotVisible.style.opacity = "0%";
-      skinContainerNotVisible.style.visibility = "hidden";
-      isUnlocking = false;
+    // Ocultamos el candado y las capas de bloqueo
+    candado.style.opacity = "0%";
+    skinContainerLock.style.opacity = "0%";
+    skinContainerLock.style.visibility = "hidden";
+    skinContainerNotVisible.style.opacity = "0%";
+    skinContainerNotVisible.style.visibility = "hidden";
+    isUnlocking = false;
 
-      await actualizarSkinsUnlockDeUsuario(idLogeado, skinIndex);
+    // Actualizamos el código de skinsUnlock en la base de datos
+    await unlockSkin(idLogeado, skinIndex);
   }, 1100);
+}
+
+async function unlockSkin(idLogin, skinIndex) {
+  try {
+    // Obtener el código actual de skinsUnlock del usuario
+    let skinsUnlock = await obtenerSkinsUnlockDeUsuario(idLogin);
+
+    const totalSkins = 4; // Ajusta este número según la cantidad total de skins
+
+    // Inicializamos skinsUnlock si es necesario
+    if (!skinsUnlock || typeof skinsUnlock !== 'string' || skinsUnlock.length === 0) {
+      skinsUnlock = 'L'.repeat(totalSkins);
+      console.warn('skinsUnlock no válido, inicializando con:', skinsUnlock);
+    }
+
+    // Ajustamos la longitud de skinsUnlock si es necesario
+    if (skinsUnlock.length < totalSkins) {
+      skinsUnlock = skinsUnlock.padEnd(totalSkins, 'L');
+      console.warn('skinsUnlock de longitud insuficiente, ajustando a:', skinsUnlock);
+    }
+
+    // Convertimos a array para modificar
+    let skinsArray = skinsUnlock.split('');
+
+    // Verificamos que skinIndex es válido
+    if (skinIndex < 0 || skinIndex >= skinsArray.length) {
+      console.error('skinIndex fuera de rango:', skinIndex);
+      return;
+    }
+
+    // Actualizamos el carácter correspondiente a '1'
+    if (skinsArray[skinIndex] === 'L') {
+      skinsArray[skinIndex] = '1';
+    } else {
+      console.warn('La skin ya está desbloqueada o tiene un valor inesperado:', skinsArray[skinIndex]);
+    }
+
+    // Unimos el array en una cadena
+    let nuevoSkinsUnlock = skinsArray.join('');
+
+    // Actualizamos en la base de datos
+    await actualizarSkinsUnlockDeUsuario(idLogin, nuevoSkinsUnlock);
+  } catch (error) {
+    console.error('Error al desbloquear la skin:', error);
+  }
 }
 
 function lockedAnimation(candado) {
@@ -879,28 +932,60 @@ function lockedAnimation(candado) {
   candado.style.filter = "blur(0.7px)";
 
   setTimeout(() => {
-      candado.style.marginLeft = "0";
-      candado.style.marginRight = "0.75vw";
+    candado.style.marginLeft = "0";
+    candado.style.marginRight = "0.75vw";
+    candado.style.filter = "blur(0.7px)";
+
+    setTimeout(() => {
+      candado.style.marginLeft = "0.75vw";
+      candado.style.marginRight = "0";
       candado.style.filter = "blur(0.7px)";
 
       setTimeout(() => {
-          candado.style.marginLeft = "0.75vw";
-          candado.style.marginRight = "0";
-          candado.style.filter = "blur(0.7px)";
-
-          setTimeout(() => {
-              candado.style.marginLeft = "0";
-              candado.style.filter = "none";
-          }, 100);
+        candado.style.marginLeft = "0";
+        candado.style.filter = "none";
       }, 100);
+    }, 100);
   }, 100);
 }
 
+async function actualizarSkinsUnlockDeUsuario(idLogin, nuevoSkinsUnlock) {
+  if (typeof nuevoSkinsUnlock !== 'string') {
+    console.error('El valor de nuevoSkinsUnlock no es una cadena:', nuevoSkinsUnlock);
+    return;
+  }
 
-// Inicializamos los candados y actualizamos las skins desbloqueadas
-manejarCandados();
-actualizarSkins(idLogeado);
+  const url = `${supabaseUrl}?id=eq.${idLogin}`;
+  const actualizarSkins = { skinsUnlock: nuevoSkinsUnlock };
 
+  try {
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation',
+      },
+      body: JSON.stringify(actualizarSkins),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('Error al actualizar skinsUnlock:', response.statusText, errorData);
+      throw new Error('Error en la actualización de skinsUnlock: ' + response.statusText);
+    }
+
+    const data = await response.json();
+    console.log('SkinsUnlock actualizado correctamente:', data);
+    return data;
+  } catch (error) {
+    console.error('Error al actualizar skinsUnlock:', error);
+  }
+}
+
+// Llamamos a cargarSkins al cargar la página
+cargarSkins(idLogeado);
 
 
 
@@ -918,7 +1003,76 @@ actualizarSkins(idLogeado);
     
     
 
+
+
+
+
+  /* OCULTAR ELEMENTOS CUANDO LA SESION ESTÁ INICIADA */
+
+  function actualizarEstadoElementosSesion() {
+    const sesionAutomatica = localStorage.getItem('sesionAutomatica');
+    const idLogeado = localStorage.getItem('idLogeado');
+  
+    if (sesionAutomatica && idLogeado) {
+      // El usuario ha iniciado sesión
+      // Ocultar botones de Login y Register
+      if (loginButton) {
+        loginButton.disabled = true;
+        loginButton.style.display = 'none';
+      }
+      if (registerButton) {
+        registerButton.disabled = true;
+        registerButton.style.display = 'none';
+      }
+  
+      // Mostrar botón de Logout si existe
+      if (logoutButton) {
+        logoutButton.style.display = 'flex';
+      }
+    } else {
+      // El usuario no ha iniciado sesión
+      // Mostrar botones de Login y Register
+      if (loginButton) {
+        loginButton.disabled = false;
+        loginButton.style.display = 'flex';
+      }
+      if (registerButton) {
+        registerButton.disabled = false;
+        registerButton.style.display = 'flex';
+      }
+  
+      // Ocultar botón de Logout si existe
+      if (logoutButton) {
+        logoutButton.style.display = 'none';
+      }
+    }
+  }
+
+  if (logoutButton) {
+    logoutButton.addEventListener('click', function() {
+      // Limpiar datos de sesión
+      localStorage.removeItem('sesionAutomatica');
+      localStorage.removeItem('idLogeado');
+  
+      // Limpiar información de la interfaz
+      helloMessage.textContent = '';
+      coinLabel.textContent = '';
+  
+      // Actualizar estado de los elementos
+      actualizarEstadoElementosSesion();
+  
+      // Recargar la página o redirigir si es necesario
+      location.reload();
+    });
+  }
+  
+
+
+
+
+
   /* EFECTO HOVER A ESC CUANDO event.key === "Escape" */
+
 
   if (window.location.pathname.endsWith("horario.html")) {
       document.addEventListener("keydown", function (event) {
@@ -1099,12 +1253,12 @@ actualizarSkins(idLogeado);
           
           audioTest.onerror = function() {
               hoverAudio = new Audio('../img/sfx_sound1.mp3');
-              console.log('Usando la ruta ../img/sfx_sound1.mp3');
+              //console.log('Usando la ruta ../img/sfx_sound1.mp3');
           };
       
           audioTest.oncanplaythrough = function() {
               hoverAudio = audioTest;
-              console.log('Usando la ruta img/sfx_sound1.mp3');
+              //console.log('Usando la ruta img/sfx_sound1.mp3');
           };
       
           audioTest.load();
@@ -1126,15 +1280,18 @@ actualizarSkins(idLogeado);
           }
       }
       
-      document.querySelectorAll('.card').forEach(card => {
-          card.addEventListener('mouseenter', playHoverAudio);
-          card.addEventListener('mouseleave', playHoverAudio);
-      });
-      
-      document.querySelectorAll('a').forEach(link => {
-          link.addEventListener('mouseenter', playHoverAudio);
-          link.addEventListener('mouseleave', playHoverAudio);
-      });
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('mouseenter', playHoverAudio);
+        card.addEventListener('mouseleave', playHoverAudio);
+    });
+    
+    document.querySelectorAll('a').forEach(link => {
+        if (!link.closest('nav')) {
+            link.addEventListener('mouseenter', playHoverAudio);
+            link.addEventListener('mouseleave', playHoverAudio);
+        }
+    });
+    
 
 
 
