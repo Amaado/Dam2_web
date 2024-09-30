@@ -9,20 +9,20 @@ document.addEventListener('DOMContentLoaded', function() {
   let button
   let horario = document.getElementById("horario");
   let loginButton = document.getElementById("loginButton");
-  let singinButton = document.getElementById("singinButton");
+  let registerButton = document.getElementById("registerButton");
   let loginScreen = document.getElementById("loginScreen");
-  let singinScreen = document.getElementById("singinScreen");
+  let registerScreen = document.getElementById("registerScreen");
   let loginContainer = document.getElementById("loginContainer");
-  let singinContainer = document.getElementById("singinContainer");
+  let registerContainer = document.getElementById("registerContainer");
   const campoNameLogin = document.getElementById('campoNameLogin');
   const campoPasswordLogin = document.getElementById('campoPasswordLogin');
   const campoNameRegister = document.getElementById('campoNameRegister');
   const campoPasswordRegister = document.getElementById('campoPasswordRegister');
   const campoPasswordRepeatRegister = document.getElementById('campoPasswordRepeatRegister');
   const errorLabelLogin = document.getElementById('errorLabelLogin');
-  const errorLabelSingin = document.getElementById('errorLabelSingin');
+  const errorLabelRegister = document.getElementById('errorLabelRegister');
   const loginSubmit = document.getElementById('loginSubmit');
-  const singinSubmit = document.getElementById('singinSubmit');
+  const registerSubmit = document.getElementById('registerSubmit');
   let oval = this.querySelector('.svg-oval');
   const flechaa = document.getElementById('flechaa');
   const skinsContainer = document.getElementById('skinsContainer');
@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
   let coinLabel = document.querySelector('.coinLabel');
   let coinsContainer = document.querySelector('.coinsContainer');
   let coinsIhave = parseInt(coinsContainer.textContent);
-  let idLogeado;
   let helloMessage = document.getElementById("helloMessage");
   const checkboxLogin = document.getElementById('stayLoged');
 
@@ -130,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   applyTheme();
 
-  /* ESTILOS HOVER PARA <a>HORARIO <a>LOGIN <a>SINGIN*/
+  /* ESTILOS HOVER PARA <a>HORARIO <a>LOGIN <a>REGISTER*/
 
   checkbox.addEventListener('change', () => {
       localStorage.setItem('checkboxStatus', checkbox.checked);
@@ -169,19 +168,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  if (singinButton) {
-    singinButton.addEventListener('mouseenter', function() {
+  if (registerButton) {
+    registerButton.addEventListener('mouseenter', function() {
         if (checkbox.checked) {
             //console.log("Tema claro");
-            singinButton.style.backgroundColor = '#edeba4';
+            registerButton.style.backgroundColor = '#edeba4';
         } else {
             //console.log("Tema oscuro");
-            singinButton.style.backgroundColor = '#333c4a9d';
+            registerButton.style.backgroundColor = '#333c4a9d';
         }
     });
 
-    singinButton.addEventListener('mouseleave', function() {
-      singinButton.style.backgroundColor = '#333c4a00';
+    registerButton.addEventListener('mouseleave', function() {
+      registerButton.style.backgroundColor = '#333c4a00';
     });
   }
 
@@ -345,36 +344,46 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // 5. Actualizar las monedas (coins) de un usuario por id
-  async function actualizarMonedasDeUsuario(id, nuevasMonedas) {
-    const url = `${supabaseUrl}?id=eq.${id}`;
-    const actualizarMonedas = { coins: nuevasMonedas };
+// 5. Actualizar las monedas (coins) de un usuario por id
+async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
+  if (isNaN(monedasNuevas) || monedasNuevas === null || monedasNuevas === undefined) {
+    console.error('El valor de monedasNuevas no es válido:', monedasNuevas);
+    return;
+  }
 
-    try {
-        const response = await fetch(url, {
-            method: 'PATCH',
-            headers: {
-                'apikey': supabaseKey,
-                'Authorization': `Bearer ${supabaseKey}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(actualizarMonedas)
-        });
+  const url = `${supabaseUrl}?id=eq.${idLogin}`;
+  const actualizarMonedas = { coins: parseInt(monedasNuevas) };
 
-        // Comprobar si la respuesta fue exitosa
-        if (!response.ok) {
-            const errorData = await response.text(); // Obtener la respuesta de error como texto
-            console.error('Error al actualizar las monedas:', response.statusText, errorData);
-            throw new Error('Error en la actualización de monedas: ' + response.statusText);
-        }
+  try {
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation',
+      },
+      body: JSON.stringify(actualizarMonedas),
+    });
 
-        // Intenta parsear la respuesta JSON
-        const data = await response.json();
-        console.log('Monedas actualizadas correctamente:', data);
-    } catch (error) {
-        console.error('Error al actualizar las monedas:', error);
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('Error al actualizar las monedas:', response.statusText, errorData);
+      throw new Error('Error en la actualización de monedas: ' + response.statusText);
     }
+
+    const data = await response.json();
+    console.log('Monedas actualizadas correctamente:', data);
+    return data;
+  } catch (error) {
+    console.error('Error al actualizar las monedas:', error);
+  }
 }
+
+
+
+
+
 
   
   // 6. Actualizar skinsUnlock de un usuario por id
@@ -453,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
- /* goToLOGIN */
+ /* goTo LOGIN */
     let isAnimatingLogin = false;
 
     loginButton.addEventListener("click", function() {
@@ -499,6 +508,10 @@ document.addEventListener('DOMContentLoaded', function() {
       checkboxLogin.checked = !checkboxLogin.checked;
     });
 
+    document.getElementById("stayLoged").addEventListener('click', function() {
+      checkboxLogin.checked = !checkboxLogin.checked;
+    });
+
     
     loginSubmit.addEventListener('click', async function() {
       errorLabelLogin.textContent = "";
@@ -532,28 +545,12 @@ document.addEventListener('DOMContentLoaded', function() {
           return;
         }
 
-        helloMessage.textContent = "Id: " + idLogeado;
-        console.log(idLogeado);
-
-        // Si el usuario es válido, continúa con las demás operaciones
-        const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
-        const skinsUnlockLogeado = await obtenerSkinsUnlockDeUsuario(idLogeado);
-        helloMessage.textContent += " Monedas: " + monedasLogeado; // Para agregar sin sobreescribir
-        helloMessage.textContent += " Skins: " + skinsUnlockLogeado;
-
-        /*await actualizarMonedasDeUsuario(idLogeado, "777");
-        await actualizarSkinsUnlockDeUsuario(idLogeado, "1LLL");*/
-    
-        // Obtenemos el nombre del usuario por su ID y lo mostramos en el helloMessage
-        const nombrePorId = await obtenerUsuarioPorId(idLogeado);
-        helloMessage.textContent += " Nombre: " + nombrePorId;
-
 
         if (checkboxLogin.checked) {
-          localStorage.setItem('sesionIniciada', 'true');
+          localStorage.setItem('sesionAutomatica', 'true');
           localStorage.setItem('idLogeado', idLogeado);
         } else {
-          localStorage.removeItem('sesionIniciada');
+          localStorage.removeItem('sesionAutomatica');
           localStorage.removeItem('idLogeado');
         }
 
@@ -564,41 +561,6 @@ document.addEventListener('DOMContentLoaded', function() {
         helloMessage.textContent = "Error en el servidor. Inténtalo de nuevo más tarde.";
       }
     });
-
-
-
-  window.addEventListener('load', async function() {  // Añadir 'async' aquí
-      const sesionIniciada = localStorage.getItem('sesionIniciada');
-      const idLogeado = localStorage.getItem('idLogeado');
-    
-      console.log("Sesión iniciada:", sesionIniciada);
-      console.log("ID logeado:", idLogeado);
-
-      if (sesionIniciada) {
-          try {
-
-              /*Crear logout */
-
-
-              /*config */
-
-              helloMessage.textContent = "Id: " + idLogeado;
-              console.log(idLogeado);
-      
-              const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
-              const skinsUnlockLogeado = await obtenerSkinsUnlockDeUsuario(idLogeado);
-              helloMessage.textContent += " Monedas: " + monedasLogeado;
-              helloMessage.textContent += " Skins: " + skinsUnlockLogeado;
-      
-              const nombrePorId = await obtenerUsuarioPorId(idLogeado);
-              helloMessage.textContent += " Nombre: " + nombrePorId;
-
-            
-          } catch (error) {
-              console.error("Error durante el inicio de sesión automático:", error);
-          }
-      }
-  });
   
     
     
@@ -606,40 +568,40 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
 
-    /* goToSINGIN */
+    /* goTo REGISTER */
 
 
-    let isAnimatingSingin = false;
+    let isAnimatingRegister = false;
 
-    singinButton.addEventListener("click", function() {
-      if (!singinScreen.classList.contains("active") && !isAnimatingSingin) {
-        isAnimatingSingin = true;
-        singinScreen.classList.add("active");
-        singinScreen.style.backdropFilter = "blur(5px)";
-        singinScreen.style.opacity = "100%";
-        singinContainer.style.opacity = "100%";
+    registerButton.addEventListener("click", function() {
+      if (!registerScreen.classList.contains("active") && !isAnimatingRegister) {
+        isAnimatingRegister = true;
+        registerScreen.classList.add("active");
+        registerScreen.style.backdropFilter = "blur(5px)";
+        registerScreen.style.opacity = "100%";
+        registerContainer.style.opacity = "100%";
         
         setTimeout(() => {
-          isAnimatingSingin = false;
+          isAnimatingRegister = false;
         }, 500);
       }
     });
     
-    singinScreen.addEventListener("click", function(event) {
-      if (isAnimatingSingin) return;
+    registerScreen.addEventListener("click", function(event) {
+      if (isAnimatingRegister) return;
     
-      // Comprueba si el clic fue fuera del singinContainer
-      if (!singinContainer.contains(event.target)) {
-        isAnimatingSingin = true;
-        singinScreen.style.backdropFilter = "blur(0)";
-        singinScreen.style.opacity = "0%";
-        singinContainer.style.opacity = "0%";
+      // Comprueba si el clic fue fuera del registerContainer
+      if (!registerContainer.contains(event.target)) {
+        isAnimatingRegister = true;
+        registerScreen.style.backdropFilter = "blur(0)";
+        registerScreen.style.opacity = "0%";
+        registerContainer.style.opacity = "0%";
     
         setTimeout(() => {
-          singinScreen.classList.remove("active");
-          singinScreen.style.opacity = "0%";
-          singinContainer.style.opacity = "0%";
-          isAnimatingSingin = false;
+          registerScreen.classList.remove("active");
+          registerScreen.style.opacity = "0%";
+          registerContainer.style.opacity = "0%";
+          isAnimatingRegister = false;
           campoNameRegister.value = '';
           campoPasswordRegister.value = '';
           campoPasswordRepeatRegister.value = '';
@@ -647,8 +609,8 @@ document.addEventListener('DOMContentLoaded', function() {
           campoPasswordRegister.blur();
           campoPasswordRepeatRegister.blur();
           // Reiniciar el estado de los estilos y mensajes de error
-          errorLabelSingin.textContent = "";
-          errorLabelSingin.style.color = "#bfd4e9";
+          errorLabelRegister.textContent = "";
+          errorLabelRegister.style.color = "#bfd4e9";
           campoNameRegister.style.color = "#1c2128";
           campoNameRegister.style.outline = '4px solid #bfd4e9';
           campoPasswordRegister.style.color = "#1c2128";
@@ -659,10 +621,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
 
-    singinSubmit.addEventListener('click', async function() { 
+    registerSubmit.addEventListener('click', async function() { 
       // Reiniciar el estado de los estilos y mensajes de error
-      errorLabelSingin.textContent = "";
-      errorLabelSingin.style.color = "#bfd4e9";
+      errorLabelRegister.textContent = "";
+      errorLabelRegister.style.color = "#bfd4e9";
       campoNameRegister.style.color = "#1c2128";
       campoNameRegister.style.outline = '4px solid #bfd4e9';
       campoPasswordRegister.style.color = "#1c2128";
@@ -672,8 +634,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
       // Validar si algún campo está vacío
       if (campoNameRegister.value.trim() === '' || campoPasswordRegister.value.trim() === '' || campoPasswordRepeatRegister.value.trim() === '') {
-        errorLabelSingin.textContent = "All the information must be filled.";
-        errorLabelSingin.style.color = "red";
+        errorLabelRegister.textContent = "All the information must be filled.";
+        errorLabelRegister.style.color = "red";
         
         if (campoNameRegister.value.trim() === '') { // Resaltar campo vacío
           campoNameRegister.style.color = "red";
@@ -692,8 +654,8 @@ document.addEventListener('DOMContentLoaded', function() {
       } else {
         // Validar si las contraseñas coinciden
         if (campoPasswordRegister.value !== campoPasswordRepeatRegister.value) {
-          errorLabelSingin.textContent = "The passwords don't match.";
-          errorLabelSingin.style.color = "red";
+          errorLabelRegister.textContent = "The passwords don't match.";
+          errorLabelRegister.style.color = "red";
           campoPasswordRegister.style.color = "red";
           campoPasswordRegister.style.outline = '4px solid red';
           campoPasswordRepeatRegister.style.color = "red";
@@ -704,14 +666,14 @@ document.addEventListener('DOMContentLoaded', function() {
           const usuarioExiste = await existeUsuario(campoNameRegister.value); // Cambiado a `usuarioExiste`
             
           if (usuarioExiste) { // Cambiado a `usuarioExiste`
-              errorLabelSingin.textContent = "El usuario ya existe.";
-              errorLabelSingin.style.color = "red";
+              errorLabelRegister.textContent = "El usuario ya existe.";
+              errorLabelRegister.style.color = "red";
               campoNameRegister.style.color = "red";
               campoNameRegister.style.outline = '4px solid red';
           } else {
             // Restablecer los estilos si todo es correcto
-            errorLabelSingin.textContent = "";
-            errorLabelSingin.style.color = "#bfd4e9";
+            errorLabelRegister.textContent = "";
+            errorLabelRegister.style.color = "#bfd4e9";
             campoNameRegister.style.color = "#1c2128";
             campoNameRegister.style.outline = '4px solid #bfd4e9';
             campoPasswordRegister.style.color = "#1c2128";
@@ -720,19 +682,111 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
               // Intentar registrar al usuario con id autoincrementado
               await registrarUsuario(campoNameRegister.value, campoPasswordRegister.value, "0", "LLLL");
-              errorLabelSingin.textContent = "User signed up correctly!";
-              errorLabelSingin.style.color = "#bfd4e9";
+              errorLabelRegister.textContent = "User signed up correctly!";
+              errorLabelRegister.style.color = "#bfd4e9";
             } catch (error) {
-              errorLabelSingin.textContent = "Error when signing up.";
-              errorLabelSingin.style.color = "red";
+              errorLabelRegister.textContent = "Error when signing up.";
+              errorLabelRegister.style.color = "red";
               console.log(error);
             }
           }
         }
       }
     });
+
+
+
+
+
+  /* GUARDAR SESION LOCALSTORAGE */
+
+  window.addEventListener('load', async function() {
+      const sesionAutomatica = localStorage.getItem('sesionAutomatica');
+      const idLogeado = localStorage.getItem('idLogeado');
+
+      if (sesionAutomatica) {
+          try {
+
+              /*Crear logout */
+
+              actualizarHelloMessage(idLogeado);
+              actualizarMonedas(idLogeado);
+              actualizarSkins(idLogeado);
+
+            
+          } catch (error) {
+              console.error("Error durante el inicio de sesión automático:", error);
+          }
+      }
+  });
+
+
+    /* ACTUALIZAR helloMessage */
+
+  async function actualizarHelloMessage(idLogeado) {
+    try {
+        const nombrePorId = await obtenerUsuarioPorId(idLogeado);
+        helloMessage.textContent += "Hola, " + capitalizeFirstLetter(nombrePorId);
+      
+    } catch (error) {
+        console.error("Error durante ACTUALIZAR helloMessage:", error);
+    }
+  }
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  }
+
+
+  /* ACTUALIZAR MONEDAS */
+
+  async function actualizarMonedas(idLogeado) {
+    try {
+        console.log("ID logeado:", idLogeado); // Añadir log
+        const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
+        coinLabel.textContent = monedasLogeado;
+  
+        console.log("Monedas obtenidas:", monedasLogeado); // Añadir log
+  
+    } catch (error) {
+        console.error("Error durante ACTUALIZAR MONEDAS:", error);
+    }
+  }
+  
+
+
+
+    /* ACTUALIZAR SKINS */
+
+  async function actualizarSkins(idLogeado) {
+    try {
+        const skinsUnlock = await obtenerSkinsUnlockDeUsuario(idLogeado);
+        actualizarSkinsPorClick(skinsUnlock);
+
+    } catch (error) {
+        console.error("Error durante ACTUALIZAR SKINS:", error);
+    }
+  }
+
+  function actualizarSkinsPorClick(codigo) {
+    const candados = document.querySelectorAll('.candado');
     
-    
+    // Iteramos sobre cada carácter del código y el índice correspondiente
+    codigo.split('').forEach((caracter, index) => {
+      if (caracter === '1' && candados[index]) {  // Si el carácter es '1' y el candado existe
+        candados[index].click();  // Simula un clic en el candado
+      }
+    });
+  }
+
+
+      /* CLICK PARA FARMEAR MONEDAS 
+
+      function incrementCoins() {
+        coinsIhave++;
+        coinLabel.textContent = coinsIhave;
+    }
+    document.addEventListener('click', incrementCoins);*/
     
     
 
@@ -1001,132 +1055,115 @@ document.addEventListener('DOMContentLoaded', function() {
       /* DESBLOQUEO CANDADO */
 
 
+// Asegúrate de que idLogeado esté definido antes de usarlo.
 let isUnlocking = false;
-let candados = document.querySelectorAll(".candado");
 
-candados.forEach(candado => {
-    candado.src = "img/lock.png";
+const idLogeado = localStorage.getItem('idLogeado');
+if (!idLogeado) {
+    console.error("No se encontró idLogeado en localStorage");
+    return; // Salimos si no hay idLogeado
+}
 
-    let skinContainer = candado.closest('.skinContainer');
-    let skinContainerLock = skinContainer.querySelector('.skinContainerLock');
-    let skinContainerNotVisible = skinContainer.querySelector('.skinContainerNotVisible');
+// Función asincrónica para manejar el desbloqueo de candados
+async function manejarCandados() {
+    let isUnlocking = false;
+    let candados = document.querySelectorAll(".candado");
 
-    let priceElement = skinContainerNotVisible.querySelector('.price');
-    let price = parseInt(priceElement.textContent);
+    for (let candado of candados) {
+        candado.src = "img/lock.png";
 
-    candado.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price));
-    skinContainerNotVisible.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price));
-    
-    setNormalPrice(skinContainer, price);
-  });
+        let skinContainer = candado.closest('.skinContainer');
+        let skinContainerLock = skinContainer.querySelector('.skinContainerLock');
+        let skinContainerNotVisible = skinContainer.querySelector('.skinContainerNotVisible');
 
+        let priceElement = skinContainerNotVisible.querySelector('.price');
+        let price = parseInt(priceElement.textContent);
 
-  function setNormalPrice(skinContainer, price) {
+        try {
+            // Coloca await dentro de una función async
+            const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
+
+            candado.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado));
+            skinContainerNotVisible.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado));
+
+            setNormalPrice(skinContainer, price);
+        } catch (error) {
+            console.error("Error al obtener las monedas:", error);
+        }
+    }
+}
+
+function setNormalPrice(skinContainer, price) {
     let priceNormalElement = skinContainer.querySelector('.priceNormal');
-    
+
     if (priceNormalElement) {
         priceNormalElement.textContent = price;
     }
-  }
+}
 
-  function searchUnlockingStatus(candado, skinContainerLock,skinContainerNotVisible, price) {
-      if (isUnlocking) return;
+async function searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado) {
+    if (isUnlocking) return;
 
-      if (coinsIhave >= price) {
-          isUnlocking = true;
-          unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price);
-      }else if(coinsIhave < price) {
-          lockedAnimation(candado);
-      }
-  }
-
-  function unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price) {
-      candado.src = "img/lock.gif";
-      candado.style.pointerEvents = "none";
-      skinContainerLock.style.pointerEvents = "none";
-
-      coinsIhave -= price;
-
-      document.querySelector('.coinLabel').textContent = coinsIhave;
-
-      setTimeout(() => {
-          candado.style.opacity = "0%";
-          skinContainerLock.style.opacity = "0%";
-          skinContainerLock.style.visibility = "hidden";
-          skinContainerNotVisible.style.opacity = "0%";
-          skinContainerNotVisible.style.visibility = "hidden";
-          isUnlocking = false;
-      }, 1100);
-  }
-
-  function lockedAnimation(candado) {
-      candado.style.transition = "margin 0.1s ease, filter 0.2s ease";
-      candado.style.marginLeft = "0.75vw";
-      candado.style.filter = "blur(0.7px)";
-
-      setTimeout(() => {
-          candado.style.marginLeft = "0";
-          candado.style.marginRight = "0.75vw";
-          candado.style.filter = "blur(0.7px)";
-
-          setTimeout(() => {
-              candado.style.marginLeft = "0.75vw";
-              candado.style.marginRight = "0";
-              candado.style.filter = "blur(0.7px)";
-
-              setTimeout(() => {
-                  candado.style.marginLeft = "0";
-                  candado.style.filter = "none";
-              }, 100);
-          }, 100);
-      }, 100);
-  }
-
-      
-      
-      
-      
-    /* CLICK PARA FARMEAR MONEDAS */
-
-    function incrementCoins() {
-        coinsIhave++;
-        coinLabel.textContent = coinsIhave;
+    if (monedasLogeado >= price) {
+        isUnlocking = true;
+        await unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado);
+    } else if (monedasLogeado < price) {
+        lockedAnimation(candado);
     }
-    document.addEventListener('click', incrementCoins);
+}
+
+async function unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado) {
+    candado.src = "img/lock.gif";
+    candado.style.pointerEvents = "none";
+    skinContainerLock.style.pointerEvents = "none";
+
+    monedasLogeado -= price;
+    coinLabel.textContent = monedasLogeado;
+
+    await actualizarMonedasUsuario(idLogeado, monedasLogeado);
+
+    document.querySelector('.coinLabel').textContent = monedasLogeado;
+
+    setTimeout(() => {
+        candado.style.opacity = "0%";
+        skinContainerLock.style.opacity = "0%";
+        skinContainerLock.style.visibility = "hidden";
+        skinContainerNotVisible.style.opacity = "0%";
+        skinContainerNotVisible.style.visibility = "hidden";
+        isUnlocking = false;
+    }, 1100);
+}
+
+function lockedAnimation(candado) {
+    candado.style.transition = "margin 0.1s ease, filter 0.2s ease";
+    candado.style.marginLeft = "0.75vw";
+    candado.style.filter = "blur(0.7px)";
+
+    setTimeout(() => {
+        candado.style.marginLeft = "0";
+        candado.style.marginRight = "0.75vw";
+        candado.style.filter = "blur(0.7px)";
+
+        setTimeout(() => {
+            candado.style.marginLeft = "0.75vw";
+            candado.style.marginRight = "0";
+            candado.style.filter = "blur(0.7px)";
+
+            setTimeout(() => {
+                candado.style.marginLeft = "0";
+                candado.style.filter = "none";
+            }, 100);
+        }, 100);
+    }, 100);
+}
+
+// Llamar a la función para manejar los candados
+manejarCandados();
 
 
-
-
-
-
-    
-    /*    
-    agregarUsuarioSiNoExiste(2, 'juan', 'abc123.', 1000, '1L1LL1');
-    
-    verificarUsuarioInicioSesion('andres', 'abc123.').then(id => {
-      if (id !== 0) {
-        console.log('Inicio de sesión exitoso, ID del usuario:', id);
-      } else {
-        console.log('Nombre de usuario o contraseña incorrectos');
-      }
-    });
-    
-    obtenerMonedasDeUsuario(1).then(coins => {
-      if (coins !== null) {
-        console.log('Monedas del usuario:', coins);
-      }
-    });
-    
-    obtenerSkinsUnlockDeUsuario(1).then(skinsUnlock => {
-      if (skinsUnlock !== null) {
-        console.log('SkinsUnlock del usuario:', skinsUnlock);
-      }
-    });
-    
-    actualizarMonedasDeUsuario(1, 2000);
-    
-    actualizarSkinsUnlockDeUsuario(1, '2L2LL2');*/
-    
+      
+      
+  
 
     
     

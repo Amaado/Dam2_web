@@ -160,12 +160,12 @@ nav a:hover {
   opacity: 100%;
 }
 
-#loginScreen, #singinScreen{
+#loginScreen, #registerScreen{
   z-index: -1;
 }
 
 
-#singinScreen.active {
+#registerScreen.active {
   position: absolute;
   display: flex;
   align-items: center;
@@ -194,7 +194,7 @@ nav a:hover {
   transition: opacity 0.3s ease;
 }
 
-#singinContainer{
+#registerContainer{
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -354,7 +354,7 @@ input[type="password"]:focus {
   bottom: -20px;
 }
 
-#errorLabelSingin{
+#errorLabelRegister{
   position: absolute;
   display: flex;
   align-items: center;
@@ -384,7 +384,7 @@ input[type="password"]:focus {
   border: 2px solid #bfd4e9b1;
 }
 
-#singinSubmit{
+#registerSubmit{
   position: relative;
   display: flex;
   align-items: center;
@@ -398,7 +398,7 @@ input[type="password"]:focus {
   border: 0;
 }
 
-#singinSubmit:hover{
+#registerSubmit:hover{
   background-color: #1c2128;
   border: 2px solid #bfd4e9b1;
 
