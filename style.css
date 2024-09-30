@@ -1169,7 +1169,7 @@ div.img img {
 
 #flechaHitbloxPlus.active {
   transform: translateX(10vw);
-  width: 30vw;
+  width: 15vw;
 }
 
 
@@ -1318,7 +1318,7 @@ div.img img {
   width: 450px;
   height: 350px;
   top: -60px;
-  
+
 }
 
 .tituloSkin{

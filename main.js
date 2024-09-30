@@ -844,20 +844,21 @@ async function manejarCandados(idLogeado, skinsUnlock) {
       candado.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, index, idLogeado));
       skinContainerNotVisible.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, index, idLogeado));
 
-      setNormalPrice(skinContainer, price);
+      //setNormalPrice(skinContainer, price);
     } catch (error) {
       console.error("Error al manejar los candados:", error);
     }
   }
 }
 
+/*
 function setNormalPrice(skinContainer, price) {
   let priceNormalElement = skinContainer.querySelector('.priceNormal');
 
   if (priceNormalElement) {
     priceNormalElement.textContent = price;
   }
-}
+}*/
 
 async function searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, skinIndex, idLogeado) {
   if (isUnlocking) return;
