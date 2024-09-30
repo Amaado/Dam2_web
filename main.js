@@ -683,17 +683,43 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
   async function actualizarMonedas(idLogeado) {
     try {
-        console.log("ID logeado:", idLogeado); // Añadir log
+        console.log("ID logeado:", idLogeado);
         const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
         coinLabel.textContent = monedasLogeado;
   
-        console.log("Monedas obtenidas:", monedasLogeado); // Añadir log
+        console.log("Monedas obtenidas:", monedasLogeado);
   
     } catch (error) {
         console.error("Error durante ACTUALIZAR MONEDAS:", error);
     }
   }
+
   
+    /* CLICK PARA FARMEAR MONEDAS */
+
+    async function incrementCoins(idLogeado) {
+      try {
+        const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
+    
+        const nuevasMonedas = monedasLogeado + 1;
+        coinLabel.textContent = nuevasMonedas;
+    
+        await actualizarMonedasUsuario(idLogeado, nuevasMonedas);
+    
+      } catch (error) {
+        console.error("Error durante AÑADIR MONEDAS CLICK:", error);
+      }
+    }
+    
+    
+    document.addEventListener('click', function() {
+      const idLogeado = parseInt(localStorage.getItem('idLogeado'));
+      if (idLogeado) {
+        incrementCoins(idLogeado);
+      } else {
+        console.error("Usuario no logeado.");
+      }
+    });
 
 
 
@@ -969,16 +995,6 @@ cargarSkins(idLogeado);
 
 
 
-  
-
-      /* CLICK PARA FARMEAR MONEDAS 
-
-      function incrementCoins() {
-        coinsIhave++;
-        coinLabel.textContent = coinsIhave;
-    }
-    document.addEventListener('click', incrementCoins);*/
-    
     
 
 
