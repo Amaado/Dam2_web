@@ -30,24 +30,12 @@ document.addEventListener('DOMContentLoaded', function() {
   let allESC = document.querySelector('nav');
   let coinLabel = document.querySelector('.coinLabel');
   let coinsContainer = document.querySelector('.coinsContainer');
-  if (!window.location.pathname.endsWith("horario.html")) {
-    let coinsIhave = parseInt(coinsContainer.textContent);
-  }
   let helloMessage = document.getElementById("helloMessage");
   const checkboxLogin = document.getElementById('stayLoged');
   let logoutButton = document.getElementById("logoutButton");
 
 
   /* CAMBIOS DE ESTILO CUANDO CAMBIO DE TEMA */
-
-  if (window.location.pathname.endsWith("horario.html")) {
-    let a = document.getElementById("a");
-    let escText = document.getElementById("escText");
-    let esc = document.getElementById("esc");
-    let esc2 = document.getElementById("esc2");
-  }else{
-    console.log("Error carga ESC");
-  }
 
   checkbox.checked = localStorage.getItem("checkboxStatus") === 'true';
   
@@ -62,40 +50,15 @@ document.addEventListener('DOMContentLoaded', function() {
       buttons.forEach(button => {
         button.style.backgroundColor = '#dddcb0';
       });
-  
-      if (window.location.pathname.endsWith("horario.html")) {
-        // Theme-specific classes
-        a.classList.add("aDay");
-        escText.classList.add("escTextDay");
-        esc.classList.add("escDay");
-        esc2.classList.add("esc2Day");
-  
-        a.classList.remove("aNight");
-        escText.classList.remove("escTextNight");
-        esc.classList.remove("escNight");
-        esc2.classList.remove("esc2Night");
-      } else {
-        console.log("Error carga esc Day");
+
+      if (cursor && cursorPurpleish) {
+        cursor.src = "img/cursors/cccc_veraniego.gif";
+        cursorPurpleish.src = "img/cursors/cccc_veraniegoPurpleish.gif";
       }
-  
-      if (window.location.pathname.endsWith("horario.html")) {
-        if (cursor && cursorPurpleish) {
-          cursor.src = "../img/cursors/cccc_veraniego.gif";
-          cursorPurpleish.src = "../img/cursors/cccc_veraniegoPurpleish.gif";
-        }
-        if (flechaa) {
-          flechaa.src = "../img/flechaDay.png";
-        }
-      } else {
-        if (cursor && cursorPurpleish) {
-          cursor.src = "img/cursors/cccc_veraniego.gif";
-          cursorPurpleish.src = "img/cursors/cccc_veraniegoPurpleish.gif";
-        }
-        if (flechaa) {
-          flechaa.src = "img/flechaDay.png";
-        }
+      if (flechaa) {
+        flechaa.src = "img/flechaDay.png";
       }
-  
+
     } else {
       // Dark theme settings
       body.style.backgroundColor = '#1c2128';
@@ -106,37 +69,13 @@ document.addEventListener('DOMContentLoaded', function() {
       buttons.forEach(button => {
         button.style.backgroundColor = '#262b31';
       });
-  
-      if (window.location.pathname.endsWith("horario.html")) {
-        a.classList.add("aNight");
-        escText.classList.add("escTextNight");
-        esc.classList.add("escNight");
-        esc2.classList.add("esc2Night");
-  
-        a.classList.remove("aDay");
-        escText.classList.remove("escTextDay");
-        esc.classList.remove("escDay");
-        esc2.classList.remove("esc2Day");
-      } else {
-        console.log("Error carga esc Night");
+
+      if (cursor && cursorPurpleish) {
+        cursor.src = "img/cursors/cccc.gif";
+        cursorPurpleish.src = "img/cursors/ccccPurpleish.gif";
       }
-  
-      if (window.location.pathname.endsWith("horario.html")) {
-        if (cursor && cursorPurpleish) {
-          cursor.src = "../img/cursors/cccc.gif";
-          cursorPurpleish.src = "../img/cursors/ccccPurpleish.gif";
-        }
-        if (flechaa) {
-          flechaa.src = "../img/flechaNight.png";
-        }
-      } else {
-        if (cursor && cursorPurpleish) {
-          cursor.src = "img/cursors/cccc.gif";
-          cursorPurpleish.src = "img/cursors/ccccPurpleish.gif";
-        }
-        if (flechaa) {
-          flechaa.src = "img/flechaNight.png";
-        }
+      if (flechaa) {
+        flechaa.src = "img/flechaNight.png";
       }
     }
   }
@@ -452,7 +391,9 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         loginScreen.style.backdropFilter = "blur(5px)";
         loginScreen.style.opacity = "100%";
         loginContainer.style.opacity = "100%";
-        
+        checkboxLogin.checked = true;
+
+
         setTimeout(() => {
           isAnimatingLogin = false;
         }, 500);
@@ -498,8 +439,10 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       errorLabelLogin.textContent = "";
       errorLabelLogin.style.color = "#bfd4e9";
       campoNameLogin.style.color = "#1c2128";
+      campoNameLogin.style.outline = '4px solid #bfd4e9';
+      campoPasswordLogin.style.color = "#1c2128";
       campoPasswordLogin.style.outline = '4px solid #bfd4e9';
-    
+
       // Validar campos vacíos antes de continuar
       if (campoNameLogin.value.trim() === '' || campoPasswordLogin.value.trim() === '') {
         errorLabelLogin.textContent = "All the information must be filled.";
@@ -532,6 +475,8 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           return; // Salir de la función si las credenciales son incorrectas
         }
     
+
+
         // Inicio de sesión exitoso, actualizar información del usuario
         if (checkboxLogin.checked) {
           localStorage.setItem('sesionAutomatica', 'true');
@@ -762,14 +707,15 @@ async function cargarSkins(idLogeado) {
     return;
   }
 
-  await actualizarSkins(idLogeado);
-  await manejarCandados(idLogeado);
+  const skinsUnlock = await actualizarSkins(idLogeado);
+  await manejarCandados(idLogeado, skinsUnlock);
 }
 
 async function actualizarSkins(idLogeado) {
   try {
     const skinsUnlock = await obtenerSkinsUnlockDeUsuario(idLogeado);
     quitarCandadosIniciales(skinsUnlock);
+    return skinsUnlock; // Retornamos skinsUnlock
   } catch (error) {
     console.error("Error durante ACTUALIZAR SKINS:", error);
   }
@@ -785,32 +731,38 @@ function quitarCandadosIniciales(codigo) {
       const skinContainerLock = skinContainer.querySelector('.skinContainerLock');
       const skinContainerNotVisible = skinContainer.querySelector('.skinContainerNotVisible');
 
-      // Quitamos el candado sin costo
+      // Ocultar y deshabilitar eventos de puntero
       candado.style.opacity = "0%";
+      candado.style.visibility = "hidden";
+      candado.style.pointerEvents = "none";
+
       skinContainerLock.style.opacity = "0%";
       skinContainerLock.style.visibility = "hidden";
+      skinContainerLock.style.pointerEvents = "none";
+
       skinContainerNotVisible.style.opacity = "0%";
       skinContainerNotVisible.style.visibility = "hidden";
+      skinContainerNotVisible.style.pointerEvents = "none";
     }
   });
 }
 
 let isUnlocking = false;
 
-// Obtener idLogeado desde localStorage o desde donde corresponda
-let idLogeado = localStorage.getItem('idLogeado');
-if (!idLogeado) {
-  console.error("No se encontró idLogeado en localStorage");
-}
-
 // Función para manejar los candados de las skins
-async function manejarCandados(idLogeado) {
+async function manejarCandados(idLogeado, skinsUnlock) {
   if (!idLogeado) {
     console.error("No se encontró idLogeado");
     return;
   }
 
   const candados = document.querySelectorAll(".candado");
+  const totalSkins = candados.length;
+
+  // Asegurar que skinsUnlock tiene la longitud correcta
+  if (!skinsUnlock || skinsUnlock.length < totalSkins) {
+    skinsUnlock = skinsUnlock.padEnd(totalSkins, 'L');
+  }
 
   for (let [index, candado] of candados.entries()) {
     candado.src = "img/lock.png";
@@ -822,8 +774,26 @@ async function manejarCandados(idLogeado) {
     let priceElement = skinContainerNotVisible.querySelector('.price');
     let price = parseInt(priceElement.textContent);
 
+    // Comprobar si la skin está desbloqueada
+    if (skinsUnlock[index] === '1') {
+      // La skin está desbloqueada; ocultar y deshabilitar eventos de puntero
+      candado.style.opacity = "0%";
+      candado.style.visibility = "hidden";
+      candado.style.pointerEvents = "none";
+
+      skinContainerLock.style.opacity = "0%";
+      skinContainerLock.style.visibility = "hidden";
+      skinContainerLock.style.pointerEvents = "none";
+
+      skinContainerNotVisible.style.opacity = "0%";
+      skinContainerNotVisible.style.visibility = "hidden";
+      skinContainerNotVisible.style.pointerEvents = "none";
+
+      continue; // Pasar a la siguiente iteración
+    }
+
     try {
-      // Agregamos los event listeners para el desbloqueo
+      // Agregar event listeners solo a skins bloqueadas
       candado.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, index, idLogeado));
       skinContainerNotVisible.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, index, idLogeado));
 
@@ -860,23 +830,30 @@ async function unlockAnimation(candado, skinContainerLock, skinContainerNotVisib
   candado.style.pointerEvents = "none";
   skinContainerLock.style.pointerEvents = "none";
 
-  // Restamos el precio y actualizamos en la base de datos
+  // Restar el precio y actualizar en la base de datos
   monedasLogeado -= price;
   await actualizarMonedasUsuario(idLogeado, monedasLogeado);
 
-  // Actualizamos el contador de monedas en la interfaz
+  // Actualizar el contador de monedas en la interfaz
   document.querySelector('.coinLabel').textContent = monedasLogeado;
 
   setTimeout(async () => {
-    // Ocultamos el candado y las capas de bloqueo
+    // Ocultar y deshabilitar eventos de puntero
     candado.style.opacity = "0%";
+    candado.style.visibility = "hidden";
+    candado.style.pointerEvents = "none";
+
     skinContainerLock.style.opacity = "0%";
     skinContainerLock.style.visibility = "hidden";
+    skinContainerLock.style.pointerEvents = "none";
+
     skinContainerNotVisible.style.opacity = "0%";
     skinContainerNotVisible.style.visibility = "hidden";
+    skinContainerNotVisible.style.pointerEvents = "none";
+
     isUnlocking = false;
 
-    // Actualizamos el código de skinsUnlock en la base de datos
+    // Actualizar el código de skinsUnlock en la base de datos
     await unlockSkin(idLogeado, skinIndex);
   }, 1100);
 }
@@ -886,40 +863,40 @@ async function unlockSkin(idLogin, skinIndex) {
     // Obtener el código actual de skinsUnlock del usuario
     let skinsUnlock = await obtenerSkinsUnlockDeUsuario(idLogin);
 
-    const totalSkins = 4; // Ajusta este número según la cantidad total de skins
+    const totalSkins = document.querySelectorAll(".candado").length;
 
-    // Inicializamos skinsUnlock si es necesario
+    // Inicializar skinsUnlock si es necesario
     if (!skinsUnlock || typeof skinsUnlock !== 'string' || skinsUnlock.length === 0) {
       skinsUnlock = 'L'.repeat(totalSkins);
       console.warn('skinsUnlock no válido, inicializando con:', skinsUnlock);
     }
 
-    // Ajustamos la longitud de skinsUnlock si es necesario
+    // Ajustar la longitud de skinsUnlock si es necesario
     if (skinsUnlock.length < totalSkins) {
       skinsUnlock = skinsUnlock.padEnd(totalSkins, 'L');
       console.warn('skinsUnlock de longitud insuficiente, ajustando a:', skinsUnlock);
     }
 
-    // Convertimos a array para modificar
+    // Convertir a array para modificar
     let skinsArray = skinsUnlock.split('');
 
-    // Verificamos que skinIndex es válido
+    // Verificar que skinIndex es válido
     if (skinIndex < 0 || skinIndex >= skinsArray.length) {
       console.error('skinIndex fuera de rango:', skinIndex);
       return;
     }
 
-    // Actualizamos el carácter correspondiente a '1'
+    // Actualizar el carácter correspondiente a '1'
     if (skinsArray[skinIndex] === 'L') {
       skinsArray[skinIndex] = '1';
     } else {
       console.warn('La skin ya está desbloqueada o tiene un valor inesperado:', skinsArray[skinIndex]);
     }
 
-    // Unimos el array en una cadena
+    // Unir el array en una cadena
     let nuevoSkinsUnlock = skinsArray.join('');
 
-    // Actualizamos en la base de datos
+    // Actualizar en la base de datos
     await actualizarSkinsUnlockDeUsuario(idLogin, nuevoSkinsUnlock);
   } catch (error) {
     console.error('Error al desbloquear la skin:', error);
@@ -984,6 +961,7 @@ async function actualizarSkinsUnlockDeUsuario(idLogin, nuevoSkinsUnlock) {
   }
 }
 
+let idLogeado = localStorage.getItem('idLogeado');
 // Llamamos a cargarSkins al cargar la página
 cargarSkins(idLogeado);
 
@@ -1069,92 +1047,102 @@ cargarSkins(idLogeado);
 
 
 
-
-
-  /* EFECTO HOVER A ESC CUANDO event.key === "Escape" */
-
-
-  if (window.location.pathname.endsWith("horario.html")) {
-      document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-
-            a.classList.add("aNight-hover");
-            escText.classList.add("escTextNight-hover");
-            esc.classList.add("escNight-hover");
-
-            a.classList.add("aDay-hover");
-            escText.classList.add("escTextDay-hover");
-            esc.classList.add("escDay-hover");
-            setTimeout(() => {
-                a.classList.remove("aNight-hover", "aDay-hover");
-                escText.classList.remove("escTextNight-hover", "escTextDay-hover");
-                esc.classList.remove("escNight-hover", "escDay-hover");
-                a.click();
-            }, 175);
-        }
-      });
-    }
-    
-
-
-
-
     /* CUSTOM CURSOR ADJUSTMENTS */
 
     setTimeout(function() {
       cursorPurpleish.style.opacity = '1%';
-      
     }, 1);
-
+    
     let soloInicio = 0;
+    let isCursorOverSpecialElement = false;
+    
     if (cursor && cursorPurpleish) {
+      const skinsContainer = document.getElementById('skinsContainer');
+    
       document.addEventListener('mousemove', function(e) {
-          soloInicio++;
-          if(soloInicio == 1){
-            cursor.style.opacity = "100%";
-          }
-          cursor.style.left = e.clientX + 'px';
-          cursor.style.top = e.clientY + 'px';
-          cursorPurpleish.style.left = e.clientX + 'px';
-          cursorPurpleish.style.top = e.clientY + 'px';
-          //console.log(e.clientX + 'left ' + e.clientY + 'top ');
+        soloInicio++;
+        if (soloInicio == 1) {
+          cursor.style.opacity = "100%";
+        }
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        cursorPurpleish.style.left = e.clientX + 'px';
+        cursorPurpleish.style.top = e.clientY + 'px';
       });
-
+    
       document.addEventListener('mousedown', function() {
-          cursor.classList.add('clicked');
-          cursorPurpleish.classList.add('clicked');
+        cursor.classList.add('clicked');
+        cursorPurpleish.classList.add('clicked');
       });
       
       document.addEventListener('mouseup', function() {
-          cursor.classList.remove('clicked');
-          cursorPurpleish.classList.remove('clicked');
+        cursor.classList.remove('clicked');
+        cursorPurpleish.classList.remove('clicked');
       });
-
-  document.addEventListener('mouseover', function(e) {
-    if (e.target.tagName === 'A' || e.target.closest('.card')
-        || e.target.closest('.material-icons-round')  || e.target.closest('.background')
-        || e.target.closest('.sun-moon') || e.target.closest('span') || e.target.closest('#flechaa')
-        || e.target.closest('.buttonTheme')) {
+    
+      document.addEventListener('mouseover', function(e) {
+        if (
+          e.target.tagName === 'A' ||
+          e.target.closest('.card') ||
+          e.target.closest('.material-icons-round') ||
+          e.target.closest('.background') ||
+          e.target.closest('.sun-moon') ||
+          e.target.closest('span') ||
+          e.target.closest('#flechaa') ||
+          e.target.closest('.buttonTheme') ||
+          e.target.closest('#logoutButton')
+        ) {
+          cursorPurpleish.style.opacity = '100%';
+          isCursorOverSpecialElement = true;
+        }
+      });
+    
+      document.addEventListener('mouseout', function(e) {
+        if (
+          e.target.tagName === 'A' ||
+          e.target.closest('.card') ||
+          e.target.closest('.material-icons-round') ||
+          e.target.closest('.background') ||
+          e.target.closest('.sun-moon') ||
+          e.target.closest('span') ||
+          e.target.closest('#flechaa') ||
+          e.target.closest('.buttonTheme') ||
+          e.target.closest('#logoutButton')
+        ) {
+          cursorPurpleish.style.opacity = '1%';
+          isCursorOverSpecialElement = false;
+        }
+      });
+    
+      if (skinsContainer) {
+        skinsContainer.addEventListener('mousemove', function(e) {
+          if (!isCursorOverSpecialElement) {
+            const rect = skinsContainer.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const contentWidth = skinsContainer.clientWidth;
+        
+            if (mouseX >= contentWidth) {
+              // El ratón está sobre el scrollbar
               cursorPurpleish.style.opacity = '100%';
-      //cursorPurpleish.style.visibility = 'visible';
-      //cursor.style.visibility = 'hidden';
-    }
-  });
-  
-  document.addEventListener('mouseout', function(e) {
-    if (e.target.tagName === 'A' || e.target.closest('.card')
-        || e.target.closest('.material-icons-round')  || e.target.closest('.background')
-        || e.target.closest('.sun-moon')  || e.target.closest('span') || e.target.closest('#flechaa')
-        || e.target.closest('.buttonTheme')) {
+            } else {
+              // El ratón está dentro de skinsContainer pero no sobre el scrollbar
               cursorPurpleish.style.opacity = '1%';
-      //cursorPurpleish.style.visibility = 'hidden';
-      //cursor.style.visibility = 'visible';
-    }
-  });
-  
-  } else {
+            }
+          }
+        });
+    
+        skinsContainer.addEventListener('mouseleave', function() {
+          if (!isCursorOverSpecialElement) {
+            cursorPurpleish.style.opacity = '1%';
+          }
+        });
+      }
+    } else {
       console.error('Elementos de cursor no encontrados en el DOM.');
-  }
+    }
+
+
+  /* PURPLEISH EN EL SCROLL DE SKINS */
 
 
 
@@ -1302,10 +1290,6 @@ cargarSkins(idLogeado);
         skinsContainer.classList.add('active');
         flechaHitbloxPlus.classList.add('active');
 
-        if (window.location.pathname.endsWith("horario.html")) {
-        allESC.style.marginLeft = "10vw";
-        }
-
         if (skinsContainer.classList.contains('active')) {
           coinsContainer.style.marginLeft = "10vw";
         }
@@ -1315,10 +1299,6 @@ cargarSkins(idLogeado);
         flechaa.classList.remove('active');
         skinsContainer.classList.remove('active');
         flechaHitbloxPlus.classList.remove('active');
-
-        if (window.location.pathname.endsWith("horario.html")) {
-          allESC.style.marginLeft = "0vw"
-        }
 
         if (!skinsContainer.classList.contains('active')) {
           coinsContainer.style.marginLeft = "0vw";
@@ -1332,159 +1312,6 @@ cargarSkins(idLogeado);
       flechaHitbloxPlus.addEventListener('mouseenter', addSkinsMenuActive);
       flechaHitbloxPlus.addEventListener('mouseleave', removeSkinsMenuActive);
       
-
-
-
-
-      
-      /* DESBLOQUEO CANDADO */
-/*
-
-// Asegúrate de que idLogeado esté definido antes de usarlo.
-let isUnlocking = false;
-
-const idLogeado = localStorage.getItem('idLogeado');
-if (!idLogeado) {
-    console.error("No se encontró idLogeado en localStorage");
-    return; // Salimos si no hay idLogeado
-}
-
-// Función asincrónica para manejar el desbloqueo de candados
-async function manejarCandados(sonCandadosSinRestricciones) {
-    let isUnlocking = false;
-    let candados = document.querySelectorAll(".candado");
-    let sonCandadosSinRestriccioness = this.sonCandadosSinRestricciones;
-
-    for (let candado of candados) {
-        candado.src = "img/lock.png";
-
-        let skinContainer = candado.closest('.skinContainer');
-        let skinContainerLock = skinContainer.querySelector('.skinContainerLock');
-        let skinContainerNotVisible = skinContainer.querySelector('.skinContainerNotVisible');
-
-        let priceElement = skinContainerNotVisible.querySelector('.price');
-        let price = parseInt(priceElement.textContent);
-
-        try {
-            // Coloca await dentro de una función async
-            const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
-
-            
-            if(sonCandadosSinRestriccioness){
-              unlockAnimationNoRestrict(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado);
-            }else{
-              candado.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado));
-              skinContainerNotVisible.addEventListener('click', () => searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado));
-            }
-
-            setNormalPrice(skinContainer, price);
-        } catch (error) {
-            console.error("Error al obtener las monedas:", error);
-        }
-    }
-}
-
-async function unlockAnimationNoRestrict(){
-
-  if (isUnlocking) return;
-
-  if (monedasLogeado >= price) {
-      isUnlocking = true;
-      candado.src = "img/lock.gif";
-      candado.style.pointerEvents = "none";
-      skinContainerLock.style.pointerEvents = "none";
-
-    
-      setTimeout(() => {
-          candado.style.opacity = "0%";
-          skinContainerLock.style.opacity = "0%";
-          skinContainerLock.style.visibility = "hidden";
-          skinContainerNotVisible.style.opacity = "0%";
-          skinContainerNotVisible.style.visibility = "hidden";
-          isUnlocking = false;
-      }, 1100);
-  } else if (monedasLogeado < price) {
-      lockedAnimation(candado);
-  }
-}
-
-
-
-function setNormalPrice(skinContainer, price) {
-    let priceNormalElement = skinContainer.querySelector('.priceNormal');
-
-    if (priceNormalElement) {
-        priceNormalElement.textContent = price;
-    }
-}
-
-async function searchUnlockingStatus(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado) {
-    if (isUnlocking) return;
-
-    if (monedasLogeado >= price) {
-        isUnlocking = true;
-        await unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado);
-    } else if (monedasLogeado < price) {
-        lockedAnimation(candado);
-    }
-}
-
-
-
-
-async function unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado) {
-    candado.src = "img/lock.gif";
-    candado.style.pointerEvents = "none";
-    skinContainerLock.style.pointerEvents = "none";
-
-    monedasLogeado -= price;
-    coinLabel.textContent = monedasLogeado;
-
-    await actualizarMonedasUsuario(idLogeado, monedasLogeado);
-
-    document.querySelector('.coinLabel').textContent = monedasLogeado;
-
-    setTimeout(() => {
-        candado.style.opacity = "0%";
-        skinContainerLock.style.opacity = "0%";
-        skinContainerLock.style.visibility = "hidden";
-        skinContainerNotVisible.style.opacity = "0%";
-        skinContainerNotVisible.style.visibility = "hidden";
-        isUnlocking = false;
-    }, 1100);
-}
-
-function lockedAnimation(candado) {
-    candado.style.transition = "margin 0.1s ease, filter 0.2s ease";
-    candado.style.marginLeft = "0.75vw";
-    candado.style.filter = "blur(0.7px)";
-
-    setTimeout(() => {
-        candado.style.marginLeft = "0";
-        candado.style.marginRight = "0.75vw";
-        candado.style.filter = "blur(0.7px)";
-
-        setTimeout(() => {
-            candado.style.marginLeft = "0.75vw";
-            candado.style.marginRight = "0";
-            candado.style.filter = "blur(0.7px)";
-
-            setTimeout(() => {
-                candado.style.marginLeft = "0";
-                candado.style.filter = "none";
-            }, 100);
-        }, 100);
-    }, 100);
-}
-
-// Llamar a la función para manejar los candados
-manejarCandados(false);
-
-
-      
-      */
-  
-
     
     
 
