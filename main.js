@@ -780,6 +780,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         await cargarSkins(idLogeado);
     
         actualizarEstadoElementosSesion();
+        loadCursorSelection(idLogeado);
 
         // Cerrar el formulario de inicio de sesión
         loginScreen.click();
