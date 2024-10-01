@@ -41,17 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const DEFAULT_NIGHT_CURSOR = 'img/cursors/cccc.gif';
 
   /* CAMBIO DE CURSOR */
-
-
-  // Agregar event listeners a los botones de skins
-  function handleSpecialCursor(cursorSrc, theme) {
-    // Aquí podemos manejar cursores especiales que requieran acciones adicionales
-    if (cursorSrc.includes('special_cursor_name')) {
-      // Realizar acciones específicas para este cursor
-      console.log('Cursor especial seleccionado:', cursorSrc);
-      // Por ejemplo, cambiar otros elementos de la interfaz, reproducir un sonido, etc.
-    }
-  }
   
   let idLogeado = localStorage.getItem('idLogeado');
 
@@ -1548,23 +1537,42 @@ cargarSkins(idLogeado);
       console.error('Elementos de cursor no encontrados en el DOM.');
     }
 
+/*
+    function handleSpecialCursor(cursorSrc, theme) {
+      // Aquí podemos manejar cursores especiales que requieran acciones adicionales
+      if (cursorSrc.includes('special_cursor_name')) {
+        // Realizar acciones específicas para este cursor
+        console.log('Cursor especial seleccionado:', cursorSrc);
+        // Por ejemplo, cambiar otros elementos de la interfaz, reproducir un sonido, etc.
+      }
+    }*/
 
 
     /* SKIN GALAXY */
-    const fondo = document.getElementById('fondo');
-    const cursorSize = 200;
-    document.addEventListener('mousemove', function(e) {
-        // Ajusta la posición de la máscara
-        fondo.style.maskPosition = `${(e.clientX - cursorSize / 2)}px ${(e.clientY - cursorSize / 2)}px`;
-    });
-  
-    document.addEventListener('mousedown', function() {
-        fondo.classList.add('clicked');
-    });
-  
-    document.addEventListener('mouseup', function() {
-        fondo.classList.remove('clicked');
-    });
+
+      // Agregar event listeners a los botones de skins
+  function handleSpecialCursor(cursorSrc, theme) {
+    // Aquí podemos manejar cursores especiales que requieran acciones adicionales
+    if (cursorSrc.includes('cccc_galaxy')) {
+      const fondo = document.getElementById('fondoGalaxy');
+      const cursorSize = 200;
+
+      document.addEventListener('mousemove', function(e) {
+          // Ajusta la posición de la máscara
+          fondo.style.maskPosition = `${(e.clientX - cursorSize / 2)}px ${(e.clientY - cursorSize / 2)}px`;
+      });
+    
+      document.addEventListener('mousedown', function() {
+          fondo.classList.add('clicked');
+      });
+    
+      document.addEventListener('mouseup', function() {
+          fondo.classList.remove('clicked');
+      });
+    }
+  }
+
+    
 
 
     /* CREAR ILUMINACION TEMA OSCURO / OVALO */
