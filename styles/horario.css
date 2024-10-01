@@ -82,7 +82,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url("../img/Calendario_Escolar.png");
+  background-image: url("../img/Calendario_Escolar_Night.png");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;

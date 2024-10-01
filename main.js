@@ -33,6 +33,274 @@ document.addEventListener('DOMContentLoaded', function() {
   let helloMessage = document.getElementById("helloMessage");
   const checkboxLogin = document.getElementById('stayLoged');
   let logoutButton = document.getElementById("logoutButton");
+  let dayCursorSrc;
+  let nightCursorSrc;
+  let selectedDayButton = null;
+  let selectedNightButton = null;
+  const DEFAULT_DAY_CURSOR = 'img/cursors/cccc_veraniego.gif';
+  const DEFAULT_NIGHT_CURSOR = 'img/cursors/cccc.gif';
+
+  /* CAMBIO DE CURSOR */
+
+  // Agregar event listeners a los botones de skins
+  function handleSpecialCursor(cursorSrc, theme) {
+    // Aquí podemos manejar cursores especiales que requieran acciones adicionales
+    if (cursorSrc.includes('special_cursor_name')) {
+      // Realizar acciones específicas para este cursor
+      console.log('Cursor especial seleccionado:', cursorSrc);
+      // Por ejemplo, cambiar otros elementos de la interfaz, reproducir un sonido, etc.
+    }
+  }
+  
+  let idLogeado = localStorage.getItem('idLogeado');
+
+  if (idLogeado) {
+    // Usuario logueado: cargar selecciones de cursor
+    dayCursorSrc = localStorage.getItem('cursorDay') || DEFAULT_DAY_CURSOR;
+    nightCursorSrc = localStorage.getItem('cursorNight') || DEFAULT_NIGHT_CURSOR;
+  } else {
+    // Usuario deslogueado: usar cursores predeterminados y limpiar selecciones previas
+    dayCursorSrc = DEFAULT_DAY_CURSOR;
+    nightCursorSrc = DEFAULT_NIGHT_CURSOR;
+    localStorage.removeItem('cursorDay');
+    localStorage.removeItem('cursorNight');
+  }
+
+  function addSkinButtonListeners() {
+    const buttonThemeDayElements = document.querySelectorAll('.buttonThemeDay');
+    const buttonThemeNightElements = document.querySelectorAll('.buttonThemeNight');
+
+    buttonThemeDayElements.forEach(button => {
+      button.addEventListener('click', function() {
+        handleCursorChange(this, 'day');
+      });
+    });
+
+    buttonThemeNightElements.forEach(button => {
+      button.addEventListener('click', function() {
+        handleCursorChange(this, 'night');
+      });
+    });
+  }
+
+  // Llamar a la función para agregar los event listeners
+  addSkinButtonListeners();
+
+
+
+  // Función para manejar el cambio de cursor
+  function handleCursorChange(buttonElement, theme) {
+    const imgElement = buttonElement.querySelector('.buttonThemeImg');
+    const cursorSrc = imgElement.getAttribute('alt');
+    const idLogeadoR = localStorage.getItem('idLogeado');
+
+    if (!idLogeadoR) {
+      console.error('No hay usuario logueado, no se puede cambiar el cursor');
+      return;
+    }
+  
+    if (!cursorSrc) {
+      console.error('No se encontró la ruta del cursor en el atributo alt');
+      return;
+    }
+  
+    // Manejar el botón previamente seleccionado para el tema
+    if (theme === 'day') {
+      if (selectedDayButton && selectedDayButton !== buttonElement) {
+        // Restablecer el ícono del botón anterior a sunIcon.png
+        const prevImgElement = selectedDayButton.querySelector('.buttonThemeImg');
+        prevImgElement.src = 'img/sunIcon.png';
+      }
+      // Establecer el nuevo botón seleccionado
+      selectedDayButton = buttonElement;
+    } else if (theme === 'night') {
+      if (selectedNightButton && selectedNightButton !== buttonElement) {
+        // Restablecer el ícono del botón anterior a moonIcon.png
+        const prevImgElement = selectedNightButton.querySelector('.buttonThemeImg');
+        prevImgElement.src = 'img/moonIcon.png';
+      }
+      // Establecer el nuevo botón seleccionado
+      selectedNightButton = buttonElement;
+    }
+  
+    // Cambiar el ícono del botón actual a tickCheck.png
+    imgElement.src = 'img/tickCheck.png';
+  
+    // Aplicar el cambio de cursor
+    applyCursorChange(cursorSrc, theme);
+  
+    // Guardar la selección en la base de datos
+    const idLogeado = localStorage.getItem('idLogeado');
+    if (idLogeado) {
+      saveCursorSelection(idLogeado, theme, cursorSrc);
+    }
+  }
+  
+
+
+  // Función para aplicar el cambio de cursor
+  function applyCursorChange(cursorSrc, theme) {
+    if (theme === 'day') {
+      // Actualizar el cursor para el tema de día
+      dayCursorSrc = cursorSrc || DEFAULT_DAY_CURSOR;
+    } else if (theme === 'night') {
+      // Actualizar el cursor para el tema de noche
+      nightCursorSrc = cursorSrc || DEFAULT_NIGHT_CURSOR;
+    }
+  
+    // Actualizar el cursor si el tema actual coincide
+    if ((checkbox.checked && theme === 'day') || (!checkbox.checked && theme === 'night')) {
+      if (cursor && cursorPurpleish) {
+        cursor.src = cursorSrc || (theme === 'day' ? DEFAULT_DAY_CURSOR : DEFAULT_NIGHT_CURSOR);
+        const cursorPurpleishSrc = insertPurpleishBeforeExtension(cursor.src);
+        cursorPurpleish.src = cursorPurpleishSrc;
+      }
+    }
+  
+    // Manejar cursores especiales si es necesario
+    handleSpecialCursor(cursorSrc, theme);
+  }
+
+
+  function insertPurpleishBeforeExtension(filename) {
+    const lastDotIndex = filename.lastIndexOf('.');
+    if (lastDotIndex === -1) {
+      // Si no hay extensión, agregamos 'Purpleish' al final
+      return filename + 'Purpleish';
+    } else {
+      // Insertamos 'Purpleish' antes de la extensión
+      return filename.substring(0, lastDotIndex) + 'Purpleish' + filename.substring(lastDotIndex);
+    }
+  }
+
+// Función para guardar la selección del cursor en la base de datos y en localStorage
+async function saveCursorSelection(idLogeado, theme, cursorSrc) {
+  const fieldToUpdate = (theme === 'day') ? 'cursorDay' : 'cursorNight';
+  const updateData = {};
+  updateData[fieldToUpdate] = cursorSrc;
+
+  // Guardar en localStorage
+  localStorage.setItem(fieldToUpdate, cursorSrc);
+
+  // Guardar en la base de datos
+  const url = `${supabaseUrl}?id=eq.${idLogeado}`;
+  try {
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation',
+      },
+      body: JSON.stringify(updateData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('Error al actualizar el cursor:', response.statusText, errorData);
+      throw new Error('Error en la actualización del cursor: ' + response.statusText);
+    }
+
+    const data = await response.json();
+    console.log('Cursor actualizado correctamente en la base de datos:', data);
+    return data;
+  } catch (error) {
+    console.error('Error al actualizar el cursor:', error);
+  }
+}
+
+
+   // Función para cargar la selección de cursores
+  // Función para cargar la selección de cursores
+  async function loadCursorSelection(idLogeado) {
+    if (!idLogeado) {
+      console.log('Usuario no logueado, no se cargan selecciones de cursor.');
+      return;
+    }
+  
+    // Intentar cargar desde localStorage
+    dayCursorSrc = localStorage.getItem('cursorDay') || DEFAULT_DAY_CURSOR;
+    nightCursorSrc = localStorage.getItem('cursorNight') || DEFAULT_NIGHT_CURSOR;
+  
+    // Si no existen en localStorage, cargar desde la base de datos
+    if ((!localStorage.getItem('cursorDay') || !localStorage.getItem('cursorNight')) && idLogeado) {
+      const url = `${supabaseUrl}?id=eq.${idLogeado}`;
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json'
+          }
+        });
+  
+        if (!response.ok) {
+          console.error('Error al obtener el cursor:', response.statusText);
+          return;
+        }
+  
+        const data = await response.json();
+        if (data.length > 0) {
+          const userData = data[0];
+          dayCursorSrc = userData.cursorDay || DEFAULT_DAY_CURSOR;
+          nightCursorSrc = userData.cursorNight || DEFAULT_NIGHT_CURSOR;
+  
+          // Guardar en localStorage
+          localStorage.setItem('cursorDay', dayCursorSrc);
+          localStorage.setItem('cursorNight', nightCursorSrc);
+        }
+      } catch (error) {
+        console.error('Error al obtener el cursor desde la base de datos:', error);
+      }
+    }
+  
+    // Actualizar los botones para reflejar la selección
+    updateSkinButtons();
+
+    // Aplicar el cursor según el tema actual
+    if (checkbox.checked) {
+      applyCursorChange(dayCursorSrc, 'day');
+    } else {
+      applyCursorChange(nightCursorSrc, 'night');
+    }
+  }
+
+
+  function updateSkinButtons() {
+    // Actualizar los botones para el tema de día
+    const buttonThemeDayElements = document.querySelectorAll('.buttonThemeDay');
+    buttonThemeDayElements.forEach(button => {
+      const imgElement = button.querySelector('.buttonThemeImg');
+      const cursorAlt = imgElement.getAttribute('alt');
+      if (cursorAlt === dayCursorSrc) {
+        // Este es el botón seleccionado
+        imgElement.src = 'img/tickCheck.png';
+        selectedDayButton = button;
+      } else {
+        // Restablecer al ícono predeterminado
+        imgElement.src = 'img/sunIcon.png';
+      }
+    });
+  
+    // Actualizar los botones para el tema de noche
+    const buttonThemeNightElements = document.querySelectorAll('.buttonThemeNight');
+    buttonThemeNightElements.forEach(button => {
+      const imgElement = button.querySelector('.buttonThemeImg');
+      const cursorAlt = imgElement.getAttribute('alt');
+      if (cursorAlt === nightCursorSrc) {
+        // Este es el botón seleccionado
+        imgElement.src = 'img/tickCheck.png';
+        selectedNightButton = button;
+      } else {
+        // Restablecer al ícono predeterminado
+        imgElement.src = 'img/moonIcon.png';
+      }
+    });
+  }
+
+
 
 
   /* CAMBIOS DE ESTILO CUANDO CAMBIO DE TEMA */
@@ -52,12 +320,18 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
       if (cursor && cursorPurpleish) {
-        cursor.src = "img/cursors/cccc_veraniego.gif";
-        cursorPurpleish.src = "img/cursors/cccc_veraniegoPurpleish.gif";
+        cursor.src = dayCursorSrc;
+        cursorPurpleish.src = insertPurpleishBeforeExtension(dayCursorSrc);
       }
       if (flechaa) {
         flechaa.src = "img/flechaDay.png";
       }
+      if (logoutButton) {
+        logoutButton.src = "img/logoutDay.png";
+      }/*
+      if(loginContainer){
+        loginContainer.backgroundColor = ""
+      }*/
 
     } else {
       // Dark theme settings
@@ -71,27 +345,37 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
       if (cursor && cursorPurpleish) {
-        cursor.src = "img/cursors/cccc.gif";
-        cursorPurpleish.src = "img/cursors/ccccPurpleish.gif";
+        cursor.src = nightCursorSrc;
+        cursorPurpleish.src = insertPurpleishBeforeExtension(nightCursorSrc);
       }
       if (flechaa) {
         flechaa.src = "img/flechaNight.png";
+      }
+      if (logoutButton) {
+        logoutButton.src = "img/logoutNight.png";
       }
     }
   }
 
 
   applyTheme();
-
-  /* DESHABILITAR SKINS Y MONEDAS SI NO HAY INCICIO DE SESION */
   
 
 
   /* ESTILOS HOVER PARA <a>HORARIO <a>LOGIN <a>REGISTER*/
 
   checkbox.addEventListener('change', () => {
-      localStorage.setItem('checkboxStatus', checkbox.checked);
-      applyTheme();
+    localStorage.setItem('checkboxStatus', checkbox.checked);
+    applyTheme();
+  
+    // Actualizar el cursor según el tema
+    if (checkbox.checked) {
+      // Tema de día
+      applyCursorChange(dayCursorSrc, 'day');
+    } else {
+      // Tema de noche
+      applyCursorChange(nightCursorSrc, 'night');
+    }
   });
 
   if (horario) {
@@ -647,7 +931,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
   window.addEventListener('load', async function() {
     const sesionAutomatica = localStorage.getItem('sesionAutomatica');
-    const idLogeado = localStorage.getItem('idLogeado');
+    idLogeado = localStorage.getItem('idLogeado');
   
     if (sesionAutomatica && idLogeado) {
       try {
@@ -655,15 +939,53 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         await actualizarHelloMessage(idLogeado);
         await actualizarMonedas(idLogeado);
         await cargarSkins(idLogeado);
+        await loadCursorSelection(idLogeado);
       } catch (error) {
         console.error("Error durante el inicio de sesión automático:", error);
       }
+    } else {
+      // Usuario deslogueado: usar cursores predeterminados y limpiar selecciones
+      dayCursorSrc = DEFAULT_DAY_CURSOR;
+      nightCursorSrc = DEFAULT_NIGHT_CURSOR;
+      localStorage.removeItem('cursorDay');
+      localStorage.removeItem('cursorNight');
     }
+  
+    // Aplicar el tema
+    applyTheme();
   
     // Actualizar estado de los elementos según la sesión
     actualizarEstadoElementosSesion();
   });
 
+  // ... (código existente)
+
+  if (logoutButton) {
+    logoutButton.addEventListener('click', function() {
+      // Limpiar datos de sesión
+      localStorage.removeItem('sesionAutomatica');
+      localStorage.removeItem('idLogeado');
+  
+      // Limpiar selección de cursores
+      localStorage.removeItem('cursorDay');
+      localStorage.removeItem('cursorNight');
+  
+      // Restablecer cursores predeterminados
+      dayCursorSrc = DEFAULT_DAY_CURSOR;
+      nightCursorSrc = DEFAULT_NIGHT_CURSOR;
+      applyTheme();
+  
+      // Limpiar información de la interfaz
+      helloMessage.textContent = '';
+      coinLabel.textContent = '';
+  
+      // Actualizar estado de los elementos
+      actualizarEstadoElementosSesion();
+  
+      // Recargar la página o redirigir si es necesario
+      location.reload();
+    });
+  }
 
     /* ACTUALIZAR helloMessage */
 
@@ -1013,7 +1335,6 @@ async function actualizarSkinsUnlockDeUsuario(idLogin, nuevoSkinsUnlock) {
   }
 }
 
-let idLogeado = localStorage.getItem('idLogeado');
 // Llamamos a cargarSkins al cargar la página
 cargarSkins(idLogeado);
 
@@ -1049,6 +1370,27 @@ cargarSkins(idLogeado);
       if (logoutButton) {
         logoutButton.style.display = 'flex';
       }
+  
+      // Mostrar menú de skins y monedas
+      if (skinsContainer) {
+        skinsContainer.style.display = 'flex';
+      }
+      if (coinsContainer) {
+        coinsContainer.style.display = 'flex';
+      }
+      if (flechaa) {
+        flechaa.style.display = 'flex';
+      }
+      if (flechaHitbloxPlus) {
+        flechaHitbloxPlus.style.display = 'flex';
+      }
+
+    // Habilitar los botones de skins
+    const buttonThemeElements = document.querySelectorAll('.buttonTheme');
+    buttonThemeElements.forEach(button => {
+      button.style.pointerEvents = 'auto';
+      button.style.opacity = '1';
+    });
     } else {
       // El usuario no ha iniciado sesión
       // Mostrar botones de Login y Register
@@ -1065,26 +1407,42 @@ cargarSkins(idLogeado);
       if (logoutButton) {
         logoutButton.style.display = 'none';
       }
+  
+      // Ocultar menú de skins y monedas
+      if (skinsContainer) {
+        skinsContainer.style.display = 'none';
+      }
+      if (coinsContainer) {
+        coinsContainer.style.display = 'none';
+      }
+      if (flechaa) {
+        flechaa.style.display = 'none';
+      }
+      if (flechaHitbloxPlus) {
+        flechaHitbloxPlus.style.display = 'none';
+      }
+
+          // Deshabilitar los botones de skins
+      const buttonThemeElements = document.querySelectorAll('.buttonTheme');
+      buttonThemeElements.forEach(button => {
+        button.style.pointerEvents = 'none';
+        button.style.opacity = '0.5';
+      });
+  
+      // Restablecer los botones seleccionados y sus íconos
+      if (selectedDayButton) {
+        const imgElement = selectedDayButton.querySelector('.buttonThemeImg');
+        imgElement.src = 'img/sunIcon.png';
+        selectedDayButton = null;
+      }
+      if (selectedNightButton) {
+        const imgElement = selectedNightButton.querySelector('.buttonThemeImg');
+        imgElement.src = 'img/moonIcon.png';
+        selectedNightButton = null;
+      }
     }
   }
-
-  if (logoutButton) {
-    logoutButton.addEventListener('click', function() {
-      // Limpiar datos de sesión
-      localStorage.removeItem('sesionAutomatica');
-      localStorage.removeItem('idLogeado');
   
-      // Limpiar información de la interfaz
-      helloMessage.textContent = '';
-      coinLabel.textContent = '';
-  
-      // Actualizar estado de los elementos
-      actualizarEstadoElementosSesion();
-  
-      // Recargar la página o redirigir si es necesario
-      location.reload();
-    });
-  }
   
 
 
