@@ -1463,12 +1463,15 @@ cargarSkins(idLogeado);
       document.addEventListener('mousemove', function(e) {
         soloInicio++;
         if (soloInicio == 1) {
-          cursor.style.opacity = "100%";
+            cursor.style.opacity = "100%";
         }
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-        cursorPurpleish.style.left = e.clientX + 'px';
-        cursorPurpleish.style.top = e.clientY + 'px';
+    
+        // Cambiar la posición para centrar el cursor
+        const cursorSize = 200; // El tamaño de tu cursor
+        cursor.style.left = (e.clientX - cursorSize / 2) + 'px'; // Centrar en X
+        cursor.style.top = (e.clientY - cursorSize / 2) + 'px'; // Centrar en Y
+        cursorPurpleish.style.left = (e.clientX - cursorSize / 2) + 'px'; // Centrar en X
+        cursorPurpleish.style.top = (e.clientY - cursorSize / 2) + 'px'; // Centrar en Y
       });
     
       document.addEventListener('mousedown', function() {
@@ -1515,6 +1518,8 @@ cargarSkins(idLogeado);
         }
       });
     
+        /* PURPLEISH EN EL SCROLL DE SKINS */
+
       if (skinsContainer) {
         skinsContainer.addEventListener('mousemove', function(e) {
           if (!isCursorOverSpecialElement) {
@@ -1543,7 +1548,6 @@ cargarSkins(idLogeado);
     }
 
 
-  /* PURPLEISH EN EL SCROLL DE SKINS */
 
 
 
