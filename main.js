@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* CAMBIO DE CURSOR */
 
+
   // Agregar event listeners a los botones de skins
   function handleSpecialCursor(cursorSrc, theme) {
     // Aquí podemos manejar cursores especiales que requieran acciones adicionales
@@ -1467,7 +1468,7 @@ cargarSkins(idLogeado);
         }
     
         // Cambiar la posición para centrar el cursor
-        const cursorSize = 200; // El tamaño de tu cursor
+        const cursorSize = 200;
         cursor.style.left = (e.clientX - cursorSize / 2) + 'px'; // Centrar en X
         cursor.style.top = (e.clientY - cursorSize / 2) + 'px'; // Centrar en Y
         cursorPurpleish.style.left = (e.clientX - cursorSize / 2) + 'px'; // Centrar en X
@@ -1549,6 +1550,21 @@ cargarSkins(idLogeado);
 
 
 
+    /* SKIN GALAXY */
+    const fondo = document.getElementById('fondo');
+    const cursorSize = 200;
+    document.addEventListener('mousemove', function(e) {
+        // Ajusta la posición de la máscara
+        fondo.style.maskPosition = `${(e.clientX - cursorSize / 2)}px ${(e.clientY - cursorSize / 2)}px`;
+    });
+  
+    document.addEventListener('mousedown', function() {
+        fondo.classList.add('clicked');
+    });
+  
+    document.addEventListener('mouseup', function() {
+        fondo.classList.remove('clicked');
+    });
 
 
     /* CREAR ILUMINACION TEMA OSCURO / OVALO */
