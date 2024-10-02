@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
   var cursor = document.getElementById('customCursor');
   var cursorPurpleish = document.getElementById('customCursorPurpleish');
   let main = document.querySelector("main");
-  const DEFAULT_DAY_CURSOR = '../img/cursors/cccc_veraniego.gif';
-  const DEFAULT_NIGHT_CURSOR = '../img/cursors/cccc.gif';
+  const DEFAULT_DAY_CURSOR = '../img/cursors/cccc_veraniego.webp';
+  const DEFAULT_NIGHT_CURSOR = '../img/cursors/cccc.webp';
   
   // Variables para almacenar los cursores seleccionados
   let dayCursorSrc = adjustCursorPathForHorario(localStorage.getItem('cursorDay')) || DEFAULT_DAY_CURSOR;

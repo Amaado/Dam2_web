@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
   var cursor = document.getElementById('customCursor');
   var cursorPurpleish = document.getElementById('customCursorPurpleish');
+  const fondo = document.getElementById('fondoGalaxy');
+  const fondoGreen = document.getElementById('fondoGalaxyGreen');
   let checkbox = document.getElementById("toggle");
   let body = document.body;
   let cards = document.querySelectorAll(".card");
@@ -37,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
   let nightCursorSrc;
   let selectedDayButton = null;
   let selectedNightButton = null;
-  const DEFAULT_DAY_CURSOR = 'img/cursors/cccc_veraniego.gif';
-  const DEFAULT_NIGHT_CURSOR = 'img/cursors/cccc.gif';
+  const DEFAULT_DAY_CURSOR = 'img/cursors/cccc_veraniego.webp';
+  const DEFAULT_NIGHT_CURSOR = 'img/cursors/cccc.webp';
 
   /* CAMBIO DE CURSOR */
   
@@ -147,7 +149,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   
-    // Manejar cursores especiales si es necesario
+    cursor.style.opacity = "100%";
+    cursorPurpleish.style.display = "block";
+    cursor.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out';
+    fondo.style.display = "none";
+    fondoGreen.style.display = "none";
+
     handleSpecialCursor(cursorSrc, theme);
   }
 
@@ -1554,21 +1561,137 @@ cargarSkins(idLogeado);
   function handleSpecialCursor(cursorSrc, theme) {
     // Aquí podemos manejar cursores especiales que requieran acciones adicionales
     if (cursorSrc.includes('cccc_galaxy')) {
-      const fondo = document.getElementById('fondoGalaxy');
       const cursorSize = 200;
+      cursor.src = 'img/cursors/cccc_galaxy.webp';
+      cursor.style.opacity = "70%";
+      fondo.style.display = "block";
+      fondo.src = "img/fondo.gif";
+      fondoGreen.style.display = "block";
+      fondoGreen.src = "img/fondoGreen.gif";
+      fondoGreen.style.opacity = "1%";
+      cursorPurpleish.style.display = "none";
+      cursor.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out, opacity 0.1s ease-in-out';
 
-      document.addEventListener('mousemove', function(e) {
-          // Ajusta la posición de la máscara
-          fondo.style.maskPosition = `${(e.clientX - cursorSize / 2)}px ${(e.clientY - cursorSize / 2)}px`;
+
+      let isMouseDown = false;
+
+
+      var fecha = new Date(); // Obtener la fecha y hora actual
+      var timestamp = fecha.getTime(); // Usar el timestamp como parámetro único
+
+      // Actualizar la máscara con un nuevo parámetro para forzar la recarga
+      fondo.style.maskImage = 'url("img/cursors/cccc.webp?' + timestamp + '")';
+      fondoGreen.style.maskImage = 'url("img/cursors/cccc.webp?' + timestamp + '")';
+
+      // Observer para manejar los cambios de clase y actualizar la posición de la máscara
+  let observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.attributeName === 'class') {
+        // Actualiza la posición según el estado actual de 'clicked'
+        const clicked = mutation.target.classList.contains('clicked');
+        updateMaskPosition(lastEvent, clicked);
+      }
+    });
+  });
+
+  observer.observe(fondo, { attributes: true });
+  observer.observe(fondoGreen, { attributes: true });
+
+  // Evento para manejar el movimiento del ratón
+  document.addEventListener('mousemove', function(e) {
+    lastEvent = e; // Almacenar el último evento del ratón
+    if (isMouseDown) { // Si el mouse está presionado, actualizar con offset
+      updateMaskPosition(e, true);
+    } else { // Si no está presionado, actualizar sin offset
+      updateMaskPosition(e, false);
+    }
+  });
+
+  // Evento cuando se presiona el ratón
+  document.addEventListener('mousedown', function() {
+    isMouseDown = true; // Establecer que el mouse está presionado
+    fondo.classList.add('clicked');
+    fondoGreen.classList.add('clicked');
+  });
+
+  // Evento cuando se suelta el ratón
+  document.addEventListener('mouseup', function() {
+    isMouseDown = false; // Establecer que el mouse ya no está presionado
+    fondo.classList.remove('clicked');
+    fondoGreen.classList.remove('clicked');
+  });
+
+  // Función para actualizar la posición de la máscara
+  function updateMaskPosition(e, offset) {
+    let x = e.clientX - cursorSize / 2;
+    let y = e.clientY - cursorSize / 2;
+    if (offset) {
+      x -= 50; // Desplazar -100px en X
+      y -= 50; // Desplazar -100px en Y
+    }
+    fondo.style.maskPosition = `${x}px ${y}px`;
+    fondoGreen.style.maskPosition = `${x}px ${y}px`;
+  }
+
+  let lastEvent = null;
+
+      document.addEventListener('mouseover', function(e) {
+        if (
+          e.target.tagName === 'A' ||
+          e.target.closest('.card') ||
+          e.target.closest('.material-icons-round') ||
+          e.target.closest('.background') ||
+          e.target.closest('.sun-moon') ||
+          e.target.closest('span') ||
+          e.target.closest('#flechaa') ||
+          e.target.closest('.buttonTheme') ||
+          e.target.closest('#logoutButton')
+        ) {
+          fondoGreen.style.opacity = '70%';
+          isCursorOverSpecialElement = true;
+        }
       });
     
-      document.addEventListener('mousedown', function() {
-          fondo.classList.add('clicked');
+      document.addEventListener('mouseout', function(e) {
+        if (
+          e.target.tagName === 'A' ||
+          e.target.closest('.card') ||
+          e.target.closest('.material-icons-round') ||
+          e.target.closest('.background') ||
+          e.target.closest('.sun-moon') ||
+          e.target.closest('span') ||
+          e.target.closest('#flechaa') ||
+          e.target.closest('.buttonTheme') ||
+          e.target.closest('#logoutButton')
+        ) {
+          fondoGreen.style.opacity = '1%';
+          isCursorOverSpecialElement = false;
+        }
       });
     
-      document.addEventListener('mouseup', function() {
-          fondo.classList.remove('clicked');
-      });
+      if (skinsContainer) {
+        skinsContainer.addEventListener('mousemove', function(e) {
+          if (!isCursorOverSpecialElement) {
+            const rect = skinsContainer.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const contentWidth = skinsContainer.clientWidth;
+        
+            if (mouseX >= contentWidth) {
+              // El ratón está sobre el scrollbar
+              fondoGreen.style.opacity = '70%';
+            } else {
+              // El ratón está dentro de skinsContainer pero no sobre el scrollbar
+              fondoGreen.style.opacity = '1%';
+            }
+          }
+        });
+    
+        skinsContainer.addEventListener('mouseleave', function() {
+          if (!isCursorOverSpecialElement) {
+            fondoGreen.style.opacity = '1%';
+          }
+        });
+      }
     }
   }
 
