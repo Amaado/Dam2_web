@@ -992,7 +992,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     try {
         const nombrePorId = await obtenerUsuarioPorId(idLogeado);
         helloMessage.textContent = "";
-        helloMessage.textContent += "Hola, " + capitalizeFirstLetter(nombrePorId);
+        helloMessage.textContent += getHelloMessage(capitalizeFirstLetter(nombrePorId));
       
     } catch (error) {
         console.error("Error durante ACTUALIZAR helloMessage:", error);
@@ -1002,6 +1002,220 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
+
+  function getHelloMessage(nombre) {
+    const now = new Date();
+    const dayOfWeek = now.getDay();  // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+    const hour = now.getHours();     // Hora actual en formato 24h
+    const minute = now.getMinutes(); // Minutos actuales
+    const totalMinutes = hour * 60 + minute;
+  
+    let helloMessage = '';
+  
+    // Definir rangos de horas por defecto
+    if (hour >= 7 && hour < 14) {
+      helloMessage = "Buenos días "+ nombre+"!";
+    } else if (hour >= 14 && hour < 21) {
+      helloMessage = "Buenas tardes "+ nombre+"!";
+    } else if (hour >= 21 || hour < 1) {
+      helloMessage = "Buenas noches "+ nombre+" zZ";
+    } else {
+      helloMessage = "¿Qué haces trasnochando "+nombre+"?";
+    }
+    
+  
+    // Empresas
+    if ((dayOfWeek === 1 && totalMinutes >= 880 && totalMinutes < 980) || (dayOfWeek === 5 && totalMinutes >= 930 && totalMinutes < 980)) {
+        const messages = [
+          `Buenas tardes ${nombre}!`,
+          "Ohh Mónica, Mónica... tu voz más melódica que una harmónica"
+        ];
+        
+        console.log("HELLOMESSAGE: Empresas");
+        helloMessage = messages[Math.floor(Math.random() * messages.length)];
+    }
+
+    // Moviles y datos SIN JUEVES
+    if ((dayOfWeek === 1 && totalMinutes >= 980 && totalMinutes < 1150) || 
+        // Martes de 15:30 (930 minutos) a 18:20 (1100 minutos)
+        (dayOfWeek === 2 && totalMinutes >= 930 && totalMinutes < 1100) || 
+        // Miércoles de 15:30 (930 minutos) a 17:10 (1030 minutos)
+        (dayOfWeek === 3 && totalMinutes >= 930 && totalMinutes < 1030) || 
+        // Viernes de 18:20 (1100 minutos) a 20:00 (1200 minutos)
+        (dayOfWeek === 5 && totalMinutes >= 1100 && totalMinutes < 1200)) {
+        
+        // Array de mensajes posibles
+        const messages = [
+          `¡Hola ${nombre}, sigue adelante!`,
+          "¡Ánimo, ya queda poco!",
+          "Estás en el rango perfecto para un pequeño descanso."
+        ];
+        
+        console.log("HELLOMESSAGE: Moviles y datos SIN JUEVES");
+        // Seleccionar un mensaje al azar
+        helloMessage = messages[Math.floor(Math.random() * messages.length)];
+    }
+
+    // Moviles y datos JUEVES
+    if (dayOfWeek === 4 && totalMinutes >= 880 && totalMinutes < 1200) {
+        // Array de mensajes posibles
+        const messages = [
+          `¡Hola ${nombre}, feliz jueves!`,
+          "El jueves ya está casi terminado, sigue con fuerza.",
+          "¡El fin de semana se acerca, aguanta un poco más!"
+        ];
+        
+        console.log("HELLOMESSAGE: Moviles y datos JUEVES");
+        // Seleccionar un mensaje al azar
+        helloMessage = messages[Math.floor(Math.random() * messages.length)];
+    }
+  
+    //Interfaces
+  if ((dayOfWeek === 1 && totalMinutes >= 1150 && totalMinutes < 1320) ||  // Lunes de 19:10 (1150 minutos) a 22:00 (1320 minutos)
+      (dayOfWeek === 3 && totalMinutes >= 1150 && totalMinutes < 1320) ||  // Miércoles de 19:10 (1150 minutos) a 22:00 (1320 minutos)
+      (dayOfWeek === 5 && totalMinutes >= 1220 && totalMinutes < 1320)) { // Viernes de 20:20 (1220 minutos) a 22:00 (1320 minutos)
+      
+      // Array de mensajes posibles
+      const messages = [
+        `¡Hola ${nombre}, es hora de relajarse!`,
+        "La noche es joven, ¿qué planes tienes?",
+        "¡Aprovecha esta hora para desconectar!"
+      ];
+      
+      console.log("HELLOMESSAGE: Interfaces");
+      // Seleccionar un mensaje al azar
+      helloMessage = messages[Math.floor(Math.random() * messages.length)];
+  }
+
+  //Sistemas empresariales
+  if ((dayOfWeek === 2 && totalMinutes >= 1150 && totalMinutes < 1320) ||  // Martes de 19:10 (1150 minutos) a 22:00 (1320 minutos)
+      (dayOfWeek === 4 && totalMinutes >= 1220 && totalMinutes < 1320)) { // Jueves de 20:20 (1220 minutos) a 22:00 (1320 minutos)
+      
+      // Array de mensajes posibles
+      const messages = [
+        `¡Hola ${nombre}, espero que estés teniendo un gran martes!`,
+        "Es hora de relajarse después de un largo día.",
+        "¡Aprovecha la noche, el fin de semana está cerca!"
+      ];
+      
+      console.log("HELLOMESSAGE: Sistemas empresariales");
+      // Seleccionar un mensaje al azar
+      helloMessage = messages[Math.floor(Math.random() * messages.length)];
+  }
+
+
+  // Comienzo recreo
+  if ((dayOfWeek >= 1 && dayOfWeek <= 5) && 
+      ((totalMinutes >= 1025 && totalMinutes < 1035) ||  // 17:05 (1025 minutos) a 17:15 (1035 minutos)
+      (totalMinutes >= 1195 && totalMinutes < 1205))) { // 19:55 (1195 minutos) a 20:05 (1205 minutos)
+      
+      // Array de mensajes posibles
+      const messages = [
+        "¡Es hora de un breve descanso!",
+        `¡Hola ${nombre}, toma un respiro en estos minutos!`,
+        "Un momento perfecto para estirarte y relajarte un poco."
+      ];
+      
+      console.log("HELLOMESSAGE: Comienzo recreo");
+      // Seleccionar un mensaje al azar
+      helloMessage = messages[Math.floor(Math.random() * messages.length)];
+  }
+
+  // Final recreo
+  if ((dayOfWeek >= 1 && dayOfWeek <= 5) && 
+      ((totalMinutes >= 1035 && totalMinutes < 1055) ||  // 17:15 (1035 minutos) a 17:35 (1055 minutos)
+      (totalMinutes >= 1205 && totalMinutes < 1225))) { // 20:05 (1205 minutos) a 20:25 (1225 minutos)
+      
+      // Array de mensajes posibles
+      const messages = [
+        `¡Hola ${nombre}, sigue con energía!`,
+        "Es el momento de recargar fuerzas.",
+        "¡El día va avanzando, mantente enfocado!"
+      ];
+
+      console.log("HELLOMESSAGE: Final recreo");
+      // Seleccionar un mensaje al azar
+      helloMessage = messages[Math.floor(Math.random() * messages.length)];
+  }
+
+  //Mensaje chao
+  if ((dayOfWeek >= 1 && dayOfWeek <= 5) && 
+      (totalMinutes >= 1305 && totalMinutes < 1325)) { // 21:45 (1305 minutos) a 22:05 (1325 minutos)
+      
+      // Array de mensajes posibles
+      const messages = [
+        `¡Hola ${nombre}, la noche está en su mejor momento!`,
+        "Casi es hora de descansar, ¿qué tal tu día?",
+        "¡No te olvides de relajarte antes de dormir!"
+      ];
+      
+      console.log("HELLOMESSAGE: Mensaje chao");
+      // Seleccionar un mensaje al azar
+      helloMessage = messages[Math.floor(Math.random() * messages.length)];
+  }
+  
+
+  
+    return helloMessage;
+  }
+
+
+
+  // Función para programar la actualización a horas específicas
+  function scheduleHelloMessageUpdates() {
+    if(idLogeado){
+      const now = new Date();
+      const secondsUntilNextUpdate = (60 - now.getSeconds()) * 1000; // Esperar hasta el próximo minuto
+
+      // Programar la actualización a las horas específicas
+      setTimeout(() => {
+        actualizarHelloMessage(idLogeado); // Llamar a la función al minuto exacto
+
+          // Luego programar las actualizaciones para las horas específicas del día siguiente
+          const hoursToUpdate = [
+              { hour: 1, minute: 0 },
+              { hour: 7, minute: 0 },
+              { hour: 14, minute: 0 },
+              { hour: 14, minute: 30 },
+              { hour: 15, minute: 30 },
+              { hour: 16, minute: 20 },
+              { hour: 17, minute: 5 },
+              { hour: 17, minute: 25 },
+              { hour: 17, minute: 35 },
+              { hour: 18, minute: 20 },
+              { hour: 19, minute: 10 },
+              { hour: 19, minute: 55 },
+              { hour: 20, minute: 25 },
+              { hour: 21, minute: 10 },
+              { hour: 21, minute: 45 },
+          ];
+
+          // Programar cada hora específica
+          hoursToUpdate.forEach(({ hour, minute }) => {
+              const updateTime = new Date();
+              updateTime.setHours(hour, minute, 0, 0); // Establecer la hora de actualización
+
+              // Si la hora ya pasó hoy, programar para mañana
+              if (updateTime <= now) {
+                  updateTime.setDate(updateTime.getDate() + 1);
+              }
+
+              const timeUntilUpdate = updateTime - now; // Calcular tiempo hasta la próxima actualización
+              setTimeout(() => {
+                actualizarHelloMessage(idLogeado); // Llamar a la función en la hora específica
+                  scheduleHelloMessageUpdates(); // Volver a programar las actualizaciones
+              }, timeUntilUpdate);
+          });
+
+      }, secondsUntilNextUpdate); // Esperar hasta el próximo minuto para empezar a programar       
+    }
+  }
+
+  // Iniciar el programa
+  scheduleHelloMessageUpdates();
+
+
+  
 
 
   /* ACTUALIZAR MONEDAS */
