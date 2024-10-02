@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var cursorPurpleish = document.getElementById('customCursorPurpleish');
   const fondo = document.getElementById('fondoGalaxy');
   const fondoGreen = document.getElementById('fondoGalaxyGreen');
+  const cursorSize = 200;
   let checkbox = document.getElementById("toggle");
   let body = document.body;
   let cards = document.querySelectorAll(".card");
@@ -1561,7 +1562,6 @@ cargarSkins(idLogeado);
   function handleSpecialCursor(cursorSrc, theme) {
     // Aquí podemos manejar cursores especiales que requieran acciones adicionales
     if (cursorSrc.includes('cccc_galaxy')) {
-      const cursorSize = 200;
       cursor.src = 'img/cursors/cccc_galaxy.webp';
       cursor.style.opacity = "70%";
       fondo.style.display = "block";

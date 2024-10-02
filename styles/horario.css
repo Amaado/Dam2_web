@@ -37,44 +37,89 @@ body {
 }
 
 
+
 #customCursor {
   position: absolute;
-  width: 47px;
-  height: 40px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   pointer-events: none;
   transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
   z-index: 100;
-  transform: translate(-20px, -18px);
+  transform: scale(1);
   visibility: visible;
   opacity: 1%;
 
 }
 
 #customCursor.clicked {
-  width: 70px;
-  height: 60px;
-  transform: translate(-29px, -29px); /* Ajuste según el nuevo tamaño */
+  transform: scale(1.5);
 }
 
 
 #customCursorPurpleish {
   position: absolute;
-  width: 47px;
-  height: 40px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   pointer-events: none;
-  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out ;
+  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
   z-index: 100;
-  transform: translate(-20px, -18px);
+  transform: scale(1);
   visibility: visible;
   opacity: 1%;
+
 }
 
 #customCursorPurpleish.clicked {
-  width: 70px;
-  height: 60px;
-  transform: translate(-29px, -29px); /* Ajuste según el nuevo tamaño */
+  transform: scale(1.5);
+}
+
+#fondoGalaxy {
+  width: 100vw;  /* Anchura completa de la ventana */
+  height: 100vh; /* Altura completa de la ventana */
+  position: absolute;
+  top: 0;
+  left: 0;
+  mask: url(../img/cursors/cccc.webp);
+  mask-repeat: no-repeat;
+  mask-size: 200px; /* Asegura que la máscara se ajuste sin cortar partes, manteniendo proporciones */
+  mask-position: 50 50; /* Centra la máscara */
+  background-size: contain; /* Asegura que el fondo sea completamente visible, manteniendo proporciones */
+  z-index: 98; /* Ajusta según necesidades, fondoGalaxyGreen debería tener un z-index ligeramente superior si se superpone */
+  pointer-events: none;
+  background-repeat: no-repeat; /* No repetir el fondo */
+  background-position: center; /* Centrar el fondo */
+  opacity: 100%;
+
+}
+
+#fondoGalaxy.clicked {
+  mask-size: 300px; /* Asegura que la máscara se ajuste sin cortar partes, manteniendo proporciones */
+}
+
+#fondoGalaxyGreen {
+  width: 100vw;  /* Anchura completa de la ventana */
+  height: 100vh; /* Altura completa de la ventana */
+  position: absolute;
+  top: 0;
+  left: 0;
+  mask: url(../img/cursors/cccc.webp);
+  mask-repeat: no-repeat;
+  mask-size: 200px; /* Asegura que la máscara se ajuste sin cortar partes, manteniendo proporciones */
+  mask-position: 0 0; /* Centra la máscara */
+  background-size: contain; /* Asegura que el fondo sea completamente visible, manteniendo proporciones */
+  z-index: 98; /* Ajusta según necesidades, fondoGalaxyGreen debería tener un z-index ligeramente superior si se superpone */
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+  background-repeat: no-repeat; /* No repetir el fondo */
+  background-position: center; /* Centrar el fondo */
+  z-index: 99; /* Asegúrate de que fondoGalaxyGreen esté por encima de fondoGalaxy si se superponen */
+  opacity: 1%;
+}
+
+#fondoGalaxyGreen.clicked {
+  mask-size: 300px; /* Asegura que la máscara se ajuste sin cortar partes, manteniendo proporciones */
 }
 
 
