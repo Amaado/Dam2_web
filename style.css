@@ -1334,7 +1334,7 @@ div.img img {
   z-index: 20;
   width: 100px;
   height: auto;
-  margin-top: 55px;
+  margin-top: 0px;
   transition: opacity 0.2s ease, transform 0.2s ease;
   opacity: 100%;
   animation-name: lockBalancing;
@@ -1398,6 +1398,19 @@ div.img img {
     transition: opacity 0.2s ease;
 }
 
+.tituloSkinNotVisible{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin-top: 123px;
+  font-size: 20px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
 .priceContainerNotVisible{
   width: 120px;
   height: 20px;
@@ -1408,7 +1421,7 @@ div.img img {
   justify-content: center;
   align-items: center;
   gap: 5px;
-  margin-top: 173px;
+  margin-top: 27px;
   color: #e9e02c;
   outline: 2px solid #e9e02c8a;
   border-radius: 20px;
