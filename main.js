@@ -1106,11 +1106,11 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         (dayOfWeek === 5 && totalMinutes >= 980 && totalMinutes < 1100)) { // Viernes
           const messages = [
             `¡Buenas tardes ${nombre}!`,
-            `Queres atender de una vez ${nombre}? Jose Miguel se lo merece`,
-            `Queres atender de una vez ${nombre}? Jose Miguel se lo merece`,
-            `Queres atender de una vez ${nombre}? Jose Miguel se lo merece`,
-            `Queres atender de una vez ${nombre}? Jose Miguel se lo merece`,
-            `Queres atender de una vez ${nombre}? Jose Miguel se lo merece`
+            `Queres atender de una vez ${nombre}? Jose Miguel se merece más`,
+            `Queres atender de una vez ${nombre}? Jose Miguel se merece más`,
+            `Queres atender de una vez ${nombre}? Jose Miguel se merece más`,
+            `Queres atender de una vez ${nombre}? Jose Miguel se merece más`,
+            `Queres atender de una vez ${nombre}? Jose Miguel se merece más`
           ];
           
           console.log("HELLOMESSAGE: Servicios y procesos");
