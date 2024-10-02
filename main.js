@@ -1014,11 +1014,11 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
   
     // Definir rangos de horas por defecto
     if (hour >= 7 && hour < 14) {
-      helloMessage = "Buenos días "+ nombre+"!";
+      helloMessage = "¡Buenos días "+ nombre+"!";
     } else if (hour >= 14 && hour < 21) {
-      helloMessage = "Buenas tardes "+ nombre+"!";
+      helloMessage = "¡Buenas tardes "+ nombre+"!";
     } else if (hour >= 21 || hour < 1) {
-      helloMessage = "Buenas noches "+ nombre+" zZ";
+      helloMessage = "¡Buenas noches "+ nombre+" zZ";
     } else {
       helloMessage = "¿Qué haces trasnochando "+nombre+"?";
     }
@@ -1027,7 +1027,11 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     // Empresas
     if ((dayOfWeek === 1 && totalMinutes >= 880 && totalMinutes < 980) || (dayOfWeek === 5 && totalMinutes >= 930 && totalMinutes < 980)) {
         const messages = [
-          `Buenas tardes ${nombre}!`,
+          `¡Buenas tardes ${nombre}!`,
+          "Ohh Mónica, Mónica... tu voz más melódica que una harmónica",
+          "Ohh Mónica, Mónica... tu voz más melódica que una harmónica",
+          "Ohh Mónica, Mónica... tu voz más melódica que una harmónica",
+          "Ohh Mónica, Mónica... tu voz más melódica que una harmónica",
           "Ohh Mónica, Mónica... tu voz más melódica que una harmónica"
         ];
         
@@ -1043,30 +1047,27 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         (dayOfWeek === 3 && totalMinutes >= 930 && totalMinutes < 1030) || 
         // Viernes de 18:20 (1100 minutos) a 20:00 (1200 minutos)
         (dayOfWeek === 5 && totalMinutes >= 1100 && totalMinutes < 1200)) {
-        
-        // Array de mensajes posibles
         const messages = [
-          `¡Hola ${nombre}, sigue adelante!`,
-          "¡Ánimo, ya queda poco!",
-          "Estás en el rango perfecto para un pequeño descanso."
+          `¡Buenas tardes ${nombre}!`,
+          "O atiendes a Iván o te va a ir mal",
+          "O atiendes a Iván o te va a ir mal",
+          "O atiendes a Iván o te va a ir mal",
+          "O atiendes a Iván o te va a ir mal",
+          "O atiendes a Iván o te va a ir mal",
         ];
         
         console.log("HELLOMESSAGE: Moviles y datos SIN JUEVES");
-        // Seleccionar un mensaje al azar
         helloMessage = messages[Math.floor(Math.random() * messages.length)];
     }
 
     // Moviles y datos JUEVES
     if (dayOfWeek === 4 && totalMinutes >= 880 && totalMinutes < 1200) {
-        // Array de mensajes posibles
         const messages = [
-          `¡Hola ${nombre}, feliz jueves!`,
-          "El jueves ya está casi terminado, sigue con fuerza.",
-          "¡El fin de semana se acerca, aguanta un poco más!"
+          `¡̵B̵u̵e̵n̵a̵s̵ ̵t̵a̵r̵d̵e̵s̵!̵  Las del jueves no son buenas...`,
+          "Iván nos enseña bien con un poco de música Zen"
         ];
         
         console.log("HELLOMESSAGE: Moviles y datos JUEVES");
-        // Seleccionar un mensaje al azar
         helloMessage = messages[Math.floor(Math.random() * messages.length)];
     }
   
@@ -1074,33 +1075,62 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
   if ((dayOfWeek === 1 && totalMinutes >= 1150 && totalMinutes < 1320) ||  // Lunes de 19:10 (1150 minutos) a 22:00 (1320 minutos)
       (dayOfWeek === 3 && totalMinutes >= 1150 && totalMinutes < 1320) ||  // Miércoles de 19:10 (1150 minutos) a 22:00 (1320 minutos)
       (dayOfWeek === 5 && totalMinutes >= 1220 && totalMinutes < 1320)) { // Viernes de 20:20 (1220 minutos) a 22:00 (1320 minutos)
-      
-      // Array de mensajes posibles
       const messages = [
-        `¡Hola ${nombre}, es hora de relajarse!`,
-        "La noche es joven, ¿qué planes tienes?",
-        "¡Aprovecha esta hora para desconectar!"
+        `¡${nombre}, no es la materia adecuada para relajarse!`,
+        "¡Deja de mirar aquí y atiende a Fernando!",
+        "Sprint final, ¡ánimos!"
       ];
       
       console.log("HELLOMESSAGE: Interfaces");
-      // Seleccionar un mensaje al azar
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
   }
 
   //Sistemas empresariales
   if ((dayOfWeek === 2 && totalMinutes >= 1150 && totalMinutes < 1320) ||  // Martes de 19:10 (1150 minutos) a 22:00 (1320 minutos)
       (dayOfWeek === 4 && totalMinutes >= 1220 && totalMinutes < 1320)) { // Jueves de 20:20 (1220 minutos) a 22:00 (1320 minutos)
-      
-      // Array de mensajes posibles
       const messages = [
-        `¡Hola ${nombre}, espero que estés teniendo un gran martes!`,
-        "Es hora de relajarse después de un largo día.",
-        "¡Aprovecha la noche, el fin de semana está cerca!"
+        `¡Buenas tardes ${nombre}!`,
+        `¡Hola ${nombre}, quieres trabajar en Odoo?`,
+        `¡Hola ${nombre}, quieres trabajar en Odoo?`,
+        `¡Hola ${nombre}, quieres trabajar en Odoo?`,
+        `¡Hola ${nombre}, quieres trabajar en Odoo?`,
+        `¡Hola ${nombre}, quieres trabajar en Odoo?`
       ];
       
       console.log("HELLOMESSAGE: Sistemas empresariales");
-      // Seleccionar un mensaje al azar
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
+  }
+
+  //Servicios y procesos
+  if ((dayOfWeek === 3 && totalMinutes >= 875 && totalMinutes < 1150) || // Miércoles
+        (dayOfWeek === 5 && totalMinutes >= 980 && totalMinutes < 1100)) { // Viernes
+          const messages = [
+            `¡Buenas tardes ${nombre}!`,
+            `Queres atender de una vez ${nombre}? Jose Miguel se lo merece`,
+            `Queres atender de una vez ${nombre}? Jose Miguel se lo merece`,
+            `Queres atender de una vez ${nombre}? Jose Miguel se lo merece`,
+            `Queres atender de una vez ${nombre}? Jose Miguel se lo merece`,
+            `Queres atender de una vez ${nombre}? Jose Miguel se lo merece`
+          ];
+          
+          console.log("HELLOMESSAGE: Servicios y procesos");
+          helloMessage = messages[Math.floor(Math.random() * messages.length)];
+  }
+
+  //Inglés
+  if ((dayOfWeek === 2 && totalMinutes >= 1100 && totalMinutes < 1150) || // Martes
+        (dayOfWeek === 3 && totalMinutes >= 880 && totalMinutes < 930)) { // Miércoles
+          const messages = [
+            `Good afternoon ${nombre}!`,
+            `¡Hello ${nombre}, Reading-1. Genshing Impact is a game originaly...`,
+            `¡Hello ${nombre}, Reading-1. Genshing Impact is a game originaly...`,
+            `¡Hello ${nombre}, Reading-1. Genshing Impact is a game originaly...`,
+            `¡Hello ${nombre}, Reading-1. Genshing Impact is a game originaly...`,
+            `¡Hello ${nombre}, Reading-1. Genshing Impact is a game originaly...`
+          ];
+          
+          console.log("HELLOMESSAGE: Inglés");
+          helloMessage = messages[Math.floor(Math.random() * messages.length)];
   }
 
 
@@ -1108,16 +1138,12 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
   if ((dayOfWeek >= 1 && dayOfWeek <= 5) && 
       ((totalMinutes >= 1025 && totalMinutes < 1035) ||  // 17:05 (1025 minutos) a 17:15 (1035 minutos)
       (totalMinutes >= 1195 && totalMinutes < 1205))) { // 19:55 (1195 minutos) a 20:05 (1205 minutos)
-      
-      // Array de mensajes posibles
       const messages = [
-        "¡Es hora de un breve descanso!",
-        `¡Hola ${nombre}, toma un respiro en estos minutos!`,
-        "Un momento perfecto para estirarte y relajarte un poco."
+        "¡Calienta que sales!",
+        `Toca un descansillo... ¡menos mal!`
       ];
       
       console.log("HELLOMESSAGE: Comienzo recreo");
-      // Seleccionar un mensaje al azar
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
   }
 
@@ -1125,32 +1151,26 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
   if ((dayOfWeek >= 1 && dayOfWeek <= 5) && 
       ((totalMinutes >= 1035 && totalMinutes < 1055) ||  // 17:15 (1035 minutos) a 17:35 (1055 minutos)
       (totalMinutes >= 1205 && totalMinutes < 1225))) { // 20:05 (1205 minutos) a 20:25 (1225 minutos)
-      
-      // Array de mensajes posibles
       const messages = [
-        `¡Hola ${nombre}, sigue con energía!`,
-        "Es el momento de recargar fuerzas.",
-        "¡El día va avanzando, mantente enfocado!"
+        `¡Que pereza volver a este aula de m****a!`,
+        "Otra vez a clase... ME DERRItOOOooo..."
       ];
 
       console.log("HELLOMESSAGE: Final recreo");
-      // Seleccionar un mensaje al azar
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
   }
 
-  //Mensaje chao
+  //Mensaje final del día
   if ((dayOfWeek >= 1 && dayOfWeek <= 5) && 
       (totalMinutes >= 1305 && totalMinutes < 1325)) { // 21:45 (1305 minutos) a 22:05 (1325 minutos)
-      
-      // Array de mensajes posibles
-      const messages = [
-        `¡Hola ${nombre}, la noche está en su mejor momento!`,
-        "Casi es hora de descansar, ¿qué tal tu día?",
-        "¡No te olvides de relajarte antes de dormir!"
+            const messages = [
+        `Queda poco, ¡venga ${nombre} un último sprint!`,
+        "Me quiero ir a casaaaa",
+        "Me voy a jugar un textMessage simulator cuando llegue a casa",
+        "Esto de ser un simple mensaje y pasarse la eternidad aquí cansa más que cualquier ciclo superior de tarde en aEstrada..."
       ];
       
-      console.log("HELLOMESSAGE: Mensaje chao");
-      // Seleccionar un mensaje al azar
+      console.log("HELLOMESSAGE: Mensaje final del día");
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
   }
   
