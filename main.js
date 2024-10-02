@@ -1794,7 +1794,11 @@ cargarSkins(idLogeado);
 
       // Agregar event listeners a los botones de skins
   function handleSpecialCursor(cursorSrc, theme) {
-    // Aquí podemos manejar cursores especiales que requieran acciones adicionales
+    if (cursorSrc.includes('cccc_krillin')) {
+      cursorPurpleish.style.display = "none";
+    }
+
+
     if (cursorSrc.includes('cccc_galaxy')) {
       cursor.src = 'img/cursors/cccc_galaxy.webp';
       cursor.style.opacity = "70%";

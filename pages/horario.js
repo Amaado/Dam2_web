@@ -39,6 +39,10 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function handleSpecialCursor(cursorSrc) {
+    if (cursorSrc.includes('cccc_krillin')) {
+      cursorPurpleish.style.display = "none";
+    }
+
     // Aquí podemos manejar cursores especiales que requieran acciones adicionales
     if (cursorSrc.includes('cccc_galaxy')) {
       cursor.src = '../img/cursors/cccc_galaxy.webp';
