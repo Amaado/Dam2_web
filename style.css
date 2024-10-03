@@ -29,6 +29,14 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'kemco';
+  src: url('img/Kemco Pixel Bold.ttf') format('woff2'),
+       url('img/Kemco Pixel Bold.ttf') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -1230,11 +1238,11 @@ div.img img {
   left: 60px;
   transition: margin-left 0.5s ease;
   font-size: 25px;
-  color: #e9e02c;
+  color: #e2cd55;
   font-weight: bold;
-  font-size: 30px;
+  font-size: 41px;
   gap: 10px;
-  font-family: "verti";
+  font-family: "kemco";
 
 }
 
@@ -1243,6 +1251,33 @@ div.img img {
   height: 40px;
   z-index: 1;
 }
+
+.coinLabel{
+  margin-top:5.5px;
+  margin-left:13px;
+
+}
+
+
+#coinsContainerAnimationContainer{
+  position: absolute;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 90px;
+  height: 50px;
+}
+
+.coinsContainerAnimation{
+  position: absolute;
+  top: -40px;
+  left: -20px;
+  width: 140px;
+  height: 89px;
+  z-index: 100;
+  filter: saturate(1.1) brightness(1) contrast(1.5);
+}
+
 
 .titulo{
   position: relative;

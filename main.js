@@ -43,6 +43,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const DEFAULT_DAY_CURSOR = 'img/cursors/cccc_veraniego.webp';
   const DEFAULT_NIGHT_CURSOR = 'img/cursors/cccc.webp';
 
+
+
+  
+
   /* CAMBIO DE CURSOR */
   
   let idLogeado = localStorage.getItem('idLogeado');
