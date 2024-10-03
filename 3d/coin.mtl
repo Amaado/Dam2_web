@@ -1,0 +1,12 @@
+# Blender 4.1.0 MTL File: 'coin.blend'
+# www.blender.org
+
+newmtl Coin
+Ns 928.595032
+Ka 0.659091 0.659091 0.659091
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 3
+map_Kd C:/Users/andre/Desktop/Dam2_web/img/coin.png
