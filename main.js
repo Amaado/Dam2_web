@@ -1284,9 +1284,9 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       // Incrementar contador local inmediatamente para manejar animaciones y evitar sobrecarga de clics
       localCoinsCounter++;
       let ultimaCifra = parseInt(localCoinsCounter.toString().slice(-1), 10);
-      
+      let longitud = localCoinsCounter.toString().length;
       // Animación basada en la última cifra calculada
-      animationCoin(ultimaCifra);
+      animationCoin(ultimaCifra, longitud);
       
       // Esperar 3 segundos antes de actualizar la base de datos
       setTimeout(async function() {
@@ -1301,22 +1301,28 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         } catch (error) {
           console.error("Error durante la actualización de monedas en la base de datos:", error);
         }
-      }, 3000);
+      }, 2000);
     }
     
     // Función de animación de monedas
-    function animationCoin(ultimaCifra) {
+    function animationCoin(ultimaCifra, longitud) {
       const coinsContainerAnimationContainer = document.getElementById('coinsContainerAnimationContainer');
       if (coinsContainerAnimationContainer) {
         let img = document.createElement('img');
         let uniqueId = 'coin-image-' + imageCounter++; // ID único basado en el contador
-        
-        console.log("ultimaCifra para la animación:", ultimaCifra);
+        let numeroDesplazamiento = 32;
         
         // Asignar el src de la imagen según la última cifra
-        img.src = 'img/animationCoinsContainer/' + ultimaCifra + '.gif';
+        img.src = 'img/animationCoinsContainer/' + ultimaCifra + '.gif' + '?t=' + new Date().getTime();
         img.className = 'coinsContainerAnimation'; 
-        img.id = uniqueId; 
+        img.id = uniqueId;
+
+        setTimeout(() => {
+          img.style.marginLeft = numeroDesplazamiento*(longitud-1)+"px";
+        }, 250);
+
+
+        
     
         // Asignar el z-index a la imagen y subirlo para la siguiente imagen
         img.style.zIndex = zIndexValue;

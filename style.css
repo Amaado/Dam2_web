@@ -1234,11 +1234,12 @@ div.img img {
   align-items: center;
   width: 90px;
   height: 50px;
-  top: 40px;
+  top: 33px;
   left: 60px;
   transition: margin-left 0.5s ease;
-  font-size: 25px;
-  color: #e2cd55;
+  font-size: 26px;
+  /*color: #e2cd55;*/
+  color: #e412123a;
   font-weight: bold;
   font-size: 41px;
   gap: 10px;
@@ -1255,7 +1256,7 @@ div.img img {
 .coinLabel{
   margin-top:5.5px;
   margin-left:13px;
-
+  z-index: 200;
 }
 
 
@@ -1270,12 +1271,14 @@ div.img img {
 
 .coinsContainerAnimation{
   position: absolute;
-  top: -40px;
+  top: -39.1px;
   left: -20px;
   width: 140px;
-  height: 89px;
+  height: 87.9px;
   z-index: 100;
-  filter: saturate(1.1) brightness(1) contrast(1.5);
+  /*filter: saturate(1.1) brightness(1) contrast(1.5);*/
+  filter: brightness(0) saturate(100%) invert(0%) sepia(5%) saturate(18%) hue-rotate(29deg) brightness(111%) contrast(97%);
+  transition: margin-left 1.2s;
 }
 
 
