@@ -1259,46 +1259,101 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
   
     /* CLICK PARA FARMEAR MONEDAS */
-
-    async function incrementCoins(idLogeado) {
+    let zIndexValue = 60; // Variable global para controlar el z-index
+    let imageCounter = 0; // Contador para generar identificadores únicos
+    let localCoinsCounter = 0; // Contador local para manejar la última cifra en las animaciones
+    
+    // Obtener idLogeado de localStorage al inicio
+    const idLogeadoLoc = parseInt(localStorage.getItem('idLogeado'));
+    if (!isNaN(idLogeadoLoc)) {
+      actualizarLocalCoinsCounter(idLogeadoLoc);
+    } else {
+      console.error("Usuario no logeado al intentar actualizar el contador local.");
+    }
+    
+    async function actualizarLocalCoinsCounter(idLogeado) {
       try {
         const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
-    
-        const nuevasMonedas = monedasLogeado + 1;
-        coinLabel.textContent = nuevasMonedas;
-    
-        await actualizarMonedasUsuario(idLogeado, nuevasMonedas);
-    
+        localCoinsCounter = monedasLogeado;
       } catch (error) {
-        console.error("Error durante AÑADIR MONEDAS CLICK:", error);
+        console.error("Error durante ACTUALIZAR MONEDAS:", error);
       }
     }
     
+    async function incrementCoins(idLogeado) {
+      // Incrementar contador local inmediatamente para manejar animaciones y evitar sobrecarga de clics
+      localCoinsCounter++;
+      let ultimaCifra = parseInt(localCoinsCounter.toString().slice(-1), 10);
+      
+      // Animación basada en la última cifra calculada
+      animationCoin(ultimaCifra);
+      
+      // Esperar 3 segundos antes de actualizar la base de datos
+      setTimeout(async function() {
+        try {
+          // Actualizar las monedas del usuario en la base de datos
+          const nuevasMonedas = localCoinsCounter;
+          await actualizarMonedasUsuario(idLogeado, nuevasMonedas);
+          
+          // Actualizar la interfaz de usuario (etiqueta de monedas)
+          coinLabel.textContent = nuevasMonedas;
+    
+        } catch (error) {
+          console.error("Error durante la actualización de monedas en la base de datos:", error);
+        }
+      }, 3000);
+    }
+    
+    // Función de animación de monedas
+    function animationCoin(ultimaCifra) {
+      const coinsContainerAnimationContainer = document.getElementById('coinsContainerAnimationContainer');
+      if (coinsContainerAnimationContainer) {
+        let img = document.createElement('img');
+        let uniqueId = 'coin-image-' + imageCounter++; // ID único basado en el contador
+        
+        console.log("ultimaCifra para la animación:", ultimaCifra);
+        
+        // Asignar el src de la imagen según la última cifra
+        img.src = 'img/animationCoinsContainer/' + ultimaCifra + '.gif';
+        img.className = 'coinsContainerAnimation'; 
+        img.id = uniqueId; 
+    
+        // Asignar el z-index a la imagen y subirlo para la siguiente imagen
+        img.style.zIndex = zIndexValue;
+        zIndexValue = (zIndexValue < 90) ? zIndexValue + 1 : 60;
+    
+        // Añadir la imagen al contenedor
+        coinsContainerAnimationContainer.appendChild(img);
+    
+        // Eliminar la imagen después de 3 segundos
+        setTimeout(() => {
+          let imgToRemove = document.getElementById(uniqueId);
+          if (imgToRemove) {
+            imgToRemove.remove(); // Eliminar la imagen del DOM
+          }
+        }, 3000);
+      } else {
+        console.error("Contenedor de animación no encontrado.");
+      }
+    }
+    
+    // Añadir el evento de clic para incrementar las monedas
     document.addEventListener('click', function(event) {
       const idLogeado = parseInt(localStorage.getItem('idLogeado'));
-      
-      // Verificar si el usuario está en el menú de skins
-      if (!isInSkinsMenu()) {
-        if (idLogeado) {
-          incrementCoins(idLogeado);
-        } else {
-          console.error("Usuario no logeado.");
-        }
+      if (!isInSkinsMenu() && !isNaN(idLogeado)) {
+        incrementCoins(idLogeado); // Llamada para incrementar monedas y generar la animación
+      } else {
+        console.error("Usuario no logeado o en el menú de skins.");
       }
     });
     
-    // Función para verificar si el usuario está en el menú de skins
     function isInSkinsMenu() {
-      // Obtenemos el contenedor del menú de skins por su ID
       const skinsMenu = document.getElementById('skinsContainer');
-      
-      // Verificamos si el menú de skins tiene la clase 'active'
-      if (skinsMenu && skinsMenu.classList.contains('active')) {
-        return true;  // Si tiene la clase 'active', estamos en el menú de skins
-      }
-    
-      return false;  // No estamos en el menú de skins
+      return skinsMenu && skinsMenu.classList.contains('active');
     }
+
+
+
 
 
 
