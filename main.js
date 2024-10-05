@@ -1022,7 +1022,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     } else if (hour >= 14 && hour < 21) {
       helloMessage = "¡Buenas tardes "+ nombre+"!";
     } else if (hour >= 21 || hour < 1) {
-      helloMessage = "¡Buenas noches "+ nombre+" zZ";
+      helloMessage = "💤 Buenas noches "+ nombre+" 💤";
     } else {
       helloMessage = "¿Qué haces trasnochando "+nombre+"?";
     }
@@ -1304,40 +1304,70 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       }, 2000);
     }
     
-    // Función de animación de monedas
+
+
     function animationCoin(ultimaCifra, longitud) {
       const coinsContainerAnimationContainer = document.getElementById('coinsContainerAnimationContainer');
       if (coinsContainerAnimationContainer) {
-        let img = document.createElement('img');
-        let uniqueId = 'coin-image-' + imageCounter++; // ID único basado en el contador
+        let imgCoinAnim = document.createElement('img');
+        let imgNumberAnim = document.createElement('img');
+        let imgBackgroundAnim = document.createElement('img');
         let numeroDesplazamiento = 32;
         
-        // Asignar el src de la imagen según la última cifra
-        img.src = 'img/animationCoinsContainer/' + ultimaCifra + '.gif' + '?t=' + new Date().getTime();
-        img.className = 'coinsContainerAnimation'; 
-        img.id = uniqueId;
+        imgCoinAnim.src = 'img/animationCoinsContainer/c' + ultimaCifra + '.gif' + '?t=' + new Date().getTime();
+        imgCoinAnim.className = 'coinsContainerAnimation';
+        
+        if (ultimaCifra === 0) {
+          imgNumberAnim.src = 'img/animationCoinsContainer/n9.gif' + '?t=' + new Date().getTime();
+          //console.log('img/animationCoinsContainer/n9.gif');
 
+        } else {
+          imgNumberAnim.src = 'img/animationCoinsContainer/n' + (ultimaCifra - 1) + '.gif' + '?t=' + new Date().getTime();
+          //console.log('img/animationCoinsContainer/n' + (ultimaCifra-1) + '.gif');
+
+        }
+        
+        imgNumberAnim.className = 'coinsContainerAnimationNo'; 
+        //console.log(ultimaCifra);
+
+        imgBackgroundAnim.src = 'img/animationCoinsContainer/b.png';
+        imgBackgroundAnim.className = 'coinsContainerAnimationBackground'; 
+
+
+        imgBackgroundAnim.style.marginLeft = numeroDesplazamiento*(longitud-1)+"px";
+        imgNumberAnim.style.marginLeft = numeroDesplazamiento*(longitud-1)+"px";
         setTimeout(() => {
-          img.style.marginLeft = numeroDesplazamiento*(longitud-1)+"px";
+          imgCoinAnim.style.marginLeft = numeroDesplazamiento*(longitud-1)+"px";
         }, 250);
 
 
         
+        imgCoinAnim.style.zIndex = zIndexValue;
+        imgBackgroundAnim.style.zIndex = zIndexValue+1;
+        imgNumberAnim.style.zIndex = zIndexValue+2;
+        zIndexValue = (zIndexValue < 198) ? zIndexValue + 1 : 60;
     
-        // Asignar el z-index a la imagen y subirlo para la siguiente imagen
-        img.style.zIndex = zIndexValue;
-        zIndexValue = (zIndexValue < 90) ? zIndexValue + 1 : 60;
+
+        coinsContainerAnimationContainer.appendChild(imgCoinAnim);
+        coinsContainerAnimationContainer.appendChild(imgBackgroundAnim);
+        coinsContainerAnimationContainer.appendChild(imgNumberAnim);
     
-        // Añadir la imagen al contenedor
-        coinsContainerAnimationContainer.appendChild(img);
-    
-        // Eliminar la imagen después de 3 segundos
+        
         setTimeout(() => {
-          let imgToRemove = document.getElementById(uniqueId);
-          if (imgToRemove) {
-            imgToRemove.remove(); // Eliminar la imagen del DOM
+            if (imgBackgroundAnim) {
+              imgBackgroundAnim.style.opacity = "0%";
+              imgBackgroundAnim.remove();
+            }
+        },6000);
+
+        setTimeout(() => {
+          if (imgCoinAnim) {
+            imgCoinAnim.remove();
           }
-        }, 3000);
+          if (imgNumberAnim) {
+            imgNumberAnim.remove();
+          }
+        }, 6000);
       } else {
         console.error("Contenedor de animación no encontrado.");
       }

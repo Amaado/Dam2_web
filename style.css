@@ -77,7 +77,7 @@ body {
   border-radius: 50%;
   pointer-events: none;
   transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
-  z-index: 100;
+  z-index: 200;
   transform: scale(1);
   visibility: visible;
   opacity: 1%;
@@ -96,7 +96,7 @@ body {
   border-radius: 50%;
   pointer-events: none;
   transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
-  z-index: 100;
+  z-index: 200;
   transform: scale(1);
   visibility: visible;
   opacity: 1%;
@@ -118,7 +118,7 @@ body {
   mask-size: 200px; /* Asegura que la máscara se ajuste sin cortar partes, manteniendo proporciones */
   mask-position: 0 0; /* Centra la máscara */
   background-size: contain; /* Asegura que el fondo sea completamente visible, manteniendo proporciones */
-  z-index: 98; /* Ajusta según necesidades, fondoGalaxyGreen debería tener un z-index ligeramente superior si se superpone */
+  z-index: 198; /* Ajusta según necesidades, fondoGalaxyGreen debería tener un z-index ligeramente superior si se superpone */
   pointer-events: none;
   background-repeat: no-repeat; /* No repetir el fondo */
   background-position: center; /* Centrar el fondo */
@@ -141,12 +141,11 @@ body {
   mask-size: 200px; /* Asegura que la máscara se ajuste sin cortar partes, manteniendo proporciones */
   mask-position: 0 0; /* Centra la máscara */
   background-size: contain; /* Asegura que el fondo sea completamente visible, manteniendo proporciones */
-  z-index: 98; /* Ajusta según necesidades, fondoGalaxyGreen debería tener un z-index ligeramente superior si se superpone */
   pointer-events: none;
   transition: opacity 0.3s ease-in-out;
   background-repeat: no-repeat; /* No repetir el fondo */
   background-position: center; /* Centrar el fondo */
-  z-index: 99; /* Asegúrate de que fondoGalaxyGreen esté por encima de fondoGalaxy si se superponen */
+  z-index: 199; /* Asegúrate de que fondoGalaxyGreen esté por encima de fondoGalaxy si se superponen */
   opacity: 1%;
 }
 
@@ -1238,8 +1237,8 @@ div.img img {
   left: 60px;
   transition: margin-left 0.5s ease;
   font-size: 26px;
-  /*color: #e2cd55;*/
-  color: #e412123a;
+  color: #e2cd55;
+  /*color: #e412123a;*/
   font-weight: bold;
   font-size: 41px;
   gap: 10px;
@@ -1251,12 +1250,13 @@ div.img img {
   width: 40px;
   height: 40px;
   z-index: 1;
+  margin-top: -2px;
 }
 
 .coinLabel{
   margin-top:5.5px;
   margin-left:13px;
-  z-index: 200;
+  z-index: 50;
 }
 
 
@@ -1275,10 +1275,31 @@ div.img img {
   left: -20px;
   width: 140px;
   height: 87.9px;
-  z-index: 100;
-  /*filter: saturate(1.1) brightness(1) contrast(1.5);*/
-  filter: brightness(0) saturate(100%) invert(0%) sepia(5%) saturate(18%) hue-rotate(29deg) brightness(111%) contrast(97%);
+  filter: saturate(1.1) brightness(1) contrast(1.5);
+  /*filter: brightness(0) saturate(100%) invert(0%) sepia(5%) saturate(18%) hue-rotate(29deg) brightness(111%) contrast(97%);*/
   transition: margin-left 1.2s;
+}
+
+.coinsContainerAnimationBackground{
+  position: absolute;
+  top: -44px;
+  left: -20px;
+  width: 140px;
+  height: 95px;
+  /*filter: saturate(1.1) brightness(1) contrast(1.5);*/
+  filter: brightness(0) saturate(100%) invert(10%) sepia(9%) saturate(1370%) hue-rotate(175deg) brightness(92%) contrast(92%);
+  animation: opacity 0.5s ease;
+  opacity: 100%;
+}
+
+.coinsContainerAnimationNo{
+  position: absolute;
+  top: -39.1px;
+  left: -20px;
+  width: 140px;
+  height: 87.9px;
+  filter: saturate(1.1) brightness(1) contrast(1.5);
+  /*filter: brightness(0) saturate(100%) invert(0%) sepia(5%) saturate(18%) hue-rotate(29deg) brightness(111%) contrast(97%);*/
 }
 
 
