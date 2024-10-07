@@ -1397,10 +1397,9 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         imgNumberAnim.style.zIndex = zIndexValue+2;
         zIndexValue = (zIndexValue < 198) ? zIndexValue + 1 : 60;
     
-
+        coinsContainerAnimationContainer.appendChild(imgNumberAnim);
         coinsContainerAnimationContainer.appendChild(imgCoinAnim);
         coinsContainerAnimationContainer.appendChild(imgBackgroundAnim);
-        coinsContainerAnimationContainer.appendChild(imgNumberAnim);
     
         
         setTimeout(() => {
