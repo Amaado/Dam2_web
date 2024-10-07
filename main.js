@@ -1382,8 +1382,9 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
         imgBackgroundAnim.src = 'img/animationCoinsContainer/b.png';
         imgBackgroundAnim.className = 'coinsContainerAnimationBackground'; 
-        imgBackgroundAnim.style.opacity = "100%";
-
+        setTimeout(() => {
+          imgBackgroundAnim.style.opacity = "100%";
+        }, 50);
 
         imgBackgroundAnim.style.marginLeft = numeroDesplazamiento*(longitud-1)+"px";
         imgNumberAnim.style.marginLeft = numeroDesplazamiento*(longitud-1)+"px";
