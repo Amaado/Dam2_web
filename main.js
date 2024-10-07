@@ -999,11 +999,13 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       nightCursorSrc = DEFAULT_NIGHT_CURSOR;
       localStorage.removeItem('cursorDay');
       localStorage.removeItem('cursorNight');
+      localStorage.removeItem('idLogeado');
     }
   
     // Aplicar el tema
     applyTheme();
-  
+    console.log(idLogeado);
+    console.log(sesionAutomatica);
     // Actualizar estado de los elementos según la sesión
     actualizarEstadoElementosSesion();
   });
