@@ -1288,8 +1288,8 @@ div.img img {
   height: 95px;
   /*filter: saturate(1.1) brightness(1) contrast(1.5);*/
   filter: brightness(0) saturate(100%) invert(10%) sepia(9%) saturate(1370%) hue-rotate(175deg) brightness(92%) contrast(92%);
-  animation: opacity 0.5s ease;
-  opacity: 100%;
+  transition: opacity 0.5s ease;
+  opacity: 0%;
 }
 
 .coinsContainerAnimationNo{
