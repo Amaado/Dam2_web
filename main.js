@@ -683,6 +683,19 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         loginContainer.style.opacity = "100%";
         checkboxLogin.checked = true;
 
+        campoNameLogin.disabled = false;
+        campoPasswordLogin.disabled = false;
+        loginSubmit.disabled = false;
+        registerSubmit.disabled = true;
+        campoNameRegister.disabled = true;
+        campoPasswordRegister.disabled = true;
+        campoPasswordRepeatRegister.disabled = true;
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            loginSubmit.click();
+          }
+        });
 
         setTimeout(() => {
           isAnimatingLogin = false;
@@ -699,6 +712,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         loginScreen.style.backdropFilter = "blur(0)";
         loginScreen.style.opacity = "0%";
         loginContainer.style.opacity = "0%";
+        
     
         setTimeout(() => {
           loginScreen.classList.remove("active");
@@ -709,6 +723,16 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           campoPasswordLogin.value = '';
           campoNameLogin.blur();
           campoPasswordLogin.blur();
+
+          registerSubmit.disabled = true;
+          campoNameRegister.disabled = true;
+          campoPasswordRegister.disabled = true;
+          campoPasswordRepeatRegister.disabled = true;
+          campoNameLogin.disabled = true;
+          campoPasswordLogin.disabled = true;
+          loginSubmit.disabled = true;
+
+
         }, 500);
       }
     });
@@ -773,7 +797,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           localStorage.setItem('idLogeado', idLogeado);
         } else {
           localStorage.removeItem('sesionAutomatica');
-          localStorage.removeItem('idLogeado');
+          localStorage.setItem('idLogeado', idLogeado);
         }
     
         // Actualizar información en la interfaz
@@ -812,7 +836,21 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         registerScreen.style.backdropFilter = "blur(5px)";
         registerScreen.style.opacity = "100%";
         registerContainer.style.opacity = "100%";
-        
+
+        campoNameLogin.disabled = true;
+        campoPasswordLogin.disabled = true;
+        loginSubmit.disabled = true;
+        registerSubmit.disabled = false;
+        campoNameRegister.disabled = false;
+        campoPasswordRegister.disabled = false;
+        campoPasswordRepeatRegister.disabled = false;
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            registerSubmit.click();
+          }
+        });
+
         setTimeout(() => {
           isAnimatingRegister = false;
         }, 500);
@@ -849,6 +887,15 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           campoPasswordRegister.style.outline = '4px solid #bfd4e9';
           campoPasswordRepeatRegister.style.color = "#1c2128";
           campoPasswordRepeatRegister.style.outline = '4px solid #bfd4e9';
+
+
+          registerSubmit.disabled = true;
+          campoNameRegister.disabled = true;
+          campoPasswordRegister.disabled = true;
+          campoPasswordRepeatRegister.disabled = true;
+          campoNameLogin.disabled = true;
+          campoPasswordLogin.disabled = true;
+          loginSubmit.disabled = true;
         }, 500);
       }
     });
@@ -936,7 +983,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     const sesionAutomatica = localStorage.getItem('sesionAutomatica');
     idLogeado = localStorage.getItem('idLogeado');
   
-    if (sesionAutomatica && idLogeado) {
+    if (sesionAutomatica) {
       try {
         // Actualizar información del usuario
         await actualizarHelloMessage(idLogeado);
@@ -1243,13 +1290,16 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
 
   /* ACTUALIZAR MONEDAS */
+  let zIndexValue = 60; // Variable global para controlar el z-index
+  let imageCounter = 0; // Contador para generar identificadores únicos
+  let localCoinsCounter = 0; // Contador local para manejar la última cifra en las animaciones
 
   async function actualizarMonedas(idLogeado) {
     try {
         console.log("ID logeado:", idLogeado);
         const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
         coinLabel.textContent = monedasLogeado;
-  
+        localCoinsCounter = monedasLogeado;
         console.log("Monedas obtenidas:", monedasLogeado);
   
     } catch (error) {
@@ -1259,9 +1309,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
   
     /* CLICK PARA FARMEAR MONEDAS */
-    let zIndexValue = 60; // Variable global para controlar el z-index
-    let imageCounter = 0; // Contador para generar identificadores únicos
-    let localCoinsCounter = 0; // Contador local para manejar la última cifra en las animaciones
+
     
     // Obtener idLogeado de localStorage al inicio
     const idLogeadoLoc = parseInt(localStorage.getItem('idLogeado'));
@@ -1679,10 +1727,9 @@ cargarSkins(idLogeado);
   /* OCULTAR ELEMENTOS CUANDO LA SESION ESTÁ INICIADA */
 
   function actualizarEstadoElementosSesion() {
-    const sesionAutomatica = localStorage.getItem('sesionAutomatica');
     const idLogeado = localStorage.getItem('idLogeado');
   
-    if (sesionAutomatica && idLogeado) {
+    if (idLogeado) {
       // El usuario ha iniciado sesión
       // Ocultar botones de Login y Register
       if (loginButton) {
