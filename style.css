@@ -67,8 +67,8 @@ body {
   transition: background-color 0.75s ease;
   overflow: hidden;
   cursor: none;
-}
 
+}
 
 #customCursor {
   position: absolute;
@@ -1164,7 +1164,7 @@ div.img img {
   display: flex;
   flex-direction: column;
   transition: transform 0.5s ease;
-  transform: translateX(-10vw);
+  transform: translateX(-11vw);
   gap: 20px;
   overflow-y:auto;
   overflow-x: hidden;
@@ -1215,7 +1215,7 @@ div.img img {
   width: 1vw;
   height: 100vh;
   transition: transform 0.5s ease;
-  transform: translateX(0vw);
+  transform: translateX(-0.5vw);
   z-index: 1;
 }
 
@@ -1615,6 +1615,18 @@ div.img img {
   background-color: #e9ddbfee;
 }
 
+.buttonThemeLock {
+  border-bottom-right-radius: 15px;
+  background-color: #e9ddbfad;
+  transition: background-color 0.2s;
+  z-index: 3;
+
+}
+
+.buttonThemeLock:hover {
+  background-color: #e9ddbfee;
+}
+
 
 
 .buttonThemeImg{
@@ -1633,4 +1645,56 @@ div.img img {
   right: 30px;
   width: 60px;
   height: 60px;
+}
+
+
+
+/* UNDERWATER SKIN */
+
+#svgUnderwater {
+	position: absolute;
+  z-index: 300;
+  pointer-events: none;
+}
+
+#underwater{
+  width: 101vw;  /* Anchura completa de la ventana */
+  height: 101vh; /* Altura completa de la ventana */
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  z-index: 301; /* Ajusta según necesidades, fondoGalaxyGreen debería tener un z-index ligeramente superior si se superpone */
+  pointer-events: none;
+  opacity: 0%;
+  mix-blend-mode:overlay;
+  filter: brightness(1) contrast(1);
+  transition: opacity 0.5s ease, filter 0.5s ease;
+  display: none;
+}
+#underwater.active{
+  opacity: 100%;
+  filter: brightness(2) contrast(0.7);
+
+}
+
+#filterUnderwater{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: none;  
+}
+
+#filterUnderwater.active{
+  filter: url(#distort);
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: none;
+
 }

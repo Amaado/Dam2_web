@@ -42,6 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
   let selectedNightButton = null;
   const DEFAULT_DAY_CURSOR = 'img/cursors/cccc_veraniego.webp';
   const DEFAULT_NIGHT_CURSOR = 'img/cursors/cccc.webp';
+  let underwater = document.getElementById("underwater");
+  let filterUnderwater = document.getElementById("filterUnderwater");
+
 
 
 
@@ -153,12 +156,28 @@ document.addEventListener('DOMContentLoaded', function() {
         cursorPurpleish.src = cursorPurpleishSrc;
       }
     }
-  
-    cursor.style.opacity = "100%";
-    cursorPurpleish.style.display = "block";
-    cursor.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out';
-    fondo.style.display = "none";
-    fondoGreen.style.display = "none";
+
+
+
+
+
+    if (!cursorSrc.includes('cccc_krillin')) {
+      cursorPurpleish.style.display = "block";
+    }
+
+    if (!cursorSrc.includes('cccc_galaxy')) {
+      cursor.style.opacity = "100%";
+      cursor.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out';
+      fondo.style.display = "none";
+      fondoGreen.style.display = "none";
+    }
+
+    if (!cursorSrc.includes('cccc_buceo')) {
+      underwater.style.display = "none";
+      underwater.className = "";
+      filterUnderwater.className = "";
+    }
+   
 
     handleSpecialCursor(cursorSrc, theme);
   }
@@ -1431,7 +1450,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       if (!isInSkinsMenu() && !isNaN(idLogeado)) {
         incrementCoins(idLogeado); // Llamada para incrementar monedas y generar la animación
       } else {
-        console.error("Usuario no logeado o en el menú de skins.");
+        console.log("No se pueden farmear monedas en el menú de skins");
       }
     });
     
@@ -1936,15 +1955,26 @@ cargarSkins(idLogeado);
     }*/
 
 
-    /* SKIN GALAXY */
+    
 
-      // Agregar event listeners a los botones de skins
+      
   function handleSpecialCursor(cursorSrc, theme) {
+
+    /* KRILLIN NO PURPLEISH */
     if (cursorSrc.includes('cccc_krillin')) {
       cursorPurpleish.style.display = "none";
     }
 
 
+    /* SKIN BUCEO */
+    if (cursorSrc.includes('cccc_buceo')) {
+      underwater.style.display = "block";
+      underwater.className = "active";
+      filterUnderwater.className = "active";
+    }
+
+
+    /* SKIN GALAXY */
     if (cursorSrc.includes('cccc_galaxy')) {
       cursor.src = 'img/cursors/cccc_galaxy.webp';
       cursor.style.opacity = "70%";
@@ -2131,9 +2161,7 @@ cargarSkins(idLogeado);
         return svg;
     }
   
-      document.querySelectorAll('a:has(.card)').forEach((link, index) => {
-        if (index === 0) return;
-      
+      document.querySelectorAll('a:has(.card)').forEach((link, index) => {      
         let ovalTimeout;
       
         link.addEventListener('mouseenter', function() {
@@ -2247,8 +2275,31 @@ cargarSkins(idLogeado);
       skinsContainer.addEventListener('mouseleave', removeSkinsMenuActive);
       flechaHitbloxPlus.addEventListener('mouseenter', addSkinsMenuActive);
       flechaHitbloxPlus.addEventListener('mouseleave', removeSkinsMenuActive);
+
+
+
+
+
+
+
+
+      /* FILTRO UNDERWATER */
+    
+      const turbulence = document.getElementById('turbulence');
+      let time = 0; // Variable de tiempo para generar el ciclo
       
-    
-    
+      function animateTurbulence() {
+        time += 0.005; // Ajusta la velocidad de la animación aumentando o disminuyendo este valor
+        
+        // Usa una función sinusoidal para un movimiento cíclico suave
+        const baseFreqX = 0.01 + 0.005 * Math.sin(time);
+        const baseFreqY = 0.01 + 0.005 * Math.cos(time);
+        
+        turbulence.setAttribute('baseFrequency', baseFreqX + ' ' + baseFreqY);
+      
+        requestAnimationFrame(animateTurbulence); // Continuar la animación
+      }
+      
+      animateTurbulence(); // Iniciar la animación
 
 });
