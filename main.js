@@ -1155,7 +1155,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
   }
 
   //Servicios y procesos
-  if ((dayOfWeek === 3 && totalMinutes >= 875 && totalMinutes < 1150) || // Miércoles
+  if ((dayOfWeek === 3 && totalMinutes >= 1055 && totalMinutes < 1150) || // Miércoles
         (dayOfWeek === 5 && totalMinutes >= 980 && totalMinutes < 1100)) { // Viernes
           const messages = [
             `¡Buenas tardes ${nombre}!`,
