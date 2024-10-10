@@ -1157,14 +1157,14 @@ div.img img {
   background: -webkit-linear-gradient(180deg,#1c2128 10%, #737f8b 200%);
   background: -moz-linear-gradient(180deg,#1c2128 10%, #737f8b 200%);
   position: fixed;
-  width: 10vw;
+  width: 15vw;
   height: 100vh;
   align-items: center;
   justify-content: top;
   display: flex;
   flex-direction: column;
   transition: transform 0.5s ease;
-  transform: translateX(-11vw);
+  transform: translateX(-15vw);
   gap: 20px;
   overflow-y:auto;
   overflow-x: hidden;
@@ -1206,7 +1206,7 @@ div.img img {
 }
 
 #flechaa.active {
-  transform: rotate(270deg) rotateX(180deg) translateY(-0.75vw);
+  transform: rotate(270deg) rotateX(180deg) translateY(-5vw);
 }
 
 #flechaHitbloxPlus{
@@ -1220,8 +1220,8 @@ div.img img {
 }
 
 #flechaHitbloxPlus.active {
-  transform: translateX(10vw);
-  width: 15vw;
+  transform: translateX(15vw);
+  width: 10vw;
 }
 
 
@@ -1344,7 +1344,7 @@ div.img img {
   flex-direction: column;
   align-items: center;
   justify-content: top;
-  width: 90%;
+  width: 70%;
   min-height: 280px;
   max-height: 280px;
   border: 2px solid #bfd4e9;
@@ -1359,7 +1359,8 @@ div.img img {
 }
 
 .skinContainerBackdropFilter{
-  backdrop-filter: blur(20px);
+  /*backdrop-filter: blur(20px);*/
+  background-color: #2d3541;
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -1369,6 +1370,73 @@ div.img img {
   min-height: 100%;
   border-radius: 25px;
   z-index: -20;
+}
+
+.boxshadow{
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  background-color: transparent;
+  border-radius: 25px;
+  width: 100%;
+  min-height: 100%;
+  z-index: -21;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.boxshadowNight{
+  background-color: transparent;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  width: 50%;
+  min-height: 100%;
+  overflow: visible;
+
+  box-shadow: 0px 0px 0px 0px #3a8bdb;
+  -webkit-box-shadow: 0px 0px 0px 0px #3a8bdb;
+  -moz-box-shadow: 0px 0px 0px 0px #3a8bdb;
+}
+
+.boxshadowNight.active{
+  background-color: transparent;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  width: 50%;
+  min-height: 100%;
+  overflow: visible;
+  transition: box-shadow 0.5s ease-in-out;
+
+  box-shadow: 0px 0px 28px 13px #65a4e4;
+  -webkit-box-shadow: 0px 0px 28px 13px #65a4e4;
+  -moz-box-shadow: 0px 0px 28px 13px #65a4e4;
+}
+
+.boxshadowDay{
+  background-color: transparent;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  width: 50%;
+  min-height: 100%;
+  overflow: visible;
+  transition: box-shadow 0.5s ease-in-out;
+
+  box-shadow: 0px 0px 0px 0px #cac862;
+  -webkit-box-shadow: 0px 0px 0px 0px #cac862;
+  -moz-box-shadow: 0px 0px 0px 0px #cac862;
+}
+
+.boxshadowDay.active{
+  background-color: transparent;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  width: 50%;
+  min-height: 100%;
+  overflow: visible;
+
+  box-shadow: 0px 0px 28px 13px #cac862;
+  -webkit-box-shadow: 0px 0px 28px 13px #cac862;
+  -moz-box-shadow: 0px 0px 28px 13px #cac862;
 }
 
 .skinContainerLock{

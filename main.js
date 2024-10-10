@@ -111,17 +111,31 @@ document.addEventListener('DOMContentLoaded', function() {
         // Restablecer el ícono del botón anterior a sunIcon.png
         const prevImgElement = selectedDayButton.querySelector('.buttonThemeImg');
         prevImgElement.src = 'img/sunIcon.png';
+  
+        const prevBoxshadowDay = selectedDayButton.closest('.skinContainer').querySelector('.boxshadowDay');
+        prevBoxshadowDay.classList.remove("active");
       }
       // Establecer el nuevo botón seleccionado
       selectedDayButton = buttonElement;
+  
+      const boxshadowDay = buttonElement.closest('.skinContainer').querySelector('.boxshadowDay');
+      boxshadowDay.classList.add("active");
+
     } else if (theme === 'night') {
       if (selectedNightButton && selectedNightButton !== buttonElement) {
         // Restablecer el ícono del botón anterior a moonIcon.png
         const prevImgElement = selectedNightButton.querySelector('.buttonThemeImg');
         prevImgElement.src = 'img/moonIcon.png';
+  
+        const prevBoxshadowNight = selectedNightButton.closest('.skinContainer').querySelector('.boxshadowNight');
+        prevBoxshadowNight.classList.remove("active");
       }
       // Establecer el nuevo botón seleccionado
       selectedNightButton = buttonElement;
+  
+      const boxshadowNight = buttonElement.closest('.skinContainer').querySelector('.boxshadowNight');
+      boxshadowNight.classList.add("active");
+
     }
   
     // Cambiar el ícono del botón actual a tickCheck.png
@@ -299,13 +313,20 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
     buttonThemeDayElements.forEach(button => {
       const imgElement = button.querySelector('.buttonThemeImg');
       const cursorAlt = imgElement.getAttribute('alt');
+      const boxshadowDay = button.closest('.skinContainer')?.querySelector('.boxshadowDay');
       if (cursorAlt === dayCursorSrc) {
         // Este es el botón seleccionado
         imgElement.src = 'img/tickCheck.png';
         selectedDayButton = button;
+        if (boxshadowDay) {
+          boxshadowDay.classList.add("active");
+        }
       } else {
         // Restablecer al ícono predeterminado
         imgElement.src = 'img/sunIcon.png';
+        if (boxshadowDay) {
+          boxshadowDay.classList.remove("active");
+        }
       }
     });
   
@@ -314,13 +335,20 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
     buttonThemeNightElements.forEach(button => {
       const imgElement = button.querySelector('.buttonThemeImg');
       const cursorAlt = imgElement.getAttribute('alt');
+      const boxshadowNight = button.closest('.skinContainer')?.querySelector('.boxshadowNight');
       if (cursorAlt === nightCursorSrc) {
         // Este es el botón seleccionado
         imgElement.src = 'img/tickCheck.png';
         selectedNightButton = button;
+        if (boxshadowNight) {
+          boxshadowNight.classList.add("active");
+        }
       } else {
         // Restablecer al ícono predeterminado
         imgElement.src = 'img/moonIcon.png';
+        if (boxshadowNight) {
+          boxshadowNight.classList.remove("active");
+        }
       }
     });
   }
@@ -1753,7 +1781,7 @@ cargarSkins(idLogeado);
 
   function actualizarEstadoElementosSesion() {
     const idLogeado = localStorage.getItem('idLogeado');
-  
+    
     if (idLogeado) {
       // El usuario ha iniciado sesión
       // Ocultar botones de Login y Register
@@ -2311,7 +2339,7 @@ cargarSkins(idLogeado);
         flechaHitbloxPlus.classList.add('active');
 
         if (skinsContainer.classList.contains('active')) {
-          coinsContainer.style.marginLeft = "10vw";
+          coinsContainer.style.marginLeft = "15vw";
         }
       }
       
