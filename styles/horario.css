@@ -982,3 +982,76 @@ nav{
 .no-transition * {
   transition: none !important;
 }
+
+
+
+
+/* UNDERWATER SKIN */
+
+#svgUnderwater {
+	position: absolute;
+  z-index: 300;
+  pointer-events: none;
+}
+
+#underwater{
+  width: 101vw;
+  height: 101vh;
+  position: absolute;
+  top: 0vw;
+  left: -1vh;
+  z-index: 301;
+  pointer-events: none;
+  opacity: 0%;
+  mix-blend-mode:overlay;
+  filter: brightness(1) contrast(1);
+  transition: filter 0.5s ease;
+  display: none;
+}
+#underwater.active{
+  opacity: 100%;
+  filter: brightness(2) contrast(0.7);
+
+}
+
+#underwaterTransi{
+  width: 101vw;
+  height: 101vh;
+  position: absolute;
+  top: 0vw;
+  left: -1vh;
+  z-index: 302;
+  pointer-events: none;
+  opacity: 100%;
+  mix-blend-mode:overlay;
+  filter: brightness(1) contrast(1);
+  transition: opacity 0.5s ease, filter 0.5s ease;
+  display: none;
+}
+#underwaterTransi.active{
+  opacity: 100%;
+  filter: brightness(2) contrast(0.7);
+
+}
+
+#filterUnderwater{
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: none;
+
+}
+
+#filterUnderwater.active{
+  filter: url(#distort);
+  display: flex;
+  width: 100vw;
+  height: 150%;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: none;
+}

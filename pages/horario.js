@@ -43,7 +43,24 @@ document.addEventListener('DOMContentLoaded', function() {
       cursorPurpleish.style.display = "none";
     }
 
-    // Aquí podemos manejar cursores especiales que requieran acciones adicionales
+    /* SKIN BUCEO */
+    if (cursorSrc.includes('cccc_buceo')) {
+      underwater.src = "../img/fondoBuceo.webp?t=" + new Date().getTime();
+      underwater.style.display = "block";
+      underwater.className = "active";
+      underwater.style.opacity = "100%";
+
+      underwaterTransi.style.display = "none";
+      underwaterTransi.style.opacity = "0%";
+      underwaterTransi.className = "";
+
+      filterUnderwater.className = "active";
+
+    }
+
+
+
+    /* SKIN GALAXY */
     if (cursorSrc.includes('cccc_galaxy')) {
       cursor.src = '../img/cursors/cccc_galaxy.webp';
       cursor.style.opacity = "70%";
@@ -194,6 +211,15 @@ document.addEventListener('DOMContentLoaded', function() {
       escText.classList.remove("escTextNight");
       esc.classList.remove("escNight");
       esc2.classList.remove("esc2Night");
+
+      if (nightCursorSrc.includes('cccc_buceo')) {
+        underwaterTransi.style.display = "none";
+        underwaterTransi.className = "";
+        underwater.style.display = "none";
+        underwater.className = "";
+        filterUnderwater.className = "";
+        filterUnderwater.style.mask = "none";
+      }
       
       if (cursor && cursorPurpleish) {
         cursor.style.opacity = "100%";
