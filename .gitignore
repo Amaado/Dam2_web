@@ -1,3 +1,5 @@
+# Ignorar todos los archivos .blend1
+*.blend1
 
-3d/cccc.blend1
-3d/cccc.blend
+# Ignorar todos los archivos .blend (si deseas ignorar este tipo de archivo también)
+*.blend
