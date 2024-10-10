@@ -381,10 +381,11 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
       }
       if (logoutButton) {
         logoutButton.src = "img/logoutDay.png";
-      }/*
-      if(loginContainer){
-        loginContainer.backgroundColor = ""
-      }*/
+      }
+
+      ajustesColorLoginYregister(checkbox);
+
+
 
     } else {
       // Dark theme settings
@@ -407,11 +408,186 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
       if (logoutButton) {
         logoutButton.src = "img/logoutNight.png";
       }
+
+
+      ajustesColorLoginYregister(checkbox);
+
+
     }
   }
 
 
   applyTheme();
+
+
+  function ajustesColorLoginYregister(checkbox){
+    if (checkbox.checked) {
+      if(loginContainer){
+        loginContainer.style.backgroundColor = "#c4bc95f4";
+        
+      }
+      if(registerContainer){
+        registerContainer.style.backgroundColor = "#c4bc95f4";
+      }
+
+      const formTitles = document.querySelectorAll('.formTittle');
+      formTitles.forEach(function(title) {
+        title.style.color = "#313842";
+      });
+
+      const formLabel = document.querySelectorAll('.formLabel');
+      formLabel.forEach(function(label) {
+        label.style.color = "#313842";
+      });
+
+      const formLabelCheckbox = document.querySelectorAll('.formLabelCheckbox');
+      formLabelCheckbox.forEach(function(labelCheckbox) {
+        labelCheckbox.style.color = "#313842";
+      });
+
+      const sheet = document.styleSheets[0]; // Asume que es la primera hoja de estilos
+      for (let i = 0; i < sheet.cssRules.length; i++) {
+        const rule = sheet.cssRules[i];
+        if (rule.selectorText === '#stayLoged[type="checkbox"]') {
+          rule.style.borderColor = '#f3edcc'; // Cambiar color del borde
+          rule.style.backgroundColor = '#dddcb0'; // Cambiar color de fondo
+        }
+        if (rule.selectorText === '#stayLoged[type="checkbox"]:checked') {
+          rule.style.backgroundColor = '#313842'; // Cambiar color de fondo cuando está seleccionado
+          rule.style.borderColor = '#313842'; // Cambiar color del borde cuando está seleccionado
+        }
+        if (rule.selectorText === '#stayLoged[type="checkbox"]:checked::before') {
+          rule.style.color = '#dddcb0'; // Cambiar color del ✔
+        }
+
+        // Modificar la regla de estilo de input[type="text"] y input[type="password"]
+        if (rule.selectorText === 'input[type="text"], input[type="password"]') {
+          rule.style.backgroundColor = '#dddcb0'; // Cambiar color de fondo
+          rule.style.color = '#313842'; // Cambiar color de texto
+          rule.style.outline = '4px solid #f3edcc'; // Cambiar el outline
+        }
+    
+        // Modificar la regla de estilo para cuando el input esté en foco
+        if (rule.selectorText === 'input[type="text"]:focus, input[type="password"]:focus') {
+          rule.style.outline = '4px solid #313842'; // Cambiar el outline cuando está en foco
+          rule.style.color = '#313842'; // Cambiar color de texto
+        }
+        if (rule.selectorText === 'input[type="text"]::placeholder, input[type="password"]::placeholder') {
+          rule.style.color = '#c4bc95f4'; // Cambiar el color del placeholder
+        }
+
+        if (rule.selectorText === '#loginSubmit') {
+          rule.style.backgroundColor = '#f3edcc'; // Cambiar color de fondo del botón login
+          rule.style.color = "#969073f4";
+        }
+      
+        // Modificar la regla de estilo para el hover de #loginSubmit
+        if (rule.selectorText === '#loginSubmit:hover') {
+          rule.style.backgroundColor = '#dddcb0'; // Cambiar el color de fondo en hover del botón login
+          rule.style.color = "#313842";
+          rule.style.border = '2px solid #313842'; // Cambiar el borde en hover
+        }
+      
+        // Modificar la regla de estilo de #registerSubmit
+        if (rule.selectorText === '#registerSubmit') {
+          rule.style.backgroundColor = '#f3edcc'; // Cambiar color de fondo del botón login
+          rule.style.color = "#969073f4";
+        }
+      
+        // Modificar la regla de estilo para el hover de #registerSubmit
+        if (rule.selectorText === '#registerSubmit:hover') {
+          rule.style.backgroundColor = '#dddcb0'; // Cambiar el color de fondo en hover del botón login
+          rule.style.color = "#313842";
+          rule.style.border = '2px solid #313842'; // Cambiar el borde en hover
+        }
+      }
+
+
+
+    } else {
+
+      if(loginContainer){
+        loginContainer.style.backgroundColor = "#141a1ff4";
+      }
+      if(registerContainer){
+        registerContainer.style.backgroundColor = "#141a1ff4";
+      }
+
+      const formTitles = document.querySelectorAll('.formTittle');
+      formTitles.forEach(function(title) {
+        title.style.color = "#bfd4e9";
+      });
+
+      const formLabel = document.querySelectorAll('.formLabel');
+      formLabel.forEach(function(label) {
+        label.style.color = "#bfd4e9";
+      });
+
+      const formLabelCheckbox = document.querySelectorAll('.formLabelCheckbox');
+      formLabelCheckbox.forEach(function(labelCheckbox) {
+        labelCheckbox.style.color = "#bfd4e9";
+      });
+
+      const sheet = document.styleSheets[0]; // Asume que es la primera hoja de estilos
+      for (let i = 0; i < sheet.cssRules.length; i++) {
+        const rule = sheet.cssRules[i];
+        if (rule.selectorText === '#stayLoged[type="checkbox"]') {
+          rule.style.borderColor = '#819db8'; // Cambiar color del borde
+          rule.style.backgroundColor = '#bfd4e9'; // Cambiar color de fondo
+        }
+        if (rule.selectorText === '#stayLoged[type="checkbox"]:checked') {
+          rule.style.backgroundColor = '#345178'; // Cambiar color de fondo cuando está seleccionado
+          rule.style.borderColor = '#345178'; // Cambiar color del borde cuando está seleccionado
+        }
+        if (rule.selectorText === '#stayLoged[type="checkbox"]:checked::before') {
+          rule.style.color = '#bfd4e9'; // Cambiar color del ✔
+        }
+      
+        // Modificar la regla de estilo de input[type="text"] y input[type="password"]
+        if (rule.selectorText === 'input[type="text"], input[type="password"]') {
+          rule.style.backgroundColor = '#819db8'; // Cambiar color de fondo
+          rule.style.color = '#1c2128'; // Cambiar color de texto
+          rule.style.outline = '4px solid #bfd4e9'; // Cambiar el outline
+        }
+    
+        // Modificar la regla de estilo para cuando el input esté en foco
+        if (rule.selectorText === 'input[type="text"]:focus, input[type="password"]:focus') {
+          rule.style.outline = '4px solid #345178'; // Cambiar el outline cuando está en foco
+          rule.style.color = '#bfd4e9'; // Cambiar color de texto
+        }
+        if (rule.selectorText === 'input[type="text"]::placeholder, input[type="password"]::placeholder') {
+          rule.style.color = '#bfd4e9'; // Cambiar el color del placeholder
+        }
+
+        if (rule.selectorText === '#loginSubmit') {
+          rule.style.backgroundColor = '#345178'; // Cambiar color de fondo del botón login
+          rule.style.color = "#bfd4e9";
+        }
+      
+        // Modificar la regla de estilo para el hover de #loginSubmit
+        if (rule.selectorText === '#loginSubmit:hover') {
+          rule.style.backgroundColor = '#1c2128'; // Cambiar el color de fondo en hover del botón login
+          rule.style.border = '2px solid #bfd4e9b1'; // Cambiar el borde en hover
+          rule.style.color = "#bfd4e9";
+        }
+      
+        // Modificar la regla de estilo de #registerSubmit
+        if (rule.selectorText === '#registerSubmit') {
+          rule.style.backgroundColor = '#345178'; // Cambiar color de fondo del botón login
+          rule.style.color = "#bfd4e9";
+        }
+      
+        // Modificar la regla de estilo para el hover de #registerSubmit
+        if (rule.selectorText === '#registerSubmit:hover') {
+          rule.style.backgroundColor = '#1c2128'; // Cambiar el color de fondo en hover del botón login
+          rule.style.border = '2px solid #bfd4e9b1'; // Cambiar el borde en hover
+          rule.style.color = "#bfd4e9";
+        }
+
+      }
+
+    }
+  }
   
 
 
@@ -668,7 +844,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     }
 
     const data = await response.json();
-    console.log('Monedas actualizadas correctamente:', data);
+    //console.log('Monedas actualizadas correctamente:', data);
     return data;
   } catch (error) {
     console.error('Error al actualizar las monedas:', error);
@@ -775,6 +951,9 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           campoNameLogin.blur();
           campoPasswordLogin.blur();
 
+          // Reiniciar mensajes de error y estilos
+          ajustesColorLoginYregister(checkbox);
+
           registerSubmit.disabled = true;
           campoNameRegister.disabled = true;
           campoPasswordRegister.disabled = true;
@@ -801,12 +980,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     
     loginSubmit.addEventListener('click', async function() {
       // Reiniciar mensajes de error y estilos
-      errorLabelLogin.textContent = "";
-      errorLabelLogin.style.color = "#bfd4e9";
-      campoNameLogin.style.color = "#1c2128";
-      campoNameLogin.style.outline = '4px solid #bfd4e9';
-      campoPasswordLogin.style.color = "#1c2128";
-      campoPasswordLogin.style.outline = '4px solid #bfd4e9';
+      ajustesColorLoginYregister(checkbox);
 
       // Validar campos vacíos antes de continuar
       if (campoNameLogin.value.trim() === '' || campoPasswordLogin.value.trim() === '') {
@@ -896,6 +1070,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         campoPasswordRegister.disabled = false;
         campoPasswordRepeatRegister.disabled = false;
 
+
         document.addEventListener("keydown", function (event) {
           if (event.key === "Enter") {
             registerSubmit.click();
@@ -929,15 +1104,11 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           campoNameRegister.blur();
           campoPasswordRegister.blur();
           campoPasswordRepeatRegister.blur();
-          // Reiniciar el estado de los estilos y mensajes de error
-          errorLabelRegister.textContent = "";
-          errorLabelRegister.style.color = "#bfd4e9";
-          campoNameRegister.style.color = "#1c2128";
-          campoNameRegister.style.outline = '4px solid #bfd4e9';
-          campoPasswordRegister.style.color = "#1c2128";
-          campoPasswordRegister.style.outline = '4px solid #bfd4e9';
-          campoPasswordRepeatRegister.style.color = "#1c2128";
-          campoPasswordRepeatRegister.style.outline = '4px solid #bfd4e9';
+          
+
+          // Reiniciar mensajes de error y estilos
+          ajustesColorLoginYregister(checkbox);
+          
 
 
           registerSubmit.disabled = true;
@@ -953,14 +1124,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
     registerSubmit.addEventListener('click', async function() { 
       // Reiniciar el estado de los estilos y mensajes de error
-      errorLabelRegister.textContent = "";
-      errorLabelRegister.style.color = "#bfd4e9";
-      campoNameRegister.style.color = "#1c2128";
-      campoNameRegister.style.outline = '4px solid #bfd4e9';
-      campoPasswordRegister.style.color = "#1c2128";
-      campoPasswordRegister.style.outline = '4px solid #bfd4e9';
-      campoPasswordRepeatRegister.style.color = "#1c2128";
-      campoPasswordRepeatRegister.style.outline = '4px solid #bfd4e9';
+      ajustesColorLoginYregister(checkbox);
     
       // Validar si algún campo está vacío
       if (campoNameRegister.value.trim() === '' || campoPasswordRegister.value.trim() === '' || campoPasswordRepeatRegister.value.trim() === '') {
@@ -1408,59 +1572,95 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     function animationCoin(ultimaCifra, longitud) {
       const coinsContainerAnimationContainer = document.getElementById('coinsContainerAnimationContainer');
       if (coinsContainerAnimationContainer) {
+        // Eliminar imgNumberAnim e imgBackgroundAnim si existen antes de crear una nueva animación
+        const existingImgNumberAnim = coinsContainerAnimationContainer.querySelector('.coinsContainerAnimationNo');
+        const existingImgBackgroundAnim = coinsContainerAnimationContainer.querySelector('.coinsContainerAnimationBackground');
+        if (existingImgNumberAnim) {
+          setTimeout(() => {
+            existingImgNumberAnim.remove();
+          }, 50);
+        }
+        if (existingImgBackgroundAnim) {
+          setTimeout(() => {
+            existingImgBackgroundAnim.remove();
+          }, 50);
+        }
+    
         let imgCoinAnim = document.createElement('img');
         let imgNumberAnim = document.createElement('img');
         let imgBackgroundAnim = document.createElement('img');
         let numeroDesplazamiento = 32;
-        
+    
         imgCoinAnim.src = 'img/animationCoinsContainer/c' + ultimaCifra + '.gif' + '?t=' + new Date().getTime();
         imgCoinAnim.className = 'coinsContainerAnimation';
-        
+    
         if (ultimaCifra === 0) {
           imgNumberAnim.src = 'img/animationCoinsContainer/n9.gif' + '?t=' + new Date().getTime();
-          //console.log('img/animationCoinsContainer/n9.gif');
-
         } else {
           imgNumberAnim.src = 'img/animationCoinsContainer/n' + (ultimaCifra - 1) + '.gif' + '?t=' + new Date().getTime();
-          //console.log('img/animationCoinsContainer/n' + (ultimaCifra-1) + '.gif');
-
         }
-        
-        imgNumberAnim.className = 'coinsContainerAnimationNo'; 
-        //console.log(ultimaCifra);
-
+    
+        imgNumberAnim.className = 'coinsContainerAnimationNo';
         imgBackgroundAnim.src = 'img/animationCoinsContainer/b.png' + '?t=' + new Date().getTime();
         imgBackgroundAnim.className = 'coinsContainerAnimationBackground';
         imgBackgroundAnim.style.opacity = "100%";
-
-        setTimeout(() => {
-        }, 50);
-
-        imgBackgroundAnim.style.marginLeft = numeroDesplazamiento*(longitud-1)+"px";
-        imgNumberAnim.style.marginLeft = numeroDesplazamiento*(longitud-1)+"px";
-        setTimeout(() => {
-          imgCoinAnim.style.marginLeft = numeroDesplazamiento*(longitud-1)+"px";
-        }, 250);
-
-
         
+        setTimeout(() => {
+          imgCoinAnim.style.filter = 'saturate(1.1) brightness(1) contrast(1.5) drop-shadow(-3px 3px 3px rgba(0, -2, 0, 0.3))';
+        }, 200);
+
+        setTimeout(() => {
+          imgCoinAnim.style.filter = 'saturate(1.1) brightness(1) contrast(1.5) drop-shadow(0px 0px 0px rgba(0, 0, 0, 0.0))';
+        }, 900);
+    
+        imgBackgroundAnim.style.marginLeft = numeroDesplazamiento * (longitud - 1) + "px";
+        imgNumberAnim.style.marginLeft = numeroDesplazamiento * (longitud - 1) + "px";
+        setTimeout(() => {
+          imgCoinAnim.style.marginLeft = numeroDesplazamiento * (longitud - 1) + "px";
+        }, 250);
+    
+        let checkboxStatus;
+        if (localStorage.getItem('checkboxStatus')) {
+          checkboxStatus = JSON.parse(localStorage.getItem('checkboxStatus'));
+        } else {
+          checkboxStatus = true;
+        }
+    
+        if (checkboxStatus === true) {
+          // Tema de día
+          imgBackgroundAnim.style.filter = 'brightness(0) saturate(100%) invert(96%) sepia(10%) saturate(811%) hue-rotate(7deg) brightness(94%) contrast(87%)';
+        } else {
+          // Tema de noche
+          imgBackgroundAnim.style.filter = 'brightness(0) saturate(100%) invert(10%) sepia(9%) saturate(1370%) hue-rotate(175deg) brightness(92%) contrast(92%)';
+        }
+    
+        checkbox.addEventListener('change', () => {
+          
+          if (checkboxStatus === false) {
+            // Tema de día
+            imgBackgroundAnim.style.filter = 'brightness(0) saturate(100%) invert(96%) sepia(10%) saturate(811%) hue-rotate(7deg) brightness(94%) contrast(87%)';
+          } else {
+            // Tema de noche
+            imgBackgroundAnim.style.filter = 'brightness(0) saturate(100%) invert(10%) sepia(9%) saturate(1370%) hue-rotate(175deg) brightness(92%) contrast(92%)';
+          }
+        });
+    
         imgCoinAnim.style.zIndex = zIndexValue;
-        imgBackgroundAnim.style.zIndex = zIndexValue+1;
-        imgNumberAnim.style.zIndex = zIndexValue+2;
+        imgBackgroundAnim.style.zIndex = zIndexValue + 1;
+        imgNumberAnim.style.zIndex = zIndexValue + 2;
         zIndexValue = (zIndexValue < 198) ? zIndexValue + 1 : 60;
     
         coinsContainerAnimationContainer.appendChild(imgNumberAnim);
         coinsContainerAnimationContainer.appendChild(imgCoinAnim);
         coinsContainerAnimationContainer.appendChild(imgBackgroundAnim);
     
-        
         setTimeout(() => {
-            if (imgBackgroundAnim) {
-              imgBackgroundAnim.style.opacity = "0%";
-              imgBackgroundAnim.remove();
-            }
-        },6000);
-
+          if (imgBackgroundAnim) {
+            imgBackgroundAnim.style.opacity = "0%";
+            imgBackgroundAnim.remove();
+          }
+        }, 6000);
+    
         setTimeout(() => {
           if (imgCoinAnim) {
             imgCoinAnim.remove();
@@ -1477,13 +1677,22 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     // Añadir el evento de clic para incrementar las monedas
     document.addEventListener('click', function(event) {
       const idLogeado = parseInt(localStorage.getItem('idLogeado'));
+      const clickedElement = event.target;
+
+      // Comprobar si el clic ocurrió en el div con la clase 'background' o en el checkbox o cualquier parte del interruptor
+      if (clickedElement.closest('.background') || clickedElement.closest('.switch')) {
+        console.log("No se pueden farmear monedas al hacer clic en el checkbox");
+        return;  // Salir de la función si el clic fue en el div del checkbox o en cualquiera de sus elementos
+      }
+
+      // Si no estamos en el menú de skins y el idLogeado es válido, farmear monedas
       if (!isInSkinsMenu() && !isNaN(idLogeado)) {
         incrementCoins(idLogeado); // Llamada para incrementar monedas y generar la animación
       } else {
         console.log("No se pueden farmear monedas en el menú de skins");
       }
     });
-    
+
     function isInSkinsMenu() {
       const skinsMenu = document.getElementById('skinsContainer');
       return skinsMenu && skinsMenu.classList.contains('active');

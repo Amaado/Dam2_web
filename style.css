@@ -242,13 +242,13 @@ nav a:hover {
   align-items: center;
   justify-content: top;
   padding: 40px;
-  background-color: #151a1ff4;
   border-radius: 50px;
   width: 600px;
   height: 460px;
   z-index: 12;
   opacity: 0%;
   transition: opacity 0.3s ease;
+  background-color: #c4bc95f4;/**/
 }
 
 #registerContainer{
@@ -259,7 +259,6 @@ nav a:hover {
   align-items: center;
   justify-content: top;
   padding: 40px;
-  background-color: #151a1ff4;
   border-radius: 50px;
   width: 600px;
   height: 480px;
@@ -343,7 +342,6 @@ nav a:hover {
   width: 20px;
   height: 20px;
   font-size: 25px;
-  color: #bfd4e9;
 }
 
 .formLabelCheckbox{
@@ -383,7 +381,6 @@ nav a:hover {
 }
 
 
-
 input[type="text"],
 input[type="password"] {
   background-color: #819db8;
@@ -398,7 +395,13 @@ input[type="password"] {
 input[type="text"]:focus,
 input[type="password"]:focus {
   outline: 4px solid #345178;
+  color: #bfd4e9;
   border: none;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+  color: #bfd4e9;
 }
 
 #errorLabelLogin{
@@ -1243,7 +1246,6 @@ div.img img {
   font-size: 41px;
   gap: 10px;
   font-family: "kemco";
-
 }
 
 .coinsContainerCoin{
@@ -1257,6 +1259,7 @@ div.img img {
   margin-top:5.5px;
   margin-left:13px;
   z-index: 50;
+  
 }
 
 
@@ -1267,6 +1270,7 @@ div.img img {
   align-items: center;
   width: 90px;
   height: 50px;
+
 }
 
 .coinsContainerAnimation{
@@ -1275,9 +1279,10 @@ div.img img {
   left: -20px;
   width: 140px;
   height: 87.9px;
-  filter: saturate(1.1) brightness(1) contrast(1.5);
+  filter: saturate(1.1) brightness(1) contrast(1.5) drop-shadow(0px 0px 0px rgba(0, 0, 0, 0.0));
   /*filter: brightness(0) saturate(100%) invert(0%) sepia(5%) saturate(18%) hue-rotate(29deg) brightness(111%) contrast(97%);*/
-  transition: margin-left 1.2s;
+  transition: margin-left 1.2s, filter 0.6s ease;
+
 }
 
 .coinsContainerAnimationBackground{
@@ -1288,7 +1293,7 @@ div.img img {
   height: 95px;
   /*filter: saturate(1.1) brightness(1) contrast(1.5);*/
   filter: brightness(0) saturate(100%) invert(10%) sepia(9%) saturate(1370%) hue-rotate(175deg) brightness(92%) contrast(92%);
-  transition: opacity 0.01s ease;
+  transition: opacity 0.01s ease, filter 0.75s ease;
   opacity: 0%;
 }
 
