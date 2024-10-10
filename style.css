@@ -1212,10 +1212,10 @@ div.img img {
 #flechaHitbloxPlus{
   background-color: transparent;
   position: fixed;
-  width: 1vw;
+  width: 1.5vw;
   height: 100vh;
   transition: transform 0.5s ease;
-  transform: translateX(-0.5vw);
+  transform: translateX(-1vw);
   z-index: 1;
 }
 
@@ -1658,17 +1658,17 @@ div.img img {
 }
 
 #underwater{
-  width: 101vw;  /* Anchura completa de la ventana */
-  height: 101vh; /* Altura completa de la ventana */
+  width: 101vw;
+  height: 101vh;
   position: absolute;
-  top: -20px;
-  left: -20px;
-  z-index: 301; /* Ajusta según necesidades, fondoGalaxyGreen debería tener un z-index ligeramente superior si se superpone */
+  top: 0vw;
+  left: -1vh;
+  z-index: 301;
   pointer-events: none;
   opacity: 0%;
   mix-blend-mode:overlay;
   filter: brightness(1) contrast(1);
-  transition: opacity 0.5s ease, filter 0.5s ease;
+  transition: filter 0.5s ease;
   display: none;
 }
 #underwater.active{
@@ -1677,24 +1677,44 @@ div.img img {
 
 }
 
-#filterUnderwater{
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  flex-direction: column;
-  overflow: hidden;
-  cursor: none;  
+#underwaterTransi{
+  width: 101vw;
+  height: 101vh;
+  position: absolute;
+  top: 0vw;
+  left: -1vh;
+  z-index: 302;
+  pointer-events: none;
+  opacity: 100%;
+  mix-blend-mode:overlay;
+  filter: brightness(1) contrast(1);
+  transition: opacity 0.5s ease, filter 0.5s ease;
+  display: none;
+}
+#underwaterTransi.active{
+  opacity: 100%;
+  filter: brightness(2) contrast(0.7);
+
 }
 
-#filterUnderwater.active{
-  filter: url(#distort);
+#filterUnderwater{
   display: flex;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
   cursor: none;
 
+}
+
+#filterUnderwater.active{
+  filter: url(#distort);
+  display: flex;
+  width: 100vw;
+  height: 150%;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: none;
 }
