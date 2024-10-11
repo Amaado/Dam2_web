@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const fondo = document.getElementById('fondoGalaxy');
   const fondoGreen = document.getElementById('fondoGalaxyGreen');
   const cursorSize = 200;
+  let underwaterTransi = document.getElementById("underwaterTransi");
+  let filterUnderwater = document.getElementById("filterUnderwater");
 
   
   // Variables para almacenar los cursores seleccionados
@@ -39,6 +41,32 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function handleSpecialCursor(cursorSrc) {
+
+    /* DESACTIVAR SI NO SON LAS SKINS CORRECTAS */
+
+    if (!cursorSrc.includes('cccc_krillin')) {
+      cursorPurpleish.style.display = "block";
+    }
+
+    if (!cursorSrc.includes('cccc_galaxy')) {
+      cursor.style.opacity = "100%";
+      cursor.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out';
+      fondo.style.display = "none";
+      fondoGreen.style.display = "none";
+    }
+
+    if (!cursorSrc.includes('cccc_buceo')) {
+      underwaterTransi.style.display = "none";
+      underwaterTransi.className = "";
+      underwater.style.display = "none";
+      underwater.className = "";
+      filterUnderwater.className = "";
+      filterUnderwater.style.mask = "none";
+    }
+
+
+
+    /* SKIN KRILLIN */
     if (cursorSrc.includes('cccc_krillin')) {
       cursorPurpleish.style.display = "none";
     }
@@ -336,5 +364,30 @@ document.addEventListener('DOMContentLoaded', function() {
   } else {
       console.error('Elementos de cursor no encontrados en el DOM.');
   }
+
+
+
+
+  /* FILTRO UNDERWATER */
+    
+  const turbulence = document.getElementById('turbulence');
+  let time = 0; // Variable de tiempo para generar el ciclo
+  
+  function animateTurbulence() {
+    time += 0.003; // Ajusta la velocidad de la animación aumentando o disminuyendo este valor
+    
+    // Usa una función sinusoidal para un movimiento cíclico suave
+    const baseFreqX = 0.01 + 0.005 * Math.sin(time);
+    const baseFreqY = 0.01 + 0.005 * Math.cos(time);
+    
+    turbulence.setAttribute('baseFrequency', baseFreqX + ' ' + baseFreqY);
+  
+    requestAnimationFrame(animateTurbulence); // Continuar la animación
+  }
+  
+  animateTurbulence(); // Iniciar la animación
+
+
+
 
 });

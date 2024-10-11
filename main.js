@@ -172,29 +172,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
 
-
-
-
-
-    if (!cursorSrc.includes('cccc_krillin')) {
-      cursorPurpleish.style.display = "block";
-    }
-
-    if (!cursorSrc.includes('cccc_galaxy')) {
-      cursor.style.opacity = "100%";
-      cursor.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out';
-      fondo.style.display = "none";
-      fondoGreen.style.display = "none";
-    }
-
-    if (!cursorSrc.includes('cccc_buceo')) {
-      underwaterTransi.style.display = "none";
-      underwaterTransi.className = "";
-      underwater.style.display = "none";
-      underwater.className = "";
-      filterUnderwater.className = "";
-      filterUnderwater.style.mask = "none";
-    }
    
 
     handleSpecialCursor(cursorSrc, theme);
@@ -383,8 +360,6 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
         logoutButton.src = "img/logoutDay.png";
       }
 
-      ajustesColorLoginYregister(checkbox);
-
 
 
     } else {
@@ -410,10 +385,10 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
       }
 
 
-      ajustesColorLoginYregister(checkbox);
-
-
     }
+
+    ajustesColorLoginYregister(checkbox);
+
   }
 
 
@@ -952,7 +927,13 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           campoPasswordLogin.blur();
 
           // Reiniciar mensajes de error y estilos
-          ajustesColorLoginYregister(checkbox);
+          campoNameLogin.removeAttribute('style');
+          campoPasswordLogin.removeAttribute('style');
+          campoNameRegister.removeAttribute('style');
+          campoPasswordRegister.removeAttribute('style');
+          campoPasswordRepeatRegister.removeAttribute('style');
+          errorLabelLogin.style.visibility = "hidden";
+          errorLabelRegister.style.visibility = "hidden";
 
           registerSubmit.disabled = true;
           campoNameRegister.disabled = true;
@@ -980,10 +961,17 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     
     loginSubmit.addEventListener('click', async function() {
       // Reiniciar mensajes de error y estilos
-      ajustesColorLoginYregister(checkbox);
+      campoNameLogin.removeAttribute('style');
+      campoPasswordLogin.removeAttribute('style');
+      campoNameRegister.removeAttribute('style');
+      campoPasswordRegister.removeAttribute('style');
+      campoPasswordRepeatRegister.removeAttribute('style');
+      errorLabelLogin.style.visibility = "hidden";
+      errorLabelRegister.style.visibility = "hidden";
 
       // Validar campos vacíos antes de continuar
       if (campoNameLogin.value.trim() === '' || campoPasswordLogin.value.trim() === '') {
+        errorLabelLogin.style.visibility = "visible";
         errorLabelLogin.textContent = "All the information must be filled.";
         errorLabelLogin.style.color = "red";
     
@@ -1106,9 +1094,13 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           campoPasswordRepeatRegister.blur();
           
 
-          // Reiniciar mensajes de error y estilos
-          ajustesColorLoginYregister(checkbox);
-          
+          campoNameLogin.removeAttribute('style');
+          campoPasswordLogin.removeAttribute('style');
+          campoNameRegister.removeAttribute('style');
+          campoPasswordRegister.removeAttribute('style');
+          campoPasswordRepeatRegister.removeAttribute('style');
+          errorLabelLogin.style.visibility = "hidden";
+          errorLabelRegister.style.visibility = "hidden";
 
 
           registerSubmit.disabled = true;
@@ -1124,10 +1116,17 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
     registerSubmit.addEventListener('click', async function() { 
       // Reiniciar el estado de los estilos y mensajes de error
-      ajustesColorLoginYregister(checkbox);
+      campoNameLogin.removeAttribute('style');
+      campoPasswordLogin.removeAttribute('style');
+      campoNameRegister.removeAttribute('style');
+      campoPasswordRegister.removeAttribute('style');
+      campoPasswordRepeatRegister.removeAttribute('style');
+      errorLabelLogin.style.visibility = "hidden";
+      errorLabelRegister.style.visibility = "hidden";
     
       // Validar si algún campo está vacío
       if (campoNameRegister.value.trim() === '' || campoPasswordRegister.value.trim() === '' || campoPasswordRepeatRegister.value.trim() === '') {
+        errorLabelRegister.style.visibility = "visible";
         errorLabelRegister.textContent = "All the information must be filled.";
         errorLabelRegister.style.color = "red";
         
@@ -1689,7 +1688,12 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       if (!isInSkinsMenu() && !isNaN(idLogeado)) {
         incrementCoins(idLogeado); // Llamada para incrementar monedas y generar la animación
       } else {
-        console.log("No se pueden farmear monedas en el menú de skins");
+        if(isInSkinsMenu()){
+          console.log("No se pueden farmear monedas en el menú de skins");
+        }
+        if(isNaN(idLogeado)){
+          console.log("No se pueden farmear monedas sin loguearse");
+        }
       }
     });
 
@@ -2201,6 +2205,28 @@ cargarSkins(idLogeado);
       
   function handleSpecialCursor(cursorSrc, theme) {
 
+    /* DESACTIVAR SI NO SON LAS SKINS CORRECTAS */
+    if (!cursorSrc.includes('cccc_krillin')) {
+      cursorPurpleish.style.display = "block";
+    }
+
+    if (!cursorSrc.includes('cccc_galaxy')) {
+      cursor.style.opacity = "100%";
+      cursor.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out';
+      fondo.style.display = "none";
+      fondoGreen.style.display = "none";
+    }
+
+    if (!cursorSrc.includes('cccc_buceo')) {
+      underwaterTransi.style.display = "none";
+      underwaterTransi.className = "";
+      underwater.style.display = "none";
+      underwater.className = "";
+      filterUnderwater.className = "";
+      filterUnderwater.style.mask = "none";
+    }
+
+
     /* KRILLIN NO PURPLEISH */
     if (cursorSrc.includes('cccc_krillin')) {
       cursorPurpleish.style.display = "none";
@@ -2582,7 +2608,7 @@ cargarSkins(idLogeado);
       let time = 0; // Variable de tiempo para generar el ciclo
       
       function animateTurbulence() {
-        time += 0.005; // Ajusta la velocidad de la animación aumentando o disminuyendo este valor
+        time += 0.003; // Ajusta la velocidad de la animación aumentando o disminuyendo este valor
         
         // Usa una función sinusoidal para un movimiento cíclico suave
         const baseFreqX = 0.01 + 0.005 * Math.sin(time);
