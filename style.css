@@ -1155,10 +1155,9 @@ div.img img {
 
 
 #skinsContainer {
-  background: #1c2128;
-  background: linear-gradient(180deg,#1c2128 10%, #737f8b 200%);
-  background: -webkit-linear-gradient(180deg,#1c2128 10%, #737f8b 200%);
-  background: -moz-linear-gradient(180deg,#1c2128 10%, #737f8b 200%);
+  background: linear-gradient(180deg,#2d1e03 10%, #dddcb0 200%);
+  background: -webkit-linear-gradient(180deg,#c4bc95f4 10%, #dddcb0 200%);
+  background: -moz-linear-gradient(180deg,#c4bc95f4 10%, #dddcb0 200%);
   position: fixed;
   width: 15vw;
   height: 100vh;
@@ -1320,6 +1319,7 @@ div.img img {
   font-family: 'verti';
   top:-120px;
   margin-top: 20px;
+  color: #bfd4e9;
 
 }
 
@@ -1331,23 +1331,13 @@ div.img img {
   background-color: #bfd4e9;
   margin-top: 95px;
 }
-/*
-@media screen and (min-width: 426px) {
-  .hr{
-    margin-top: 85px;
-  }
-}
-
-@media screen and (max-width: 426px) {
-  .hr{
-    margin-top: 85px;
-  }
-}*/
-
-
 
 .skinContainerFirst{
   margin-top: 30px;
+}
+
+.skinContainerLast{
+  margin-bottom: 60px;
 }
 
 .skinContainer{
@@ -1373,7 +1363,7 @@ div.img img {
 
 .skinContainerBackdropFilter{
   /*backdrop-filter: blur(20px);*/
-  background-color: #2d3541;
+  background-color: #68654f;
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -1463,7 +1453,7 @@ div.img img {
   border-radius: 25px;
   background-color: rgba(119, 119, 119, 0.342);
   backdrop-filter: blur(2px);
-  filter: saturate(0);
+  filter: saturate(0.5);
   z-index: 10;
   transition: opacity 0.2s ease;
   opacity: 100%;
@@ -1779,7 +1769,6 @@ div.img img {
 }
 
 #filterUnderwaterDupe{
-  mask: url('path_to_inverse_mask_image');
   position: absolute;
   display: flex;
   width: 100vw;

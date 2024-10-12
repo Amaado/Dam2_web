@@ -476,6 +476,47 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
           rule.style.color = "#313842";
           rule.style.border = '2px solid #313842'; // Cambiar el borde en hover
         }
+
+        /* SKINS CONTAINER COLOR */
+        if (rule.selectorText === '#skinsContainer') {
+          rule.style.background = `linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
+          rule.style.background = `-webkit-linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
+          rule.style.background = `-moz-linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
+        }
+        if (rule.selectorText === '#skinsContainer::-webkit-scrollbar-thumb') {
+          rule.style.backgroundColor = "#313842";
+        }
+        if (rule.selectorText === '#skinsContainer::-webkit-scrollbar-thumb:hover') {
+          rule.style.backgroundColor = "#68654f";
+        }
+
+
+        if (rule.selectorText === '.titulo') {
+          rule.style.color = '#313842';
+          rule.style.filter = 'drop-shadow(3px 0px 1px #31384289) drop-shadow(-3px 0px 1px #31384289)';
+
+        }
+
+        // Cambiar propiedades de color para la clase .hr
+        if (rule.selectorText === '.hr') {
+          rule.style.backgroundColor = '#313842'; 
+        }
+
+        if (rule.selectorText === '.skinContainer') {
+          rule.style.borderColor = '#313842';  // Cambia 'nuevo_color' por el valor de color deseado
+        }
+
+        // Cambiar propiedades de color para la clase .skinContainerBackdropFilter
+        if (rule.selectorText === '.skinContainerBackdropFilter') {
+          rule.style.backgroundColor = '#bab58d';  // Cambia 'nuevo_color' por el valor de color deseado
+        }
+
+        if (rule.selectorText === '.skinContainerLock') {
+          rule.style.backgroundColor = 'rgba(45, 42, 34, 0.542)';  // Cambia 'nuevo_color' por el valor de color deseado
+        }
+
+
+
       }
 
 
@@ -559,6 +600,44 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
           rule.style.border = '2px solid #bfd4e9b1'; // Cambiar el borde en hover
           rule.style.color = "#bfd4e9";
         }
+
+        if (rule.selectorText === '#skinsContainer') {
+          rule.style.background = `linear-gradient(180deg,#1c2128 10%, #737f8b 200%)`;
+          rule.style.background = `-webkit-linear-gradient(180deg,#1c2128 10%, #737f8b 200%)`;
+          rule.style.background = `-moz-linear-gradient(180deg,#1c2128 10%, #737f8b 200%)`;
+        }
+        if (rule.selectorText === '#skinsContainer::-webkit-scrollbar-thumb') {
+          rule.style.backgroundColor = "#737f8b";
+        }
+        if (rule.selectorText === '#skinsContainer::-webkit-scrollbar-thumb:hover') {
+          rule.style.backgroundColor = "#bfd4e9";
+        }
+
+
+
+        if (rule.selectorText === '.titulo') {
+          rule.style.color = '#bfd4e9';  // Cambia 'nuevo_color' por el valor de color deseado
+          rule.style.filter = 'drop-shadow(3px 0px 1px #bfd4e97f) drop-shadow(-3px 0px 1px #bfd4e97f)';
+        }
+
+        // Cambiar propiedades de color para la clase .hr
+        if (rule.selectorText === '.hr') {
+          rule.style.backgroundColor = '#bfd4e9';  // Cambia 'nuevo_color' por el valor de color deseado
+        }
+
+        if (rule.selectorText === '.skinContainer') {
+          rule.style.borderColor = '#bfd4e9';  // Cambia 'nuevo_color' por el valor de color deseado
+        }
+
+        // Cambiar propiedades de color para la clase .skinContainerBackdropFilter
+        if (rule.selectorText === '.skinContainerBackdropFilter') {
+          rule.style.backgroundColor = '#2d3541';  // Cambia 'nuevo_color' por el valor de color deseado
+        }
+        
+        if (rule.selectorText === '.skinContainerLock') {
+          rule.style.backgroundColor = 'rgba(119, 119, 119, 0.342)';  // Cambia 'nuevo_color' por el valor de color deseado
+        }
+
 
       }
 
@@ -1659,7 +1738,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
             imgBackgroundAnim.style.opacity = "0%";
             imgBackgroundAnim.remove();
           }
-        }, 6000);
+        }, 3000);
     
         setTimeout(() => {
           if (imgCoinAnim) {
@@ -1668,7 +1747,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           if (imgNumberAnim) {
             imgNumberAnim.remove();
           }
-        }, 6000);
+        }, 3000);
       } else {
         console.error("Contenedor de animación no encontrado.");
       }
@@ -2234,9 +2313,15 @@ cargarSkins(idLogeado);
       cursorPurpleish.style.display = "none";
     }
 
+    /* SKIN BUCEO */
     let timeoutId; // Variable global o propiedad para almacenar el ID del setTimeout
 
     if (cursorSrc.includes('cccc_buceo')) {
+      console.log(checkbox.value);
+      if(checkbox.checked){
+        return;
+      }
+
       // Reinicia cualquier timeout pendiente
       if (timeoutId) {
         clearTimeout(timeoutId); // Cancela el setTimeout anterior
@@ -2289,6 +2374,9 @@ cargarSkins(idLogeado);
           underwaterTransi.style.display = "none";
           underwaterTransi.className = "";
           underwater.style.opacity = "100%";
+          if (filterUnderwaterDupe && filterUnderwaterDupe.parentNode) {
+            filterUnderwaterDupe.parentNode.removeChild(filterUnderwaterDupe); // Elimina filterUnderwaterDupe del DOM
+          }
           timeoutId = null; // Limpia el ID del timeout después de que se complete
         }, 9600);
       } else {
