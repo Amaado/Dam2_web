@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let underwater = document.getElementById("underwater");
   let underwaterTransi = document.getElementById("underwaterTransi");
   let filterUnderwater = document.getElementById("filterUnderwater");
+  let filterUnderwaterDupe = document.getElementById("filterUnderwaterDupe");
 
 
 
@@ -2196,6 +2197,7 @@ cargarSkins(idLogeado);
         // Por ejemplo, cambiar otros elementos de la interfaz, reproducir un sonido, etc.
       }
     }*/
+      
 
 
     
@@ -2232,8 +2234,6 @@ cargarSkins(idLogeado);
       cursorPurpleish.style.display = "none";
     }
 
-
-    /* SKIN BUCEO */
     let timeoutId; // Variable global o propiedad para almacenar el ID del setTimeout
 
     if (cursorSrc.includes('cccc_buceo')) {
@@ -2241,58 +2241,71 @@ cargarSkins(idLogeado);
       if (timeoutId) {
         clearTimeout(timeoutId); // Cancela el setTimeout anterior
       }
-
+    
       // Verifica si transicionBuceo está activa
       if (sessionStorage.getItem('transicionBuceo') === 'true') {
-        // Cambia transicionBuceo a false para que no entre más en este bloque durante la sesión
-        sessionStorage.setItem('transicionBuceo', 'false');
-
+        sessionStorage.setItem('transicionBuceo', 'false'); // Cambia transicionBuceo a false
+    
         underwater.src = "img/fondoBuceo.webp?t=" + new Date().getTime();
         underwater.style.display = "block";
         underwater.className = "active";
         underwater.style.opacity = "1%";
-
+    
         underwaterTransi.src = "img/fondoBuceoTransi.webp?t=" + new Date().getTime();
         underwaterTransi.style.display = "block";
         underwaterTransi.className = "active";
         underwaterTransi.style.opacity = "100%";
-
+    
         filterUnderwater.className = "active";
         filterUnderwater.style.mask = "none";
-
-        setTimeout(function () {
-          filterUnderwater.style.mask = "url(img/fondoBuceoTransi.webp?t=" + new Date().getTime() + ")";
-          filterUnderwater.style.maskRepeat = "no-repeat";
-          filterUnderwater.style.maskSize = "100vw";
-          filterUnderwater.style.maskPosition = "0 0";
-        }, 1);
-
-        // Inicia un nuevo timeout
+    
+        const filterUnderwaterDupe = filterUnderwater.cloneNode(true);
+        filterUnderwaterDupe.id = "filterUnderwaterDupe";
+        const elementsToRemove = filterUnderwaterDupe.querySelectorAll('#fondoGalaxyGreen, #fondoGalaxy, #customCursor, #customCursorPurpleish, #loginScreen, #registerScreen, #loginButton, #registerButton');
+        elementsToRemove.forEach(element => element.remove());
+    
+        const toggleInput = filterUnderwaterDupe.querySelector('.toggle');
+        if (toggleInput) {
+          toggleInput.removeAttribute('id');
+          toggleInput.classList.add('toggle');
+        }
+        filterUnderwater.parentNode.appendChild(filterUnderwaterDupe);
+    
+        requestAnimationFrame(() => {
+          const currentTime = new Date().getTime();
+          requestAnimationFrame(() => {
+            filterUnderwater.style.mask = "url(img/fondoBuceoTransi.webp?t=" + currentTime + ")";
+            filterUnderwater.style.maskRepeat = "no-repeat";
+            filterUnderwater.style.maskSize = "100%";
+            filterUnderwater.style.maskPosition = "0 0";
+            filterUnderwaterDupe.style.mask = "url(img/fondoBuceoTransiMask.webp?t=" + currentTime + ")";
+            filterUnderwaterDupe.style.maskRepeat = "no-repeat";
+            filterUnderwaterDupe.style.maskSize = "100%";
+            filterUnderwaterDupe.style.maskPosition = "0 0";
+          });
+        });
+    
         timeoutId = setTimeout(function () {
           underwaterTransi.style.display = "none";
           underwaterTransi.className = "";
           underwater.style.opacity = "100%";
           timeoutId = null; // Limpia el ID del timeout después de que se complete
         }, 9600);
-
       } else {
-        // Este bloque se ejecuta si transicionBuceo es 'false' (es decir, ya se ha realizado la transición)
         underwater.src = "img/fondoBuceo.webp?t=" + new Date().getTime();
         underwater.style.display = "block";
         underwater.className = "active";
         underwater.style.opacity = "100%";
-
+    
         underwaterTransi.style.display = "none";
         underwaterTransi.style.opacity = "0%";
         underwaterTransi.className = "";
-
+    
         filterUnderwater.className = "active";
+        syncTransition(filterUnderwater, underwaterTransi);
       }
-
-      
     }
-
-
+    
     /* SKIN GALAXY */
     if (cursorSrc.includes('cccc_galaxy')) {
       cursor.src = 'img/cursors/cccc_galaxy.webp';
@@ -2425,6 +2438,23 @@ cargarSkins(idLogeado);
           }
         });
       }
+    }
+  }
+
+
+  function syncTransition(element1, element2) {
+    if (element1 && element2) {
+      requestAnimationFrame(() => {
+        element1.style.transition = "opacity 2s ease-in-out";
+        element2.style.transition = "opacity 2s ease-in-out";
+        
+        requestAnimationFrame(() => {
+          element1.style.opacity = "1";
+          element2.style.opacity = "1";
+        });
+      });
+    } else {
+      console.error("syncTransition: Uno o ambos elementos no existen.");
     }
   }
 

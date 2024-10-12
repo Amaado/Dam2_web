@@ -1778,10 +1778,24 @@ div.img img {
 
 }
 
-#filterUnderwater{
+#filterUnderwaterDupe{
+  mask: url('path_to_inverse_mask_image');
+  position: absolute;
   display: flex;
   width: 100vw;
   height: 100vh;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: none;
+  z-index: -10;
+  /*filter: brightness(0) saturate(100%) invert(16%) sepia(95%) saturate(5554%) hue-rotate(357deg) brightness(105%) contrast(116%);*/
+}
+
+#filterUnderwater{
+  display: flex;
+  width: 100vw;
+  height: 150%;
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
@@ -1798,4 +1812,10 @@ div.img img {
   flex-direction: column;
   overflow: hidden;
   cursor: none;
+}
+
+#filterUnderwater,
+#filterUnderwaterDupe {
+  will-change: opacity, mask-position;
+  transition: opacity 0.5s ease-in-out, mask-position 0.5s ease-in-out;
 }
