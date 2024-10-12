@@ -1916,6 +1916,7 @@ async function searchUnlockingStatus(candado, skinContainerLock, skinContainerNo
   if (monedasLogeado >= price) {
     isUnlocking = true;
     await unlockAnimation(candado, skinContainerLock, skinContainerNotVisible, price, monedasLogeado, idLogeado, skinIndex);
+    actualizarLocalCoinsCounter(idLogeado);
   } else {
     lockedAnimation(candado);
   }
