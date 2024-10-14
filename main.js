@@ -2319,10 +2319,12 @@ cargarSkins(idLogeado);
 
     if (cursorSrc.includes('cccc_buceo')) {
       console.log(checkbox.value);
-      if(checkbox.checked){
+    
+      // Si el checkbox está marcado, salir de la función
+      if (checkbox.checked) {
         return;
       }
-
+    
       // Reinicia cualquier timeout pendiente
       if (timeoutId) {
         clearTimeout(timeoutId); // Cancela el setTimeout anterior
@@ -2332,6 +2334,7 @@ cargarSkins(idLogeado);
       if (sessionStorage.getItem('transicionBuceo') === 'true') {
         sessionStorage.setItem('transicionBuceo', 'false'); // Cambia transicionBuceo a false
     
+        // Configura la transición del fondo
         underwater.src = "img/fondoBuceo.webp?t=" + new Date().getTime();
         underwater.style.display = "block";
         underwater.className = "active";
@@ -2345,42 +2348,59 @@ cargarSkins(idLogeado);
         filterUnderwater.className = "active";
         filterUnderwater.style.mask = "none";
     
+        // Clona filterUnderwater y configura el nuevo elemento
         const filterUnderwaterDupe = filterUnderwater.cloneNode(true);
         filterUnderwaterDupe.id = "filterUnderwaterDupe";
+    
+        // Elimina los elementos no deseados del clon
         const elementsToRemove = filterUnderwaterDupe.querySelectorAll('#fondoGalaxyGreen, #fondoGalaxy, #customCursor, #customCursorPurpleish, #loginScreen, #registerScreen, #loginButton, #registerButton');
         elementsToRemove.forEach(element => element.remove());
     
+        // Ajusta el toggle si existe
         const toggleInput = filterUnderwaterDupe.querySelector('.toggle');
         if (toggleInput) {
           toggleInput.removeAttribute('id');
           toggleInput.classList.add('toggle');
         }
+    
+        // Añadir el clon al DOM
         filterUnderwater.parentNode.appendChild(filterUnderwaterDupe);
     
+        // Aplica las máscaras simultáneamente utilizando un único requestAnimationFrame
         requestAnimationFrame(() => {
           const currentTime = new Date().getTime();
-          requestAnimationFrame(() => {
-            filterUnderwater.style.mask = "url(img/fondoBuceoTransi.webp?t=" + currentTime + ")";
-            filterUnderwater.style.maskRepeat = "no-repeat";
-            filterUnderwater.style.maskSize = "100%";
-            filterUnderwater.style.maskPosition = "0 0";
-            filterUnderwaterDupe.style.mask = "url(img/fondoBuceoTransiMask.webp?t=" + currentTime + ")";
-            filterUnderwaterDupe.style.maskRepeat = "no-repeat";
-            filterUnderwaterDupe.style.maskSize = "100%";
-            filterUnderwaterDupe.style.maskPosition = "0 0";
-          });
+    
+          // Configura la máscara del primer elemento
+          filterUnderwater.style.mask = `url(img/fondoBuceoTransi.webp?t=${currentTime})`;
+          filterUnderwater.style.maskRepeat = "no-repeat";
+          filterUnderwater.style.maskSize = "100%";
+          filterUnderwater.style.maskPosition = "0 0";
+    
+          // Configura la máscara del clon con composiciones
+          filterUnderwaterDupe.style.mask = `url(img/fondoBuceoTransiMask.webp?t=${currentTime})`;
+          filterUnderwaterDupe.style.maskRepeat = "no-repeat";
+          filterUnderwaterDupe.style.maskSize = "100%";
+          filterUnderwaterDupe.style.maskPosition = "0 0";
+          filterUnderwaterDupe.style.setProperty('-webkit-mask-composite', 'xor');
+          filterUnderwaterDupe.style.setProperty('mask-composite', 'xor');
         });
     
+        // Inicia el timeout para ocultar el fondo de transición después de 9.6 segundos
         timeoutId = setTimeout(function () {
           underwaterTransi.style.display = "none";
           underwaterTransi.className = "";
           underwater.style.opacity = "100%";
+    
+          // Elimina el clon filterUnderwaterDupe del DOM
           if (filterUnderwaterDupe && filterUnderwaterDupe.parentNode) {
-            filterUnderwaterDupe.parentNode.removeChild(filterUnderwaterDupe); // Elimina filterUnderwaterDupe del DOM
+            filterUnderwaterDupe.parentNode.removeChild(filterUnderwaterDupe);
           }
-          timeoutId = null; // Limpia el ID del timeout después de que se complete
+    
+          // Limpia el ID del timeout después de que se complete
+          timeoutId = null;
         }, 9600);
       } else {
+        // Si no hay transición activa, mostrar solo el fondo buceo sin transiciones
         underwater.src = "img/fondoBuceo.webp?t=" + new Date().getTime();
         underwater.style.display = "block";
         underwater.className = "active";
@@ -2391,7 +2411,7 @@ cargarSkins(idLogeado);
         underwaterTransi.className = "";
     
         filterUnderwater.className = "active";
-        syncTransition(filterUnderwater, underwaterTransi);
+        syncTransition(filterUnderwater, underwaterTransi); // Sincroniza la transición si es necesario
       }
     }
     
