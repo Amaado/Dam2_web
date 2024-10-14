@@ -1,5 +1,2 @@
-# Ignorar todos los archivos .blend1
-*.blend1
-
-# Ignorar todos los archivos .blend (si deseas ignorar este tipo de archivo también)
-*.blend
+3d/.blend1
+3d/cccc.blend
