@@ -2319,8 +2319,12 @@ cargarSkins(idLogeado);
     }
 
 
-    /* KRILLIN NO PURPLEISH */
+    /* SKINS NO PURPLEISH */
     if (cursorSrc.includes('cccc_krillin')) {
+      cursorPurpleish.style.display = "none";
+    }
+
+    if (cursorSrc.includes('cccc_jefeEstudios')) {
       cursorPurpleish.style.display = "none";
     }
 
