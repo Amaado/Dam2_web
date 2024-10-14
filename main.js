@@ -1014,6 +1014,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           campoPasswordRepeatRegister.removeAttribute('style');
           errorLabelLogin.style.visibility = "hidden";
           errorLabelRegister.style.visibility = "hidden";
+          ajustesColorLoginYregister(checkbox);
 
           registerSubmit.disabled = true;
           campoNameRegister.disabled = true;
@@ -1098,6 +1099,8 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         await actualizarMonedas(idLogeado);
         await cargarSkins(idLogeado);
     
+        ajustesColorLoginYregister(checkbox);
+
         actualizarEstadoElementosSesion();
         loadCursorSelection(idLogeado);
 
@@ -1172,7 +1175,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           campoNameRegister.blur();
           campoPasswordRegister.blur();
           campoPasswordRepeatRegister.blur();
-          
+          ajustesColorLoginYregister(checkbox);
 
           campoNameLogin.removeAttribute('style');
           campoPasswordLogin.removeAttribute('style');
@@ -1203,6 +1206,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       campoPasswordRepeatRegister.removeAttribute('style');
       errorLabelLogin.style.visibility = "hidden";
       errorLabelRegister.style.visibility = "hidden";
+      ajustesColorLoginYregister(checkbox);
     
       // Validar si algún campo está vacío
       if (campoNameRegister.value.trim() === '' || campoPasswordRegister.value.trim() === '' || campoPasswordRepeatRegister.value.trim() === '') {
@@ -1227,6 +1231,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       } else {
         // Validar si las contraseñas coinciden
         if (campoPasswordRegister.value !== campoPasswordRepeatRegister.value) {
+          errorLabelRegister.style.visibility = "visible";
           errorLabelRegister.textContent = "The passwords don't match.";
           errorLabelRegister.style.color = "red";
           campoPasswordRegister.style.color = "red";
@@ -1239,12 +1244,14 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
           const usuarioExiste = await existeUsuario(campoNameRegister.value); // Cambiado a `usuarioExiste`
             
           if (usuarioExiste) { // Cambiado a `usuarioExiste`
+              errorLabelRegister.style.visibility = "visible";
               errorLabelRegister.textContent = "El usuario ya existe.";
               errorLabelRegister.style.color = "red";
               campoNameRegister.style.color = "red";
               campoNameRegister.style.outline = '4px solid red';
           } else {
             // Restablecer los estilos si todo es correcto
+            errorLabelRegister.style.visibility = "visible";
             errorLabelRegister.textContent = "";
             errorLabelRegister.style.color = "#bfd4e9";
             campoNameRegister.style.color = "#1c2128";
@@ -1255,9 +1262,12 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
             try {
               // Intentar registrar al usuario con id autoincrementado
               await registrarUsuario(campoNameRegister.value, campoPasswordRegister.value, "0", "LLLL");
+              ajustesColorLoginYregister(checkbox);
+              errorLabelRegister.style.visibility = "visible";
               errorLabelRegister.textContent = "User signed up correctly!";
               errorLabelRegister.style.color = "#bfd4e9";
             } catch (error) {
+              errorLabelRegister.style.visibility = "visible";
               errorLabelRegister.textContent = "Error when signing up.";
               errorLabelRegister.style.color = "red";
               console.log(error);
