@@ -2325,14 +2325,26 @@ cargarSkins(idLogeado);
     }
 
     /* SKIN BUCEO */
-    let timeoutId; // Variable global o propiedad para almacenar el ID del setTimeout
+    let timeoutId; // Variable global para almacenar el ID del setTimeout
 
+    function preloadImage(src, callback) {
+      const img = new Image();
+      img.src = src;
+      img.onload = callback;
+      img.onerror = () => {
+        console.error("Error cargando la imagen: " + src);
+        callback(); // Aún llamamos al callback para no bloquear la ejecución
+      };
+    }
+    
     if (cursorSrc.includes('cccc_buceo')) {
       console.log(checkbox.value);
-      if(checkbox.checked){
+    
+      // Si el checkbox está marcado, salir de la función
+      if (checkbox.checked) {
         return;
       }
-
+    
       // Reinicia cualquier timeout pendiente
       if (timeoutId) {
         clearTimeout(timeoutId); // Cancela el setTimeout anterior
@@ -2342,55 +2354,95 @@ cargarSkins(idLogeado);
       if (sessionStorage.getItem('transicionBuceo') === 'true') {
         sessionStorage.setItem('transicionBuceo', 'false'); // Cambia transicionBuceo a false
     
-        underwater.src = "img/fondoBuceo.webp?t=" + new Date().getTime();
-        underwater.style.display = "block";
-        underwater.className = "active";
-        underwater.style.opacity = "1%";
+        // Cargar imágenes del fondo y las máscaras antes de iniciar la animación
+        const backgroundSrc = "img/fondoBuceo.webp?t=" + new Date().getTime();
+        const transiSrc = "img/fondoBuceoTransi.webp?t=" + new Date().getTime();
+        const maskSrc = "img/fondoBuceoTransiMask.webp?t=" + new Date().getTime();
     
-        underwaterTransi.src = "img/fondoBuceoTransi.webp?t=" + new Date().getTime();
-        underwaterTransi.style.display = "block";
-        underwaterTransi.className = "active";
-        underwaterTransi.style.opacity = "100%";
+        // Preload las imágenes
+        let loadedCount = 0;
+        const totalToLoad = 3;
     
-        filterUnderwater.className = "active";
-        filterUnderwater.style.mask = "none";
-    
-        const filterUnderwaterDupe = filterUnderwater.cloneNode(true);
-        filterUnderwaterDupe.id = "filterUnderwaterDupe";
-        const elementsToRemove = filterUnderwaterDupe.querySelectorAll('#fondoGalaxyGreen, #fondoGalaxy, #customCursor, #customCursorPurpleish, #loginScreen, #registerScreen, #loginButton, #registerButton');
-        elementsToRemove.forEach(element => element.remove());
-    
-        const toggleInput = filterUnderwaterDupe.querySelector('.toggle');
-        if (toggleInput) {
-          toggleInput.removeAttribute('id');
-          toggleInput.classList.add('toggle');
+        function onImageLoad() {
+          loadedCount++;
+          if (loadedCount === totalToLoad) {
+            startTransition();
+          }
         }
-        filterUnderwater.parentNode.appendChild(filterUnderwaterDupe);
     
-        requestAnimationFrame(() => {
-          const currentTime = new Date().getTime();
+        // Preload todas las imágenes
+        preloadImage(backgroundSrc, onImageLoad);
+        preloadImage(transiSrc, onImageLoad);
+        preloadImage(maskSrc, onImageLoad);
+    
+        // Función para ejecutar la transición cuando las imágenes estén listas
+        function startTransition() {
+          // Configura la transición del fondo
+          underwater.src = backgroundSrc;
+          underwater.style.display = "block";
+          underwater.className = "active";
+          underwater.style.opacity = "1%";
+    
+          underwaterTransi.src = transiSrc;
+          underwaterTransi.style.display = "block";
+          underwaterTransi.className = "active";
+          underwaterTransi.style.opacity = "100%";
+    
+          filterUnderwater.className = "active";
+          filterUnderwater.style.mask = "none";
+    
+          // Clona filterUnderwater y configura el nuevo elemento
+          const filterUnderwaterDupe = filterUnderwater.cloneNode(true);
+          filterUnderwaterDupe.id = "filterUnderwaterDupe";
+    
+          // Elimina los elementos no deseados del clon
+          const elementsToRemove = filterUnderwaterDupe.querySelectorAll('#fondoGalaxyGreen, #fondoGalaxy, #customCursor, #customCursorPurpleish, #loginScreen, #registerScreen, #loginButton, #registerButton');
+          elementsToRemove.forEach(element => element.remove());
+    
+          // Ajusta el toggle si existe
+          const toggleInput = filterUnderwaterDupe.querySelector('.toggle');
+          if (toggleInput) {
+            toggleInput.removeAttribute('id');
+            toggleInput.classList.add('toggle');
+          }
+    
+          // Añadir el clon al DOM
+          filterUnderwater.parentNode.appendChild(filterUnderwaterDupe);
+    
+          // Aplica las máscaras simultáneamente utilizando un único requestAnimationFrame
           requestAnimationFrame(() => {
-            filterUnderwater.style.mask = "url(img/fondoBuceoTransi.webp?t=" + currentTime + ")";
+            const currentTime = new Date().getTime();
+    
+            // Configura la máscara del primer elemento
+            filterUnderwater.style.mask = `url(img/fondoBuceoTransi.webp?t=${currentTime})`;
             filterUnderwater.style.maskRepeat = "no-repeat";
             filterUnderwater.style.maskSize = "100%";
             filterUnderwater.style.maskPosition = "0 0";
-            filterUnderwaterDupe.style.mask = "url(img/fondoBuceoTransiMask.webp?t=" + currentTime + ")";
+    
+            // Configura la máscara del clon con composiciones
+            filterUnderwaterDupe.style.mask = `url(img/fondoBuceoTransiMask.webp?t=${currentTime})`;
             filterUnderwaterDupe.style.maskRepeat = "no-repeat";
             filterUnderwaterDupe.style.maskSize = "100%";
             filterUnderwaterDupe.style.maskPosition = "0 0";
-          });
-        });
     
-        timeoutId = setTimeout(function () {
-          underwaterTransi.style.display = "none";
-          underwaterTransi.className = "";
-          underwater.style.opacity = "100%";
-          if (filterUnderwaterDupe && filterUnderwaterDupe.parentNode) {
-            filterUnderwaterDupe.parentNode.removeChild(filterUnderwaterDupe); // Elimina filterUnderwaterDupe del DOM
-          }
-          timeoutId = null; // Limpia el ID del timeout después de que se complete
-        }, 9600);
+            // Inicia el timeout justo después de comenzar las animaciones de las máscaras
+            timeoutId = setTimeout(function () {
+              underwaterTransi.style.display = "none";
+              underwaterTransi.className = "";
+              underwater.style.opacity = "100%";
+    
+              // Elimina el clon filterUnderwaterDupe del DOM
+              if (filterUnderwaterDupe && filterUnderwaterDupe.parentNode) {
+                filterUnderwaterDupe.parentNode.removeChild(filterUnderwaterDupe);
+              }
+    
+              // Limpia el ID del timeout después de que se complete
+              timeoutId = null;
+            }, 9600); // Ajusta el valor del timeout a 9600 ms después del inicio de la animación
+          });
+        }
       } else {
+        // Si no hay transición activa, mostrar solo el fondo buceo sin transiciones
         underwater.src = "img/fondoBuceo.webp?t=" + new Date().getTime();
         underwater.style.display = "block";
         underwater.className = "active";
@@ -2401,7 +2453,7 @@ cargarSkins(idLogeado);
         underwaterTransi.className = "";
     
         filterUnderwater.className = "active";
-        syncTransition(filterUnderwater, underwaterTransi);
+        syncTransition(filterUnderwater, underwaterTransi); // Sincroniza la transición si es necesario
       }
     }
     
