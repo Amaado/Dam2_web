@@ -1261,7 +1261,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     
             try {
               // Intentar registrar al usuario con id autoincrementado
-              await registrarUsuario(campoNameRegister.value, campoPasswordRegister.value, "0", "LLLL");
+              await registrarUsuario(campoNameRegister.value, campoPasswordRegister.value, "0", "11LLLLLLLLLLLLLL");
               ajustesColorLoginYregister(checkbox);
               errorLabelRegister.style.visibility = "visible";
               errorLabelRegister.textContent = "User signed up correctly!";
