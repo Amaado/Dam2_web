@@ -1198,18 +1198,18 @@ div.img img {
 
 }
 
-#flechaa {
+#flechaaSkins {
   width: 40px;
   height: 80px;
   position: fixed;
   top: calc(50vh - 20px);
   left: 12vw;
-  transform: rotate(270deg) rotateX(0deg) translateY(-13vw);
+  transform: rotate(270deg) rotateX(0deg) translateY(-11vw);
   transition: transform 0.75s ease;
   z-index: 2;
 }
 
-#flechaa.active {
+#flechaaSkins.active {
   transform: rotate(270deg) rotateX(180deg) translateY(-5vw);
 }
 
@@ -1225,9 +1225,28 @@ div.img img {
 
 #flechaHitbloxPlus.active {
   transform: translateX(15vw);
-  width: 10vw;
+  width: 3vw;
 }
 
+#menuLabelSkins{
+  background-color: transparent;
+  position: fixed;
+  width: 200px;
+  height: 30px;
+  transition: transform 0.5s ease;
+  pointer-events: none;
+  z-index: -6;
+  text-align: center;
+  top: calc(50vh - 13px);
+
+  font-size: 36px;
+  transform-origin: top;
+  line-height: 1;
+  transform: scaleY(1.2) translateX(-80px) translateY(20px) rotate(-90deg);
+  font-family: 'verti';
+  color: #bfd4e9;
+
+}
 
 .coinsContainer{
   position: absolute;

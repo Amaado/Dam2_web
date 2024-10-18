@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const loginSubmit = document.getElementById('loginSubmit');
   const registerSubmit = document.getElementById('registerSubmit');
   let oval = this.querySelector('.svg-oval');
-  const flechaa = document.getElementById('flechaa');
+  const flechaaSkins = document.getElementById('flechaaSkins');
   const skinsContainer = document.getElementById('skinsContainer');
   const flechaHitbloxPlus = document.getElementById('flechaHitbloxPlus');
   let allESC = document.querySelector('nav');
@@ -354,8 +354,8 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
         cursor.src = dayCursorSrc;
         cursorPurpleish.src = insertPurpleishBeforeExtension(dayCursorSrc);
       }
-      if (flechaa) {
-        flechaa.src = "img/flechaDay.png";
+      if (flechaaSkins) {
+        flechaaSkins.src = "img/flechaDay.png";
       }
       if (logoutButton) {
         logoutButton.src = "img/logoutDay.png";
@@ -378,8 +378,8 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
         cursor.src = nightCursorSrc;
         cursorPurpleish.src = insertPurpleishBeforeExtension(nightCursorSrc);
       }
-      if (flechaa) {
-        flechaa.src = "img/flechaNight.png";
+      if (flechaaSkins) {
+        flechaaSkins.src = "img/flechaNight.png";
       }
       if (logoutButton) {
         logoutButton.src = "img/logoutNight.png";
@@ -2110,8 +2110,8 @@ cargarSkins(idLogeado);
       if (coinsContainer) {
         coinsContainer.style.display = 'flex';
       }
-      if (flechaa) {
-        flechaa.style.display = 'flex';
+      if (flechaaSkins) {
+        flechaaSkins.style.display = 'flex';
       }
       if (flechaHitbloxPlus) {
         flechaHitbloxPlus.style.display = 'flex';
@@ -2147,8 +2147,8 @@ cargarSkins(idLogeado);
       if (coinsContainer) {
         coinsContainer.style.display = 'none';
       }
-      if (flechaa) {
-        flechaa.style.display = 'none';
+      if (flechaaSkins) {
+        flechaaSkins.style.display = 'none';
       }
       if (flechaHitbloxPlus) {
         flechaHitbloxPlus.style.display = 'none';
@@ -2223,7 +2223,7 @@ cargarSkins(idLogeado);
           e.target.closest('.background') ||
           e.target.closest('.sun-moon') ||
           e.target.closest('span') ||
-          e.target.closest('#flechaa') ||
+          e.target.closest('#flechaaSkins') ||
           e.target.closest('.buttonTheme') ||
           e.target.closest('#logoutButton')
         ) {
@@ -2240,7 +2240,7 @@ cargarSkins(idLogeado);
           e.target.closest('.background') ||
           e.target.closest('.sun-moon') ||
           e.target.closest('span') ||
-          e.target.closest('#flechaa') ||
+          e.target.closest('#flechaaSkins') ||
           e.target.closest('.buttonTheme') ||
           e.target.closest('#logoutButton')
         ) {
@@ -2316,6 +2316,10 @@ cargarSkins(idLogeado);
       underwater.className = "";
       filterUnderwater.className = "";
       filterUnderwater.style.mask = "none";
+    }
+
+    if (!cursorSrc.includes('cccc_jefeEstudios')) {
+      cursorPurpleish.style.display = "block";
     }
 
 
@@ -2544,7 +2548,7 @@ cargarSkins(idLogeado);
           e.target.closest('.background') ||
           e.target.closest('.sun-moon') ||
           e.target.closest('span') ||
-          e.target.closest('#flechaa') ||
+          e.target.closest('#flechaaSkins') ||
           e.target.closest('.buttonTheme') ||
           e.target.closest('#logoutButton')
         ) {
@@ -2561,7 +2565,7 @@ cargarSkins(idLogeado);
           e.target.closest('.background') ||
           e.target.closest('.sun-moon') ||
           e.target.closest('span') ||
-          e.target.closest('#flechaa') ||
+          e.target.closest('#flechaaSkins') ||
           e.target.closest('.buttonTheme') ||
           e.target.closest('#logoutButton')
         ) {
@@ -2754,7 +2758,7 @@ cargarSkins(idLogeado);
       /* ACTIVAR MENU-SKINS */
 
       function addSkinsMenuActive() {
-        flechaa.classList.add('active');
+        flechaaSkins.classList.add('active');
         skinsContainer.classList.add('active');
         flechaHitbloxPlus.classList.add('active');
 
@@ -2764,7 +2768,7 @@ cargarSkins(idLogeado);
       }
       
       function removeSkinsMenuActive() {
-        flechaa.classList.remove('active');
+        flechaaSkins.classList.remove('active');
         skinsContainer.classList.remove('active');
         flechaHitbloxPlus.classList.remove('active');
 
@@ -2773,8 +2777,8 @@ cargarSkins(idLogeado);
         }
       }
       
-      flechaa.addEventListener('mouseenter', addSkinsMenuActive);
-      flechaa.addEventListener('mouseleave', removeSkinsMenuActive);
+      flechaaSkins.addEventListener('mouseenter', addSkinsMenuActive);
+      flechaaSkins.addEventListener('mouseleave', removeSkinsMenuActive);
       skinsContainer.addEventListener('mouseenter', addSkinsMenuActive);
       skinsContainer.addEventListener('mouseleave', removeSkinsMenuActive);
       flechaHitbloxPlus.addEventListener('mouseenter', addSkinsMenuActive);
