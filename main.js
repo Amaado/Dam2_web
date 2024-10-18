@@ -28,9 +28,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const registerSubmit = document.getElementById('registerSubmit');
   let oval = this.querySelector('.svg-oval');
   const flechaaSkins = document.getElementById('flechaaSkins');
+  const menuLabelSkins = document.getElementById('menuLabelSkins');
   const skinsContainer = document.getElementById('skinsContainer');
-  const flechaHitbloxPlus = document.getElementById('flechaHitbloxPlus');
+  const flechaHitbloxPlusSkins = document.getElementById('flechaHitbloxPlusSkins');
+  const flechaaModifiers = document.getElementById('flechaaModifiers');
+  const menuLabelModifiers = document.getElementById('menuLabelModifiers');
+  const modifiersContainer = document.getElementById('modifiersContainer');
+  const flechaHitbloxPlusModifiers = document.getElementById('flechaHitbloxPlusModifiers');
   let allESC = document.querySelector('nav');
+  let switchThemeButton = document.querySelector('.container');
   let coinLabel = document.querySelector('.coinLabel');
   let coinsContainer = document.querySelector('.coinsContainer');
   let helloMessage = document.getElementById("helloMessage");
@@ -357,10 +363,13 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
       if (flechaaSkins) {
         flechaaSkins.src = "img/flechaDay.png";
       }
+      if (flechaaModifiers) {
+        flechaaModifiers.src = "img/flechaDay.png";
+      }
       if (logoutButton) {
         logoutButton.src = "img/logoutDay.png";
       }
-
+      
 
 
     } else {
@@ -380,6 +389,9 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
       }
       if (flechaaSkins) {
         flechaaSkins.src = "img/flechaNight.png";
+      }
+      if (flechaaModifiers) {
+        flechaaModifiers.src = "img/flechaNight.png";
       }
       if (logoutButton) {
         logoutButton.src = "img/logoutNight.png";
@@ -1775,10 +1787,10 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       }
 
       // Si no estamos en el menú de skins y el idLogeado es válido, farmear monedas
-      if (!isInSkinsMenu() && !isNaN(idLogeado)) {
+      if (!isInMenu() && !isNaN(idLogeado)) {
         incrementCoins(idLogeado); // Llamada para incrementar monedas y generar la animación
       } else {
-        if(isInSkinsMenu()){
+        if(isInMenu()){
           console.log("No se pueden farmear monedas en el menú de skins");
         }
         if(isNaN(idLogeado)){
@@ -1787,9 +1799,8 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       }
     });
 
-    function isInSkinsMenu() {
-      const skinsMenu = document.getElementById('skinsContainer');
-      return skinsMenu && skinsMenu.classList.contains('active');
+    function isInMenu() {
+      return skinsContainer && skinsContainer.classList.contains('active') || modifiersContainer && modifiersContainer.classList.contains('active');
     }
 
 
@@ -2113,8 +2124,11 @@ cargarSkins(idLogeado);
       if (flechaaSkins) {
         flechaaSkins.style.display = 'flex';
       }
-      if (flechaHitbloxPlus) {
-        flechaHitbloxPlus.style.display = 'flex';
+      if (flechaaModifiers) {
+        flechaaModifiers.style.display = 'flex';
+      }
+      if (flechaHitbloxPlusSkins) {
+        flechaHitbloxPlusSkins.style.display = 'flex';
       }
 
     // Habilitar los botones de skins
@@ -2150,8 +2164,11 @@ cargarSkins(idLogeado);
       if (flechaaSkins) {
         flechaaSkins.style.display = 'none';
       }
-      if (flechaHitbloxPlus) {
-        flechaHitbloxPlus.style.display = 'none';
+      if (flechaaModifiers) {
+        flechaaModifiers.style.display = 'none';
+      }
+      if (flechaHitbloxPlusSkins) {
+        flechaHitbloxPlusSkins.style.display = 'none';
       }
 
           // Deshabilitar los botones de skins
@@ -2224,6 +2241,7 @@ cargarSkins(idLogeado);
           e.target.closest('.sun-moon') ||
           e.target.closest('span') ||
           e.target.closest('#flechaaSkins') ||
+          e.target.closest('#flechaaModifiers') ||
           e.target.closest('.buttonTheme') ||
           e.target.closest('#logoutButton')
         ) {
@@ -2241,6 +2259,7 @@ cargarSkins(idLogeado);
           e.target.closest('.sun-moon') ||
           e.target.closest('span') ||
           e.target.closest('#flechaaSkins') ||
+          e.target.closest('#flechaaModifiers') ||
           e.target.closest('.buttonTheme') ||
           e.target.closest('#logoutButton')
         ) {
@@ -2549,6 +2568,7 @@ cargarSkins(idLogeado);
           e.target.closest('.sun-moon') ||
           e.target.closest('span') ||
           e.target.closest('#flechaaSkins') ||
+          e.target.closest('#flechaaModifiers') ||
           e.target.closest('.buttonTheme') ||
           e.target.closest('#logoutButton')
         ) {
@@ -2566,6 +2586,7 @@ cargarSkins(idLogeado);
           e.target.closest('.sun-moon') ||
           e.target.closest('span') ||
           e.target.closest('#flechaaSkins') ||
+          e.target.closest('#flechaaModifiers') ||
           e.target.closest('.buttonTheme') ||
           e.target.closest('#logoutButton')
         ) {
@@ -2760,7 +2781,8 @@ cargarSkins(idLogeado);
       function addSkinsMenuActive() {
         flechaaSkins.classList.add('active');
         skinsContainer.classList.add('active');
-        flechaHitbloxPlus.classList.add('active');
+        flechaHitbloxPlusSkins.classList.add('active');
+        menuLabelSkins.classList.add('active');
 
         if (skinsContainer.classList.contains('active')) {
           coinsContainer.style.marginLeft = "15vw";
@@ -2770,7 +2792,8 @@ cargarSkins(idLogeado);
       function removeSkinsMenuActive() {
         flechaaSkins.classList.remove('active');
         skinsContainer.classList.remove('active');
-        flechaHitbloxPlus.classList.remove('active');
+        flechaHitbloxPlusSkins.classList.remove('active');
+        menuLabelSkins.classList.remove('active');
 
         if (!skinsContainer.classList.contains('active')) {
           coinsContainer.style.marginLeft = "0vw";
@@ -2781,11 +2804,48 @@ cargarSkins(idLogeado);
       flechaaSkins.addEventListener('mouseleave', removeSkinsMenuActive);
       skinsContainer.addEventListener('mouseenter', addSkinsMenuActive);
       skinsContainer.addEventListener('mouseleave', removeSkinsMenuActive);
-      flechaHitbloxPlus.addEventListener('mouseenter', addSkinsMenuActive);
-      flechaHitbloxPlus.addEventListener('mouseleave', removeSkinsMenuActive);
+      flechaHitbloxPlusSkins.addEventListener('mouseenter', addSkinsMenuActive);
+      flechaHitbloxPlusSkins.addEventListener('mouseleave', removeSkinsMenuActive);
+      menuLabelSkins.addEventListener('mouseenter', addSkinsMenuActive);
+      menuLabelSkins.addEventListener('mouseleave', removeSkinsMenuActive);
 
 
 
+
+      /* ACTIVAR MODIFIERS-SKINS */
+
+      function addModifiersMenuActive() {
+        flechaaModifiers.classList.add('active');
+        modifiersContainer.classList.add('active');
+        flechaHitbloxPlusModifiers.classList.add('active');
+        menuLabelModifiers.classList.add('active');
+
+        if (modifiersContainer.classList.contains('active')) {
+          switchThemeButton.style.right = "15vw";
+          logoutButton.style.right = "15vw";
+        }
+      }
+      
+      function removeModifiersMenuActive() {
+        flechaaModifiers.classList.remove('active');
+        modifiersContainer.classList.remove('active');
+        flechaHitbloxPlusModifiers.classList.remove('active');
+        menuLabelModifiers.classList.remove('active');
+
+        if (!modifiersContainer.classList.contains('active')) {
+          switchThemeButton.style.right = "10px";
+          logoutButton.style.right = "30px";
+        }
+      }
+      
+      flechaaModifiers.addEventListener('mouseenter', addModifiersMenuActive);
+      flechaaModifiers.addEventListener('mouseleave', removeModifiersMenuActive);
+      modifiersContainer.addEventListener('mouseenter', addModifiersMenuActive);
+      modifiersContainer.addEventListener('mouseleave', removeModifiersMenuActive);
+      flechaHitbloxPlusModifiers.addEventListener('mouseenter', addModifiersMenuActive);
+      flechaHitbloxPlusModifiers.addEventListener('mouseleave', removeModifiersMenuActive);
+      menuLabelModifiers.addEventListener('mouseenter', addModifiersMenuActive);
+      menuLabelModifiers.addEventListener('mouseleave', removeModifiersMenuActive);
 
 
 
