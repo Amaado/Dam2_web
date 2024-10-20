@@ -1,9 +1,0 @@
-Fuego de etiqueta .tier
-
-animación monedas cursor
-animación monedas caídas abajo
-
-
-
-animación monedas añadidas arriba
-
