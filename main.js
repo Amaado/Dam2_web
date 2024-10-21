@@ -1651,6 +1651,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       let longitud = localCoinsCounter.toString().length;
       // Animación basada en la última cifra calculada
       animationCoin(ultimaCifra, longitud);
+      animationCoinCursor();
       
       // Esperar 3 segundos antes de actualizar la base de datos
       setTimeout(async function() {
@@ -1667,6 +1668,8 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         }
       }, 2000);
     }
+
+
     
 
 
@@ -2124,11 +2127,20 @@ cargarSkins(idLogeado);
       if (flechaaSkins) {
         flechaaSkins.style.display = 'flex';
       }
+      if (modifiersContainer) {
+        modifiersContainer.style.display = 'flex';
+      }
       if (flechaaModifiers) {
         flechaaModifiers.style.display = 'flex';
       }
       if (flechaHitbloxPlusSkins) {
         flechaHitbloxPlusSkins.style.display = 'flex';
+      }
+      if (menuLabelSkins) {
+        menuLabelSkins.style.display = 'flex';
+      }
+      if (menuLabelModifiers) {
+        menuLabelModifiers.style.display = 'flex';
       }
 
     // Habilitar los botones de skins
@@ -2164,11 +2176,20 @@ cargarSkins(idLogeado);
       if (flechaaSkins) {
         flechaaSkins.style.display = 'none';
       }
+      if (modifiersContainer) {
+        modifiersContainer.style.display = 'none';
+      }
       if (flechaaModifiers) {
         flechaaModifiers.style.display = 'none';
       }
       if (flechaHitbloxPlusSkins) {
         flechaHitbloxPlusSkins.style.display = 'none';
+      }
+      if (menuLabelSkins) {
+        menuLabelSkins.style.display = 'none';
+      }
+      if (menuLabelModifiers) {
+        menuLabelModifiers.style.display = 'none';
       }
 
           // Deshabilitar los botones de skins
