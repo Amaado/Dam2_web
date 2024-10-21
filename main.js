@@ -1669,7 +1669,22 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       }, 2000);
     }
 
-
+    function animationCoinCursor() {
+      // Generar un número aleatorio entre 1 y 10
+      const randomNumber = Math.floor(Math.random() * 10) + 1;
+      
+      // Crear una imagen
+      const img = document.createElement("img");
+      //img.src = `/ruta/${randomNumber}.gif`;
+      img.src ="/img/animationCoinsCursor/1/1.gif"
+      img.alt = "Coin Animation";
+  
+      // Agregar una clase para el estilo
+      img.classList.add("fullscreen-image");
+  
+      // Agregar la imagen al cuerpo del documento
+      document.body.appendChild(img);
+  }
     
 
 
