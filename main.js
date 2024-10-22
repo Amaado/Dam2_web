@@ -1644,14 +1644,14 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       }
     }
     
-    async function incrementCoins(idLogeado) {
+    async function incrementCoins(idLogeado, event) {
       // Incrementar contador local inmediatamente para manejar animaciones y evitar sobrecarga de clics
       localCoinsCounter++;
       let ultimaCifra = parseInt(localCoinsCounter.toString().slice(-1), 10);
       let longitud = localCoinsCounter.toString().length;
       // Animación basada en la última cifra calculada
       animationCoin(ultimaCifra, longitud);
-      animationCoinCursor();
+      animationCoinCursor(event);
       
       // Esperar 3 segundos antes de actualizar la base de datos
       setTimeout(async function() {
@@ -1669,22 +1669,34 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       }, 2000);
     }
 
-    function animationCoinCursor() {
+    function animationCoinCursor(event) {
+      // Obtener la altura de la pantalla y calcular la altura de cada sección
+      const screenHeight = window.innerHeight;
+      const sectionHeight = screenHeight / 29;
+    
+      // Calcular en qué sección se hizo clic
+      const section = Math.floor(event.clientY / sectionHeight) + 1;
+    
       // Generar un número aleatorio entre 1 y 10
       const randomNumber = Math.floor(Math.random() * 10) + 1;
-      
+    
       // Crear una imagen
       const img = document.createElement("img");
-      //img.src = `/ruta/${randomNumber}.gif`;
-      img.src ="/img/animationCoinsCursor/1/1.gif"
+      //img.src = `/img/animationCoinsCursor/${section}/${randomNumber}.gif`;
+      img.src = `/img/animationCoinsCursor/${section}/1_1.gif` + '?t=' + new Date().getTime();
       img.alt = "Coin Animation";
-  
+
+      console.log(`/img/animationCoinsCursor/${section}/1_1.gif` + '?t=' + new Date().getTime())
       // Agregar una clase para el estilo
-      img.classList.add("fullscreen-image");
-  
+      img.classList.add("fullscreen-image-CursorCoinAnim");
+    
+      // Posicionar la imagen donde se hizo clic
+      img.style.position = "absolute";
+      img.style.left = `${event.clientX}px`;
+    
       // Agregar la imagen al cuerpo del documento
       document.body.appendChild(img);
-  }
+    }
     
 
 
@@ -1806,7 +1818,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
       // Si no estamos en el menú de skins y el idLogeado es válido, farmear monedas
       if (!isInMenu() && !isNaN(idLogeado)) {
-        incrementCoins(idLogeado); // Llamada para incrementar monedas y generar la animación
+        incrementCoins(idLogeado, event); // Llamada para incrementar monedas y generar la animación
       } else {
         if(isInMenu()){
           console.log("No se pueden farmear monedas en el menú de skins");
