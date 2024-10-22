@@ -1683,12 +1683,12 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       // Crear una imagen
       const img = document.createElement("img");
       //img.src = `/img/animationCoinsCursor/${section}/${randomNumber}.gif`;
-      img.src = `/img/animationCoinsCursor/${section}/1_1.gif` + '?t=' + new Date().getTime();
+      img.src = `/img/animationCoinsCursor/${section}/1_1.png` + '?t=' + new Date().getTime();
       img.alt = "Coin Animation";
 
-      console.log(`/img/animationCoinsCursor/${section}/1_1.gif` + '?t=' + new Date().getTime())
+      console.log(`/img/animationCoinsCursor/${section}/1_1.webp` + '?t=' + new Date().getTime())
       // Agregar una clase para el estilo
-      img.classList.add("fullscreen-image-CursorCoinAnim");
+      img.classList.add("fullscreenImage-CursorCoinAnim");
     
       // Posicionar la imagen donde se hizo clic
       img.style.position = "absolute";
