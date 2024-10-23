@@ -1669,7 +1669,19 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       }, 2000);
     }
 
+
+
+
+    let activeAnimations = 0;
+    const maxAnimations = 15;
+
     function animationCoinCursor(event) {
+      if (activeAnimations >= maxAnimations) {
+        console.log("Solo se pueden tener 20 monedas en la pantalla simultaneamente");
+        return; // Salir de la función si se ha alcanzado el límite
+      }
+      activeAnimations++;
+
       // Obtener la altura de la pantalla y calcular la altura de cada sección
       const screenHeight = window.innerHeight;
       const sectionHeight = screenHeight / 29;
@@ -1681,21 +1693,33 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       const randomNumber = Math.floor(Math.random() * 10) + 1;
     
       // Crear una imagen
-      const img = document.createElement("img");
-      //img.src = `/img/animationCoinsCursor/${section}/${randomNumber}.gif`;
-      img.src = `/img/animationCoinsCursor/${section}/1_1.png` + '?t=' + new Date().getTime();
-      img.alt = "Coin Animation";
-
-      console.log(`/img/animationCoinsCursor/${section}/1_1.webp` + '?t=' + new Date().getTime())
+      const img = document.createElement('img');
+      //img.src = `/img/animationCoinsCursor/${section}/${section}_${randomNumber}.gif?t=${new Date().getTime()}`;
+      img.src = `/img/animationCoinsCursor/${section}/${section}_1.gif?t=${new Date().getTime()}`;
+      console.log(`/img/animationCoinsCursor/${section}/${section}_1.gif`);
+    
       // Agregar una clase para el estilo
-      img.classList.add("fullscreenImage-CursorCoinAnim");
+      img.classList.add('fullscreenImage-CursorCoinAnim');
     
       // Posicionar la imagen donde se hizo clic
-      img.style.position = "absolute";
       img.style.left = `${event.clientX}px`;
     
       // Agregar la imagen al cuerpo del documento
-      document.body.appendChild(img);
+      filterUnderwater.appendChild(img);
+
+      
+      setTimeout(() => {
+        if (filterUnderwater.classList.contains("active")) {
+          //TODO: crear animacion sin fondo para cuando está SkinBuceo
+        }
+      }, 500);
+      setTimeout(() => {
+        img.style.opacity = "0%";
+      }, 10500);
+      setTimeout(() => {
+        filterUnderwater.removeChild(img);
+        activeAnimations--;
+      }, 11500);
     }
     
 
@@ -2163,6 +2187,9 @@ cargarSkins(idLogeado);
       if (flechaHitbloxPlusSkins) {
         flechaHitbloxPlusSkins.style.display = 'flex';
       }
+      if (flechaHitbloxPlusModifiers) {
+        flechaHitbloxPlusModifiers.style.display = 'flex';
+      }
       if (menuLabelSkins) {
         menuLabelSkins.style.display = 'flex';
       }
@@ -2211,6 +2238,9 @@ cargarSkins(idLogeado);
       }
       if (flechaHitbloxPlusSkins) {
         flechaHitbloxPlusSkins.style.display = 'none';
+      }
+      if (flechaHitbloxPlusModifiers) {
+        flechaHitbloxPlusModifiers.style.display = 'none';
       }
       if (menuLabelSkins) {
         menuLabelSkins.style.display = 'none';
@@ -2413,7 +2443,6 @@ cargarSkins(idLogeado);
     }
     
     if (cursorSrc.includes('cccc_buceo')) {
-      console.log(checkbox.value);
     
       // Si el checkbox está marcado, salir de la función
       if (checkbox.checked) {
