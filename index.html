@@ -21,17 +21,36 @@
       </defs>
       <rect width="100%" height="100%" filter="url(#distort)" fill="none"/>
     </svg>
-      
-    <div class="container">
-      <div class="switch">
-        <label for="toggle">
-          <input id="toggle" class="toggle-switch" type="checkbox">
-          <div class="sun-moon"><div class="dots"></div></div>
-          <div class="background"><div class="stars1"></div><div class="stars2"></div></div>
-          <div class="fill"></div>
-        </label>
-      </div>
+    
+    <div id="settingsImgContainer">
+      <img id="settingsImg" src="img/settingsNight.png" draggable="false"/>
+      <img id="settingsImgLight" src="img/settingsNight.png" draggable="false"/>
     </div>
+    <div id="settingsContainer">
+      <div class="container">
+        <div class="switch">
+          <label for="toggle">
+            <input id="toggle" class="toggle-switch" type="checkbox">
+            <div class="sun-moon"><div class="dots"></div></div>
+            <div class="background"><div class="stars1"></div><div class="stars2"></div></div>
+            <div class="fill"></div>
+          </label>
+        </div>
+      </div>
+  
+      <div id="rtxContainer">
+        <img id="rtxON" class="rtxImg" src="img/rtxON.png" draggable="false"/>
+        <img id="rtxOFF" class="rtxImg" src="img/rtxOFF.png" draggable="false"/>
+        <img id="rtxBLANK" class="rtxImg" src="img/rtxBLANK.png" draggable="false"/>
+        <img id="rtxGREEN" class="rtxImg" src="img/rtxGREEN.png" draggable="false"/>
+      </div>
+      <div id="volumenContainer">
+        <img id="volumenImg" src="img/volumenMute.png" draggable="false"/>
+        
+      </div>
+    </div> 
+      
+
     
     <div class="coinsContainer">
       <div id="coinsContainerAnimationContainer"></div>

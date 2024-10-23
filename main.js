@@ -52,6 +52,15 @@ document.addEventListener('DOMContentLoaded', function() {
   let underwaterTransi = document.getElementById("underwaterTransi");
   let filterUnderwater = document.getElementById("filterUnderwater");
   let filterUnderwaterDupe = document.getElementById("filterUnderwaterDupe");
+  let rtxContainer = document.getElementById("rtxContainer");
+  let rtxON = document.getElementById("rtxON");
+  let rtxOFF = document.getElementById("rtxOFF");
+  let rtxBLANK = document.getElementById("rtxBLANK");
+  let rtxGREEN = document.getElementById("rtxGREEN");
+  let settingsImgContainer = document.getElementById("settingsImgContainer");
+  let settingsContainer = document.getElementById("settingsContainer");
+  let settingsImgLight = document.getElementById("settingsImgLight");
+  let settingsImg = document.getElementById("settingsImg");
 
 
 
@@ -346,7 +355,7 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
   
   function applyTheme() {
     if (checkbox.checked) {
-      // Light theme settings
+      // Light theme
       body.style.backgroundColor = '#dddcb0';
       body.style.color = "#313842";
       cards.forEach(card => {
@@ -373,7 +382,7 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
 
 
     } else {
-      // Dark theme settings
+      // Dark theme
       body.style.backgroundColor = '#1c2128';
       body.style.color = "#bfd4e9";
       cards.forEach(card => {
@@ -1859,6 +1868,67 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 
 
 
+/* SETTINGS MENU */
+
+let settingsEstado = false;
+settingsImgContainer.addEventListener("click", function(){
+  settingsUpdate();
+  settingsEstado = !settingsEstado;
+});
+
+function settingsUpdate(){
+  console.log("settingsImg"+settingsImg);
+  console.log("settingsImgLight"+settingsImgLight);
+
+  if(settingsEstado){
+    settingsContainer.classList.add("active");
+    settingsContainer.classList.remove("notActive");
+
+    settingsImg.classList.add("active");
+    settingsImgLight.classList.add("active");
+  }else{
+    settingsContainer.classList.remove("active");
+    settingsContainer.classList.add("notActive");
+
+    settingsImg.classList.remove("active");
+    settingsImgLight.classList.remove("active");
+
+  }
+}
+settingsUpdate();
+
+
+
+
+/* RTX BUTTON */
+let estadoCheckboxRTX = false;
+
+if (localStorage.getItem('estadoCheckboxRTX') === null) {
+  localStorage.setItem('estadoCheckboxRTX', 'false');
+} else {
+  estadoCheckboxRTX = localStorage.getItem('estadoCheckboxRTX') === 'true';
+}
+
+actualizarRtxCheckbox(estadoCheckboxRTX);
+
+rtxContainer.addEventListener("click", function() {
+    estadoCheckboxRTX = !estadoCheckboxRTX;
+    localStorage.setItem('estadoCheckboxRTX', estadoCheckboxRTX);
+    actualizarRtxCheckbox(estadoCheckboxRTX);
+});
+
+function actualizarRtxCheckbox(estadoCheckboxRTX) {
+  if (estadoCheckboxRTX) {
+    rtxContainer.classList.remove("rtxInactivo");
+    rtxContainer.classList.add("rtxActivo");
+  } else {
+    rtxContainer.classList.remove("rtxActivo");
+    rtxContainer.classList.add("rtxInactivo");
+  }
+}
+
+
+
 
 
 
@@ -2321,7 +2391,8 @@ cargarSkins(idLogeado);
           e.target.closest('#flechaaSkins') ||
           e.target.closest('#flechaaModifiers') ||
           e.target.closest('.buttonTheme') ||
-          e.target.closest('#logoutButton')
+          e.target.closest('#logoutButton') ||
+          e.target.closest('#rtxContainer')
         ) {
           cursorPurpleish.style.opacity = '100%';
           isCursorOverSpecialElement = true;
@@ -2339,7 +2410,8 @@ cargarSkins(idLogeado);
           e.target.closest('#flechaaSkins') ||
           e.target.closest('#flechaaModifiers') ||
           e.target.closest('.buttonTheme') ||
-          e.target.closest('#logoutButton')
+          e.target.closest('#logoutButton') ||
+          e.target.closest('#rtxContainer')
         ) {
           cursorPurpleish.style.opacity = '1%';
           isCursorOverSpecialElement = false;

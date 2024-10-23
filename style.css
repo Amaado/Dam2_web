@@ -791,7 +791,6 @@ div.img img {
   line-height: normal;
   overflow: visible;
   padding: 0;
-  cursor: pointer;
   opacity: 20%;
 }
 
@@ -813,7 +812,6 @@ div.img img {
   line-height: normal;
   overflow: visible;
   padding: 0;
-  cursor: pointer;
   opacity: 20%;
 }
 
@@ -835,7 +833,6 @@ div.img img {
   line-height: normal;
   overflow: visible;
   padding: 0;
-  cursor: pointer;
   opacity: 20%;
 }
 
@@ -857,7 +854,6 @@ div.img img {
   line-height: normal;
   overflow: visible;
   padding: 0;
-  cursor: pointer;
   opacity: 20%;
 }
 
@@ -879,7 +875,6 @@ div.img img {
   line-height: normal;
   overflow: visible;
   padding: 0;
-  cursor: pointer;
   opacity: 20%;
 }
 
@@ -901,7 +896,6 @@ div.img img {
   line-height: normal;
   overflow: visible;
   padding: 0;
-  cursor: pointer;
   opacity: 20%;
 }
 
@@ -923,7 +917,6 @@ div.img img {
   line-height: normal;
   overflow: visible;
   padding: 0;
-  cursor: pointer;
   opacity: 20%;
 }
 
@@ -945,20 +938,19 @@ div.img img {
   line-height: normal;
   overflow: visible;
   padding: 0;
-  cursor: pointer;
   opacity: 20%;
 }
 
 
 .container {
-  position: absolute;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   transform:scale(60%);
-  top: 5px;
-  right: 10px;
+  right: 0px;
   transition: right 0.5s ease;
+  z-index: 99;
 }
 
 .credit {
@@ -984,9 +976,6 @@ div.img img {
   opacity: 0;
 }
 
-.switch label {
-  cursor: pointer;
-}
 
 .background {
   z-index: 1;
@@ -1219,7 +1208,7 @@ div.img img {
   background-color: transparent;
   position: fixed;
   width: 1.5vw;
-  height: 100vh;
+  height: 80vh;
   transition: transform 0.5s ease;
   transform: translateX(99vw);
   z-index: 1;
@@ -1925,6 +1914,7 @@ div.img img {
   flex-direction: column;
   overflow: hidden;
   cursor: none;
+
   z-index: -10;
   /*filter: brightness(0) saturate(100%) invert(16%) sepia(95%) saturate(5554%) hue-rotate(357deg) brightness(105%) contrast(116%);*/
 }
@@ -1938,6 +1928,7 @@ div.img img {
   overflow: hidden;
   cursor: none;
 
+
 }
 
 #filterUnderwater.active{
@@ -1949,6 +1940,7 @@ div.img img {
   flex-direction: column;
   overflow: hidden;
   cursor: none;
+
 }
 
 #filterUnderwater,
@@ -1976,4 +1968,184 @@ div.img img {
   pointer-events: none;
   z-index: 190;
   transition: opacity 1s ease, margin-top 1s ease;
+}
+
+
+/* RTX BUTTON */
+#rtxContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: right 0.5s ease;
+  width: 40px;
+  height: 60px;
+  z-index: 13;
+}
+
+.rtxImg {
+  position: absolute;
+  width: 150px;
+  height: auto;
+}
+
+#rtxON,
+#rtxOFF {
+  transition: right 0.5s ease, opacity 0.5s ease;
+  z-index: 9;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.568));
+  pointer-events: none;
+}
+
+#rtxON {
+  right: 17px;
+}
+
+#rtxOFF {
+  right: -127px;
+}
+
+#rtxBLANK,
+#rtxGREEN {
+  transition: opacity 0.5s ease;
+  z-index: 8;
+  filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.268));
+
+}
+
+/* Estado activo */
+.rtxActivo #rtxBLANK {
+  opacity: 0;
+}
+
+.rtxActivo #rtxOFF {
+  opacity: 0;
+}
+
+.rtxActivo #rtxGREEN {
+  opacity: 1;
+}
+
+.rtxActivo #rtxON {
+  right: -55px;
+  opacity: 1;
+}
+
+/* Estado inactivo */
+.rtxInactivo #rtxBLANK {
+  opacity: 1;
+}
+
+.rtxInactivo #rtxOFF {
+  opacity: 1;
+  right: -55px;
+}
+
+.rtxInactivo #rtxGREEN {
+  opacity: 0;
+}
+
+.rtxInactivo #rtxON {
+  opacity: 0;
+}
+
+#settingsImgContainer{
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: auto;
+  top: 30px;
+  right: 50px;
+  transition: right 0.5s ease;
+  z-index: 6;
+}
+
+
+
+#settingsImg{
+  position: absolute;
+  display: flex;
+  width: 40px;
+  height: auto;
+  transition: transform 1.2s ease;
+  filter: invert(100%) hue-rotate(180deg) brightness(0.5);
+  transform: rotateZ(0deg);
+  z-index: 5;
+}
+
+#settingsImg.active{
+  transform: rotateZ(720deg);
+}
+
+#settingsImgLight{
+  position: relative;
+  display: flex;
+  width: 40px;
+  height: auto;
+  transition: transform 1.2s ease, opacity 1.2s ease;
+  z-index: 6;
+  transform: rotateZ(0deg);
+  opacity: 1%;
+
+}
+
+#settingsImgLight.active{
+  transform: rotateZ(720deg);
+  opacity: 100%;
+}
+
+@keyframes slideInSettingsContainer {
+  0% {
+    right: -400px;
+    opacity: 0;
+  }
+  75% {
+    right: 100px;
+    opacity: 1;
+  }
+  100% {
+    right: 90px;
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutSettingsContainer {
+  0% {
+    right: 90px;
+    opacity: 1;
+  }
+  25% {
+    right: 100px;
+    opacity: 1;
+  }
+  100% {
+    right: -400px;
+    opacity: 0;
+  }
+}
+
+#settingsContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  width: 400px;
+  height: 60px;
+  top: 20px;
+  right: -400px;
+  justify-content: right;
+  align-items: center;
+  background-color: rgba(172, 255, 47, 0.315);
+  z-index: 5;
+  transition: right 1s ease;
+}
+
+#settingsContainer.active {
+  animation: slideInSettingsContainer 1s ease forwards;
+}
+
+#settingsContainer.notActive {
+  animation: slideOutSettingsContainer 1s ease forwards;
 }
