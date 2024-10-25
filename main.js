@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let settingsContainer = document.getElementById("settingsContainer");
   let settingsImgLight = document.getElementById("settingsImgLight");
   let settingsImg = document.getElementById("settingsImg");
-
+  let volumenContainer = document.getElementById("volumenContainer");
 
 
 
@@ -1331,6 +1331,9 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     applyTheme();
     // Actualizar estado de los elementos según la sesión
     actualizarEstadoElementosSesion();
+
+    updateAudioMaster();
+
   });
 
   // ... (código existente)
@@ -1700,12 +1703,16 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     
       // Generar un número aleatorio entre 1 y 10
       const randomNumber = Math.floor(Math.random() * 10) + 1;
+
+      if(section>1){
+        return;
+      }
     
       // Crear una imagen
       const img = document.createElement('img');
       //img.src = `/img/animationCoinsCursor/${section}/${section}_${randomNumber}.gif?t=${new Date().getTime()}`;
-      img.src = `/img/animationCoinsCursor/${section}/${section}_1.gif?t=${new Date().getTime()}`;
-      console.log(`/img/animationCoinsCursor/${section}/${section}_1.gif`);
+      img.src = `/img/animationCoinsCursor/${section}/${section}_${randomNumber}.gif?t=${new Date().getTime()}`;
+      console.log(`/img/animationCoinsCursor/${section}/${section}_${randomNumber}.gif`);
     
       // Agregar una clase para el estilo
       img.classList.add('fullscreenImage-CursorCoinAnim');
@@ -1883,12 +1890,21 @@ function settingsUpdate(){
   if(settingsEstado){
     settingsContainer.classList.add("active");
     settingsContainer.classList.remove("notActive");
+    
+    
+    switchThemeButton.classList.add("active");
+    rtxContainer.classList.add("active");
+    volumenContainer.classList.add("active");
 
     settingsImg.classList.add("active");
     settingsImgLight.classList.add("active");
   }else{
     settingsContainer.classList.remove("active");
     settingsContainer.classList.add("notActive");
+
+    switchThemeButton.classList.remove("active");
+    rtxContainer.classList.remove("active");
+    volumenContainer.classList.remove("active");
 
     settingsImg.classList.remove("active");
     settingsImgLight.classList.remove("active");
@@ -1926,6 +1942,131 @@ function actualizarRtxCheckbox(estadoCheckboxRTX) {
     rtxContainer.classList.add("rtxInactivo");
   }
 }
+
+
+
+
+/* AUDIO FUNCTIONS */
+let hoverAudio;
+
+function loadAudio() {
+    const audioTest = new Audio('img/sfx_sound1.mp3');
+    
+    audioTest.onerror = function() {
+        hoverAudio = new Audio('../img/sfx_sound1.mp3');
+        //console.log('Usando la ruta ../img/sfx_sound1.mp3');
+    };
+
+    audioTest.oncanplaythrough = function() {
+        hoverAudio = audioTest;
+        //console.log('Usando la ruta img/sfx_sound1.mp3');
+    };
+
+    audioTest.load();
+}
+
+loadAudio();
+
+function playHoverAudio() {
+    if (hoverAudio) {
+        hoverAudio.currentTime = 0;
+        hoverAudio.play()
+            .catch((error) => {
+                if (error.name === 'NotAllowedError') {
+                    console.log("No se permite reproducir audio sin interacción del usuario."); // Personaliza el mensaje
+                } else {
+                    console.log("Error al reproducir audio:", error); // Para otros errores
+                }
+            });
+    }
+}
+
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('mouseenter', playHoverAudio);
+  card.addEventListener('mouseleave', playHoverAudio);
+});
+
+document.querySelectorAll('a').forEach(link => {
+  if (!link.closest('nav')) {
+      link.addEventListener('mouseenter', playHoverAudio);
+      link.addEventListener('mouseleave', playHoverAudio);
+  }
+});
+
+
+
+
+
+/* VOLUMEN CONTROLLER */
+
+  const slider = document.getElementById('volumeSlider');
+  const tooltip = document.getElementById('tooltip');
+  const toolttooltipLabelip = document.getElementById('tooltipLabel');
+  const volumenImgUd = document.getElementById('volumenImgUd');
+  const volumenImg = document.getElementById("volumenImg");
+  // Función para actualizar el tooltip
+  function updateTooltipAndImg() {
+      let valueReal = slider.value;
+      let value = slider.max - slider.value;
+
+      toolttooltipLabelip.textContent = `${slider.max - value}`;
+      // Posiciona el tooltip en función del valor del slider
+      const maxSliderValue = slider.max;
+      const sliderHeight = 150; // Altura total del slider en píxeles
+      const offset = ((sliderHeight - (value / maxSliderValue) * sliderHeight) - 15); // Ajuste según el tamaño del slider y padding
+      tooltip.style.top = `${offset}px`;
+      
+      if (valueReal == 100) {
+          tooltip.style.minWidth = "60px";
+          volumenImgUd.style.left = "13px";
+      } else if (valueReal > 9 && valueReal < 100) {
+          tooltip.style.minWidth = "50px";
+          volumenImgUd.style.left = "3px";
+      } else if (valueReal < 10) {
+          tooltip.style.minWidth = "37px";
+          volumenImgUd.style.left = "-11px";
+      }
+
+      if(valueReal > 66 && valueReal <= 100){
+        volumenImg.src = "img/volumen3.png";
+      }else if(valueReal > 33 && valueReal <= 66){
+        volumenImg.src = "img/volumen2.png";
+      }else if(valueReal > 0 && valueReal <= 33){
+        volumenImg.src = "img/volumen1.png";
+      }else if(valueReal == 0){
+        volumenImg.src = "img/volumenMute.png";
+      }
+
+
+    localStorage.setItem('sliderValue', slider.value);
+    updateAudioMaster();
+  }
+
+  function updateAudioMaster() {
+      const value = slider.max - slider.value;
+      const volume = (slider.max - value) / 100; // Convertir el valor a un rango de 0.0 a 1.0
+      const mediaElements = document.querySelectorAll('audio, video');
+      
+      // Ajustar el volumen de todos los elementos de audio y video en la página
+      mediaElements.forEach(element => {
+          element.volume = volume;
+      });
+
+      // Ajustar el volumen de hoverAudio si está definido
+      if (hoverAudio) {
+          hoverAudio.volume = volume;
+      }
+  }
+
+  // Cargar el valor inicial del slider desde localStorage o establecerlo en 100 si no existe
+  const initialValue = localStorage.getItem('sliderValue') !== null ? localStorage.getItem('sliderValue') : 100;
+  slider.value = initialValue;
+
+  // Actualizar el tooltip y el volumen para reflejar el valor inicial
+  updateTooltipAndImg();
+
+  // Evento para actualizar el tooltip y el volumen al cambiar el valor del slider
+  slider.addEventListener('input', updateTooltipAndImg);
 
 
 
@@ -2873,54 +3014,6 @@ cargarSkins(idLogeado);
         });
       });
 
-
-
-      /* AUDIO FUNCTIONS */
-      let hoverAudio;
-
-      function loadAudio() {
-          const audioTest = new Audio('img/sfx_sound1.mp3');
-          
-          audioTest.onerror = function() {
-              hoverAudio = new Audio('../img/sfx_sound1.mp3');
-              //console.log('Usando la ruta ../img/sfx_sound1.mp3');
-          };
-      
-          audioTest.oncanplaythrough = function() {
-              hoverAudio = audioTest;
-              //console.log('Usando la ruta img/sfx_sound1.mp3');
-          };
-      
-          audioTest.load();
-      }
-      
-      loadAudio();
-      
-      function playHoverAudio() {
-          if (hoverAudio) {
-              hoverAudio.currentTime = 0;
-              hoverAudio.play()
-                  .catch((error) => {
-                      if (error.name === 'NotAllowedError') {
-                          console.log("No se permite reproducir audio sin interacción del usuario."); // Personaliza el mensaje
-                      } else {
-                          console.log("Error al reproducir audio:", error); // Para otros errores
-                      }
-                  });
-          }
-      }
-      
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('mouseenter', playHoverAudio);
-        card.addEventListener('mouseleave', playHoverAudio);
-    });
-    
-    document.querySelectorAll('a').forEach(link => {
-        if (!link.closest('nav')) {
-            link.addEventListener('mouseenter', playHoverAudio);
-            link.addEventListener('mouseleave', playHoverAudio);
-        }
-    });
     
 
 
@@ -2970,8 +3063,11 @@ cargarSkins(idLogeado);
         menuLabelModifiers.classList.add('active');
 
         if (modifiersContainer.classList.contains('active')) {
-          switchThemeButton.style.right = "15vw";
           logoutButton.style.right = "15vw";
+          if(settingsContainer.classList.contains("active")){
+            settingsContainer.style.marginRight = "15vw";
+          }
+          settingsImgContainer.style.marginRight = "15vw";
         }
       }
       
@@ -2982,8 +3078,11 @@ cargarSkins(idLogeado);
         menuLabelModifiers.classList.remove('active');
 
         if (!modifiersContainer.classList.contains('active')) {
-          switchThemeButton.style.right = "10px";
           logoutButton.style.right = "30px";
+          if(settingsContainer.classList.contains("active")){
+            settingsContainer.style.marginRight = "0vw";
+          }
+          settingsImgContainer.style.marginRight = "0vw";
         }
       }
       
