@@ -1119,7 +1119,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         await actualizarHelloMessage(idLogeado);
         await actualizarMonedas(idLogeado);
         await cargarSkins(idLogeado);
-    
+        applyTheme();
         ajustesColorLoginYregister(checkbox);
 
         actualizarEstadoElementosSesion();
@@ -1884,9 +1884,6 @@ settingsImgContainer.addEventListener("click", function(){
 });
 
 function settingsUpdate(){
-  console.log("settingsImg"+settingsImg);
-  console.log("settingsImgLight"+settingsImgLight);
-
   if(settingsEstado){
     settingsContainer.classList.add("active");
     settingsContainer.classList.remove("notActive");
@@ -1998,76 +1995,192 @@ document.querySelectorAll('a').forEach(link => {
 
 
 /* VOLUMEN CONTROLLER */
+const slider = document.getElementById('volumeSlider');
+const tooltip = document.getElementById('tooltip');
+const toolttooltipLabelip = document.getElementById('tooltipLabel');
+const volumenImgUd = document.getElementById('volumenImgUd');
+const volumenImg = document.getElementById("volumenImg");
+const volumenImgDropShadow = document.getElementById("volumenImgDropShadow");
+let lastValue;
 
-  const slider = document.getElementById('volumeSlider');
-  const tooltip = document.getElementById('tooltip');
-  const toolttooltipLabelip = document.getElementById('tooltipLabel');
-  const volumenImgUd = document.getElementById('volumenImgUd');
-  const volumenImg = document.getElementById("volumenImg");
-  // Función para actualizar el tooltip
-  function updateTooltipAndImg() {
-      let valueReal = slider.value;
-      let value = slider.max - slider.value;
+// Función para actualizar el tooltip y la imagen del volumen
+function updateTooltipAndImg() {
+    let valueReal = slider.value;
+    let value = slider.max - slider.value;
 
-      toolttooltipLabelip.textContent = `${slider.max - value}`;
-      // Posiciona el tooltip en función del valor del slider
-      const maxSliderValue = slider.max;
-      const sliderHeight = 150; // Altura total del slider en píxeles
-      const offset = ((sliderHeight - (value / maxSliderValue) * sliderHeight) - 15); // Ajuste según el tamaño del slider y padding
-      tooltip.style.top = `${offset}px`;
-      
-      if (valueReal == 100) {
-          tooltip.style.minWidth = "60px";
-          volumenImgUd.style.left = "13px";
-      } else if (valueReal > 9 && valueReal < 100) {
-          tooltip.style.minWidth = "50px";
-          volumenImgUd.style.left = "3px";
-      } else if (valueReal < 10) {
-          tooltip.style.minWidth = "37px";
-          volumenImgUd.style.left = "-11px";
-      }
+    toolttooltipLabelip.textContent = `${slider.max - value}`;
+    // Posiciona el tooltip en función del valor del slider
+    const maxSliderValue = slider.max;
+    const sliderHeight = 150; // Altura total del slider en píxeles
+    const offset = ((sliderHeight - (value / maxSliderValue) * sliderHeight) - 15);
+    tooltip.style.top = `${offset}px`;
 
-      if(valueReal > 66 && valueReal <= 100){
+    // Guardar el último valor si no es 0
+    if (valueReal > 0) {
+        lastValue = valueReal;
+        localStorage.setItem('lastValue', lastValue);
+    }
+
+    if (valueReal == 100) {
+        tooltip.style.minWidth = "60px";
+        volumenImgUd.style.left = "13px";
+    } else if (valueReal > 9 && valueReal < 100) {
+        tooltip.style.minWidth = "50px";
+        volumenImgUd.style.left = "3px";
+    } else if (valueReal < 10) {
+        tooltip.style.minWidth = "37px";
+        volumenImgUd.style.left = "-11px";
+    }
+
+    if (valueReal > 66 && valueReal <= 100) {
         volumenImg.src = "img/volumen3.png";
-      }else if(valueReal > 33 && valueReal <= 66){
+    } else if (valueReal > 33 && valueReal <= 66) {
         volumenImg.src = "img/volumen2.png";
-      }else if(valueReal > 0 && valueReal <= 33){
+    } else if (valueReal > 0 && valueReal <= 33) {
         volumenImg.src = "img/volumen1.png";
-      }else if(valueReal == 0){
+    } else if (valueReal == 0) {
         volumenImg.src = "img/volumenMute.png";
-      }
-
+    }
 
     localStorage.setItem('sliderValue', slider.value);
     updateAudioMaster();
+}
+
+function updateAudioMaster() {
+    const value = slider.max - slider.value;
+    const volume = (slider.max - value) / 100;
+    const mediaElements = document.querySelectorAll('audio, video');
+
+    mediaElements.forEach(element => {
+        element.volume = volume;
+    });
+
+    if (hoverAudio) {
+        hoverAudio.volume = volume;
+    }
+}
+
+const initialValue = localStorage.getItem('sliderValue') !== null ? localStorage.getItem('sliderValue') : 100;
+slider.value = initialValue;
+
+updateTooltipAndImg();
+slider.addEventListener('input', updateTooltipAndImg);
+
+/* CLICK TO MUTE */
+
+// Función para silenciar o restaurar el volumen
+function clickToMute() {
+    if (slider.value > 0) {
+        // Guardar el último valor antes de silenciar
+        lastValue = slider.value;
+        localStorage.setItem('lastValue', lastValue);
+
+        // Silenciar
+        slider.value = 0;
+        volumenImg.src = "img/volumenMute.png";
+    } else {
+        // Restaurar el volumen al último valor conocido o 100 si no se encuentra
+        const restoredValue = localStorage.getItem('lastValue') !== null ? localStorage.getItem('lastValue') : 100;
+        slider.value = restoredValue;
+
+        // Actualizar la imagen del volumen según el valor restaurado
+        if (restoredValue > 66) {
+            volumenImg.src = "img/volumen3.png";
+        } else if (restoredValue > 33) {
+            volumenImg.src = "img/volumen2.png";
+        } else if (restoredValue > 0) {
+            volumenImg.src = "img/volumen1.png";
+        } else {
+            volumenImg.src = "img/volumenMute.png";
+        }
+    }
+
+    // Actualizar el tooltip y el volumen en la página
+    updateTooltipAndImg();
+    updateAudioMaster();
+}
+
+// Asignar el evento de clic al contenedor de configuración
+volumenImg.addEventListener('click', clickToMute);
+
+
+
+
+
+
+
+/* OCULTAR/MOSTRAR SLIDER */
+
+let hideTimeout;
+
+function showVolumeTooplip() {
+  // Cancelamos el temporizador de esconder si existe
+  clearTimeout(hideTimeout);
+
+  slider.style.display = "block";
+
+  setTimeout(() => {
+    slider.style.opacity = "100%";
+  }, 100);
+}
+
+function hideVolumeTooplip() {
+  hideTimeout = setTimeout(() => {
+    slider.style.opacity = "0%";
+
+    setTimeout(() => {
+      slider.style.display = "none";
+    }, 200);
+  }, 1000);
+}
+
+function hideVolumeTooplipWhithoutTimeout() {
+  slider.style.opacity = "0%";
+
+    setTimeout(() => {
+      slider.style.display = "none";
+    }, 200);
+}
+
+volumenImg.addEventListener("mouseenter", showVolumeTooplip);
+slider.addEventListener("mouseover", showVolumeTooplip);
+
+volumenImg.addEventListener("mouseleave", hideVolumeTooplip);
+slider.addEventListener("mouseleave", hideVolumeTooplip);
+settingsImgContainer.addEventListener("click", hideVolumeTooplip);
+document.addEventListener("click", function(event) {
+  if (event.target !== volumenImg && event.target !== slider) {
+      hideVolumeTooplipWhithoutTimeout();
+  }
+});
+
+
+
+  /* DROPSHADOW VOLUME */
+
+  function volumeDropShadowShow(){
+    volumenImgDropShadow.style.opacity = "100%";
   }
 
-  function updateAudioMaster() {
-      const value = slider.max - slider.value;
-      const volume = (slider.max - value) / 100; // Convertir el valor a un rango de 0.0 a 1.0
-      const mediaElements = document.querySelectorAll('audio, video');
-      
-      // Ajustar el volumen de todos los elementos de audio y video en la página
-      mediaElements.forEach(element => {
-          element.volume = volume;
-      });
-
-      // Ajustar el volumen de hoverAudio si está definido
-      if (hoverAudio) {
-          hoverAudio.volume = volume;
-      }
+  function volumeDropShadowHide(){
+    volumenImgDropShadow.style.opacity = "0%";
   }
 
-  // Cargar el valor inicial del slider desde localStorage o establecerlo en 100 si no existe
-  const initialValue = localStorage.getItem('sliderValue') !== null ? localStorage.getItem('sliderValue') : 100;
-  slider.value = initialValue;
+  volumenImg.addEventListener("mouseenter", volumeDropShadowShow);
+  volumenImg.addEventListener("mouseleave", volumeDropShadowHide);
 
-  // Actualizar el tooltip y el volumen para reflejar el valor inicial
-  updateTooltipAndImg();
 
-  // Evento para actualizar el tooltip y el volumen al cambiar el valor del slider
-  slider.addEventListener('input', updateTooltipAndImg);
+  /* MOSTRAR TOOLTIP CUANDO FOCUS */
+  function volumeTooltipHide(){
+    tooltip.style.opacity = "0%";
+  }
+  
+  function volumeTooltipShow(){
+    tooltip.style.opacity = "100%";
+  }
 
+  slider.addEventListener("mousedown", volumeTooltipShow);
+  slider.addEventListener("mouseup", volumeTooltipHide);
 
 
 
@@ -2407,6 +2520,11 @@ cargarSkins(idLogeado);
       if (menuLabelModifiers) {
         menuLabelModifiers.style.display = 'flex';
       }
+      if(rtxContainer){
+        rtxContainer.style.display = 'flex';
+      }
+
+
 
     // Habilitar los botones de skins
     const buttonThemeElements = document.querySelectorAll('.buttonTheme');
@@ -2458,6 +2576,9 @@ cargarSkins(idLogeado);
       }
       if (menuLabelModifiers) {
         menuLabelModifiers.style.display = 'none';
+      }
+      if(rtxContainer){
+        rtxContainer.style.display = 'none';
       }
 
           // Deshabilitar los botones de skins
