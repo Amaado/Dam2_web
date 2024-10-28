@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let settingsImgLight = document.getElementById("settingsImgLight");
   let settingsImg = document.getElementById("settingsImg");
   let volumenContainer = document.getElementById("volumenContainer");
+  let isShowUnlockPass = false;
 
 
 
@@ -535,6 +536,7 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
         if (rule.selectorText === '.skinContainerLock') {
           rule.style.backgroundColor = 'rgba(45, 42, 34, 0.542)';  // Cambia 'nuevo_color' por el valor de color deseado
         }
+        
 
 
 
@@ -970,6 +972,9 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         return null; // Devuelve null en caso de error en la solicitud
     }
 }
+
+
+
   
 
 
@@ -1003,6 +1008,8 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         setTimeout(() => {
           isAnimatingLogin = false;
         }, 500);
+
+        toggleUnlockPass('reset');
       }
     });
     
@@ -1172,6 +1179,8 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         setTimeout(() => {
           isAnimatingRegister = false;
         }, 500);
+        
+        toggleUnlockPass('reset');
       }
     });
     
@@ -1297,6 +1306,78 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         }
       }
     });
+
+
+
+    /* HIDE/SHOW PASSWORD */
+    function toggleUnlockPass(action = 'toggle') {
+        const calvoIcons = document.querySelectorAll('.unlockPassIconCalvo');
+    
+        if (action === 'reset') {
+            // Restablecer al estado por defecto
+            const passwordFields = document.querySelectorAll('.passwordField');
+            passwordFields.forEach(field => {
+                field.type = 'password';
+                field.dataset.isShowUnlockPass = 'false';
+            });
+    
+            const shadows = document.querySelectorAll('.unlockPassIconShadow');
+            shadows.forEach(shadow => {
+                shadow.style.opacity = "100%";
+            });
+    
+            const hands = document.querySelectorAll('.unlockPassIconHands');
+            hands.forEach(hand => {
+                hand.classList.remove("active");
+            });
+        } else if (action === 'toggle') {
+            calvoIcons.forEach(icon => {
+                // Evitar añadir múltiples event listeners al mismo elemento
+                icon.removeEventListener('click', handleIconClick);
+                icon.addEventListener('click', handleIconClick);
+            });
+        }
+    
+        function handleIconClick() {
+            const icon = this;
+            // Encontrar el contenedor más cercano que puede ser 'formRow' o 'formRow2'
+            const closestFormRow = icon.closest('.formRow, .formRow2');
+            if (!closestFormRow) {
+                console.error("No se encontró el contenedor del campo de contraseña.");
+                return;
+            }
+    
+            const closestPasswordField = closestFormRow.querySelector('.passwordField');
+            const closestShadow = closestFormRow.querySelector('.unlockPassIconShadow');
+            const closestHands = closestFormRow.querySelector('.unlockPassIconHands');
+    
+            if (closestPasswordField && closestShadow && closestHands) {
+                // Obtener el estado actual del campo de contraseña
+                let isShowUnlockPass = closestPasswordField.dataset.isShowUnlockPass === 'true';
+    
+                if (isShowUnlockPass) {
+                    // Ocultar contraseña
+                    closestShadow.style.opacity = "100%";
+                    closestHands.classList.remove("active");
+                    closestPasswordField.type = 'password';
+                    closestPasswordField.dataset.isShowUnlockPass = 'false';
+                } else {
+                    // Mostrar contraseña
+                    closestShadow.style.opacity = "0%";
+                    closestHands.classList.add("active");
+                    closestPasswordField.type = 'text';
+                    closestPasswordField.dataset.isShowUnlockPass = 'true';
+                }
+            } else {
+                console.error("unlockPassIconCalvo ERROR: No se encontraron los elementos más cercanos.");
+            }
+        }
+    }
+    
+    toggleUnlockPass();
+
+
+
 
 
 
@@ -1688,11 +1769,15 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     const maxAnimations = 15;
 
     function animationCoinCursor(event) {
+      //Comprobar actividad estadoCheckboxRTX
+      if (!estadoCheckboxRTX) {
+        return;
+      }
+
       if (activeAnimations >= maxAnimations) {
-        console.log("Solo se pueden tener 20 monedas en la pantalla simultaneamente");
+        console.log("Solo se pueden tener 15 monedas en la pantalla simultaneamente");
         return; // Salir de la función si se ha alcanzado el límite
       }
-      activeAnimations++;
 
       // Obtener la altura de la pantalla y calcular la altura de cada sección
       const screenHeight = window.innerHeight;
@@ -1701,12 +1786,14 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       // Calcular en qué sección se hizo clic
       const section = Math.floor(event.clientY / sectionHeight) + 1;
     
-      // Generar un número aleatorio entre 1 y 10
-      const randomNumber = Math.floor(Math.random() * 10) + 1;
-
-      if(section>=3){
+      if(section>=4){
         return;
       }
+
+      activeAnimations++;
+
+      // Generar un número aleatorio entre 1 y 10
+      const randomNumber = Math.floor(Math.random() * 10) + 1;
     
       // Crear una imagen
       const img = document.createElement('img');
@@ -1851,7 +1938,9 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       const clickedElement = event.target;
 
       // Comprobar si el clic ocurrió en el div con la clase 'background' o en el checkbox o cualquier parte del interruptor
-      if (clickedElement.closest('.background') || clickedElement.closest('.switch')) {
+      if (clickedElement.closest('.background') || clickedElement.closest('.switch') || clickedElement.closest('.slider')
+         || clickedElement.closest('#settingsImgContainer') || clickedElement.closest('#volumenImg') || clickedElement.closest('#rtxContainer')
+         || clickedElement.closest('#loginScreen') ) {
         console.log("No se pueden farmear monedas al hacer clic en el checkbox");
         return;  // Salir de la función si el clic fue en el div del checkbox o en cualquiera de sus elementos
       }
@@ -1878,16 +1967,25 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
 /* SETTINGS MENU */
 
 let settingsEstado = false;
-settingsImgContainer.addEventListener("click", function(){
-  settingsUpdate();
-  settingsEstado = !settingsEstado;
+let isSettingsAnimating = false; // Variable para prevenir el spam de clics
+
+settingsImgContainer.addEventListener("click", function() {
+  if (!isSettingsAnimating) {
+    isSettingsAnimating = true; // Bloquea nuevos clics
+
+    settingsUpdate();
+    settingsEstado = !settingsEstado;
+
+    setTimeout(() => {
+      isSettingsAnimating = false; // Permite clics después de 500ms
+    }, 500); // 500 milisegundos de espera
+  }
 });
 
-function settingsUpdate(){
-  if(settingsEstado){
+function settingsUpdate() {
+  if (settingsEstado) {
     settingsContainer.classList.add("active");
     settingsContainer.classList.remove("notActive");
-    
     
     switchThemeButton.classList.add("active");
     rtxContainer.classList.add("active");
@@ -1895,7 +1993,7 @@ function settingsUpdate(){
 
     settingsImg.classList.add("active");
     settingsImgLight.classList.add("active");
-  }else{
+  } else {
     settingsContainer.classList.remove("active");
     settingsContainer.classList.add("notActive");
 
@@ -1905,7 +2003,6 @@ function settingsUpdate(){
 
     settingsImg.classList.remove("active");
     settingsImgLight.classList.remove("active");
-
   }
 }
 settingsUpdate();
@@ -2012,7 +2109,7 @@ function updateTooltipAndImg() {
     // Posiciona el tooltip en función del valor del slider
     const maxSliderValue = slider.max;
     const sliderHeight = 150; // Altura total del slider en píxeles
-    const offset = ((sliderHeight - (value / maxSliderValue) * sliderHeight) - 15);
+    const offset = ((sliderHeight - (value / maxSliderValue) * sliderHeight) - 22);
     tooltip.style.top = `${offset}px`;
 
     // Guardar el último valor si no es 0
@@ -2532,6 +2629,17 @@ cargarSkins(idLogeado);
       button.style.pointerEvents = 'auto';
       button.style.opacity = '1';
     });
+
+    //Actualizar distancia de boton Theme cuando usuario no está logueado
+    const sheet = document.styleSheets[0];
+    for (let i = 0; i < sheet.cssRules.length; i++) {
+      const rule = sheet.cssRules[i];
+      if (rule.selectorText === '.container.active') {
+        rule.style.right = "0px";
+      }
+    }
+
+
     } else {
       // El usuario no ha iniciado sesión
       // Mostrar botones de Login y Register
@@ -2599,6 +2707,15 @@ cargarSkins(idLogeado);
         imgElement.src = 'img/moonIcon.png';
         selectedNightButton = null;
       }
+
+      const sheet = document.styleSheets[0];
+      for (let i = 0; i < sheet.cssRules.length; i++) {
+        const rule = sheet.cssRules[i];
+        if (rule.selectorText === '.container.active') {
+          rule.style.right = "-55px";
+        }
+      }
+
     }
   }
   
@@ -2654,7 +2771,10 @@ cargarSkins(idLogeado);
           e.target.closest('#flechaaModifiers') ||
           e.target.closest('.buttonTheme') ||
           e.target.closest('#logoutButton') ||
-          e.target.closest('#rtxContainer')
+          e.target.closest('#rtxContainer') ||
+          e.target.closest('#volumenImg') ||
+          e.target.closest('#volumeSlider') ||
+          e.target.closest('#settingsImgContainer')
         ) {
           cursorPurpleish.style.opacity = '100%';
           isCursorOverSpecialElement = true;
@@ -2673,7 +2793,10 @@ cargarSkins(idLogeado);
           e.target.closest('#flechaaModifiers') ||
           e.target.closest('.buttonTheme') ||
           e.target.closest('#logoutButton') ||
-          e.target.closest('#rtxContainer')
+          e.target.closest('#rtxContainer') ||
+          e.target.closest('#volumenImg') ||
+          e.target.closest('#volumeSlider') ||
+          e.target.closest('#settingsImgContainer')
         ) {
           cursorPurpleish.style.opacity = '1%';
           isCursorOverSpecialElement = false;
@@ -2981,7 +3104,11 @@ cargarSkins(idLogeado);
           e.target.closest('#flechaaSkins') ||
           e.target.closest('#flechaaModifiers') ||
           e.target.closest('.buttonTheme') ||
-          e.target.closest('#logoutButton')
+          e.target.closest('#logoutButton') ||
+          e.target.closest('#rtxContainer') ||
+          e.target.closest('#volumenImg') ||
+          e.target.closest('#volumeSlider') ||
+          e.target.closest('#settingsImgContainer')
         ) {
           fondoGreen.style.opacity = '70%';
           isCursorOverSpecialElement = true;
@@ -2999,7 +3126,11 @@ cargarSkins(idLogeado);
           e.target.closest('#flechaaSkins') ||
           e.target.closest('#flechaaModifiers') ||
           e.target.closest('.buttonTheme') ||
-          e.target.closest('#logoutButton')
+          e.target.closest('#logoutButton') ||
+          e.target.closest('#rtxContainer') ||
+          e.target.closest('#volumenImg') ||
+          e.target.closest('#volumeSlider') ||
+          e.target.closest('#settingsImgContainer')
         ) {
           fondoGreen.style.opacity = '1%';
           isCursorOverSpecialElement = false;

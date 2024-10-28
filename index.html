@@ -547,7 +547,7 @@
       <a draggable="false" id="horario" href="pages/horario.html">Horario</a>
       <a draggable="false" id="loginButton">Login</a>
       <a draggable="false" id="registerButton">Register</a>
-      <img draggable="false" id="logoutButton"></img>
+      <img draggable="false" id="logoutButton"/>
     </nav>
 
     <div id="loginScreen">
@@ -560,7 +560,10 @@
             </div>
             <div class="formRow">
               <div class="formLabel">Password:</div>
-              <input type="password" placeholder="Password..." id="campoPasswordLogin"/>
+              <input type="password" placeholder="Password..." id="campoPasswordLogin" class="passwordField"/>
+              <img draggable="false" class="unlockPassIconCalvo unlockPassIcon unlockPassIconLogin" src="img/unlockPassIconCalvo.png"/>
+              <img draggable="false" class="unlockPassIconShadow unlockPassIcon unlockPassIconLogin" src="img/unlockPassIconShadow.png"/>
+              <img draggable="false" class="unlockPassIconHands unlockPassIcon unlockPassIconLogin" src="img/unlockPassIconHands.png"/>
             </div>
             <div class="formRowCheckbox">
               <input type="checkbox" id="stayLoged">
@@ -574,7 +577,7 @@
     
     <div id="registerScreen">
       <div id="registerContainer">
-        <div class="formTittle">Sing-in</div>
+        <div class="formTittle">Register</div>
           <div class="formContainer">
             <div class="formRow2">
               <div class="formLabel">Name:</div>
@@ -582,11 +585,17 @@
             </div>
             <div class="formRow2">
               <div class="formLabel">Password:</div>
-              <input type="password" placeholder="Password..." id="campoPasswordRegister"/>
+              <input type="password" placeholder="Password..." id="campoPasswordRegister" class="passwordField"/>
+              <img draggable="false" class="unlockPassIconCalvo unlockPassIcon unlockPassIconRegister" src="img/unlockPassIconCalvo.png"/>
+              <img draggable="false" class="unlockPassIconShadow unlockPassIcon unlockPassIconRegister" src="img/unlockPassIconShadow.png"/>
+              <img draggable="false" class="unlockPassIconHands unlockPassIcon unlockPassIconRegister" src="img/unlockPassIconHands.png"/>
             </div>
             <div class="formRow2">
               <div class="formLabel">Rep Password:</div>
-              <input type="password" placeholder="Repeat password..." id="campoPasswordRepeatRegister"/>
+              <input type="password" placeholder="Repeat password..." id="campoPasswordRepeatRegister" class="passwordField"/>
+              <img draggable="false" class="unlockPassIconCalvo unlockPassIcon unlockPassIconRegister" src="img/unlockPassIconCalvo.png"/>
+              <img draggable="false" class="unlockPassIconShadow unlockPassIcon unlockPassIconRegister" src="img/unlockPassIconShadow.png"/>
+              <img draggable="false" class="unlockPassIconHands unlockPassIcon unlockPassIconRegister" src="img/unlockPassIconHands.png"/>
             </div>
             <div id="errorLabelRegister"></div>
             <div id="registerSubmit">Submit</div>
