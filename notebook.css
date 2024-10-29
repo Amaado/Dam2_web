@@ -1,0 +1,107 @@
+@import url(https://fonts.googleapis.com/css?family=Indie+Flower);
+body {
+  margin: 0;
+  padding: 0;
+  background: lightgoldenrodyellow;
+}
+
+.page{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.paper {
+  position: absolute;
+  display: flex;
+  height: 550px;
+  width: 450px;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0px 0px 5px 0px #888;
+  -webkit-user-drag: none;
+}
+
+.paperRight {
+    margin: -275px 40px;
+    left: 50%;
+    top: 50%;
+}
+
+.paperLeft {
+    margin: -275px -440px;
+    left: 50%;
+    top: 50%;
+}
+
+.paper::before {
+  content: '';
+  position: absolute;
+  height: 100%;
+  width: 2px;
+  background: rgba(255,0,0,0.4);
+}
+
+.paperRight::before {
+    left: 45px;
+}
+
+.paperLeft::before {
+    right: 45px;
+}
+
+.lines {
+  margin-top: 40px;
+  height: calc(100% - 40px);
+  width: 100%;
+  background-image: repeating-linear-gradient(white 0px, white 24px, steelblue 25px);
+}
+.text {
+  position: absolute;
+  top: 65px;
+  bottom: 10px;
+  right: 10px;
+  line-height: 25px;
+  font-family: 'Indie Flower';
+  overflow: hidden;
+  outline: none;
+}
+
+.textRight {
+    left: 55px;
+    width: 385px;
+}
+
+.textLeft {
+    left: 10px;
+    width: 380px;
+}
+
+
+.holes {
+  position: absolute;
+  height: 25px;
+  width: 25px;
+  background: lightgoldenrodyellow;
+  border-radius: 50%;
+  box-shadow: inset 0px 0px 2px 0px #888;
+}
+
+.holesRight {
+    left: 10px;
+}
+
+.holesLeft {
+    right: 10px;
+}
+.hole-top {
+  top: 10%;
+}
+.hole-middle {
+  top: 50%;
+}
+.hole-bottom {
+  bottom: 10%;
+}
