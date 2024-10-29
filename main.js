@@ -1786,7 +1786,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
       // Calcular en qué sección se hizo clic
       const section = Math.floor(event.clientY / sectionHeight) + 1;
     
-      if(section>=4){
+      if(section>=5 || section==3){
         return;
       }
 
@@ -3369,5 +3369,41 @@ cargarSkins(idLogeado);
       }
       
       animateTurbulence(); // Iniciar la animación
+
+
+
+      /*
+
+      //CREAR MEDIDAS ANIM
+      function createColorColumn() {
+        const container = document.getElementById('colorColumn');
+        const totalSections = 29;
+    
+        for (let i = 1; i <= totalSections; i++) {
+            const square = document.createElement('div');
+            square.classList.add('colorSquare');
+            
+            // Asignar un color diferente a cada cuadrado
+            square.style.backgroundColor = getRandomColor();
+            
+            // Añadir el número al cuadrado
+            square.textContent = i;
+            
+            container.appendChild(square);
+        }
+    }
+    
+    // Función para generar un color aleatorio en formato hexadecimal
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let j = 0; j < 6; j++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+    
+    // Llamar a la función para crear la columna de colores
+    createColorColumn();*/
 
 });

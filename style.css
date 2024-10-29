@@ -2352,3 +2352,29 @@ div.img img {
   font-family: register;
   font-size:0.5cm;
 }
+
+/*
+#colorColumn {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 100px; 
+  height: 100vh; 
+  margin: 0 auto; 
+  border: 1px solid #000;
+}
+
+.colorSquare {
+  flex: 1; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1em;
+  border-bottom: 1px solid #fff;
+}
+
+.colorSquare:last-child {
+  border-bottom: none;
+}*/
