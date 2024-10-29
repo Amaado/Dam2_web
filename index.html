@@ -23,7 +23,7 @@
     </svg>
 
     <!--<div id="colorColumn"></div>-->
-    
+
     <div id="settingsImgContainer">
       <img id="settingsImg" src="img/settingsNight.png" draggable="false"/>
       <img id="settingsImgLight" src="img/settingsNight.png" draggable="false"/>
@@ -464,6 +464,10 @@
     <img id="customCursor" alt="Custom Cursor" />
     <img id="customCursorPurpleish" alt="Custom Cursor" />
 
+
+
+
+
     <div class="boxx">
       <a draggable="false"
         href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1572"
@@ -551,6 +555,54 @@
       <a draggable="false" id="registerButton">Register</a>
       <img draggable="false" id="logoutButton"/>
     </nav>
+    
+    <div id="notebookContainer">
+        <div id="notebook">
+          <div><div class="portada"></div></div>
+          <div><div class="portadaBack"></div></div>
+          <div>
+              
+              <div class="paper paperRight">
+                  <div class="lines">
+                      <div class="text textRight" contenteditable spellcheck="false">
+                      You can edit this text! <br /><br />
+                      Cupcake ipsum dolor sit amet liquorice fruitcake. Candy canes jelly beans sweet roll cupcake lollipop. Powder carrot cake toffee brownie. Marshmallow sweet roll donut. Chocolate cake apple pie candy canes tiramisu dragée wafer. Croissant cookie lemon drops tiramisu jelly-o donut. Sweet gummi bears ice cream.</div>
+                  </div>
+                  <div class="intermidleRight"></div>
+                  <div class="holes holesRight hole-top"></div>
+                  <div class="holes holesRight hole-middle"></div>
+                  <div class="holes holesRight hole-bottom"></div>
+              </div>
+          </div>
+          <div>
+              <div class="paper paperLeft">
+                  <div class="lines">
+                  <div class="text textLeft" contenteditable spellcheck="false">
+                      You can edit this text! <br /><br />
+                      Cupcake ipsum dolor sit amet liquorice fruitcake. Candy canes jelly beans sweet roll cupcake lollipop. Powder carrot cake toffee brownie. Marshmallow sweet roll donut. Chocolate cake apple pie candy canes tiramisu dragée wafer. Croissant cookie lemon drops tiramisu jelly-o donut. Sweet gummi bears ice cream.</div>
+                  </div>
+                  <div class="intermidleLeft"></div>
+                  <div class="holes holesLeft hole-top"></div>
+                  <div class="holes holesLeft hole-middle"></div>
+                  <div class="holes holesLeft hole-bottom"></div>
+              </div>
+          </div>
+          <div>
+              <div class="paper paperRight">
+                  <div class="lines">
+                      <div class="text textRight" contenteditable spellcheck="false">
+                      You can edit this text! <br /><br />
+                      Cupcake ipsum dolor sit amet liquorice fruitcake. Candy canes jelly beans sweet roll cupcake lollipop. Powder carrot cake toffee brownie. Marshmallow sweet roll donut. Chocolate cake apple pie candy canes tiramisu dragée wafer. Croissant cookie lemon drops tiramisu jelly-o donut. Sweet gummi bears ice cream.</div>
+                  </div>
+                  <div class="intermidleRight"></div>
+                  <div class="holes holesRight hole-top"></div>
+                  <div class="holes holesRight hole-middle"></div>
+                  <div class="holes holesRight hole-bottom"></div>
+              </div>
+          </div>
+          <div></div>
+        </div>
+    </div>
 
     <div id="loginScreen">
       <div id="loginContainer">
@@ -729,6 +781,12 @@
         }, 8000);
       }
       
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="turn.min.js"></script>
+    <script src="turn.js"></script>
+    <script>
+        $('#notebook').turn({gradients: true, acceleration: true});
     </script>
   </body>
 </html>
