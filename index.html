@@ -550,17 +550,22 @@
     </div>
 
     <nav>
-      <a draggable="false" id="horario" href="pages/horario.html">Horario</a>
+      <a draggable="false" id="horario">Horario</a>
+      <a draggable="false" id="notas">Notas</a>
       <a draggable="false" id="loginButton">Login</a>
       <a draggable="false" id="registerButton">Register</a>
       <img draggable="false" id="logoutButton"/>
     </nav>
-    
+
+    <div id="horarioImgContainer">
+       <img draggable="false" id="horarioImg" src="img/Calendario_Escolar_Night.png"/>
+    </div>
+
     <div id="notebookContainer">
         <div id="notebook">
-          <div><div class="portada"></div></div>
-          <div><div class="portadaBack"></div></div>
-          <div>
+          <div class="hard" page="1"><div class="portada"></div></div>
+          <div class="hard" page="2"><div class="portadaBack"></div></div>
+          <div page="3">
               
               <div class="paper paperRight">
                   <div class="lines">
@@ -574,7 +579,7 @@
                   <div class="holes holesRight hole-bottom"></div>
               </div>
           </div>
-          <div>
+          <div page="4">
               <div class="paper paperLeft">
                   <div class="lines">
                   <div class="text textLeft" contenteditable spellcheck="false">
@@ -587,7 +592,7 @@
                   <div class="holes holesLeft hole-bottom"></div>
               </div>
           </div>
-          <div>
+          <div page="5">
               <div class="paper paperRight">
                   <div class="lines">
                       <div class="text textRight" contenteditable spellcheck="false">
@@ -600,8 +605,132 @@
                   <div class="holes holesRight hole-bottom"></div>
               </div>
           </div>
-          <div></div>
+          <div page="6">
+            <div class="paper paperLeft">
+                <div class="lines">
+                <div class="text textLeft" contenteditable spellcheck="false">
+                    You can edit this text! <br /><br />
+                    Cupcake ipsum dolor sit amet liquorice fruitcake. Candy canes jelly beans sweet roll cupcake lollipop. Powder carrot cake toffee brownie. Marshmallow sweet roll donut. Chocolate cake apple pie candy canes tiramisu dragée wafer. Croissant cookie lemon drops tiramisu jelly-o donut. Sweet gummi bears ice cream.</div>
+                </div>
+                <div class="intermidleLeft"></div>
+                <div class="holes holesLeft hole-top"></div>
+                <div class="holes holesLeft hole-middle"></div>
+                <div class="holes holesLeft hole-bottom"></div>
+            </div>
         </div>
+        <div page="7">
+            <div class="paper paperRight">
+                <div class="lines">
+                    <div class="text textRight" contenteditable spellcheck="false">
+                    You can edit this text! <br /><br />
+                    Cupcake ipsum dolor sit amet liquorice fruitcake. Candy canes jelly beans sweet roll cupcake lollipop. Powder carrot cake toffee brownie. Marshmallow sweet roll donut. Chocolate cake apple pie candy canes tiramisu dragée wafer. Croissant cookie lemon drops tiramisu jelly-o donut. Sweet gummi bears ice cream.</div>
+                </div>
+                <div class="intermidleRight"></div>
+                <div class="holes holesRight hole-top"></div>
+                <div class="holes holesRight hole-middle"></div>
+                <div class="holes holesRight hole-bottom"></div>
+            </div>
+        </div>
+        <div page="8">
+          <div class="paper paperLeft">
+              <div class="lines">
+              <div class="text textLeft" contenteditable spellcheck="false">
+                  You can edit this text! <br /><br />
+                  Cupcake ipsum dolor sit amet liquorice fruitcake. Candy canes jelly beans sweet roll cupcake lollipop. Powder carrot cake toffee brownie. Marshmallow sweet roll donut. Chocolate cake apple pie candy canes tiramisu dragée wafer. Croissant cookie lemon drops tiramisu jelly-o donut. Sweet gummi bears ice cream.</div>
+              </div>
+              <div class="intermidleLeft"></div>
+              <div class="holes holesLeft hole-top"></div>
+              <div class="holes holesLeft hole-middle"></div>
+              <div class="holes holesLeft hole-bottom"></div>
+          </div>
+      </div>
+      <div page="9">
+          <div class="paper paperRight">
+              <div class="lines">
+                  <div class="text textRight" contenteditable spellcheck="false">
+                  You can edit this text! <br /><br />
+                  Cupcake ipsum dolor sit amet liquorice fruitcake. Candy canes jelly beans sweet roll cupcake lollipop. Powder carrot cake toffee brownie. Marshmallow sweet roll donut. Chocolate cake apple pie candy canes tiramisu dragée wafer. Croissant cookie lemon drops tiramisu jelly-o donut. Sweet gummi bears ice cream.</div>
+              </div>
+              <div class="intermidleRight"></div>
+              <div class="holes holesRight hole-top"></div>
+              <div class="holes holesRight hole-middle"></div>
+              <div class="holes holesRight hole-bottom"></div>
+          </div>
+      </div>
+      <div page="10">
+        <div class="paper paperLeft">
+            <div class="lines">
+            <div class="text textLeft" contenteditable spellcheck="false">
+                You can edit this text! <br /><br />
+                Cupcake ipsum dolor sit amet liquorice fruitcake. Candy canes jelly beans sweet roll cupcake lollipop. Powder carrot cake toffee brownie. Marshmallow sweet roll donut. Chocolate cake apple pie candy canes tiramisu dragée wafer. Croissant cookie lemon drops tiramisu jelly-o donut. Sweet gummi bears ice cream.</div>
+            </div>
+            <div class="intermidleLeft"></div>
+            <div class="holes holesLeft hole-top"></div>
+            <div class="holes holesLeft hole-middle"></div>
+            <div class="holes holesLeft hole-bottom"></div>
+        </div>
+    </div>
+    <div page="11">
+        <div class="paper paperRight">
+            <div class="lines">
+                <div class="text textRight" contenteditable spellcheck="false">
+                You can edit this text! <br /><br />
+                Cupcake ipsum dolor sit amet liquorice fruitcake. Candy canes jelly beans sweet roll cupcake lollipop. Powder carrot cake toffee brownie. Marshmallow sweet roll donut. Chocolate cake apple pie candy canes tiramisu dragée wafer. Croissant cookie lemon drops tiramisu jelly-o donut. Sweet gummi bears ice cream.</div>
+            </div>
+            <div class="intermidleRight"></div>
+            <div class="holes holesRight hole-top"></div>
+            <div class="holes holesRight hole-middle"></div>
+            <div class="holes holesRight hole-bottom"></div>
+        </div>
+    </div>
+    <div page="12">
+        <div class="paper paperLeft">
+            <div class="lines">
+            <div class="text textLeft" contenteditable spellcheck="false">
+                You can edit this text! <br /><br />
+                Cupcake ipsum dolor sit amet liquorice fruitcake. Candy canes jelly beans sweet roll cupcake lollipop. Powder carrot cake toffee brownie. Marshmallow sweet roll donut. Chocolate cake apple pie candy canes tiramisu dragée wafer. Croissant cookie lemon drops tiramisu jelly-o donut. Sweet gummi bears ice cream.</div>
+            </div>
+            <div class="intermidleLeft"></div>
+            <div class="holes holesLeft hole-top"></div>
+            <div class="holes holesLeft hole-middle"></div>
+            <div class="holes holesLeft hole-bottom"></div>
+        </div>
+    </div>
+    <div page="13">
+        <div class="paper paperRight">
+            <div class="lines">
+                <div class="text textRight" contenteditable spellcheck="false">
+                You can edit this text! <br /><br />
+                Cupcake ipsum dolor sit amet liquorice fruitcake. Candy canes jelly beans sweet roll cupcake lollipop. Powder carrot cake toffee brownie. Marshmallow sweet roll donut. Chocolate cake apple pie candy canes tiramisu dragée wafer. Croissant cookie lemon drops tiramisu jelly-o donut. Sweet gummi bears ice cream.</div>
+            </div>
+            <div class="intermidleRight"></div>
+            <div class="holes holesRight hole-top"></div>
+            <div class="holes holesRight hole-middle"></div>
+            <div class="holes holesRight hole-bottom"></div>
+        </div>
+    </div>
+          <div page="14">
+              <div class="paper paperLeft">
+                <div class="lines">
+                <div class="text textLeft" contenteditable spellcheck="false">
+                    You can edit this text! <br /><br />
+                    Cupcake ipsum dolor sit amet liquorice fruitcake. Candy canes jelly beans sweet roll cupcake lollipop. Powder carrot cake toffee brownie. Marshmallow sweet roll donut. Chocolate cake apple pie candy canes tiramisu dragée wafer. Croissant cookie lemon drops tiramisu jelly-o donut. Sweet gummi bears ice cream.</div>
+                </div>
+                <div class="intermidleLeft"></div>
+                <div class="holes holesLeft hole-top"></div>
+                <div class="holes holesLeft hole-middle"></div>
+                <div class="holes holesLeft hole-bottom"></div>
+            </div>
+          </div>
+          <div class="hard portadaBack" page="15"></div>
+          <div class="hard portada" page="16"></div>
+        </div>
+
+
+        <div id="controls">
+          <label for="page-number">Go to page: </label> <input type="text" size="3" id="page-number" autocomplete="off"> of <span id="number-pages"></span>
+        </div>
+
     </div>
 
     <div id="loginScreen">
@@ -786,7 +915,30 @@
     <script src="turn.min.js"></script>
     <script src="turn.js"></script>
     <script>
-        $('#notebook').turn({gradients: true, acceleration: true});
+        $('#notebook').turn({acceleration: true, gradients: true, autoCenter: true});
+
+    var numberOfPages = 15; 
+
+    $(window).ready(function(){
+      $('#number-pages').html(numberOfPages);
+
+      $('#page-number').keydown(function(e){
+
+        if (e.keyCode==13)
+          $('#notebook').turn('page', $('#page-number').val());
+          
+      });
+    });
+
+    $(window).bind('keydown', function(e){
+
+      if (e.target && e.target.tagName.toLowerCase()!='input')
+        if (e.keyCode==37)
+          $('#notebook').turn('previous');
+        else if (e.keyCode==39)
+          $('#notebook').turn('next');
+
+    });
     </script>
   </body>
 </html>

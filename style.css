@@ -181,6 +181,8 @@ body {
   width: 100%;
   justify-content: center;
   font-size: 25px;
+  margin-left: 0px;
+  transition: margin-left 1.1s ease,  margin-right 1.1s ease;
 }
 
 nav {
@@ -190,6 +192,8 @@ nav {
   height: fit-content;
   width: 100%;
   justify-content: center;
+  margin-left: 0px;
+  transition: margin-left 0.9s ease,  margin-right 0.9s ease;
   
 }
 
@@ -541,6 +545,8 @@ input[type="password"]::placeholder {
   gap: 10px;
   padding: 30px;
   border-radius: 20px;
+  margin-right: 0px;
+  transition: margin-right 1s ease, margin-left 1s ease;
 }
 
 .card {
@@ -2381,27 +2387,67 @@ div.img img {
 }*/
 
 
-#notebookContainer{
+
+
+#horarioImgContainer{
   position: absolute;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 30vw;
   height: 100vh;
-  right: 5vw;
+  left: 20vw;
+  pointer-events: none;
+}
+
+#horarioImg{
+  position: absolute;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  height: 800px;
+  z-index: 100;
+  color: black;
+  filter: drop-shadow(10px 10px 20px #000000b3);
+  transition: opacity 0.5s ease;
+  left: 0;
+  margin-top: -40px;
+  pointer-events: none;
+  opacity: 0;
+  display: none;
+}
+
+#notebookContainer{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30vw;
+  height: 100vh;
+  right: 20vw;
+  pointer-events: none;
 }
 
 #notebook{
   position: absolute !important;
-  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 600px !important;
-  height: 600px !important;
-  z-index: 50;
+  width: 900px !important;
+  height: 700px !important;
+  z-index: 100;
   color: black;
   filter: drop-shadow(10px 10px 20px #000000b3);
+  opacity: 0%;
+  transition: opacity 0.5s ease, margin-left 0.5s ease;
+  left: 0;
+  margin-top: -110px;
+  pointer-events: all;
+  opacity: 0;
+  display: none;
 }
 
 #notebook .turn-page{
@@ -2448,7 +2494,9 @@ div.img img {
   font-family: 'Indie Flower';
   overflow: hidden;
   outline: none;
-  width: 240px;
+  width: 390px;
+  height: 600px;
+  background-color: green;
 }
 
 .textRight {
@@ -2510,4 +2558,27 @@ div.img img {
   width: 300px;
   height: 600px;
   background-image: url(img/notasBackgoundBack.png);
+}
+
+
+
+
+
+#controls{
+  position: absolute;
+  display: flex;
+	width:800px;
+	text-align:center;
+	margin:20px 0px;
+	font:30px arial;
+  margin-top: 750px;
+  margin-left: 280px;
+  opacity: 0%;
+  transition: opacity 1s ease;
+  z-index: 100;
+  left: 0;
+}
+
+#controls input, #controls label{
+	font:30px arial;
 }

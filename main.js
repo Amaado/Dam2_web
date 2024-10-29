@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let buttons  = document.querySelectorAll("button");
   let button
   let horario = document.getElementById("horario");
+  let notas = document.getElementById("notas");
   let loginButton = document.getElementById("loginButton");
   let registerButton = document.getElementById("registerButton");
   let loginScreen = document.getElementById("loginScreen");
@@ -63,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let settingsImg = document.getElementById("settingsImg");
   let volumenContainer = document.getElementById("volumenContainer");
   let isShowUnlockPass = false;
+  let boxx = document.querySelector('.boxx');
 
 
 
@@ -730,6 +732,22 @@ async function saveCursorSelection(idLogeado, theme, cursorSrc) {
 
     registerButton.addEventListener('mouseleave', function() {
       registerButton.style.backgroundColor = '#333c4a00';
+    });
+  }
+
+  if (notas) {
+    notas.addEventListener('mouseenter', function() {
+        if (checkbox.checked) {
+            //console.log("Tema claro");
+            notas.style.backgroundColor = '#edeba4';
+        } else {
+            //console.log("Tema oscuro");
+            notas.style.backgroundColor = '#333c4a9d';
+        }
+    });
+
+    notas.addEventListener('mouseleave', function() {
+      notas.style.backgroundColor = '#333c4a00';
     });
   }
 
@@ -2575,6 +2593,10 @@ cargarSkins(idLogeado);
     if (idLogeado) {
       // El usuario ha iniciado sesión
       // Ocultar botones de Login y Register
+      if (notas) {
+        notas.disabled = false;
+        notas.style.display = 'flex';
+      }
       if (loginButton) {
         loginButton.disabled = true;
         loginButton.style.display = 'none';
@@ -2643,6 +2665,10 @@ cargarSkins(idLogeado);
     } else {
       // El usuario no ha iniciado sesión
       // Mostrar botones de Login y Register
+      if (notas) {
+        notas.disabled = true;
+        notas.style.display = 'none';
+      }
       if (loginButton) {
         loginButton.disabled = false;
         loginButton.style.display = 'flex';
@@ -3405,5 +3431,96 @@ cargarSkins(idLogeado);
     
     // Llamar a la función para crear la columna de colores
     createColorColumn();*/
+
+
+    let notasEstado = false;
+    let notasAnimating = false;
+    const notebook = document.getElementById("notebook");
+    const controls = document.getElementById("controls");
+    
+    notas.addEventListener("click", function() {
+      if (horarioEstado) {
+        return;
+      }
+      if (!notasAnimating) {
+        notasAnimating = true;
+        
+        notasEstado = !notasEstado;
+    
+        if (notasEstado) {
+          notebook.style.display = "flex";
+          controls.style.display = "flex";
+    
+          setTimeout(() => {
+            notebook.style.opacity = "1";
+            controls.style.opacity = "1";
+            boxx.style.marginRight = "800px";
+            allESC.style.marginLeft = "-400px";
+            helloMessage.style.marginLeft = "-400px";
+            console.log(allESC);
+          }, 10);
+        } else {
+          notebook.style.opacity = "0";
+          controls.style.opacity = "0";
+          boxx.style.marginRight = "0px";
+          allESC.style.marginLeft = "0px";
+          helloMessage.style.marginLeft = "0px";
+    
+          setTimeout(() => {
+            notebook.style.display = "none";
+            controls.style.display = "none";
+          }, 1000);
+        }
+    
+        setTimeout(() => {
+          notasAnimating = false;
+        }, 1100);
+      }
+    });
+
+
+
+
+
+
+    let horarioEstado = false;
+    let horarioAnimating = false;
+    const horarioImg = document.getElementById("horarioImg");
+    
+    horario.addEventListener("click", function() {
+      if (notasEstado) {
+        return;
+      }
+      if (!horarioAnimating) {
+        horarioAnimating = true;
+    
+        horarioEstado = !horarioEstado;
+    
+        if (horarioEstado) {
+          horarioImg.style.display = "flex";
+          setTimeout(() => {
+            horarioImg.style.opacity = "1";
+            boxx.style.marginLeft = "800px";
+            allESC.style.marginLeft = "400px";
+            helloMessage.style.marginLeft = "400px";
+          }, 10);
+        } else {
+          horarioImg.style.opacity = "0";
+          boxx.style.marginLeft = "0px";
+          allESC.style.marginLeft = "0px";
+          helloMessage.style.marginLeft = "0px";
+    
+          setTimeout(() => {
+            horarioImg.style.display = "none";
+          }, 1000);
+        }
+    
+        setTimeout(() => {
+          horarioAnimating = false;
+        }, 1100);
+      }
+    });
+    
+
 
 });
