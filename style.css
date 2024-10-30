@@ -2401,6 +2401,7 @@ div.img img {
   pointer-events: none;
 }
 
+
 #horarioImg{
   position: absolute;
   flex-direction: row;
@@ -2410,13 +2411,15 @@ div.img img {
   height: 800px;
   z-index: 100;
   color: black;
-  filter: drop-shadow(10px 10px 20px #000000b3);
-  transition: opacity 0.5s ease;
   left: 0;
-  margin-top: -40px;
   pointer-events: none;
-  opacity: 0;
   display: none;
+  opacity: 0;
+  margin-left: 350px;
+  margin-top: 900px;
+  transform: translateX(-48px) scale(0.07, 0.01);
+  filter: drop-shadow(10px 10px 20px #000000b3) blur(100px);
+  transition: opacity 1.5s ease, margin-left 0.9s ease, margin-top 1.3s ease, transform 1s ease, filter 1.5s ease;
 }
 
 #notebookContainer{
@@ -2450,57 +2453,52 @@ div.img img {
   display: none;
 }
 
-#notebook .turn-page{
-	background-color:#ccc;
-}
-
 .paper {
   position: absolute;
   display: flex;
   height: 100%;
   width: 100%;
-  background: rgba(255,255,255,0.9);
 }
 
-.paper::before {
-  content: '';
-  position: absolute;
-  height: 100%;
-  width: 2px;
-  background: rgba(255,0,0,0.4);
+.paperLeft{
+  filter: drop-shadow(10px 0px 5px #000000b3);
+
+     background-image: url(img/hojaLeft.png) !important;
+     background-size: contain;
+     background-position: center;
+     background-repeat: no-repeat;
+   
 }
 
-.paperRight::before {
-    left: 50px;
+.paperRight{
+  filter: drop-shadow(-10px 0px 5px #000000b3);
+
+      background-image: url(img/hojaRight.png) !important;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
 }
 
-.paperLeft::before {
-    right: 50px;
-}
 
 .lines {
   height: 100%;
   width: 100%;
-  background-image: repeating-linear-gradient(white 0px, white 24px, steelblue 25px);
-  background-position: 0px 12px;
 }
 
 .text {
   position: absolute;
-  top: 65px;
-  bottom: 10px;
-  right: 10px;
+  top: 90px;
   line-height: 25px;
   font-family: 'Indie Flower';
   overflow: hidden;
   outline: none;
   width: 390px;
-  height: 600px;
-  background-color: green;
+  height: 500px;
+  /*background-color: green;*/
 }
 
 .textRight {
-    left: 55px;
+    left: 20px;
 }
 
 .textLeft {
@@ -2508,56 +2506,55 @@ div.img img {
 }
 
 
-.holes {
+.paint{
   position: absolute;
-  height: 25px;
-  width: 25px;
-  background: #1c2128;
-  border-radius: 50%;
-  box-shadow: inset 0px 0px 2px 0px #888;
+  width: 100%;
+  height: 100%;
+  mask: url(img/hojaRight.png);
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  /*background-color: purple;*/
+  pointer-events: none;
 }
 
-.holesRight {
-    left: 15px;
+
+.numeration{
+  position: absolute;
+  width: 100px;
+  height: 40px;
+  font-family: 'Indie Flower';
+  font-size: 28px;
+  bottom: 80px;
 }
 
-.holesLeft {
-    right: 15px;
-}
-.hole-top {
-  top: 10%;
-}
-.hole-middle {
-  top: 50%;
-}
-.hole-bottom {
-  bottom: 10%;
+.numerationLeft{
+  text-align: left;
+  left: 40px;
 }
 
-.intermidleRight{
-  position: relative;
-  right:441px;
-  width: 10px;
-  background-color: #1c2128;
+.numerationRight{
+  text-align: right;
+  right: 40px;
 }
 
-.intermidleLeft{
-  position: relative;
-  right:0px;
-  width: 10px;
-  background-color: #1c2128;
-}
 
-.portada{
-  width: 300px;
-  height: 600px;
+.portada {
+  width: auto;
+  height: 700px;
   background-image: url(img/notasBackgound.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .portadaBack{
-  width: 300px;
-  height: 600px;
+  width: auto;
+  height: 700px;
   background-image: url(img/notasBackgoundBack.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 
@@ -2577,6 +2574,7 @@ div.img img {
   transition: opacity 1s ease;
   z-index: 100;
   left: 0;
+  pointer-events: all;
 }
 
 #controls input, #controls label{

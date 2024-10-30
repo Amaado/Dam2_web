@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let volumenContainer = document.getElementById("volumenContainer");
   let isShowUnlockPass = false;
   let boxx = document.querySelector('.boxx');
-
+  const horarioImg = document.getElementById("horarioImg");
 
 
   
@@ -1406,7 +1406,7 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
   window.addEventListener('load', async function() {
     const sesionAutomatica = localStorage.getItem('sesionAutomatica');
     idLogeado = localStorage.getItem('idLogeado');
-  
+
     if (sesionAutomatica) {
       try {
         // Actualizar información del usuario
@@ -3457,7 +3457,6 @@ cargarSkins(idLogeado);
             boxx.style.marginRight = "800px";
             allESC.style.marginLeft = "-400px";
             helloMessage.style.marginLeft = "-400px";
-            console.log(allESC);
           }, 10);
         } else {
           notebook.style.opacity = "0";
@@ -3485,42 +3484,72 @@ cargarSkins(idLogeado);
 
     let horarioEstado = false;
     let horarioAnimating = false;
-    const horarioImg = document.getElementById("horarioImg");
     
-    horario.addEventListener("click", function() {
-      if (notasEstado) {
-        return;
-      }
-      if (!horarioAnimating) {
-        horarioAnimating = true;
+    window.addEventListener("load", function() {
+      // Desactiva la transición temporalmente para configurar el estado inicial
+      horarioImg.style.transition = "none";
     
-        horarioEstado = !horarioEstado;
+      // Configura el estado inicial de `horarioImg` con `!important`
+      horarioImg.style.setProperty("display", "none", "important");
+      horarioImg.style.setProperty("opacity", "0", "important");
+      horarioImg.style.setProperty("margin-left", "350px", "important");
+      horarioImg.style.setProperty("margin-top", "900px", "important");
+      horarioImg.style.setProperty("transform", "translateX(-48px) scale(0.07, 0.01)", "important");
+      horarioImg.style.setProperty("filter", "drop-shadow(10px 10px 20px #000000b3) blur(100px)", "important");
     
-        if (horarioEstado) {
-          horarioImg.style.display = "flex";
-          setTimeout(() => {
-            horarioImg.style.opacity = "1";
-            boxx.style.marginLeft = "800px";
-            allESC.style.marginLeft = "400px";
-            helloMessage.style.marginLeft = "400px";
-          }, 10);
-        } else {
-          horarioImg.style.opacity = "0";
-          boxx.style.marginLeft = "0px";
-          allESC.style.marginLeft = "0px";
-          helloMessage.style.marginLeft = "0px";
+      // Espera un tiempo adicional para asegurar que todo esté completamente renderizado
+      setTimeout(() => {
+        // Activa la transición en el primer clic
+        horario.addEventListener("click", function() {
+          if (notasEstado) {
+            return;
+          }
+          if (!horarioAnimating) {
+            horarioAnimating = true;
+            
+            // Activa la transición ahora que el elemento ya está en su estado inicial
+            
+            
+            horarioEstado = !horarioEstado;
     
-          setTimeout(() => {
-            horarioImg.style.display = "none";
-          }, 1000);
-        }
+            if (horarioEstado) {
+              horarioImg.style.setProperty("display", "flex", "important");
+              setTimeout(() => {
+                // Configura el estilo para la animación de entrada
+                horarioImg.style.setProperty("transition", "opacity 1.5s ease, margin-left 0.9s ease, margin-top 0.5s ease, transform 1s ease, filter 0.5s ease", "important");
+                horarioImg.style.setProperty("opacity", "1", "important");
+                horarioImg.style.setProperty("margin-left", "750px", "important");
+                horarioImg.style.setProperty("transform", "translateX(-800px) scale(1, 1)", "important");
+                horarioImg.style.setProperty("filter", "drop-shadow(10px 10px 20px #000000b3) blur(0px)", "important");
+                horarioImg.style.setProperty("margin-top", "-40px", "important");
+                boxx.style.marginLeft = "800px";
+                allESC.style.marginLeft = "400px";
+                helloMessage.style.marginLeft = "400px";
+              }, 10);
+            } else {
+              // Configura el estilo para la animación de salida
+              horarioImg.style.setProperty("transition", "opacity 1.5s ease, margin-left 0.9s ease, margin-top 1.3s ease, transform 1s ease, filter 5s ease", "important");
+              horarioImg.style.setProperty("opacity", "0", "important");
+              horarioImg.style.setProperty("margin-left", "350px", "important");
+              horarioImg.style.setProperty("transform", "translateX(-48px) scale(0.07, 0.01)", "important");
+              horarioImg.style.setProperty("filter", "drop-shadow(10px 10px 20px #000000b3) blur(100px)", "important");
+              horarioImg.style.setProperty("margin-top", "900px", "important");
+              boxx.style.marginLeft = "0px";
+              allESC.style.marginLeft = "0px";
+              helloMessage.style.marginLeft = "0px";
     
-        setTimeout(() => {
-          horarioAnimating = false;
-        }, 1100);
-      }
+              setTimeout(() => {
+                horarioImg.style.setProperty("display", "none", "important");
+              }, 1000);
+            }
+    
+            setTimeout(() => {
+              horarioAnimating = false;
+            }, 1100);
+          }
+        });
+      }, 200); // Tiempo adicional para asegurar que el navegador haya terminado de renderizar
     });
-    
 
 
 });
