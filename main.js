@@ -3857,9 +3857,10 @@ cargarSkins(idLogeado);
   });
   
   function paintON() {
-      configurarEventosDePintura();
-      console.log("Event listeners de pintura y selección de color activados.");
-  }
+    configurarEventosDePintura();
+    activarGeneracionDePixeles();
+    console.log("Event listeners de pintura y selección de color activados.");
+}
   
   // Variables globales para almacenar los event listeners
   let colorSelectListener;
@@ -3970,33 +3971,61 @@ cargarSkins(idLogeado);
     
     // Función para pintar píxeles y actualizar buffer de cambios
     function pintarPixel(pixel, color) {
-        const container = pixel.closest('.paint');
-        const pageElement = container.closest('[page]');
-        const pageNumber = pageElement.getAttribute('page');
-    
-        pixel.style.backgroundColor = color;
-        pixel.dataset.color = color;
-    
-        if (!paintChangesBuffer[pageNumber]) paintChangesBuffer[pageNumber] = [];
-        paintChangesBuffer[pageNumber].push({ x: pixel.dataset.x, y: pixel.dataset.y, color });
-    
-        if (saveTimeout) clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(guardarDibujosActualizados, 1000);
-    }
+      const container = pixel.closest('.paint');
+      const pageElement = container.closest('[page]');
+      const pageNumber = pageElement.getAttribute('page');
+  
+      // Aplicar el color en el frontend
+      if (color === 'rgba(0, 0, 0, 0)') {
+          pixel.style.backgroundColor = 'transparent'; // Hacer el píxel visualmente transparente
+          pixel.dataset.color = 'transparent';
+  
+          // Enviar `null` al buffer de cambios para eliminar el color en la base de datos
+          if (!paintChangesBuffer[pageNumber]) paintChangesBuffer[pageNumber] = [];
+          paintChangesBuffer[pageNumber].push({ x: pixel.dataset.x, y: pixel.dataset.y, color: null });
+      } else {
+          // Asignar el color normalmente si no es transparente
+          pixel.style.backgroundColor = color;
+          pixel.dataset.color = color;
+  
+          if (!paintChangesBuffer[pageNumber]) paintChangesBuffer[pageNumber] = [];
+          paintChangesBuffer[pageNumber].push({ x: pixel.dataset.x, y: pixel.dataset.y, color });
+      }
+  
+      if (saveTimeout) clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(guardarDibujosActualizados, 1000);
+  }
     
     // Función para guardar solo los cambios nuevos
     function guardarDibujosActualizados() {
-        const dibujos = { ...dibujosCache };
-    
-        for (const page in paintChangesBuffer) {
-            if (!dibujos[page]) dibujos[page] = [];
-            dibujos[page].push(...paintChangesBuffer[page]);
-        }
-    
-        actualizarDibujosUsuario(idLogeado, JSON.stringify(dibujos));
-        paintChangesBuffer = {};
-        dibujosCache = dibujos;
-    }
+      const dibujos = { ...dibujosCache };
+  
+      for (const page in paintChangesBuffer) {
+          if (!dibujos[page]) dibujos[page] = [];
+  
+          paintChangesBuffer[page].forEach(change => {
+              if (change.color === null) {
+                  // Solo eliminar el color en la base de datos para este píxel
+                  const index = dibujos[page].findIndex(p => p.x === change.x && p.y === change.y);
+                  if (index !== -1) {
+                      dibujos[page].splice(index, 1); // Eliminar el color en la caché
+                  }
+              } else {
+                  // Actualizar o agregar el color normalmente
+                  const index = dibujos[page].findIndex(p => p.x === change.x && p.y === change.y);
+                  if (index !== -1) {
+                      dibujos[page][index] = change;
+                  } else {
+                      dibujos[page].push(change);
+                  }
+              }
+          });
+      }
+  
+      actualizarDibujosUsuario(idLogeado, JSON.stringify(dibujos)); // Guardar los cambios en la base de datos
+      paintChangesBuffer = {};
+      dibujosCache = dibujos;
+  }
     
     async function actualizarDibujosUsuario(idLogeado, dibujos) {
         const url = `${supabaseUrl}?id=eq.${idLogeado}`;
@@ -4039,9 +4068,7 @@ cargarSkins(idLogeado);
     
 
 
-    $(document).ready(async function () {
-      await cargarDibujosEnTodasLasPaginas();
-    });
+
 
     // Inicializa el cuaderno y carga las páginas necesarias
     $('#notebook').turn({
@@ -4080,8 +4107,15 @@ cargarSkins(idLogeado);
 
 
     async function cargarDibujosEnTodasLasPaginas() {
+      console.log("Iniciando carga de dibujos...");
+  
       const dibujosJSON = await obtenerDibujosDeUsuario(idLogeado);
-      if (!dibujosJSON) return;
+      console.log("Dibujos obtenidos desde la base de datos:", dibujosJSON);
+  
+      if (!dibujosJSON) {
+          console.log("No hay datos de dibujos disponibles o error al obtener.");
+          return;
+      }
   
       const dibujos = JSON.parse(dibujosJSON);
       dibujosCache = dibujos;
@@ -4090,14 +4124,60 @@ cargarSkins(idLogeado);
           const pageElement = document.querySelector(`[page="${pageNumber}"]`);
           if (pageElement) {
               const paintContainer = pageElement.querySelector('.paint');
+              console.log(`Renderizando dibujos para página ${pageNumber}`);
+  
               if (paintContainer && !paintContainer.dataset.initialized) {
                   generarCuadriculaDePixelesEnContenedor(paintContainer);
-                  renderizarDibujos(dibujos[pageNumber], paintContainer);
               }
+  
+              // Renderizar los dibujos
+              renderizarDibujos(dibujos[pageNumber], paintContainer);
+          } else {
+              console.log(`Elemento de página no encontrado para la página ${pageNumber}`);
           }
       });
-  }
   
+      console.log("Carga de dibujos completada.");
+  }
+
+  function activarGeneracionDePixeles() {
+    console.log("Ejecutando activarGeneracionDePixeles...");
+
+    // Seleccionar todos los contenedores `.paint`
+    const paintContainers = document.querySelectorAll('.paint');
+    console.log("Contenedores .paint encontrados:", paintContainers);
+
+    paintContainers.forEach(container => {
+        console.log("Procesando contenedor:", container);
+        
+        // Añadir evento de clic
+        container.addEventListener('click', function generarPixelesSiEsNecesario() {
+            console.log("Evento click detectado en el contenedor .paint:", container);
+
+            if (!container.dataset.initialized) {
+                console.log('Generando cuadrícula de píxeles en el contenedor:', container);
+
+                // Llamada para generar la cuadrícula
+                generarCuadriculaDePixelesEnContenedor(container);
+
+                // Marcar el contenedor como inicializado
+                container.dataset.initialized = true;
+                console.log("Cuadrícula generada y marcado como inicializado.");
+
+                // Eliminar el evento después de la primera vez
+                container.removeEventListener('click', generarPixelesSiEsNecesario);
+                console.log("Evento click eliminado del contenedor para evitar duplicados.");
+            } else {
+                console.log("La cuadrícula ya está generada para este contenedor, no se vuelve a crear.");
+            }
+        });
+    });
+
+    console.log("activarGeneracionDePixeles finalizado.");
+}
+
+
+
   // Renderizar dibujos de una página específica
   function renderizarDibujos(pixelDataArray, container) {
       pixelDataArray.forEach((pixelData) => {
@@ -4110,36 +4190,43 @@ cargarSkins(idLogeado);
       });
   }
   
-  // Genera cuadrícula solo cuando la página tiene dibujos
   function generarCuadriculaDePixelesEnContenedor(container) {
-      if (container.dataset.initialized) return;
-  
-      container.innerHTML = '';
-      const pixelSize = 7;
-      const containerWidth = 450;
-      const containerHeight = 700;
-  
-      const pixelsHorizontal = Math.floor(containerWidth / pixelSize);
-      const pixelsVertical = Math.floor(containerHeight / pixelSize);
-  
-      for (let y = 0; y < pixelsVertical; y++) {
-          for (let x = 0; x < pixelsHorizontal; x++) {
-              const pixel = document.createElement('div');
-              pixel.classList.add('pixel');
-              pixel.style.width = `${pixelSize}px`;
-              pixel.style.height = `${pixelSize}px`;
-              pixel.style.position = 'absolute';
-              pixel.style.left = `${x * pixelSize}px`;
-              pixel.style.top = `${y * pixelSize}px`;
-              pixel.style.backgroundColor = 'transparent';
-              pixel.dataset.x = x;
-              pixel.dataset.y = y;
-              container.appendChild(pixel);
-          }
-      }
-  
-      container.dataset.initialized = true;
-  }
+    console.log('Ejecutando generarCuadriculaDePixelesEnContenedor en contenedor:', container);
+
+    if (container.dataset.initialized) {
+        console.log("El contenedor ya está inicializado, saliendo de la función.");
+        return;
+    }
+
+    container.innerHTML = '';
+    const pixelSize = 7;
+    const containerWidth = 450;
+    const containerHeight = 700;
+    const pixelsHorizontal = Math.floor(containerWidth / pixelSize);
+    const pixelsVertical = Math.floor(containerHeight / pixelSize);
+
+    console.log("Generando píxeles. Tamaño:", pixelSize, "Ancho:", containerWidth, "Alto:", containerHeight);
+    console.log("Píxeles por fila:", pixelsHorizontal, "Píxeles por columna:", pixelsVertical);
+
+    for (let y = 0; y < pixelsVertical; y++) {
+        for (let x = 0; x < pixelsHorizontal; x++) {
+            const pixel = document.createElement('div');
+            pixel.classList.add('pixel');
+            pixel.style.width = `${pixelSize}px`;
+            pixel.style.height = `${pixelSize}px`;
+            pixel.style.position = 'absolute';
+            pixel.style.left = `${x * pixelSize}px`;
+            pixel.style.top = `${y * pixelSize}px`;
+            pixel.style.backgroundColor = 'transparent';
+            pixel.dataset.x = x;
+            pixel.dataset.y = y;
+            container.appendChild(pixel);
+        }
+    }
+
+    console.log("Cuadrícula generada correctamente en el contenedor.");
+    container.dataset.initialized = true;
+}
 
 
 
