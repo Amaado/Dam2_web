@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let isShowUnlockPass = false;
   let boxx = document.querySelector('.boxx');
   const horarioImg = document.getElementById("horarioImg");
+  const paintContainers = document.querySelectorAll('.paint');
 
 
   
@@ -1150,6 +1151,9 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         actualizarEstadoElementosSesion();
         loadCursorSelection(idLogeado);
 
+        cargarNotas(idLogeado);
+
+
         // Cerrar el formulario de inicio de sesión
         loginScreen.click();
     
@@ -1414,6 +1418,8 @@ async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
         await actualizarMonedas(idLogeado);
         await cargarSkins(idLogeado);
         await loadCursorSelection(idLogeado);
+        cargarNotas(idLogeado);
+        cargarDibujosEnTodasLasPaginas();
       } catch (error) {
         console.error("Error durante el inicio de sesión automático:", error);
       }
@@ -3433,6 +3439,9 @@ cargarSkins(idLogeado);
     createColorColumn();*/
 
 
+    /* NOTAS TRANSICION */
+
+
     let notasEstado = false;
     let notasAnimating = false;
     const notebook = document.getElementById("notebook");
@@ -3480,15 +3489,18 @@ cargarSkins(idLogeado);
 
 
 
-
+    /* HORARIO TRANSICION */
 
     let horarioEstado = false;
     let horarioAnimating = false;
     
     window.addEventListener("load", function() {
-      // Desactiva la transición temporalmente para configurar el estado inicial
       horarioImg.style.transition = "none";
     
+      setTimeout(() => {
+        notas.click();
+      }, 1100);
+
       // Configura el estado inicial de `horarioImg` con `!important`
       horarioImg.style.setProperty("display", "none", "important");
       horarioImg.style.setProperty("opacity", "0", "important");
@@ -3519,7 +3531,7 @@ cargarSkins(idLogeado);
                 horarioImg.style.setProperty("transition", "opacity 1.5s ease, margin-left 0.9s ease, margin-top 0.5s ease, transform 1s ease, filter 0.5s ease", "important");
                 horarioImg.style.setProperty("opacity", "1", "important");
                 horarioImg.style.setProperty("margin-left", "750px", "important");
-                horarioImg.style.setProperty("transform", "translateX(-800px) scale(1, 1)", "important");
+                horarioImg.style.setProperty("transform", "translateX(-350px) scale(1, 1)", "important");
                 horarioImg.style.setProperty("filter", "drop-shadow(10px 10px 20px #000000b3) blur(0px)", "important");
                 horarioImg.style.setProperty("margin-top", "-40px", "important");
                 boxx.style.marginLeft = "800px";
@@ -3550,6 +3562,586 @@ cargarSkins(idLogeado);
         });
       }, 200); // Tiempo adicional para asegurar que el navegador haya terminado de renderizar
     });
+
+
+
+
+
+
+      /* SLIDER TAMAÑO PINCEL */
+
+  const sliderPaint = document.querySelector('.sliderPaint');
+  const tooltipPaint  = document.querySelector('.tooltipPaint');
+  const tooltipLabelPaint = document.getElementById("tooltipLabelPaint");
+  const paintImgUd = document.getElementById("paintImgUd");
+  let selectedRadius
+
+  function updateTooltipPaint() {
+      let valueReal = sliderPaint.value;
+
+      // Actualiza el contenido del tooltip
+      tooltipLabelPaint.textContent = `${valueReal}`;
+
+      
+      if(valueReal<10){
+        tooltipPaint.style.minWidth = "42px";
+        paintImgUd.style.left = "-6px";
+      }else{
+        tooltipPaint.style.minWidth = "50px";
+        paintImgUd.style.left = "3px";
+      }
+
+      // Posiciona el tooltip en función del valor del slider
+      const sliderWidth = sliderPaint.offsetWidth;
+      const thumbWidth = 25; // Ancho de la bola del slider
+      const tooltipOffset = ((valueReal / sliderPaint.max) * (sliderWidth - thumbWidth)) + thumbWidth / 2;
+
+      tooltipPaint.style.left = `${sliderPaint.offsetLeft + tooltipOffset - tooltipPaint.offsetWidth / 2}px`;
+      tooltipPaint.style.top = `${sliderPaint.offsetTop - 35}px`; // Ajusta la posición vertical del tooltip
+
+
+
+      selectedRadius = sliderPaint.value;
+
+      // Guarda el valor en el localStorage
+      localStorage.setItem('sliderPaintValue', valueReal);
+  }
+
+  // Muestra el tooltip cuando el ratón está presionado
+  function showTooltip() {
+    tooltipPaint.style.opacity = '1';
+    isMouseDown = true;
+  }
+
+  // Oculta el tooltip cuando el ratón se suelta
+  function hideTooltip() {
+    tooltipPaint.style.opacity = '0';
+    isMouseDown = false;
+  }
+
+  // Solo actualiza el tooltip si el ratón está presionado
+  function handleSliderMove() {
+    if (isMouseDown) {
+        updateTooltipPaint();
+    }
+  }
+
+  // Añadir los eventos de mostrar y ocultar tooltip
+  sliderPaint.addEventListener('mousedown', showTooltip);
+  document.addEventListener('mouseup', hideTooltip);
+  sliderPaint.addEventListener('input', handleSliderMove);
+
+  // Iniciar el tooltip con el valor del slider si está en localStorage
+  if (localStorage.getItem('sliderPaintValue')) {
+    sliderPaint.value = localStorage.getItem('sliderPaintValue');
+    updateTooltipPaint();
+    tooltipPaint.style.opacity = '0'; // Ocultar el tooltip inicialmente
+  }
+
+
+
+
+
+
+
+
+
+
+
+    /* CONTROLAR QUE EL TEXTO DE LA LIBRETA NO SOBREPASE EL CONTENEDOR */
+
+    const text = document.querySelector('.text');
+    text.style.overflow = "hidden";
+    text.style.maxHeight = "500px"; // Ajusta este valor según la altura deseada
+    
+    function checkContentHeight() {
+      // Mientras el contenido exceda la altura máxima, elimina el último carácter
+      while (text.scrollHeight > text.clientHeight) {
+        text.innerText = text.innerText.slice(0, -1);
+      }
+    
+      // Coloca el cursor al final del texto después de la modificación
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(text);
+      range.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+    
+    text.addEventListener('input', checkContentHeight);
+    
+    text.addEventListener('paste', (event) => {
+      event.preventDefault();
+      
+      // Obtén el texto del portapapeles y pégalo sin exceder los límites
+      const clipboardText = (event.clipboardData || window.clipboardData).getData('text');
+      text.innerText += clipboardText;
+    
+      // Verifica si el contenido excede la altura y recorta si es necesario
+      checkContentHeight();
+    });
+    
+
+
+
+
+
+    // Actualizar las notas de un usuario por id
+    async function actualizarNotasUsuario(idLogeado, notas) {
+      const url = `${supabaseUrl}?id=eq.${idLogeado}`;
+      const actualizarNotas = { notas: notas }; // Aquí asignamos el contenido de 'notas'
+
+      try {
+        const response = await fetch(url, {
+          method: 'PATCH',
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation',
+          },
+          body: JSON.stringify(actualizarNotas),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.text();
+          console.error('Error al actualizar las notas:', response.statusText, errorData);
+          throw new Error('Error en la actualización de notas: ' + response.statusText);
+        }
+
+        const data = await response.json();
+        console.log('Notas actualizadas correctamente:', data);
+        return data;
+      } catch (error) {
+        console.error('Error al actualizar las notas:', error);
+      }
+    }
+
+
+    // Obtener las notas de un usuario por id
+    async function obtenerNotasDeUsuario(idLogeado) {
+      const url = `${supabaseUrl}?id=eq.${idLogeado}`;
+
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          console.error('Error en la solicitud:', response.statusText);
+          return null;
+        }
+
+        const data = await response.json();
+
+        if (data.length > 0) {
+          return data[0].notas;  // Devuelve el contenido de 'notas'
+        } else {
+          console.error('Usuario no encontrado');
+          return null;
+        }
+      } catch (error) {
+        console.error('Error al obtener las notas:', error);
+        return null;
+      }
+    }
+
+
+// Seleccionamos todos los elementos con clase 'text'
+  const textElements = document.querySelectorAll('.text');
+
+  // Función para recoger y enviar las notas
+  function enviarNotasActualizadas() {
+    const notas = {};
+
+    textElements.forEach((textElement) => {
+      const pageElement = textElement.closest('[page]');
+      const pageNumber = pageElement.getAttribute('page');
+      const content = textElement.innerHTML;
+      notas[pageNumber] = content;
+    });
+
+    const notasJSON = JSON.stringify(notas);
+
+    actualizarNotasUsuario(idLogeado, notasJSON);
+  }
+
+  // Agregamos los listeners a cada elemento 'text'
+  textElements.forEach((textElement) => {
+    const updateFunction = () => {
+      clearTimeout(textElement.updateTimeout);
+      textElement.updateTimeout = setTimeout(() => {
+        enviarNotasActualizadas();
+      }, 500);
+    };
+
+    // Listener para 'input' event (se activa al escribir)
+    textElement.addEventListener('input', updateFunction);
+
+    // Listener para 'paste' event (se activa al pegar texto)
+    textElement.addEventListener('paste', updateFunction);
+  });
+
+
+
+    async function cargarNotas(idLogeado) {
+      // Obtenemos las notas desde la base de datos
+      const notasJSON = await obtenerNotasDeUsuario(idLogeado);
+    
+      if (notasJSON) {
+        // Convertimos la cadena JSON a un objeto
+        const notas = JSON.parse(notasJSON);
+    
+        // Iteramos sobre las páginas y colocamos el contenido en los elementos correspondientes
+        for (const pageNumber in notas) {
+          const content = notas[pageNumber];
+    
+          // Seleccionamos el elemento 'text' correspondiente a la página
+          const textElement = document.querySelector(`[page="${pageNumber}"] .text`);
+    
+          if (textElement) {
+            textElement.innerHTML = content;
+          }
+        }
+      } else {
+        console.log('No hay notas para cargar o ocurrió un error al obtenerlas.');
+      }
+    }
+
+
+
+
+
+    let writeButton = document.getElementById('writeButton');
+    let paintButton = document.getElementById('paintButton');
+    let paints = document.getElementsByClassName("paint");
+    let textSelected = true;
+    let paintChangesBuffer = {};
+    let saveTimeout = null;
+    let dibujosCache = {}; // Cache local de dibujos
+    let isPainting = false; // Estado para saber si está en modo de pintura
+    
+    writeButton.addEventListener("click", function() {
+      if (!textSelected) {
+          textSelected = !textSelected;
+          writeButton.classList.add("active");
+          paintButton.classList.remove("active");
+          Array.from(paints).forEach(painting => {
+              painting.style.pointerEvents = "none";
+          });
+          paintOF(); // Asegura que se eliminen los event listeners de pintura
+          writeButtonAction();
+      }
+  });
+  
+  function writeButtonAction() {}
+  
+  paintButton.addEventListener("click", function() {
+      if (textSelected) {
+          textSelected = !textSelected;
+          paintButton.classList.add("active");
+          writeButton.classList.remove("active");
+          Array.from(paints).forEach(painting => {
+              painting.style.pointerEvents = "all";
+          });
+          paintON();
+      } else {
+          paintOF();
+      }
+  });
+  
+  function paintON() {
+      configurarEventosDePintura();
+      console.log("Event listeners de pintura y selección de color activados.");
+  }
+  
+  // Variables globales para almacenar los event listeners
+  let colorSelectListener;
+  let mouseDownListener;
+  let mouseMoveListener;
+  let mouseUpListener;
+  
+  // Configura eventos para selección de color y pintura
+  function configurarEventosDePintura() {
+      const paletteColors = document.querySelectorAll('.paletteColor');
+      let selectedColor = 'black';
+  
+      // Listener para seleccionar color
+      colorSelectListener = function(event) {
+          paletteColors.forEach((el) => el.classList.remove('active'));
+          event.currentTarget.classList.add('active');
+          selectedColor = getComputedStyle(event.currentTarget).backgroundColor;
+  
+          // Si no hay ningún color seleccionado, activar el negro por defecto
+          if (![...paletteColors].some((color) => color.classList.contains('active'))) {
+              selectedColor = 'black';
+              paletteColors.forEach((colorElement) => {
+                  if (getComputedStyle(colorElement).backgroundColor === 'rgb(0, 0, 0)') {
+                      colorElement.classList.add('active'); // Marca negro como activo
+                  }
+              });
+          }
+      };
+  
+      paletteColors.forEach((colorElement) => {
+          colorElement.addEventListener('click', colorSelectListener);
+      });
+  
+      // Listeners para eventos de pintura solo si paintButton está activo
+      mouseDownListener = (event) => {
+          if (!textSelected) iniciarPintura(event, selectedColor);
+      };
+      mouseMoveListener = (event) => {
+          if (!textSelected) pintarArrastrando(event, selectedColor);
+      };
+      mouseUpListener = detenerPintura;
+  
+      document.addEventListener('mousedown', mouseDownListener);
+      document.addEventListener('mousemove', mouseMoveListener);
+      document.addEventListener('mouseup', mouseUpListener);
+  }
+  
+  // Función para eliminar todos los event listeners de pintura
+  function paintOF() {
+      const paletteColors = document.querySelectorAll('.paletteColor');
+  
+      // Eliminar listeners de selección de color en la paleta
+      paletteColors.forEach((colorElement) => {
+          colorElement.removeEventListener('click', colorSelectListener);
+      });
+  
+      // Eliminar listeners de pintura (mousedown, mousemove, mouseup)
+      document.removeEventListener('mousedown', mouseDownListener);
+      document.removeEventListener('mousemove', mouseMoveListener);
+      document.removeEventListener('mouseup', mouseUpListener);
+  
+      // Restablece el estado de pintura
+      isPainting = false;
+  
+      // Asegura que no haya color activo para forzar la selección de color nuevamente al reactivar
+      paletteColors.forEach((colorElement) => colorElement.classList.remove('active'));
+  
+      console.log("Todos los event listeners de pintura han sido desactivados.");
+  }
+  
+  // Función para pintar píxeles en el lienzo
+  function iniciarPintura(event, selectedColor) {
+      if (event.target.classList.contains('pixel')) {
+          isPainting = true;
+          pintarConRadio(event.target, selectedColor, selectedRadius);
+      }
+  }
+  
+  // Mantener la función de pintura y arrastre sin cambios
+  function pintarArrastrando(event, selectedColor) {
+      if (isPainting && event.target.classList.contains('pixel')) {
+          pintarConRadio(event.target, selectedColor, selectedRadius);
+      }
+  }
+  
+  // Finalizar la acción de pintar cuando se suelta el mouse
+  function detenerPintura() {
+      isPainting = false;
+  }
+    
+    // Función para pintar un píxel y su área circundante con el radio seleccionado
+    function pintarConRadio(pixel, color, radius) {
+        const container = pixel.closest('.paint');
+        const xCenter = parseInt(pixel.dataset.x);
+        const yCenter = parseInt(pixel.dataset.y);
+    
+        for (let y = yCenter - radius; y <= yCenter + radius; y++) {
+            for (let x = xCenter - radius; x <= xCenter + radius; x++) {
+                if (Math.sqrt((x - xCenter) ** 2 + (y - yCenter) ** 2) <= radius) {
+                    const targetPixel = container.querySelector(`.pixel[data-x="${x}"][data-y="${y}"]`);
+                    if (targetPixel) {
+                        pintarPixel(targetPixel, color);
+                    }
+                }
+            }
+        }
+    }
+    
+    // Función para pintar píxeles y actualizar buffer de cambios
+    function pintarPixel(pixel, color) {
+        const container = pixel.closest('.paint');
+        const pageElement = container.closest('[page]');
+        const pageNumber = pageElement.getAttribute('page');
+    
+        pixel.style.backgroundColor = color;
+        pixel.dataset.color = color;
+    
+        if (!paintChangesBuffer[pageNumber]) paintChangesBuffer[pageNumber] = [];
+        paintChangesBuffer[pageNumber].push({ x: pixel.dataset.x, y: pixel.dataset.y, color });
+    
+        if (saveTimeout) clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(guardarDibujosActualizados, 1000);
+    }
+    
+    // Función para guardar solo los cambios nuevos
+    function guardarDibujosActualizados() {
+        const dibujos = { ...dibujosCache };
+    
+        for (const page in paintChangesBuffer) {
+            if (!dibujos[page]) dibujos[page] = [];
+            dibujos[page].push(...paintChangesBuffer[page]);
+        }
+    
+        actualizarDibujosUsuario(idLogeado, JSON.stringify(dibujos));
+        paintChangesBuffer = {};
+        dibujosCache = dibujos;
+    }
+    
+    async function actualizarDibujosUsuario(idLogeado, dibujos) {
+        const url = `${supabaseUrl}?id=eq.${idLogeado}`;
+        const actualizarDibujos = { dibujos: dibujos };
+        try {
+            const response = await fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'apikey': supabaseKey,
+                    'Authorization': `Bearer ${supabaseKey}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=representation',
+                },
+                body: JSON.stringify(actualizarDibujos),
+            });
+            return response.ok ? await response.json() : null;
+        } catch (error) {
+            console.error('Error al actualizar los dibujos:', error);
+        }
+    }
+    
+    async function obtenerDibujosDeUsuario(idUsuario) {
+        const url = `${supabaseUrl}?id=eq.${idUsuario}`;
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'apikey': supabaseKey,
+                    'Authorization': `Bearer ${supabaseKey}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            return data.length > 0 ? data[0].dibujos : null;
+        } catch (error) {
+            console.error('Error al obtener los dibujos:', error);
+            return null;
+        }
+    }
+    
+
+
+    $(document).ready(async function () {
+      await cargarDibujosEnTodasLasPaginas();
+    });
+
+    // Inicializa el cuaderno y carga las páginas necesarias
+    $('#notebook').turn({
+        acceleration: true,
+        gradients: false,
+        autoCenter: true,
+        when: {
+            turning: function (event, page) {
+                $('#page-number').val(page);
+                $('#notebook').find('[page="2"]').toggleClass('fixed', page !== 1);
+                $('#notebook').find('[page="35"]').toggleClass('fixed', page !== 36);
+            },
+        },
+    });
+
+
+    
+    
+    // Control de número de páginas
+    var numberOfPages = 36;
+    $(window).ready(function () {
+      $('#number-pages').html(numberOfPages);
+    
+      $('#page-number').keydown(function (e) {
+        if (e.keyCode == 13) {
+          $('#notebook').turn('page', $('#page-number').val());
+        }
+      });
+    
+      $('#page-number').blur(function () {
+        $('#notebook').turn('page', $('#page-number').val());
+      });
+    });
+
+
+
+
+    async function cargarDibujosEnTodasLasPaginas() {
+      const dibujosJSON = await obtenerDibujosDeUsuario(idLogeado);
+      if (!dibujosJSON) return;
+  
+      const dibujos = JSON.parse(dibujosJSON);
+      dibujosCache = dibujos;
+  
+      Object.keys(dibujos).forEach(pageNumber => {
+          const pageElement = document.querySelector(`[page="${pageNumber}"]`);
+          if (pageElement) {
+              const paintContainer = pageElement.querySelector('.paint');
+              if (paintContainer && !paintContainer.dataset.initialized) {
+                  generarCuadriculaDePixelesEnContenedor(paintContainer);
+                  renderizarDibujos(dibujos[pageNumber], paintContainer);
+              }
+          }
+      });
+  }
+  
+  // Renderizar dibujos de una página específica
+  function renderizarDibujos(pixelDataArray, container) {
+      pixelDataArray.forEach((pixelData) => {
+          const { x, y, color } = pixelData;
+          const pixel = container.querySelector(`.pixel[data-x="${x}"][data-y="${y}"]`);
+          if (pixel) {
+              pixel.style.backgroundColor = color;
+              pixel.dataset.color = color;
+          }
+      });
+  }
+  
+  // Genera cuadrícula solo cuando la página tiene dibujos
+  function generarCuadriculaDePixelesEnContenedor(container) {
+      if (container.dataset.initialized) return;
+  
+      container.innerHTML = '';
+      const pixelSize = 7;
+      const containerWidth = 450;
+      const containerHeight = 700;
+  
+      const pixelsHorizontal = Math.floor(containerWidth / pixelSize);
+      const pixelsVertical = Math.floor(containerHeight / pixelSize);
+  
+      for (let y = 0; y < pixelsVertical; y++) {
+          for (let x = 0; x < pixelsHorizontal; x++) {
+              const pixel = document.createElement('div');
+              pixel.classList.add('pixel');
+              pixel.style.width = `${pixelSize}px`;
+              pixel.style.height = `${pixelSize}px`;
+              pixel.style.position = 'absolute';
+              pixel.style.left = `${x * pixelSize}px`;
+              pixel.style.top = `${y * pixelSize}px`;
+              pixel.style.backgroundColor = 'transparent';
+              pixel.dataset.x = x;
+              pixel.dataset.y = y;
+              container.appendChild(pixel);
+          }
+      }
+  
+      container.dataset.initialized = true;
+  }
+
+
 
 
 });
