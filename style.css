@@ -2604,11 +2604,15 @@ div.img img {
 }
 
 #writeButton.active{
-  background: #22B14C;
+  background-color: #bfd4e9;
+  filter: drop-shadow(0px 0px 2px #15181db9);
+  background-image: url(img/writeIconNight.png);
 }
 
 #paintButton.active{
-background: #22B14C;
+  background-color: #bfd4e9;
+  filter: drop-shadow(0px 0px 2px #15181db9);
+  background-image: url(img/paintIconNight.png);
 }
 
 .controlsButton{
@@ -2616,12 +2620,15 @@ background: #22B14C;
   width: 40px;
   height: 40px;
   border-radius: 5px;
-  background-color: #34527A;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+  background-color: transparent;
   margin-top: -4px;
   margin-left: 15px;
+  transition: filter 0.5s ease, background-color 0.5s ease, background-image 0.5s ease;
+  box-shadow: 0px 0px 20px -5px #07080a41 inset;/*1c2128*/
+  filter: drop-shadow(0px 0px 2px #15181db9) brightness(0) saturate(100%) invert(87%) sepia(13%) saturate(470%) hue-rotate(175deg) brightness(97%) contrast(88%);
 }
 
 #paletteContainer{

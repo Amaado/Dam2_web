@@ -3870,43 +3870,47 @@ cargarSkins(idLogeado);
   
   // Configura eventos para selección de color y pintura
   function configurarEventosDePintura() {
-      const paletteColors = document.querySelectorAll('.paletteColor');
-      let selectedColor = 'black';
-  
-      // Listener para seleccionar color
-      colorSelectListener = function(event) {
-          paletteColors.forEach((el) => el.classList.remove('active'));
-          event.currentTarget.classList.add('active');
-          selectedColor = getComputedStyle(event.currentTarget).backgroundColor;
-  
-          // Si no hay ningún color seleccionado, activar el negro por defecto
-          if (![...paletteColors].some((color) => color.classList.contains('active'))) {
-              selectedColor = 'black';
-              paletteColors.forEach((colorElement) => {
-                  if (getComputedStyle(colorElement).backgroundColor === 'rgb(0, 0, 0)') {
-                      colorElement.classList.add('active'); // Marca negro como activo
-                  }
-              });
-          }
-      };
-  
-      paletteColors.forEach((colorElement) => {
-          colorElement.addEventListener('click', colorSelectListener);
-      });
-  
-      // Listeners para eventos de pintura solo si paintButton está activo
-      mouseDownListener = (event) => {
-          if (!textSelected) iniciarPintura(event, selectedColor);
-      };
-      mouseMoveListener = (event) => {
-          if (!textSelected) pintarArrastrando(event, selectedColor);
-      };
-      mouseUpListener = detenerPintura;
-  
-      document.addEventListener('mousedown', mouseDownListener);
-      document.addEventListener('mousemove', mouseMoveListener);
-      document.addEventListener('mouseup', mouseUpListener);
-  }
+    const paletteColors = document.querySelectorAll('.paletteColor');
+    let selectedColor = 'black';
+
+    // Listener para seleccionar color
+    colorSelectListener = function(event) {
+        paletteColors.forEach((el) => el.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        selectedColor = getComputedStyle(event.currentTarget).backgroundColor || 'black';
+    };
+
+    paletteColors.forEach((colorElement) => {
+        colorElement.addEventListener('click', colorSelectListener);
+    });
+
+    // Listener para iniciar pintura
+    mouseDownListener = (event) => {
+        if (!textSelected && event.target.classList.contains('pixel')) {
+            isPainting = true;
+            iniciarPintura(event, selectedColor);
+        }
+    };
+
+    // Listener para pintar mientras se arrastra
+    mouseMoveListener = (event) => {
+        if (isPainting && event.target.classList.contains('pixel')) {
+            pintarArrastrando(event, selectedColor);
+        }
+    };
+
+    // Listener para terminar la pintura
+    mouseUpListener = () => {
+        if (isPainting) {
+            isPainting = false; // Terminar pintura
+            guardarDibujosActualizados(); // Guardar cambios inmediatamente al soltar
+        }
+    };
+
+    document.addEventListener('mousedown', mouseDownListener);
+    document.addEventListener('mousemove', mouseMoveListener);
+    document.addEventListener('mouseup', mouseUpListener);
+}
   
   // Función para eliminar todos los event listeners de pintura
   function paintOF() {
@@ -3924,9 +3928,6 @@ cargarSkins(idLogeado);
   
       // Restablece el estado de pintura
       isPainting = false;
-  
-      // Asegura que no haya color activo para forzar la selección de color nuevamente al reactivar
-      paletteColors.forEach((colorElement) => colorElement.classList.remove('active'));
   
       console.log("Todos los event listeners de pintura han sido desactivados.");
   }
@@ -3975,25 +3976,19 @@ cargarSkins(idLogeado);
       const pageElement = container.closest('[page]');
       const pageNumber = pageElement.getAttribute('page');
   
-      // Aplicar el color en el frontend
       if (color === 'rgba(0, 0, 0, 0)') {
-          pixel.style.backgroundColor = 'transparent'; // Hacer el píxel visualmente transparente
+          pixel.style.backgroundColor = 'transparent';
           pixel.dataset.color = 'transparent';
   
-          // Enviar `null` al buffer de cambios para eliminar el color en la base de datos
           if (!paintChangesBuffer[pageNumber]) paintChangesBuffer[pageNumber] = [];
           paintChangesBuffer[pageNumber].push({ x: pixel.dataset.x, y: pixel.dataset.y, color: null });
       } else {
-          // Asignar el color normalmente si no es transparente
           pixel.style.backgroundColor = color;
           pixel.dataset.color = color;
   
           if (!paintChangesBuffer[pageNumber]) paintChangesBuffer[pageNumber] = [];
           paintChangesBuffer[pageNumber].push({ x: pixel.dataset.x, y: pixel.dataset.y, color });
       }
-  
-      if (saveTimeout) clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(guardarDibujosActualizados, 1000);
   }
     
     // Función para guardar solo los cambios nuevos
@@ -4002,27 +3997,24 @@ cargarSkins(idLogeado);
   
       for (const page in paintChangesBuffer) {
           if (!dibujos[page]) dibujos[page] = [];
+          const pixelMap = {};
+          dibujos[page].forEach(pixelData => {
+              pixelMap[`${pixelData.x},${pixelData.y}`] = pixelData;
+          });
   
           paintChangesBuffer[page].forEach(change => {
+              const key = `${change.x},${change.y}`;
               if (change.color === null) {
-                  // Solo eliminar el color en la base de datos para este píxel
-                  const index = dibujos[page].findIndex(p => p.x === change.x && p.y === change.y);
-                  if (index !== -1) {
-                      dibujos[page].splice(index, 1); // Eliminar el color en la caché
-                  }
+                  delete pixelMap[key];
               } else {
-                  // Actualizar o agregar el color normalmente
-                  const index = dibujos[page].findIndex(p => p.x === change.x && p.y === change.y);
-                  if (index !== -1) {
-                      dibujos[page][index] = change;
-                  } else {
-                      dibujos[page].push(change);
-                  }
+                  pixelMap[key] = { x: change.x, y: change.y, color: change.color };
               }
           });
+  
+          dibujos[page] = Object.values(pixelMap);
       }
   
-      actualizarDibujosUsuario(idLogeado, JSON.stringify(dibujos)); // Guardar los cambios en la base de datos
+      actualizarDibujosUsuario(idLogeado, JSON.stringify(dibujos));
       paintChangesBuffer = {};
       dibujosCache = dibujos;
   }
