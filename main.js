@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let boxx = document.querySelector('.boxx');
   const horarioImg = document.getElementById("horarioImg");
   const paintContainers = document.querySelectorAll('.paint');
-
+  const paletteContainer = document.getElementById("paletteContainer");
 
   
 
@@ -3847,16 +3847,21 @@ cargarSkins(idLogeado);
               painting.style.pointerEvents = "all";
           });
           paintON();
-      } else {
-          paintOF();
       }
   });
   
   function paintON() {
     configurarEventosDePintura();
     activarGeneracionDePixeles();
-    console.log("Event listeners de pintura y selección de color activados.");
-}
+
+    paletteContainer.style.display = "flex";
+    sliderPaint.style.display = "flex";
+
+    setTimeout(() => {
+      paletteContainer.style.opacity = "1";
+      sliderPaint.style.opacity = "1";
+    }, 10);
+  }
   
   // Variables globales para almacenar los event listeners
   let colorSelectListener;
@@ -3925,8 +3930,23 @@ cargarSkins(idLogeado);
       // Restablece el estado de pintura
       isPainting = false;
   
-      console.log("Todos los event listeners de pintura han sido desactivados.");
-  }
+
+
+      paletteContainer.style.opacity = "0";
+      sliderPaint.style.opacity = "0";
+    
+      paletteContainer.addEventListener("transitionend", () => {
+        if (paletteContainer.style.opacity === "0") {
+          paletteContainer.style.display = "none";
+        }
+      }, { once: true });
+    
+      sliderPaint.addEventListener("transitionend", () => {
+        if (sliderPaint.style.opacity === "0") {
+          sliderPaint.style.display = "none";
+        }
+      }, { once: true });
+    }
   
   // Función para pintar píxeles en el lienzo
   function iniciarPintura(event, selectedColor) {
@@ -4089,10 +4109,8 @@ cargarSkins(idLogeado);
 
 
     async function cargarDibujosEnTodasLasPaginas() {
-      console.log("Iniciando carga de dibujos...");
   
       const dibujosJSON = await obtenerDibujosDeUsuario(idLogeado);
-      console.log("Dibujos obtenidos desde la base de datos:", dibujosJSON);
   
       if (!dibujosJSON) {
           console.log("No hay datos de dibujos disponibles o error al obtener.");
@@ -4106,7 +4124,6 @@ cargarSkins(idLogeado);
           const pageElement = document.querySelector(`[page="${pageNumber}"]`);
           if (pageElement) {
               const paintContainer = pageElement.querySelector('.paint');
-              console.log(`Renderizando dibujos para página ${pageNumber}`);
   
               if (paintContainer && !paintContainer.dataset.initialized) {
                   generarCuadriculaDePixelesEnContenedor(paintContainer);
@@ -4119,48 +4136,27 @@ cargarSkins(idLogeado);
           }
       });
   
-      console.log("Carga de dibujos completada.");
   }
 
   function activarGeneracionDePixeles() {
-    console.log("Ejecutando activarGeneracionDePixeles...");
-
-    // Seleccionar todos los contenedores `.paint`
     const paintContainers = document.querySelectorAll('.paint');
-    console.log("Contenedores .paint encontrados:", paintContainers);
 
     paintContainers.forEach(container => {
-        console.log("Procesando contenedor:", container);
-        
-        // Añadir evento de clic
-        container.addEventListener('click', function generarPixelesSiEsNecesario() {
-            console.log("Evento click detectado en el contenedor .paint:", container);
+    container.addEventListener('click', function generarPixelesSiEsNecesario() {
 
             if (!container.dataset.initialized) {
-                console.log('Generando cuadrícula de píxeles en el contenedor:', container);
-
-                // Llamada para generar la cuadrícula
                 generarCuadriculaDePixelesEnContenedor(container);
-
-                // Marcar el contenedor como inicializado
                 container.dataset.initialized = true;
-                console.log("Cuadrícula generada y marcado como inicializado.");
-
-                // Eliminar el evento después de la primera vez
                 container.removeEventListener('click', generarPixelesSiEsNecesario);
-                console.log("Evento click eliminado del contenedor para evitar duplicados.");
             } else {
                 console.log("La cuadrícula ya está generada para este contenedor, no se vuelve a crear.");
             }
         });
     });
-
-    console.log("activarGeneracionDePixeles finalizado.");
 }
 
 
 
-  // Renderizar dibujos de una página específica
   function renderizarDibujos(pixelDataArray, container) {
       pixelDataArray.forEach((pixelData) => {
           const { x, y, color } = pixelData;
@@ -4173,8 +4169,6 @@ cargarSkins(idLogeado);
   }
   
   function generarCuadriculaDePixelesEnContenedor(container) {
-    console.log('Ejecutando generarCuadriculaDePixelesEnContenedor en contenedor:', container);
-
     if (container.dataset.initialized) {
         console.log("El contenedor ya está inicializado, saliendo de la función.");
         return;
@@ -4186,9 +4180,6 @@ cargarSkins(idLogeado);
     const containerHeight = 700;
     const pixelsHorizontal = Math.floor(containerWidth / pixelSize);
     const pixelsVertical = Math.floor(containerHeight / pixelSize);
-
-    console.log("Generando píxeles. Tamaño:", pixelSize, "Ancho:", containerWidth, "Alto:", containerHeight);
-    console.log("Píxeles por fila:", pixelsHorizontal, "Píxeles por columna:", pixelsVertical);
 
     for (let y = 0; y < pixelsVertical; y++) {
         for (let x = 0; x < pixelsHorizontal; x++) {
@@ -4206,7 +4197,6 @@ cargarSkins(idLogeado);
         }
     }
 
-    console.log("Cuadrícula generada correctamente en el contenedor.");
     container.dataset.initialized = true;
 }
 
