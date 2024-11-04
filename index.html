@@ -463,9 +463,8 @@
     <img id="fondoGalaxy" src="" />
     <img id="customCursor" alt="Custom Cursor" />
     <img id="customCursorPurpleish" alt="Custom Cursor" />
-
-
-
+    <img id="cursorPaint" />
+    <img id="cursorPaintErase" />
 
 
     <div class="boxx">
@@ -832,15 +831,15 @@
           <input type="text" id="page-number" autocomplete="off" maxlength="2">/<div id="number-pages"></div>
           <div id="writeButton" class="controlsButton active"></div>
           <div id="paintButton" class="controlsButton"></div>
-          <input type="range" min="0" max="15" class="sliderPaint" id="paintSlider">
+          <img id="sizeVisualizer" src="/img/paintCursor/14.png" draggable="false"/>
+          <input type="range" min="0" max="14" class="sliderPaint" id="paintSlider">
           <div class="tooltipPaint">
             <div id="tooltipLabelPaint"></div>
             <img id="paintImgUd" src="img/cursors/portadas/cccc.png" draggable="false"/>
           </div>
 
             <div id="paletteContainer">
-              <div class="paletteRow">
-                <div class="paletteColor eraseContainer erase"></div>
+              <div class="paletteRow row1">
                 <div class="paletteColor black active"></div>
                 <div class="paletteColor darkGrey"></div>
                 <div class="paletteColor darkRed"></div>
@@ -852,7 +851,7 @@
                 <div class="paletteColor darkBlue"></div>
                 <div class="paletteColor darkPurple"></div>
               </div>
-              <div class="paletteRow">
+              <div class="paletteRow row2">
                 <div class="paletteColor white"></div>
                 <div class="paletteColor lightGrey"></div>
                 <div class="paletteColor salmon"></div>
@@ -864,8 +863,8 @@
                 <div class="paletteColor mediumLightBlue"></div>
                 <div class="paletteColor lightPurple"></div>
               </div>
+              <div class="paletteColor eraseContainer erase"></div>
             </div>
-
       </div>
     </div>
 

@@ -50,6 +50,7 @@
   touch-action: none;
 }
 
+
 a:link,
 a:visited {
   text-decoration: none;
@@ -62,13 +63,13 @@ body {
   color: #bfd4e9;
   font-family: "Roboto";
   display: flex;
-  height: 100dvh;
+  width: 100%;
+  min-height: 100vh;
   justify-content: center;
   flex-direction: column;
   transition: background-color 0.75s ease;
   overflow: hidden;
   cursor: none;
-
 }
 
 #customCursor {
@@ -77,7 +78,7 @@ body {
   height: 200px;
   border-radius: 50%;
   pointer-events: none;
-  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
+  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease, margin-top 0.5s ease;
   z-index: 200;
   transform: scale(1);
   visibility: visible;
@@ -96,7 +97,7 @@ body {
   height: 200px;
   border-radius: 50%;
   pointer-events: none;
-  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
+  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease, margin-top 0.5s ease;
   z-index: 200;
   transform: scale(1);
   visibility: visible;
@@ -152,6 +153,29 @@ body {
 
 #fondoGalaxyGreen.clicked {
   mask-size: 300px; /* Asegura que la máscara se ajuste sin cortar partes, manteniendo proporciones */
+}
+
+#cursorPaint {
+  position: absolute;
+  width: 219px;
+  height: 219px;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+  z-index: 210;
+  display: none;
+  opacity: 100%;
+  filter: drop-shadow(1px 2px 1px #00000081);
+}
+
+#cursorPaintErase {
+  position: absolute;
+  width: 219px;
+  height: 219px;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out, margin-left 0.5s ease, margin-top 0.5s ease;
+  z-index: 210;
+  display: none;
+  opacity: 1%;
 }
 
 
@@ -2597,22 +2621,26 @@ div.img img {
   background-image: url(img/writeIcon.png);
   background-size: 28px;
   margin-left: 40px;
+  transition: transform 0.4s ease;
 }
 
 #paintButton{
   background-image: url(img/paintIcon.png);
+  transition: transform 0.4s ease;
 }
 
 #writeButton.active{
   background-color: #bfd4e9;
   filter: drop-shadow(0px 0px 2px #15181db9);
   background-image: url(img/writeIconNight.png);
+  transform: scale(1.1);
 }
 
 #paintButton.active{
   background-color: #bfd4e9;
   filter: drop-shadow(0px 0px 2px #15181db9);
   background-image: url(img/paintIconNight.png);
+  transform: scale(1.1);
 }
 
 .controlsButton{
@@ -2636,10 +2664,18 @@ div.img img {
   flex-direction: column;
   gap: 10px;
   margin-left: -40px;
-  margin-top: 70px;
-  transition: opacity 0.5s ease;
+  margin-top: -100px;
+  clip-path: inset(0 0 0 0);
+  clip-path: inset(36px);
+  background-clip: content-box;
+  transition: clip-path 0.7s ease, margin-top 0.7s ease;
   display: none;
-  opacity: 0;
+  z-index: -100;
+}
+
+#paletteContainer.active{
+  clip-path: inset(-50px);
+  margin-top: 70px;
 }
 
 .paletteRow{
@@ -2658,17 +2694,33 @@ div.img img {
   background-repeat: no-repeat;
   margin-top: -4px;
   margin-left: 10px;
+  transition: box-shadow 0.4s ease, filter 0.4s ease, margin-top 0.2s ease, margin-left 0.2s ease, transform 0.2s ease;
+  box-shadow: 0px 0px 0px 0px #dbedff;
+  filter: drop-shadow(0px 0px 0px #dbedff);
 }
 
+
 .paletteColor.active{
-  outline: 2px solid white;
-  border: 2px solid black;
-  box-shadow: 0px 0px 0px 4px #000000;
+  box-shadow: 0px 0px 0px 3px #dbedff;
+  filter: drop-shadow(0px 0px 5px #dbedff);
+  scale: 1.2;
+}
+
+.row1 > .paletteColor.active {
+  margin-top: -7px;
+}
+
+.row2 > .paletteColor.active {
+  margin-top: -1px;
+}
+
+.erase.active{
+  margin-left: -23px;
 }
 
 .eraseContainer{
   position: absolute;
-  margin-left: -25px;
+  margin-left: -20px;
   margin-top: 10px;
   background-image: url(img/noBackground.png);
   background-size: 160px;
@@ -2760,23 +2812,40 @@ div.img img {
 
 
 
-
+#sizeVisualizer{
+  display: flex;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: 118px;
+  left: -10px;
+  pointer-events: none;
+  filter: brightness(0) saturate(100%) invert(88%) sepia(10%) saturate(649%) hue-rotate(176deg) brightness(96%) contrast(90%);
+}
 
 
 .sliderPaint{
   -webkit-appearance: none;
   display: block;
-  opacity: 0;
   appearance: none;
-  min-width: 195px;
+  min-width: 205px;
   max-height:8px;
   background: #bfd4e9ac;
   border-radius: 10px;
   outline: none;
   position: absolute;
+  left: 50px;
+  top: -168px;
+  clip-path: inset(0 0 0 0);
+  clip-path: inset(36px);
+  background-clip: content-box;
+  transition: clip-path 0.9s ease, top 0.9s ease;
+  margin-top: 0px;
+}
+
+.sliderPaint.active{
+  clip-path: inset(-50px);
   top: 140px;
-  left: 60px;
-  transition: opacity 0.5s ease;
 }
 
 /*BOLA*/

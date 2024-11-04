@@ -68,7 +68,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const horarioImg = document.getElementById("horarioImg");
   const paintContainers = document.querySelectorAll('.paint');
   const paletteContainer = document.getElementById("paletteContainer");
-
+  const cursorPaintErase = document.getElementById("cursorPaintErase");
+  const cursorPaint = document.getElementById("cursorPaint");
+  let writeButton = document.getElementById('writeButton');
+  let paintButton = document.getElementById('paintButton');
+  let paints = document.getElementsByClassName("paint");
+  let sizeVisualizer = document.getElementById("sizeVisualizer");
   
 
   /* CAMBIO DE CURSOR */
@@ -2775,10 +2780,16 @@ cargarSkins(idLogeado);
     
         // Cambiar la posición para centrar el cursor
         const cursorSize = 200;
+        const cursorPaintSizeX = 220.5;
+        const cursorPaintSizeY = 218;
         cursor.style.left = (e.clientX - cursorSize / 2) + 'px'; // Centrar en X
         cursor.style.top = (e.clientY - cursorSize / 2) + 'px'; // Centrar en Y
         cursorPurpleish.style.left = (e.clientX - cursorSize / 2) + 'px'; // Centrar en X
         cursorPurpleish.style.top = (e.clientY - cursorSize / 2) + 'px'; // Centrar en Y
+        cursorPaint.style.left = (e.clientX - cursorPaintSizeX / 2) + 'px';
+        cursorPaint.style.top = (e.clientY - cursorPaintSizeY / 2) + 'px';
+        cursorPaintErase.style.left = (e.clientX - cursorPaintSizeX / 2) + 'px';
+        cursorPaintErase.style.top = (e.clientY - cursorPaintSizeY / 2) + 'px';
       });
     
       document.addEventListener('mousedown', function() {
@@ -2890,7 +2901,7 @@ cargarSkins(idLogeado);
 
     if (!cursorSrc.includes('cccc_galaxy')) {
       cursor.style.opacity = "100%";
-      cursor.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out';
+      cursor.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease, margin-top 0.5s ease';
       fondo.style.display = "none";
       fondoGreen.style.display = "none";
     }
@@ -3060,7 +3071,7 @@ cargarSkins(idLogeado);
       fondoGreen.src = "img/fondoGreen.gif";
       fondoGreen.style.opacity = "1%";
       cursorPurpleish.style.display = "none";
-      cursor.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out, opacity 0.1s ease-in-out';
+      cursor.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease, margin-top 0.5s ease';
 
 
       let isMouseDown = false;
@@ -3575,9 +3586,7 @@ cargarSkins(idLogeado);
   function updateTooltipPaint() {
       let valueReal = sliderPaint.value;
 
-      // Actualiza el contenido del tooltip
-      tooltipLabelPaint.textContent = `${valueReal}`;
-
+      tooltipLabelPaint.textContent = `${parseInt(valueReal, 10) + 1}`;
       
       if(valueReal<10){
         tooltipPaint.style.minWidth = "42px";
@@ -3586,6 +3595,151 @@ cargarSkins(idLogeado);
         tooltipPaint.style.minWidth = "50px";
         paintImgUd.style.left = "3px";
       }
+
+      if(paintButton.classList.contains("active")){
+        switch (sliderPaint.value) {
+          case '0':
+            cursorPaint.src = "/img/paintCursor/0.png";
+            sizeVisualizer.src = "/img/paintCursor/0.png";
+            cursor.style.marginLeft = "50px";
+            cursor.style.marginTop = "50px";
+            cursorPurpleish.style.marginLeft = "50px";
+            cursorPurpleish.style.marginTop = "50px";
+            break;
+    
+          case '1':
+            cursorPaint.src = "/img/paintCursor/1.png";
+            sizeVisualizer.src = "/img/paintCursor/1.png";
+            cursor.style.marginLeft = "53.3px";
+            cursor.style.marginTop = "53.3px";
+            cursorPurpleish.style.marginLeft = "53.3px";
+            cursorPurpleish.style.marginTop = "53.3px";
+            break;
+    
+          case '2':
+            cursorPaint.src = "/img/paintCursor/2.png";
+            sizeVisualizer.src = "/img/paintCursor/2.png";
+            cursor.style.marginLeft = "56.6px";
+            cursor.style.marginTop = "56.6px";
+            cursorPurpleish.style.marginLeft = "56.6px";
+            cursorPurpleish.style.marginTop = "56.6px";
+            break;
+    
+          case '3':
+            cursorPaint.src = "/img/paintCursor/3.png";
+            sizeVisualizer.src = "/img/paintCursor/3.png";
+            cursor.style.marginLeft = "60px";
+            cursor.style.marginTop = "60px";
+            cursorPurpleish.style.marginLeft = "60px";
+            cursorPurpleish.style.marginTop = "60px";
+            break;
+          
+          case '4':
+            cursorPaint.src = "/img/paintCursor/4.png";
+            sizeVisualizer.src = "/img/paintCursor/4.png";
+            cursor.style.marginLeft = "63.3px";
+            cursor.style.marginTop = "63.3px";
+            cursorPurpleish.style.marginLeft = "63.3px";
+            cursorPurpleish.style.marginTop = "63.3px";
+            break;
+    
+          case '5':
+            cursorPaint.src = "/img/paintCursor/5.png";
+            sizeVisualizer.src = "/img/paintCursor/5.png";
+            cursor.style.marginLeft = "66.6px";
+            cursor.style.marginTop = "66.6px";
+            cursorPurpleish.style.marginLeft = "66.6px";
+            cursorPurpleish.style.marginTop = "66.6px";
+            break;
+    
+          case '6':
+            cursorPaint.src = "/img/paintCursor/6.png";
+            sizeVisualizer.src = "/img/paintCursor/6.png";
+            cursor.style.marginLeft = "70px";
+            cursor.style.marginTop = "70px";
+            cursorPurpleish.style.marginLeft = "70px";
+            cursorPurpleish.style.marginTop = "70px";
+            break;
+    
+          case '7':
+            cursorPaint.src = "/img/paintCursor/7.png";
+            sizeVisualizer.src = "/img/paintCursor/7.png";
+            cursor.style.marginLeft = "73.3px";
+            cursor.style.marginTop = "73.3px";
+            cursorPurpleish.style.marginLeft = "73.3px";
+            cursorPurpleish.style.marginTop = "73.3px";
+            break;
+    
+          case '8':
+            cursorPaint.src = "/img/paintCursor/8.png";
+            sizeVisualizer.src = "/img/paintCursor/8.png";
+            cursor.style.marginLeft = "76.6px";
+            cursor.style.marginTop = "76.6px";
+            cursorPurpleish.style.marginLeft = "76.6px";
+            cursorPurpleish.style.marginTop = "76.6px";
+            break;
+    
+          case '9':
+            cursorPaint.src = "/img/paintCursor/9.png";
+            sizeVisualizer.src = "/img/paintCursor/9.png";
+            cursor.style.marginLeft = "80px";
+            cursor.style.marginTop = "80px";
+            cursorPurpleish.style.marginLeft = "80px";
+            cursorPurpleish.style.marginTop = "80px";
+            break;
+    
+          case '10':
+            cursorPaint.src = "/img/paintCursor/10.png";
+            sizeVisualizer.src = "/img/paintCursor/10.png";
+            cursor.style.marginLeft = "83.3px";
+            cursor.style.marginTop = "83.3px";
+            cursorPurpleish.style.marginLeft = "83.3px";
+            cursorPurpleish.style.marginTop = "83.3px";
+            break;
+    
+          case '11':
+            cursorPaint.src = "/img/paintCursor/11.png";
+            sizeVisualizer.src = "/img/paintCursor/11.png";
+            cursor.style.marginLeft = "86.6px";
+            cursor.style.marginTop = "86.6px";
+            cursorPurpleish.style.marginLeft = "86.6px";
+            cursorPurpleish.style.marginTop = "86.6px";
+            break;
+    
+          case '12':
+            cursorPaint.src = "/img/paintCursor/12.png";
+            sizeVisualizer.src = "/img/paintCursor/12.png";
+            cursor.style.marginLeft = "90px";
+            cursor.style.marginTop = "90px";
+            cursorPurpleish.style.marginLeft = "90px";
+            cursorPurpleish.style.marginTop = "90px";
+            break;
+          
+          case '13':
+            cursorPaint.src = "/img/paintCursor/13.png";
+            sizeVisualizer.src = "/img/paintCursor/13.png";
+            cursor.style.marginLeft = "93.3px";
+            cursor.style.marginTop = "93.3px";
+            cursorPurpleish.style.marginLeft = "93.3px";
+            cursorPurpleish.style.marginTop = "93.3px";
+            break;
+    
+          case '14':
+            cursorPaint.src = "/img/paintCursor/14.png";
+            sizeVisualizer.src = "/img/paintCursor/14.png";
+            cursor.style.marginLeft = "96.6px";
+            cursor.style.marginTop = "96.6px";
+            cursorPurpleish.style.marginLeft = "96.6px";
+            cursorPurpleish.style.marginTop = "96.6px";
+            break;
+        }
+      }else{
+        cursor.style.marginLeft = "0px";
+        cursor.style.marginTop = "0px";
+        cursorPurpleish.style.marginLeft = "0px";
+        cursorPurpleish.style.marginTop = "0px";
+      }
+
 
       // Posiciona el tooltip en función del valor del slider
       const sliderWidth = sliderPaint.offsetWidth;
@@ -3814,9 +3968,7 @@ cargarSkins(idLogeado);
 
 
 
-    let writeButton = document.getElementById('writeButton');
-    let paintButton = document.getElementById('paintButton');
-    let paints = document.getElementsByClassName("paint");
+
     let textSelected = true;
     let paintChangesBuffer = {};
     let saveTimeout = null;
@@ -3857,9 +4009,151 @@ cargarSkins(idLogeado);
     paletteContainer.style.display = "flex";
     sliderPaint.style.display = "flex";
 
+    cursorPaint.style.display = "block";
+    cursorPaint.style.opacity = "1";
+
+    switch (sliderPaint.value) {
+      case '0':
+        cursorPaint.src = "/img/paintCursor/0.png";
+        sizeVisualizer.src = "/img/paintCursor/0.png";
+        cursor.style.marginLeft = "50px";
+        cursor.style.marginTop = "50px";
+        cursorPurpleish.style.marginLeft = "50px";
+        cursorPurpleish.style.marginTop = "50px";
+        break;
+
+      case '1':
+        cursorPaint.src = "/img/paintCursor/1.png";
+        sizeVisualizer.src = "/img/paintCursor/1.png";
+        cursor.style.marginLeft = "53.3px";
+        cursor.style.marginTop = "53.3px";
+        cursorPurpleish.style.marginLeft = "53.3px";
+        cursorPurpleish.style.marginTop = "53.3px";
+        break;
+
+      case '2':
+        cursorPaint.src = "/img/paintCursor/2.png";
+        sizeVisualizer.src = "/img/paintCursor/2.png";
+        cursor.style.marginLeft = "56.6px";
+        cursor.style.marginTop = "56.6px";
+        cursorPurpleish.style.marginLeft = "56.6px";
+        cursorPurpleish.style.marginTop = "56.6px";
+        break;
+
+      case '3':
+        cursorPaint.src = "/img/paintCursor/3.png";
+        sizeVisualizer.src = "/img/paintCursor/3.png";
+        cursor.style.marginLeft = "60px";
+        cursor.style.marginTop = "60px";
+        cursorPurpleish.style.marginLeft = "60px";
+        cursorPurpleish.style.marginTop = "60px";
+        break;
+      
+      case '4':
+        cursorPaint.src = "/img/paintCursor/4.png";
+        sizeVisualizer.src = "/img/paintCursor/4.png";
+        cursor.style.marginLeft = "63.3px";
+        cursor.style.marginTop = "63.3px";
+        cursorPurpleish.style.marginLeft = "63.3px";
+        cursorPurpleish.style.marginTop = "63.3px";
+        break;
+
+      case '5':
+        cursorPaint.src = "/img/paintCursor/5.png";
+        sizeVisualizer.src = "/img/paintCursor/5.png";
+        cursor.style.marginLeft = "66.6px";
+        cursor.style.marginTop = "66.6px";
+        cursorPurpleish.style.marginLeft = "66.6px";
+        cursorPurpleish.style.marginTop = "66.6px";
+        break;
+
+      case '6':
+        cursorPaint.src = "/img/paintCursor/6.png";
+        sizeVisualizer.src = "/img/paintCursor/6.png";
+        cursor.style.marginLeft = "70px";
+        cursor.style.marginTop = "70px";
+        cursorPurpleish.style.marginLeft = "70px";
+        cursorPurpleish.style.marginTop = "70px";
+        break;
+
+      case '7':
+        cursorPaint.src = "/img/paintCursor/7.png";
+        sizeVisualizer.src = "/img/paintCursor/7.png";
+        cursor.style.marginLeft = "73.3px";
+        cursor.style.marginTop = "73.3px";
+        cursorPurpleish.style.marginLeft = "73.3px";
+        cursorPurpleish.style.marginTop = "73.3px";
+        break;
+
+      case '8':
+        cursorPaint.src = "/img/paintCursor/8.png";
+        sizeVisualizer.src = "/img/paintCursor/8.png";
+        cursor.style.marginLeft = "76.6px";
+        cursor.style.marginTop = "76.6px";
+        cursorPurpleish.style.marginLeft = "76.6px";
+        cursorPurpleish.style.marginTop = "76.6px";
+        break;
+
+      case '9':
+        cursorPaint.src = "/img/paintCursor/9.png";
+        sizeVisualizer.src = "/img/paintCursor/9.png";
+        cursor.style.marginLeft = "80px";
+        cursor.style.marginTop = "80px";
+        cursorPurpleish.style.marginLeft = "80px";
+        cursorPurpleish.style.marginTop = "80px";
+        break;
+
+      case '10':
+        cursorPaint.src = "/img/paintCursor/10.png";
+        sizeVisualizer.src = "/img/paintCursor/10.png";
+        cursor.style.marginLeft = "83.3px";
+        cursor.style.marginTop = "83.3px";
+        cursorPurpleish.style.marginLeft = "83.3px";
+        cursorPurpleish.style.marginTop = "83.3px";
+        break;
+
+      case '11':
+        cursorPaint.src = "/img/paintCursor/11.png";
+        sizeVisualizer.src = "/img/paintCursor/11.png";
+        cursor.style.marginLeft = "86.6px";
+        cursor.style.marginTop = "86.6px";
+        cursorPurpleish.style.marginLeft = "86.6px";
+        cursorPurpleish.style.marginTop = "86.6px";
+        break;
+
+      case '12':
+        cursorPaint.src = "/img/paintCursor/12.png";
+        sizeVisualizer.src = "/img/paintCursor/12.png";
+        cursor.style.marginLeft = "90px";
+        cursor.style.marginTop = "90px";
+        cursorPurpleish.style.marginLeft = "90px";
+        cursorPurpleish.style.marginTop = "90px";
+        break;
+      
+      case '13':
+        cursorPaint.src = "/img/paintCursor/13.png";
+        sizeVisualizer.src = "/img/paintCursor/13.png";
+        cursor.style.marginLeft = "93.3px";
+        cursor.style.marginTop = "93.3px";
+        cursorPurpleish.style.marginLeft = "93.3px";
+        cursorPurpleish.style.marginTop = "93.3px";
+        break;
+
+      case '14':
+        cursorPaint.src = "/img/paintCursor/14.png";
+        sizeVisualizer.src = "/img/paintCursor/14.png";
+        cursor.style.marginLeft = "96.6px";
+        cursor.style.marginTop = "96.6px";
+        cursorPurpleish.style.marginLeft = "96.6px";
+        cursorPurpleish.style.marginTop = "96.6px";
+        break;
+    }
+    
+
     setTimeout(() => {
-      paletteContainer.style.opacity = "1";
-      sliderPaint.style.opacity = "1";
+      paletteContainer.classList.add("active");
+      sliderPaint.classList.add("active");
+
     }, 10);
   }
   
@@ -3932,18 +4226,26 @@ cargarSkins(idLogeado);
   
 
 
-      paletteContainer.style.opacity = "0";
-      sliderPaint.style.opacity = "0";
+      paletteContainer.classList.remove("active");
+      sliderPaint.classList.remove("active");
+      cursorPaint.style.opacity = "0";
+      cursorPaintErase.style.opacity = "0";
+
+      cursor.style.marginLeft = "0px";
+      cursor.style.marginTop = "0px";
+      cursorPurpleish.style.marginLeft = "0px";
+      cursorPurpleish.style.marginTop = "0px";
     
-      paletteContainer.addEventListener("transitionend", () => {
-        if (paletteContainer.style.opacity === "0") {
-          paletteContainer.style.display = "none";
+
+      cursorPaint.addEventListener("transitionend", () => {
+        if (cursorPaint.style.opacity === "0") {
+          cursorPaint.style.display = "none";
         }
       }, { once: true });
-    
-      sliderPaint.addEventListener("transitionend", () => {
-        if (sliderPaint.style.opacity === "0") {
-          sliderPaint.style.display = "none";
+
+      cursorPaintErase.addEventListener("transitionend", () => {
+        if (cursorPaintErase.style.opacity === "0") {
+          cursorPaintErase.style.display = "none";
         }
       }, { once: true });
     }
@@ -4131,11 +4433,8 @@ cargarSkins(idLogeado);
   
               // Renderizar los dibujos
               renderizarDibujos(dibujos[pageNumber], paintContainer);
-          } else {
-              console.log(`Elemento de página no encontrado para la página ${pageNumber}`);
           }
-      });
-  
+      });  
   }
 
   function activarGeneracionDePixeles() {
