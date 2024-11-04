@@ -3496,10 +3496,6 @@ cargarSkins(idLogeado);
     
     window.addEventListener("load", function() {
       horarioImg.style.transition = "none";
-    
-      setTimeout(() => {
-        notas.click();
-      }, 1100);
 
       // Configura el estado inicial de `horarioImg` con `!important`
       horarioImg.style.setProperty("display", "none", "important");
@@ -3899,11 +3895,11 @@ cargarSkins(idLogeado);
         }
     };
 
-    // Listener para terminar la pintura
+    // Listener para terminar la pintura y guardar cambios en grupo
     mouseUpListener = () => {
         if (isPainting) {
             isPainting = false; // Terminar pintura
-            guardarDibujosActualizados(); // Guardar cambios inmediatamente al soltar
+            guardarDibujosActualizados(); // Guardar todos los cambios acumulados en una sola llamada
         }
     };
 
@@ -3976,19 +3972,13 @@ cargarSkins(idLogeado);
       const pageElement = container.closest('[page]');
       const pageNumber = pageElement.getAttribute('page');
   
-      if (color === 'rgba(0, 0, 0, 0)') {
-          pixel.style.backgroundColor = 'transparent';
-          pixel.dataset.color = 'transparent';
+      // Cambiar el color visualmente
+      pixel.style.backgroundColor = color === 'rgba(0, 0, 0, 0)' ? 'transparent' : color;
+      pixel.dataset.color = color;
   
-          if (!paintChangesBuffer[pageNumber]) paintChangesBuffer[pageNumber] = [];
-          paintChangesBuffer[pageNumber].push({ x: pixel.dataset.x, y: pixel.dataset.y, color: null });
-      } else {
-          pixel.style.backgroundColor = color;
-          pixel.dataset.color = color;
-  
-          if (!paintChangesBuffer[pageNumber]) paintChangesBuffer[pageNumber] = [];
-          paintChangesBuffer[pageNumber].push({ x: pixel.dataset.x, y: pixel.dataset.y, color });
-      }
+      // Acumular cambios en el buffer, sin llamar aún a la base de datos
+      if (!paintChangesBuffer[pageNumber]) paintChangesBuffer[pageNumber] = [];
+      paintChangesBuffer[pageNumber].push({ x: pixel.dataset.x, y: pixel.dataset.y, color: color === 'rgba(0, 0, 0, 0)' ? null : color });
   }
     
     // Función para guardar solo los cambios nuevos
@@ -4014,9 +4004,9 @@ cargarSkins(idLogeado);
           dibujos[page] = Object.values(pixelMap);
       }
   
-      actualizarDibujosUsuario(idLogeado, JSON.stringify(dibujos));
-      paintChangesBuffer = {};
-      dibujosCache = dibujos;
+      actualizarDibujosUsuario(idLogeado, JSON.stringify(dibujos)); // Guardar los cambios acumulados
+      paintChangesBuffer = {}; // Limpiar el buffer después de guardar
+      dibujosCache = dibujos; // Actualizar la caché local
   }
     
     async function actualizarDibujosUsuario(idLogeado, dibujos) {
