@@ -38,6 +38,14 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'geek';
+  src: url('img/geek.ttf') format('woff2'),
+       url('img/geek.ttf') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -57,6 +65,32 @@ a:visited {
   color: currentColor;
   position: relative;
 }
+
+h1{
+  margin-top: -467px;
+  margin-left: 10px;
+  font-family: 'geek';
+  font-size: 60px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  filter: drop-shadow(0px 0px 5px #000000c2);
+}
+
+.z-text {
+  /* Tip: Apply CSS transforms here */
+  /* rotateX() == up/down */
+  /* rotateY() == left/right */
+  transform: rotateX(0deg) rotateY(-3deg) scaleX(0.93);
+  color: #916a53;
+}
+
+.z-layer:not(:first-child) {
+  /*color: #8c7557;*/
+  filter: brightness(0.7);
+}
+
 
 body {
   background-color: #1c2128;
@@ -2817,12 +2851,20 @@ div.img img {
   position: absolute;
   width: 50px;
   height: 50px;
-  top: 118px;
+  top: -90px;
   left: -10px;
   pointer-events: none;
-  filter: brightness(0) saturate(100%) invert(88%) sepia(10%) saturate(649%) hue-rotate(176deg) brightness(96%) contrast(90%);
+  clip-path: inset(0 0 0 0);
+  clip-path: inset(30px);
+  background-clip: content-box;
+  transition: clip-path 0.8s ease, top 0.8s ease;
+  /*filter: brightness(0) saturate(100%) invert(88%) sepia(10%) saturate(649%) hue-rotate(176deg) brightness(96%) contrast(90%);*/
 }
 
+#sizeVisualizer.active{
+  clip-path: inset(-40px);
+  top: 118px;
+}
 
 .sliderPaint{
   -webkit-appearance: none;
