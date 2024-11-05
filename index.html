@@ -560,23 +560,33 @@
        <img draggable="false" id="horarioImg" src="img/Calendario_Escolar_Night.png"/>
     </div>
 
-
+    <div id="virtualCursor"></div>
 
     <div id="notebookContainer">
         <div id="notebook">
 
           <div class="hard" page="1">
             <div class="portada"></div>
-            <h1>
+            <!--
+            <img class="portadaMask" src="img/notasBackgound_mask.png" draggable="false"/>
+            <h1 class="h1">
+              <span data-z data-z data-z-event="pointer" data-z-depth="20px" data-z-eventRotation="10deg">calvitium</span>
+              <span data-z data-z data-z-event="pointer" data-z-depth="20px" data-z-eventRotation="10deg">hominis</span>
+              <span data-z data-z data-z-event="pointer" data-z-depth="20px" data-z-eventRotation="10deg">libello</span>
+            </h1>-->
+          </div>
+          <div class="hard" page="2">
+            <div class="portadaBack"></div>
+            <img class="portadaBackMask" src="img/notasPortadaBack_Mask.png" draggable="false"/>
+            <h1 class="h2">
               <span data-z data-z data-z-event="pointer" data-z-depth="20px" data-z-eventRotation="10deg">calvitium</span>
               <span data-z data-z data-z-event="pointer" data-z-depth="20px" data-z-eventRotation="10deg">hominis</span>
               <span data-z data-z data-z-event="pointer" data-z-depth="20px" data-z-eventRotation="10deg">libello</span>
             </h1>
           </div>
-          <div class="hard" page="2"><div class="portadaBack"></div></div>
 
-          <div page="3">
-            <div class="paper paperRight">
+          <div page="3" class="shadow">
+            <div class="paper paperRight hoja1">
               <div class="text textRight" contenteditable spellcheck="false"></div>
               <div class="numeration numerationRight">3</div>
               <div class="paint"></div>
@@ -584,7 +594,7 @@
           </div>
 
           <div page="4">
-              <div class="paper paperLeft">
+              <div class="paper paperLeft hoja2">
                   <div class="text textLeft" contenteditable spellcheck="false"></div>
                   <div class="numeration numerationLeft">4</div>
                   <div class="paint"></div>
@@ -592,7 +602,7 @@
           </div>
 
           <div page="5">
-              <div class="paper paperRight">
+              <div class="paper paperRight hoja3">
                 <div class="text textRight" contenteditable spellcheck="false"></div>
                 <div class="numeration numerationRight">5</div>
                 <div class="paint"></div>
@@ -600,7 +610,7 @@
           </div>
 
           <div page="6">
-            <div class="paper paperLeft">
+            <div class="paper paperLeft hoja4">
               <div class="text textLeft" contenteditable spellcheck="false"></div>
               <div class="numeration numerationLeft">6</div>
               <div class="paint"></div>
@@ -608,7 +618,7 @@
           </div>
 
           <div page="7">
-            <div class="paper paperRight">
+            <div class="paper paperRight hoja5">
               <div class="text textRight" contenteditable spellcheck="false"></div>
               <div class="numeration numerationRight">7</div>
               <div class="paint"></div>
@@ -616,7 +626,7 @@
           </div>
 
           <div page="8">
-            <div class="paper paperLeft">
+            <div class="paper paperLeft hoja1">
               <div class="text textLeft" contenteditable spellcheck="false"></div>
               <div class="numeration numerationLeft">8</div>
               <div class="paint"></div>
@@ -624,7 +634,7 @@
           </div>
 
           <div page="9">
-            <div class="paper paperRight">
+            <div class="paper paperRight hoja3">
               <div class="text textRight" contenteditable spellcheck="false"></div>
               <div class="numeration numerationRight">9</div>
               <div class="paint"></div>
@@ -632,7 +642,7 @@
           </div>
 
           <div page="10">
-            <div class="paper paperLeft">
+            <div class="paper paperLeft hoja5">
                 <div class="text textLeft" contenteditable spellcheck="false"></div>
                 <div class="numeration numerationLeft">10</div>
                 <div class="paint"></div>
@@ -640,7 +650,7 @@
           </div>
 
           <div page="11">
-            <div class="paper paperRight">
+            <div class="paper paperRight hoja4">
               <div class="text textRight" contenteditable spellcheck="false"></div>
               <div class="numeration numerationRight">11</div>
               <div class="paint"></div>
@@ -648,7 +658,7 @@
           </div>
 
           <div page="12">
-            <div class="paper paperLeft">
+            <div class="paper paperLeft hoja2">
                 <div class="text textLeft" contenteditable spellcheck="false"></div>
                 <div class="numeration numerationLeft">12</div>
                 <div class="paint"></div>
@@ -656,7 +666,7 @@
           </div>
 
           <div page="13">
-            <div class="paper paperRight">
+            <div class="paper paperRight hoja1">
                 <div class="text textRight" contenteditable spellcheck="false"></div>
                 <div class="numeration numerationRight">13</div>
                 <div class="paint"></div>
@@ -664,7 +674,7 @@
           </div>
 
           <div page="14">
-            <div class="paper paperLeft">
+            <div class="paper paperLeft hoja4">
                 <div class="text textLeft" contenteditable spellcheck="false"></div>
                 <div class="numeration numerationLeft">14</div>
                 <div class="paint"></div>
@@ -672,7 +682,7 @@
         </div>
 
         <div page="15">
-            <div class="paper paperRight">
+            <div class="paper paperRight hoja5">
               <div class="text textRight" contenteditable spellcheck="false"></div>
               <div class="numeration numerationRight">15</div>
               <div class="paint"></div>
@@ -680,7 +690,7 @@
         </div>
 
         <div page="16">
-          <div class="paper paperLeft">
+          <div class="paper paperLeft hoja2">
             <div class="text textLeft" contenteditable spellcheck="false"></div>
             <div class="numeration numerationLeft">16</div>
             <div class="paint"></div>
@@ -688,7 +698,7 @@
         </div>
 
         <div page="17">
-          <div class="paper paperRight">
+          <div class="paper paperRight hoja3">
             <div class="text textRight" contenteditable spellcheck="false"></div>
             <div class="numeration numerationRight">17</div>
             <div class="paint"></div>
@@ -696,7 +706,7 @@
         </div>
 
         <div page="18">
-          <div class="paper paperLeft">
+          <div class="paper paperLeft hoja1">
             <div class="text textLeft" contenteditable spellcheck="false"></div>
             <div class="numeration numerationLeft">18</div>
             <div class="paint"></div>
@@ -704,7 +714,7 @@
         </div>
 
         <div page="19">
-          <div class="paper paperRight">
+          <div class="paper paperRight hoja5">
             <div class="text textRight" contenteditable spellcheck="false"></div>
             <div class="numeration numerationRight ">19</div>
             <div class="paint"></div>
@@ -712,7 +722,7 @@
         </div>
 
         <div page="20">
-          <div class="paper paperLeft">
+          <div class="paper paperLeft hoja4">
               <div class="text textLeft" contenteditable spellcheck="false"></div>
               <div class="numeration numerationLeft">20</div>
               <div class="paint"></div>
@@ -720,7 +730,7 @@
         </div>
 
         <div page="21">
-          <div class="paper paperRight">
+          <div class="paper paperRight hoja1">
             <div class="text textRight" contenteditable spellcheck="false"></div>
             <div class="numeration numerationRight">21</div>
             <div class="paint"></div>
@@ -728,7 +738,7 @@
         </div>
 
         <div page="22">
-          <div class="paper paperLeft">
+          <div class="paper paperLeft hoja2">
               <div class="text textLeft" contenteditable spellcheck="false"></div>
               <div class="numeration numerationLeft">22</div>
               <div class="paint"></div>
@@ -736,7 +746,7 @@
         </div>
 
         <div page="23">
-          <div class="paper paperRight">
+          <div class="paper paperRight hoja3">
               <div class="text textRight" contenteditable spellcheck="false"></div>
               <div class="numeration numerationRight">23</div>
               <div class="paint"></div>
@@ -744,7 +754,7 @@
         </div>
 
         <div page="24">
-          <div class="paper paperLeft">
+          <div class="paper paperLeft hoja4">
               <div class="text textLeft" contenteditable spellcheck="false"></div>
               <div class="numeration numerationLeft">24</div>
               <div class="paint"></div>
@@ -752,7 +762,7 @@
       </div>
 
       <div page="25">
-          <div class="paper paperRight">
+          <div class="paper paperRight hoja1">
             <div class="text textRight" contenteditable spellcheck="false"></div>
             <div class="numeration numerationRight">25</div>
             <div class="paint"></div>
@@ -760,7 +770,7 @@
       </div>
 
       <div page="26">
-        <div class="paper paperLeft">
+        <div class="paper paperLeft hoja5">
           <div class="text textLeft" contenteditable spellcheck="false"></div>
           <div class="numeration numerationLeft">26</div>
           <div class="paint"></div>
@@ -768,7 +778,7 @@
       </div>
 
       <div page="27">
-        <div class="paper paperRight">
+        <div class="paper paperRight hoja4">
           <div class="text textRight" contenteditable spellcheck="false"></div>
           <div class="numeration numerationRight">27</div>
           <div class="paint"></div>
@@ -776,7 +786,7 @@
       </div>
 
       <div page="28">
-        <div class="paper paperLeft">
+        <div class="paper paperLeft hoja1">
           <div class="text textLeft" contenteditable spellcheck="false"></div>
           <div class="numeration numerationLeft">28</div>
           <div class="paint"></div>
@@ -784,7 +794,7 @@
       </div>
 
       <div page="29">
-        <div class="paper paperRight">
+        <div class="paper paperRight hoja2">
           <div class="text textRight" contenteditable spellcheck="false"></div>
           <div class="numeration numerationRight">29</div>
           <div class="paint"></div>
@@ -792,7 +802,7 @@
       </div>
 
       <div page="30">
-        <div class="paper paperLeft">
+        <div class="paper paperLeft hoja3">
             <div class="text textLeft" contenteditable spellcheck="false"></div>
             <div class="numeration numerationLeft">30</div>
             <div class="paint"></div>
@@ -800,7 +810,7 @@
       </div>
 
       <div page="31">
-        <div class="paper paperRight">
+        <div class="paper paperRight hoja5">
           <div class="text textRight" contenteditable spellcheck="false"></div>
           <div class="numeration numerationRight">31</div>
           <div class="paint"></div>
@@ -808,7 +818,7 @@
       </div>
 
       <div page="32">
-        <div class="paper paperLeft">
+        <div class="paper paperLeft hoja2">
             <div class="text textLeft" contenteditable spellcheck="false"></div>
             <div class="numeration numerationLeft">32</div>
             <div class="paint"></div>
@@ -816,7 +826,7 @@
       </div>
 
       <div page="33">
-        <div class="paper paperRight">
+        <div class="paper paperRight hoja4">
             <div class="text textRight" contenteditable spellcheck="false"></div>
             <div class="numeration numerationRight">33</div>
             <div class="paint"></div>
@@ -824,15 +834,15 @@
       </div>
 
       <div page="34">
-        <div class="paper paperLeft">
+        <div class="paper paperLeft hoja1">
             <div class="text textLeft" contenteditable spellcheck="false"></div>
             <div class="numeration numerationLeft">34</div>
             <div class="paint"></div>
         </div>
       </div>
 
-          <div class="hard fixed" page="35"><div class="portadaBack"></div></div>
-          <div class="hard" page="36"><div class="portada"></div></div>
+          <div class="hard fixed" page="35"><div class="contraportadaBack"></div></div>
+          <div class="hard" page="36"><div class="portadaBack"></div></div>
         </div>
 
 
@@ -1055,7 +1065,7 @@
       }
       
     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="libs/turn.min.js"></script>
     <script src="libs/turn.js"></script>
     <script src="libs/ztext.min.js"></script>

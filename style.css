@@ -66,15 +66,31 @@ a:visited {
   position: relative;
 }
 
-h1{
+#virtualCursor {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  pointer-events: none; /* No interfiere con el cursor real */
+  top: 700px;
+  left: 760px;
+  z-index: 1000;
+}
+
+.h1, .h2{
   margin-top: -467px;
-  margin-left: 10px;
   font-family: 'geek';
   font-size: 60px;
   text-align: center;
   display: flex;
   flex-direction: column;
   gap: 50px;
+  filter: drop-shadow(0px 0px 5px #000000c2);
+}
+
+.h2{
+  transform: rotateY(180deg);
   filter: drop-shadow(0px 0px 5px #000000c2);
 }
 
@@ -91,6 +107,48 @@ h1{
   filter: brightness(0.7);
 }
 
+.portada{
+  width: auto;
+  height: 700px;
+  background-image: url(img/notasBackgound.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.portadaMask{
+  margin-top: -651px;
+  position: absolute;
+  width: auto;
+  height: 86%;
+  z-index: 199;
+}
+
+.portadaBack{
+  width: auto;
+  height: 700px;
+  background-image: url(img/notasBackgoundBack.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.portadaBackMask{
+  margin-top: -651px;
+  position: absolute;
+  width: auto;
+  height: 86%;
+  z-index: 199;
+}
+
+.contraportadaBack{
+  width: auto;
+  height: 700px;
+  background-image: url(img/notasContraportadaBack.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
 body {
   background-color: #1c2128;
@@ -2514,25 +2572,42 @@ div.img img {
   display: flex;
   height: 100%;
   width: 100%;
+  filter: drop-shadow(10px 0px 5px #000000b3);
+
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .paperLeft{
-  filter: drop-shadow(10px 0px 5px #000000b3);
 
-     background-image: url(img/hojaLeft.png) !important;
-     background-size: contain;
-     background-position: center;
-     background-repeat: no-repeat;
    
 }
 
 .paperRight{
-  filter: drop-shadow(-10px 0px 5px #000000b3);
 
-      background-image: url(img/hojaRight.png) !important;
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
+}
+
+.hoja1{
+  background-image: url(img/hoja/hoja1.png) !important;
+}
+
+.hoja2{
+  background-image: url(img/hoja/hoja2.png) !important;
+}
+
+.hoja3{
+  background-image: url(img/hoja/hoja3.png) !important;
+}
+
+
+.hoja4{
+  background-image: url(img/hoja/hoja4.png) !important;
+}
+
+
+.hoja5{
+  background-image: url(img/hoja/hoja5.png) !important;
 }
 
 
@@ -2596,28 +2671,6 @@ div.img img {
   text-align: right;
   right: 40px;
 }
-
-
-.portada {
-  width: auto;
-  height: 700px;
-  background-image: url(img/notasBackgound.png);
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.portadaBack{
-  width: auto;
-  height: 700px;
-  background-image: url(img/notasBackgoundBack.png);
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-
-
 
 
 #controls{
