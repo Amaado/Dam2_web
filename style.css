@@ -66,15 +66,15 @@ a:visited {
   position: relative;
 }
 
-#virtualCursor {
+.virtualCursor {
   position: absolute;
   width: 20px;
   height: 20px;
   background-color: red;
   border-radius: 50%;
   pointer-events: none; /* No interfiere con el cursor real */
-  top: 700px;
-  left: 760px;
+  margin-top: 7vw;
+  margin-left: 50vw;
   z-index: 1000;
 }
 

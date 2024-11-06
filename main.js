@@ -4398,6 +4398,8 @@ cargarSkins(idLogeado);
         gradients: false,
         autoCenter: true,
         when: {
+          start: function (event, page) {
+          },
           turning: function (event, page) {
             $('#page-number').val(page);
             $('#notebook').find('[page="2"]').toggleClass('fixed', page !== 1);
@@ -4423,56 +4425,6 @@ cargarSkins(idLogeado);
         $('#notebook').turn('page', $('#page-number').val());
       });
     });
-
-
-
-
-
-    $(document).ready(function() {
-      const virtualCursor = $('#virtual-cursor');
-      const cursorX = 150; // Coordenada X fija del cursor virtual
-      const cursorY = 150; // Coordenada Y fija del cursor virtual
-      let lastElement = null;
-  
-      // Configura la posición del cursor virtual
-      virtualCursor.css({ left: cursorX + 'px', top: cursorY + 'px' });
-  
-      // Función para simular eventos en el elemento directamente debajo del cursor virtual
-      function simulateMouseEvents() {
-          // Obtiene el elemento directamente debajo del cursor virtual
-          const elementBelow = document.elementFromPoint(cursorX, cursorY);
-  
-          // Si el elemento debajo cambia, dispara eventos
-          if (elementBelow !== lastElement) {
-              if (lastElement) {
-                  $(lastElement).trigger('mouseout').removeClass('hovered'); // Dispara mouseout en el último elemento
-              }
-              if (elementBelow && $(elementBelow).hasClass('elemento')) {
-                  $(elementBelow).trigger('mouseover').addClass('hovered'); // Dispara mouseover en el nuevo elemento
-              }
-              lastElement = elementBelow; // Actualiza el último elemento
-          }
-  
-          // Simula el evento mousemove en el elemento actual dentro del radio
-          if (elementBelow && $(elementBelow).hasClass('elemento')) {
-              $(elementBelow).trigger('mousemove');
-          }
-      }
-  
-      // Ejecuta la simulación de eventos en el área fija
-      setInterval(simulateMouseEvents, 100); // Ajusta el intervalo según la frecuencia deseada
-  
-      // Eventos en los elementos de ejemplo
-      $('.elemento').on('mouseover', function() {
-          console.log('Mouseover en:', this.id);
-      }).on('mouseout', function() {
-          console.log('Mouseout en:', this.id);
-      }).on('mousemove', function() {
-          console.log('Mousemove en:', this.id);
-      });
-  });
-
-
 
 
 
