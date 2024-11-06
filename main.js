@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let paints = document.getElementsByClassName("paint");
   let sizeVisualizer = document.getElementById("sizeVisualizer");
   const page1Hitbox = document.getElementById("page1hitbox");
-
+  const h2 = document.querySelector('.h2');
 
   /* CAMBIO DE CURSOR */
   
@@ -4394,21 +4394,59 @@ cargarSkins(idLogeado);
     }
     
 
-
+    let inStart = false;
+    let currentPage = 1;
     $('#notebook').turn({
       acceleration: true,
       gradients: false,
       autoCenter: true,
       when: {
-          start: function (event, page) {
-            if (page.next === 2) {
-              $('#page1hitbox').css('display', 'block');
-              console.log("display block");
-            }
+          start: function (event, pageObject) {
+                // Activa la bandera solo cuando `start` es el evento activo
+                inStart = true;
+                //console.log("Parámetros recibidos:", event, pageObject);
+                // Limpia cualquier evento anterior para evitar duplicaciones
+                $('#notebook').off('mouseup.pageEvent');
+                $('#notebook').off('mousedown.pageEvent');
+
+                if(pageObject.next === 2){
+                  $('#page1hitbox').css('margin-left', '260px');
+                  page1Hitbox.classList.remove("active");
+                  h2.style.display = "none";
+                  //console.log("margin-left 260px");
+                }
+                if(pageObject.next === 1){
+                  page1Hitbox.classList.add("active");
+                  h2.style.display = "flex";
+                  $('#page1hitbox').css('margin-left', '1620px');
+                  //console.log("margin-left -2060px");
+                }
+
+                $('#notebook').on('mouseup.pageEvent', function () {
+                    if (inStart && (pageObject.next === 2 || pageObject.next === 1)) {
+                        $('#page1hitbox').css('display', 'none');
+                        console.log("display none - mouseup detected");
+                    }
+                });
+    
+                $('#notebook').on('mousedown.pageEvent', function () {
+                    if (inStart && (pageObject.next === 2 || pageObject.next === 1)) {
+                        $('#page1hitbox').css('display', 'block');
+                        console.log("display block - mousedown detected");
+                    }
+                });
+                currentPage = pageObject.page;
+                console.log(currentPage);
+
           },
-          end: function (event, pageObject) {
+          end: function (event, page) {
+            inStart = false;
+
             $('#page1hitbox').css('display', 'none');
             console.log("display none");
+
+            $(document).off('mouseup.pageEvent');
+            $(document).off('mousedown.pageEvent');
 
           },
           turning: function (event, page) {
@@ -4446,11 +4484,32 @@ cargarSkins(idLogeado);
 
 
     page1Hitbox.addEventListener("mouseover", () => {
-        page1Hitbox.classList.add("active");
+      //console.log(currentPage);
+        if (currentPage === 1) {
+            page1Hitbox.classList.add("active");
+            h2.style.display = "flex";
+
+            console.log("PAGE 1 - mouseover: add active");
+        } else if (currentPage === 2) {
+            page1Hitbox.classList.remove("active");
+            h2.style.display = "none";
+            console.log("PAGE 2 - mouseover: remove active");
+        }
     });
     
     page1Hitbox.addEventListener("mouseout", () => {
-        page1Hitbox.classList.remove("active");
+        //console.log(currentPage);
+        if (currentPage === 1) {
+            page1Hitbox.classList.remove("active");
+            h2.style.display = "none";
+
+            console.log("PAGE 1 - mouseout: remove active");
+        } else if (currentPage === 2) {
+            page1Hitbox.classList.add("active");
+            h2.style.display = "flex";
+
+            console.log("PAGE 2 - mouseout: add active");
+        }
     });
 
 
