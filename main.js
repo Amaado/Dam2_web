@@ -74,7 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
   let paintButton = document.getElementById('paintButton');
   let paints = document.getElementsByClassName("paint");
   let sizeVisualizer = document.getElementById("sizeVisualizer");
-  
+  const page1Hitbox = document.getElementById("page1hitbox");
+
 
   /* CAMBIO DE CURSOR */
   
@@ -3470,7 +3471,8 @@ cargarSkins(idLogeado);
         if (notasEstado) {
           notebook.style.display = "flex";
           controls.style.display = "flex";
-    
+          notas.classList.add("active");
+
           setTimeout(() => {
             notebook.style.opacity = "1";
             controls.style.opacity = "1";
@@ -3484,7 +3486,8 @@ cargarSkins(idLogeado);
           boxx.style.marginRight = "0px";
           allESC.style.marginLeft = "0px";
           helloMessage.style.marginLeft = "0px";
-          
+          notas.classList.remove("active");
+
           paintOF();
 
           setTimeout(() => {
@@ -4392,21 +4395,35 @@ cargarSkins(idLogeado);
     
 
 
-    // Inicializa el cuaderno y carga las páginas necesarias
     $('#notebook').turn({
-        acceleration: true,
-        gradients: false,
-        autoCenter: true,
-        when: {
+      acceleration: true,
+      gradients: false,
+      autoCenter: true,
+      when: {
           start: function (event, page) {
+            if (page.next === 2) {
+              $('#page1hitbox').css('display', 'block');
+              console.log("display block");
+            }
+          },
+          end: function (event, pageObject) {
+            $('#page1hitbox').css('display', 'none');
+            console.log("display none");
+
           },
           turning: function (event, page) {
-            $('#page-number').val(page);
-            $('#notebook').find('[page="2"]').toggleClass('fixed', page !== 1);
-            $('#notebook').find('[page="35"]').toggleClass('fixed', page !== 36);
+              $('#page-number').val(page);
+              $('#notebook').find('[page="2"]').toggleClass('fixed', page !== 1);
+              $('#notebook').find('[page="35"]').toggleClass('fixed', page !== 36);
+
+
+          },
+          turned: function (event, page) {
+
           }
-        }
-    });
+
+      }
+  });
 
     
     
@@ -4424,6 +4441,16 @@ cargarSkins(idLogeado);
       $('#page-number').blur(function () {
         $('#notebook').turn('page', $('#page-number').val());
       });
+    });
+
+
+
+    page1Hitbox.addEventListener("mouseover", () => {
+        page1Hitbox.classList.add("active");
+    });
+    
+    page1Hitbox.addEventListener("mouseout", () => {
+        page1Hitbox.classList.remove("active");
     });
 
 
