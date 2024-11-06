@@ -75,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function() {
   let paints = document.getElementsByClassName("paint");
   let sizeVisualizer = document.getElementById("sizeVisualizer");
   const page1Hitbox = document.getElementById("page1hitbox");
-  const h2 = document.querySelector('.h2');
 
   /* CAMBIO DE CURSOR */
   
@@ -4393,61 +4392,36 @@ cargarSkins(idLogeado);
         }
     }
     
+    const h2 = document.querySelector('.h2');
 
-    let inStart = false;
-    let currentPage = 1;
     $('#notebook').turn({
       acceleration: true,
       gradients: false,
       autoCenter: true,
       when: {
-          start: function (event, pageObject) {
-                // Activa la bandera solo cuando `start` es el evento activo
-                inStart = true;
-                //console.log("Parámetros recibidos:", event, pageObject);
-                // Limpia cualquier evento anterior para evitar duplicaciones
-                $('#notebook').off('mouseup.pageEvent');
-                $('#notebook').off('mousedown.pageEvent');
-
-                if(pageObject.next === 2){
-                  $('#page1hitbox').css('margin-left', '260px');
-                  page1Hitbox.classList.remove("active");
-                  h2.style.display = "none";
-                  //console.log("margin-left 260px");
-                }
-                if(pageObject.next === 1){
-                  page1Hitbox.classList.add("active");
-                  h2.style.display = "flex";
-                  $('#page1hitbox').css('margin-left', '1620px');
-                  //console.log("margin-left -2060px");
-                }
-
-                $('#notebook').on('mouseup.pageEvent', function () {
-                    if (inStart && (pageObject.next === 2 || pageObject.next === 1)) {
-                        $('#page1hitbox').css('display', 'none');
-                        console.log("display none - mouseup detected");
-                    }
-                });
-    
-                $('#notebook').on('mousedown.pageEvent', function () {
-                    if (inStart && (pageObject.next === 2 || pageObject.next === 1)) {
-                        $('#page1hitbox').css('display', 'block');
-                        console.log("display block - mousedown detected");
-                    }
-                });
-                currentPage = pageObject.page;
-                console.log(currentPage);
+        start: function (event, pageObject) {
+            
+              if (pageObject.next === 2) {
+                  // Aplica el filtro para la página 1
+                  h2.style.filter = 'drop-shadow(0px 0px 0px #000000c2) blur(0px)';
+              }
+              if (pageObject.next === 1) {
+                  // Quita el filtro para la página 2
+                  h2.style.filter = 'drop-shadow(0px 0px 5px #000000c2) blur(10px)';
+              }
 
           },
-          end: function (event, page) {
-            inStart = false;
-
-            $('#page1hitbox').css('display', 'none');
-            console.log("display none");
-
-            $(document).off('mouseup.pageEvent');
-            $(document).off('mousedown.pageEvent');
-
+          end: function (event, pageObject) {
+            if (pageObject.page == 2) {
+                // Aplica el filtro para la página 1
+                h2.style.filter = 'drop-shadow(0px 0px 0px #000000c2) blur(0px)';
+                console.log("END PAGE 1");
+            }
+            if (pageObject.page == 1) {
+                // Quita el filtro para la página 2
+                h2.style.filter = 'drop-shadow(0px 0px 5px #000000c2) blur(10px)';
+                console.log("END PAGE 2");
+            }
           },
           turning: function (event, page) {
               $('#page-number').val(page);
@@ -4480,38 +4454,6 @@ cargarSkins(idLogeado);
         $('#notebook').turn('page', $('#page-number').val());
       });
     });
-
-
-
-    page1Hitbox.addEventListener("mouseover", () => {
-      //console.log(currentPage);
-        if (currentPage === 1) {
-            page1Hitbox.classList.add("active");
-            h2.style.display = "flex";
-
-            console.log("PAGE 1 - mouseover: add active");
-        } else if (currentPage === 2) {
-            page1Hitbox.classList.remove("active");
-            h2.style.display = "none";
-            console.log("PAGE 2 - mouseover: remove active");
-        }
-    });
-    
-    page1Hitbox.addEventListener("mouseout", () => {
-        //console.log(currentPage);
-        if (currentPage === 1) {
-            page1Hitbox.classList.remove("active");
-            h2.style.display = "none";
-
-            console.log("PAGE 1 - mouseout: remove active");
-        } else if (currentPage === 2) {
-            page1Hitbox.classList.add("active");
-            h2.style.display = "flex";
-
-            console.log("PAGE 2 - mouseout: add active");
-        }
-    });
-
 
 
     async function cargarDibujosEnTodasLasPaginas() {
