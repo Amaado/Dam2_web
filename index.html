@@ -520,7 +520,10 @@
       <a draggable="false" id="loginButton">Login</a>
       <a draggable="false" id="registerButton">Register</a>
       <img draggable="false" id="logoutButton" />
+      <button onclick="capturarImagen()">Capturar como imagen</button>
+      <img id="imagen" alt="captura" />
     </nav>
+
 
     <div id="horarioImgContainer">
       <img draggable="false" id="horarioImg" src="img/Calendario_Escolar_Night.png" />
@@ -1037,13 +1040,24 @@
         imagen.style.display = "none";
       }, 8000);
     }
+
+
+
+    function capturarImagen() {
+        const contenedor = document.getElementById('notebook');
+        html2canvas(contenedor, { backgroundColor: null }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            document.getElementById('imagen').src = imgData;
+        });
+    }
+
   </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="libs/turn.min.js"></script>
   <script src="libs/turn.js"></script>
   <script src="libs/ztext.min.js"></script>
-  <script src="libs/virtualpointer.js"></script>
-  <script src="libs/eventrecorder.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 </body>
 
 </html>
