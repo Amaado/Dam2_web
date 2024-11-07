@@ -63,8 +63,8 @@ a:visited {
 }
 
 .h1,
-.h2 {
-  margin-top: -467px;
+.h2, .h3, .h4 {
+  margin-top: -486px;
   font-family: "geek";
   font-size: 60px;
   text-align: center;
@@ -72,6 +72,10 @@ a:visited {
   flex-direction: column;
   gap: 50px;
   filter: drop-shadow(0px 0px 5px #000000c2);
+}
+
+.h1 {
+  filter: drop-shadow(0px 0px 5px #000000c2) saturate(150%);
 }
 
 .h2 {
@@ -83,10 +87,21 @@ a:visited {
   color: #624738;
 }
 
+.h3 {
+  margin-left: -23px;
+  margin-top: -642px;
+  position: absolute;
+}
+
+.h4 {
+  margin-left: -15px;
+  margin-top: -455px;
+  position: absolute;
+  transform: rotateY(180deg);
+  filter: drop-shadow(0px 0px 5px #ffffffc2) blur(4px);
+}
+
 .z-text {
-  /* Tip: Apply CSS transforms here */
-  /* rotateX() == up/down */
-  /* rotateY() == left/right */
   transform: rotateX(0deg) rotateY(-3deg) scaleX(0.93);
   color: #916a53;
 }
@@ -114,7 +129,7 @@ a:visited {
 }
 
 .notasBackdropFilter {
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(2px);
   margin-top: -600px;
   margin-left: 25px;
   position: absolute;
@@ -2458,14 +2473,14 @@ div.img img {
   z-index: 100;
   color: black;
   pointer-events: none;
-  display: none;
+  display: flex;
   right: 0;
-  opacity: 0;
+  opacity: 1;
   margin-left: 350px;
-  margin-top: 900px;
-  transform: translateX(-48px) scale(0.07, 0.01);
-  filter: drop-shadow(10px 10px 20px #000000b3) blur(100px);
-  transition: opacity 1.5s ease, margin-left 0.9s ease, margin-top 1.3s ease,
+  margin-top: 898px;
+  transform: translateX(-10px) scale(0.02, 0.02);
+  filter: drop-shadow(10px 10px 20px #000000b3) brightness(0) saturate(100%) invert(87%) sepia(12%) saturate(575%) hue-rotate(179deg) brightness(96%) contrast(91%);
+  transition: margin-left 0.9s ease, margin-top 1.3s ease,
     transform 1s ease, filter 1.5s ease;
 }
 

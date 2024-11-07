@@ -1,1475 +1,1049 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>D A M</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="icon" type="image/png" href="img/favicon.png " id="icon" />
-    <script src="main.js"></script>
-  </head>
 
-  <body>
-    <img id="underwater" draggable="false" />
-    <img id="underwaterTransi" draggable="false" />
-    <div id="filterUnderwater">
-      <svg id="svgUnderwater">
-        <defs>
-          <filter id="distort">
-            <feTurbulence
-              id="turbulence"
-              baseFrequency="0.01 0.01"
-              numOctaves="1"
-              result="noise"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="noise"
-              scale="10"
-              xChannelSelector="R"
-              yChannelSelector="R"
-            />
-          </filter>
-        </defs>
-        <rect width="100%" height="100%" filter="url(#distort)" fill="none" />
-      </svg>
-
-      <!--<div id="colorColumn"></div>-->
-
-      <div id="settingsImgContainer">
-        <img id="settingsImg" src="img/settingsNight.png" draggable="false" />
-        <img
-          id="settingsImgLight"
-          src="img/settingsNight.png"
-          draggable="false"
-        />
-      </div>
-      <div id="settingsContainer">
-        <div class="container">
-          <div class="switch">
-            <label for="toggle">
-              <input id="toggle" class="toggle-switch" type="checkbox" />
-              <div class="sun-moon"><div class="dots"></div></div>
-              <div class="background">
-                <div class="stars1"></div>
-                <div class="stars2"></div>
-              </div>
-              <div class="fill"></div>
-            </label>
-          </div>
-        </div>
-
-        <div id="rtxContainer">
-          <img
-            id="rtxON"
-            class="rtxImg"
-            src="img/rtxON.png"
-            draggable="false"
-          />
-          <img
-            id="rtxOFF"
-            class="rtxImg"
-            src="img/rtxOFF.png"
-            draggable="false"
-          />
-          <img
-            id="rtxBLANK"
-            class="rtxImg"
-            src="img/rtxBLANK.png"
-            draggable="false"
-          />
-          <img
-            id="rtxGREEN"
-            class="rtxImg"
-            src="img/rtxGREEN.png"
-            draggable="false"
-          />
-        </div>
-        <div id="volumenContainer">
-          <img id="volumenImg" class="volumenImgNight" draggable="false" />
-          <div id="volumenImgDropShadow"></div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            class="slider"
-            id="volumeSlider"
-          />
-          <div class="tooltip" id="tooltip">
-            <div id="tooltipLabel"></div>
-            <img
-              id="volumenImgUd"
-              src="img/cursors/portadas/cccc.png"
-              draggable="false"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="coinsContainer">
-        <div id="coinsContainerAnimationContainer"></div>
-        <img class="coinsContainerCoin" src="img/coin.png" draggable="false" />
-        <div class="coinLabel"></div>
-      </div>
-
-      <div id="helloMessage">ㅤ</div>
-
-      <div id="modifiersContainer"></div>
-
-      <div id="skinsContainer">
-        <div class="titulo">SKINS</div>
-        <div class="hr"></div>
-
-        <div class="skinContainer skinContainerFirst">
-          <div class="boxshadow">
-            <div class="boxshadowNight"></div>
-            <div class="boxshadowDay"></div>
-          </div>
-
-          <img class="candado" src="img/lock.png" draggable="false" />
-          <div class="skinContainerLock"></div>
-
-          <div class="skinContainerNotVisible">
-            <div class="tituloSkinNotVisible">Cc</div>
-            <div class="priceContainerNotVisible">
-              <div>Price:</div>
-              <div class="price">FREE</div>
-              <img class="coin" src="img/coin.png" draggable="false" />
-              <img class="coinBlur" src="img/coin.png" draggable="false" />
-            </div>
-          </div>
-
-          <img
-            class="skinPortada"
-            src="img/cursors/portadas/cccc.png"
-            draggable="false"
-          />
-          <div class="tituloSkin">Cc</div>
-          <div class="releaseDate">Released: 26/09/2024</div>
-          <div class="priceContainer">
-            <div>Price:</div>
-            <div class="priceNormal">FREE</div>
-            <img class="coin" src="img/coinNormal.png" draggable="false" />
-          </div>
-          <div class="tier common">Common</div>
-          <div class="buttonThemeContainer">
-            <div class="buttonTheme buttonThemeNight">
-              <img
-                class="buttonThemeImg"
-                src="img/moonIcon.png"
-                alt="img/cursors/cccc.webp"
-                draggable="false"
-              />
-            </div>
-            <div class="buttonTheme buttonThemeDay">
-              <img
-                class="buttonThemeImg"
-                src="img/sunIcon.png"
-                alt="img/cursors/cccc.webp"
-                draggable="false"
-              />
-            </div>
-          </div>
-          <div class="skinContainerBackdropFilter"></div>
-        </div>
-
-        <div class="skinContainer">
-          <div class="boxshadow">
-            <div class="boxshadowNight"></div>
-            <div class="boxshadowDay"></div>
-          </div>
-
-          <img class="candado" src="img/lock.png" draggable="false" />
-          <div class="skinContainerLock"></div>
-
-          <div class="skinContainerNotVisible">
-            <div class="tituloSkinNotVisible">Cc Veraniego</div>
-            <div class="priceContainerNotVisible">
-              <div>Price:</div>
-              <div class="price">FREE</div>
-              <img class="coin" src="img/coin.png" draggable="false" />
-              <img class="coinBlur" src="img/coin.png" draggable="false" />
-            </div>
-          </div>
-
-          <img
-            class="skinPortada"
-            src="img/cursors/portadas/cccc_veraniego.png"
-            draggable="false"
-          />
-          <div class="tituloSkin">Cc Veraniego</div>
-          <div class="releaseDate">Released: 26/09/2024</div>
-          <div class="priceContainer">
-            <div>Price:</div>
-            <div class="priceNormal">FREE</div>
-            <img class="coin" src="img/coinNormal.png" draggable="false" />
-          </div>
-          <div class="tier common">Common</div>
-          <div class="buttonThemeContainer">
-            <div class="buttonTheme buttonThemeNight">
-              <img
-                class="buttonThemeImg"
-                src="img/moonIcon.png"
-                alt="img/cursors/cccc_veraniego.webp"
-                draggable="false"
-              />
-            </div>
-            <div class="buttonTheme buttonThemeDay">
-              <img
-                class="buttonThemeImg"
-                src="img/sunIcon.png"
-                alt="img/cursors/cccc_veraniego.webp"
-                draggable="false"
-              />
-            </div>
-          </div>
-          <div class="skinContainerBackdropFilter"></div>
-        </div>
-
-        <div class="skinContainer">
-          <div class="boxshadow">
-            <div class="boxshadowNight"></div>
-            <div class="boxshadowDay"></div>
-          </div>
-
-          <img class="candado" src="img/lock.png" draggable="false" />
-          <div class="skinContainerLock"></div>
-
-          <div class="skinContainerNotVisible">
-            <div class="tituloSkinNotVisible">Cc Krillin</div>
-            <div class="priceContainerNotVisible">
-              <div>Price:</div>
-              <div class="price">200</div>
-              <img class="coin" src="img/coin.png" draggable="false" />
-              <img class="coinBlur" src="img/coin.png" draggable="false" />
-            </div>
-          </div>
-
-          <img
-            class="skinPortada"
-            src="img/cursors/portadas/cccc_krillin.png"
-            draggable="false"
-          />
-          <div class="tituloSkin">Cc Krillin</div>
-          <div class="releaseDate">Released: 26/09/2024</div>
-          <div class="priceContainer">
-            <div>Price:</div>
-            <div class="priceNormal">200</div>
-            <img class="coin" src="img/coinNormal.png" draggable="false" />
-          </div>
-          <div class="tier rare">Rare</div>
-          <div class="buttonThemeContainer">
-            <div class="buttonTheme buttonThemeNight">
-              <img
-                class="buttonThemeImg"
-                src="img/moonIcon.png"
-                alt="img/cursors/cccc_krillin.webp"
-                draggable="false"
-              />
-            </div>
-            <div class="buttonTheme buttonThemeDay">
-              <img
-                class="buttonThemeImg"
-                src="img/sunIcon.png"
-                alt="img/cursors/cccc_krillin.webp"
-                draggable="false"
-              />
-            </div>
-          </div>
-          <div class="skinContainerBackdropFilter"></div>
-        </div>
-
-        <div class="skinContainer">
-          <div class="boxshadow">
-            <div class="boxshadowNight"></div>
-            <div class="boxshadowDay"></div>
-          </div>
-
-          <img class="candado" src="img/lock.png" draggable="false" />
-          <div class="skinContainerLock"></div>
-
-          <div class="skinContainerNotVisible">
-            <div class="tituloSkinNotVisible">Cc Avatar</div>
-            <div class="priceContainerNotVisible">
-              <div>Price:</div>
-              <div class="price">1000</div>
-              <img class="coin" src="img/coin.png" draggable="false" />
-              <img class="coinBlur" src="img/coin.png" draggable="false" />
-            </div>
-          </div>
-
-          <img
-            class="skinPortada"
-            src="img/cursors/portadas/cccc_avatar.png"
-            draggable="false"
-          />
-          <div class="tituloSkin">Cc Avatar</div>
-          <div class="releaseDate">Released: 26/09/2024</div>
-          <div class="priceContainer">
-            <div>Price:</div>
-            <div class="priceNormal">1000</div>
-            <img class="coin" src="img/coinNormal.png" draggable="false" />
-          </div>
-          <div class="tier epic">Epic</div>
-          <div class="buttonThemeContainer">
-            <div class="buttonTheme buttonThemeNight">
-              <img
-                class="buttonThemeImg"
-                src="img/moonIcon.png"
-                alt="img/cursors/cccc_avatar.webp"
-                draggable="false"
-              />
-            </div>
-            <div class="buttonTheme buttonThemeDay">
-              <img
-                class="buttonThemeImg"
-                src="img/sunIcon.png"
-                alt="img/cursors/cccc_avatar.webp"
-                draggable="false"
-              />
-            </div>
-          </div>
-          <div class="skinContainerBackdropFilter"></div>
-        </div>
-
-        <div class="skinContainer">
-          <div class="boxshadow">
-            <div class="boxshadowNight"></div>
-            <div class="boxshadowDay"></div>
-          </div>
-
-          <img class="candado" src="img/lock.png" draggable="false" />
-          <div class="skinContainerLock"></div>
-
-          <div class="skinContainerNotVisible">
-            <div class="tituloSkinNotVisible">Cc Galaxy</div>
-            <div class="priceContainerNotVisible">
-              <div>Price:</div>
-              <div class="price">2000</div>
-              <img class="coin" src="img/coin.png" draggable="false" />
-              <img class="coinBlur" src="img/coin.png" draggable="false" />
-            </div>
-          </div>
-
-          <img
-            class="skinPortada"
-            src="img/cursors/portadas/cccc_galaxy.png"
-            draggable="false"
-          />
-          <div class="tituloSkin">Cc Galaxy</div>
-          <div class="releaseDate">Released: 01/10/2024</div>
-          <div class="priceContainer">
-            <div>Price:</div>
-            <div class="priceNormal">2000</div>
-            <img class="coin" src="img/coinNormal.png" draggable="false" />
-          </div>
-          <div class="tier legendary">Legendary</div>
-          <div class="buttonThemeContainer">
-            <div class="buttonTheme buttonThemeNight">
-              <img
-                class="buttonThemeImg"
-                src="img/moonIcon.png"
-                alt="img/cursors/cccc_galaxy.webp"
-                draggable="false"
-              />
-            </div>
-            <div class="buttonTheme buttonThemeDay">
-              <img
-                class="buttonThemeImg"
-                src="img/sunIcon.png"
-                alt="img/cursors/cccc_galaxy.webp"
-                draggable="false"
-              />
-            </div>
-          </div>
-          <div class="skinContainerBackdropFilter"></div>
-        </div>
-
-        <div class="skinContainer">
-          <div class="boxshadow">
-            <div class="boxshadowNight"></div>
-            <div class="boxshadowDay"></div>
-          </div>
-
-          <img class="candado" src="img/lock.png" draggable="false" />
-          <div class="skinContainerLock"></div>
-
-          <div class="skinContainerNotVisible">
-            <div class="tituloSkinNotVisible">Cc Buceo</div>
-            <div class="priceContainerNotVisible">
-              <div>Price:</div>
-              <div class="price">2000</div>
-              <img class="coin" src="img/coin.png" draggable="false" />
-              <img class="coinBlur" src="img/coin.png" draggable="false" />
-            </div>
-          </div>
-
-          <img
-            class="skinPortada"
-            src="img/cursors/portadas/cccc_buceo.png"
-            draggable="false"
-          />
-          <div class="tituloSkin">Cc Buceo</div>
-          <div class="releaseDate">Released: 09/10/2024</div>
-          <div class="priceContainer">
-            <div>Price:</div>
-            <div class="priceNormal">2000</div>
-            <img class="coin" src="img/coinNormal.png" draggable="false" />
-          </div>
-          <div class="tier legendary">Legendary</div>
-          <div class="buttonThemeContainer">
-            <div class="buttonTheme buttonThemeNight">
-              <img
-                class="buttonThemeImg"
-                src="img/moonIcon.png"
-                alt="img/cursors/cccc_buceo.webp"
-                draggable="false"
-              />
-            </div>
-            <div class="buttonTheme buttonThemeLock">
-              <img
-                class="buttonThemeImg"
-                src="img/lockIcon.png"
-                alt="img/cursors/cccc_buceo.webp"
-                draggable="false"
-              />
-            </div>
-          </div>
-          <div class="skinContainerBackdropFilter"></div>
-        </div>
-
-        <div class="skinContainer">
-          <div class="boxshadow">
-            <div class="boxshadowNight"></div>
-            <div class="boxshadowDay"></div>
-          </div>
-
-          <img class="candado" src="img/lock.png" draggable="false" />
-          <div class="skinContainerLock"></div>
-
-          <div class="skinContainerNotVisible">
-            <div class="tituloSkinNotVisible">Cc Jefe de Estudios</div>
-            <div class="priceContainerNotVisible">
-              <div>Price:</div>
-              <div class="price">500</div>
-              <img class="coin" src="img/coin.png" draggable="false" />
-              <img class="coinBlur" src="img/coin.png" draggable="false" />
-            </div>
-          </div>
-
-          <img
-            class="skinPortada"
-            src="img/cursors/portadas/cccc_jefeEstudios.png"
-            draggable="false"
-          />
-          <div class="tituloSkin">Cc Jefe de Estudios</div>
-          <div class="releaseDate">Released: 14/10/2024</div>
-          <div class="priceContainer">
-            <div>Price:</div>
-            <div class="priceNormal">500</div>
-            <img class="coin" src="img/coinNormal.png" draggable="false" />
-          </div>
-          <div class="tier rare">Rare</div>
-          <div class="buttonThemeContainer">
-            <div class="buttonTheme buttonThemeNight">
-              <img
-                class="buttonThemeImg"
-                src="img/moonIcon.png"
-                alt="img/cursors/cccc_jefeEstudios.webp"
-                draggable="false"
-              />
-            </div>
-            <div class="buttonTheme buttonThemeDay">
-              <img
-                class="buttonThemeImg"
-                src="img/sunIcon.png"
-                alt="img/cursors/cccc_jefeEstudios.webp"
-                draggable="false"
-              />
-            </div>
-          </div>
-          <div class="skinContainerBackdropFilter"></div>
-        </div>
-
-        <div class="skinContainer">
-          <div class="boxshadow">
-            <div class="boxshadowNight"></div>
-            <div class="boxshadowDay"></div>
-          </div>
-
-          <img class="candado" src="img/lock.png" draggable="false" />
-          <div class="skinContainerLock"></div>
-
-          <div class="skinContainerNotVisible">
-            <div class="tituloSkinNotVisible">Cc ????</div>
-            <div class="priceContainerNotVisible">
-              <div>Price:</div>
-              <div class="price">????</div>
-              <img class="coin" src="img/coin.png" draggable="false" />
-              <img class="coinBlur" src="img/coin.png" draggable="false" />
-            </div>
-          </div>
-
-          <img
-            class="skinPortada"
-            src="img/cursors/portadas/cccc_noSkin.png"
-            draggable="false"
-          />
-          <div class="tituloSkin">Cc ????</div>
-          <div class="releaseDate">Released: 26/09/2024</div>
-          <div class="priceContainer">
-            <div>Price:</div>
-            <div class="priceNormal">????</div>
-            <img class="coin" src="img/coinNormal.png" draggable="false" />
-          </div>
-          <div class="tier legendary">Legendary</div>
-          <div class="buttonThemeContainer">
-            <div class="buttonTheme buttonThemeNight">
-              <img
-                class="buttonThemeImg"
-                src="img/moonIcon.png"
-                draggable="false"
-              />
-            </div>
-            <div class="buttonTheme buttonThemeDay">
-              <img
-                class="buttonThemeImg"
-                src="img/sunIcon.png"
-                draggable="false"
-              />
-            </div>
-          </div>
-          <div class="skinContainerBackdropFilter"></div>
-        </div>
-
-        <div class="skinContainer skinContainerLast">
-          <div class="boxshadow">
-            <div class="boxshadowNight"></div>
-            <div class="boxshadowDay"></div>
-          </div>
-
-          <img class="candado" src="img/lock.png" draggable="false" />
-          <div class="skinContainerLock"></div>
-
-          <div class="skinContainerNotVisible">
-            <div class="tituloSkinNotVisible">Cc ????</div>
-            <div class="priceContainerNotVisible">
-              <div>Price:</div>
-              <div class="price">????</div>
-              <img class="coin" src="img/coin.png" draggable="false" />
-              <img class="coinBlur" src="img/coin.png" draggable="false" />
-            </div>
-          </div>
-
-          <img
-            class="skinPortada"
-            src="img/cursors/portadas/cccc_noSkin.png"
-            draggable="false"
-          />
-          <div class="tituloSkin">Cc ????</div>
-          <div class="releaseDate">Released: 26/09/2024</div>
-          <div class="priceContainer">
-            <div>Price:</div>
-            <div class="priceNormal">????</div>
-            <img class="coin" src="img/coinNormal.png" draggable="false" />
-          </div>
-          <div class="tier legendary">Legendary</div>
-          <div class="buttonThemeContainer">
-            <div class="buttonTheme buttonThemeNight">
-              <img
-                class="buttonThemeImg"
-                src="img/moonIcon.png"
-                draggable="false"
-              />
-            </div>
-            <div class="buttonTheme buttonThemeDay">
-              <img
-                class="buttonThemeImg"
-                src="img/sunIcon.png"
-                draggable="false"
-              />
-            </div>
-          </div>
-          <div class="skinContainerBackdropFilter"></div>
-        </div>
-      </div>
-
-      <div id="flechaHitbloxPlusSkins"></div>
-      <img id="flechaaSkins" draggable="false" />
-      <div id="menuLabelSkins">S K I N S</div>
-      <div id="flechaHitbloxPlusModifiers"></div>
-      <img id="flechaaModifiers" draggable="false" />
-      <div id="menuLabelModifiers">M O D I F I E R S</div>
-
-      <img id="fondoGalaxyGreen" src="img/fondoGreen.gif" />
-      <img id="fondoGalaxy" src="" />
-      <img id="customCursor" alt="Custom Cursor" />
-      <img id="customCursorPurpleish" alt="Custom Cursor" />
-      <img id="cursorPaint" />
-      <img id="cursorPaintErase" />
-
-      <div class="boxx">
-        <a
-          draggable="false"
-          href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1572"
-          target="_blank"
-        >
-          <div class="card card1">
-            <div class="img">
-              <img draggable="false" src="img/g_datos.png" />
-            </div>
-            <div class="info">
-              <h4 id="title">Datos</h4>
-            </div>
-          </div>
-        </a>
-        <a
-          draggable="false"
-          href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1577"
-          target="_blank"
-        >
-          <div class="card card2">
-            <div class="img">
-              <img draggable="false" src="img/g_moviles.png" />
-            </div>
-            <div class="info">
-              <h4 id="title">Móviles</h4>
-            </div>
-          </div>
-        </a>
-        <a
-          draggable="false"
-          href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1574"
-          target="_blank"
-        >
-          <div class="card card3">
-            <div class="img">
-              <img draggable="false" src="img/g_empresas.png" />
-            </div>
-            <div class="info">
-              <h4 id="title">Empresa</h4>
-            </div>
-          </div>
-        </a>
-        <a
-          draggable="false"
-          href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1573"
-          target="_blank"
-        >
-          <div class="card card4">
-            <div class="img">
-              <img draggable="false" src="img/g_interfaces.png" />
-            </div>
-            <div class="info">
-              <h4 id="title">Interfaces</h4>
-            </div>
-          </div>
-        </a>
-        <a
-          draggable="false"
-          href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1576"
-          target="_blank"
-        >
-          <div class="card card5">
-            <div class="img">
-              <img draggable="false" src="img/g_servicios_y_procesos.png" />
-            </div>
-            <div class="info">
-              <h4 id="title">Servicios y procesos</h4>
-            </div>
-          </div>
-        </a>
-        <a
-          draggable="false"
-          href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1578"
-          target="_blank"
-        >
-          <div class="card card6">
-            <div class="img">
-              <img draggable="false" src="img/g_sistemas_empresariales.png" />
-            </div>
-            <div class="info">
-              <h4 id="title">Sistemas empresariales</h4>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <nav>
-        <a draggable="false" id="horario">Horario</a>
-        <a draggable="false" id="notas">Notas</a>
-        <a draggable="false" id="loginButton">Login</a>
-        <a draggable="false" id="registerButton">Register</a>
-        <img draggable="false" id="logoutButton" />
-      </nav>
-
-      <div id="horarioImgContainer">
-        <img
-          draggable="false"
-          id="horarioImg"
-          src="img/Calendario_Escolar_Night.png"
-        />
-      </div>
-
-      <div id="notebookContainer">
-        <div id="notebook">
-          <div class="hard" page="1">
-            <div class="portada"></div>
-            <img
-              class="portadaMask"
-              src="img/notasBackgound_mask.png"
-              draggable="false"
-            />
-            <div class="notasBackdropFilter"></div>
-            <h1 class="h1">
-              <span
-                data-z
-                data-z
-                data-z-event="pointer"
-                data-z-depth="20px"
-                data-z-eventRotation="10deg"
-                >calvitium</span
-              >
-              <span
-                data-z
-                data-z
-                data-z-event="pointer"
-                data-z-depth="20px"
-                data-z-eventRotation="10deg"
-                >hominis</span
-              >
-              <span
-                data-z
-                data-z
-                data-z-event="pointer"
-                data-z-depth="20px"
-                data-z-eventRotation="10deg"
-                >libello</span
-              >
-            </h1>
-          </div>
-          <div class="hard" page="2">
-            <div class="portadaBack"></div>
-            <img
-              class="portadaBackMask"
-              src="img/notasPortadaBack_Mask.png"
-              draggable="false"
-            />
-            <h1 class="h2">
-              <span
-                data-z
-                data-z
-                data-z-event="pointer"
-                data-z-depth="20px"
-                data-z-eventRotation="10deg"
-                >calvitium</span
-              >
-              <span
-                data-z
-                data-z
-                data-z-event="pointer"
-                data-z-depth="20px"
-                data-z-eventRotation="10deg"
-                >hominis</span
-              >
-              <span
-                data-z
-                data-z
-                data-z-event="pointer"
-                data-z-depth="20px"
-                data-z-eventRotation="10deg"
-                >libello</span
-              >
-            </h1>
-          </div>
-
-          <div page="3" class="shadow">
-            <div class="paper paperRight hoja1">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">3</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="4">
-            <div class="paper paperLeft hoja2">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">4</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="5">
-            <div class="paper paperRight hoja3">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">5</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="6">
-            <div class="paper paperLeft hoja4">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">6</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="7">
-            <div class="paper paperRight hoja5">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">7</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="8">
-            <div class="paper paperLeft hoja1">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">8</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="9">
-            <div class="paper paperRight hoja3">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">9</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="10">
-            <div class="paper paperLeft hoja5">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">10</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="11">
-            <div class="paper paperRight hoja4">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">11</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="12">
-            <div class="paper paperLeft hoja2">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">12</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="13">
-            <div class="paper paperRight hoja1">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">13</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="14">
-            <div class="paper paperLeft hoja4">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">14</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="15">
-            <div class="paper paperRight hoja5">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">15</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="16">
-            <div class="paper paperLeft hoja2">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">16</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="17">
-            <div class="paper paperRight hoja3">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">17</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="18">
-            <div class="paper paperLeft hoja1">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">18</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="19">
-            <div class="paper paperRight hoja5">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">19</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="20">
-            <div class="paper paperLeft hoja4">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">20</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="21">
-            <div class="paper paperRight hoja1">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">21</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="22">
-            <div class="paper paperLeft hoja2">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">22</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="23">
-            <div class="paper paperRight hoja3">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">23</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="24">
-            <div class="paper paperLeft hoja4">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">24</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="25">
-            <div class="paper paperRight hoja1">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">25</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="26">
-            <div class="paper paperLeft hoja5">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">26</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="27">
-            <div class="paper paperRight hoja4">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">27</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="28">
-            <div class="paper paperLeft hoja1">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">28</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="29">
-            <div class="paper paperRight hoja2">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">29</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="30">
-            <div class="paper paperLeft hoja3">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">30</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="31">
-            <div class="paper paperRight hoja5">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">31</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="32">
-            <div class="paper paperLeft hoja2">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">32</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="33">
-            <div class="paper paperRight hoja4">
-              <div
-                class="text textRight"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationRight">33</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div page="34">
-            <div class="paper paperLeft hoja1">
-              <div
-                class="text textLeft"
-                contenteditable
-                spellcheck="false"
-              ></div>
-              <div class="numeration numerationLeft">34</div>
-              <div class="paint"></div>
-            </div>
-          </div>
-
-          <div class="hard fixed" page="35">
-            <div class="contraportadaBack"></div>
-          </div>
-          <div class="hard" page="36">
-            <div class="portadaBack">
-              <div class="notasBackdropFilter"></div>
-            </div>
-          </div>
-        </div>
-
-        <div id="controls">
-          <input
-            type="text"
-            id="page-number"
-            autocomplete="off"
-            maxlength="2"
-          />/
-          <div id="number-pages"></div>
-          <div id="writeButton" class="controlsButton active"></div>
-          <div id="paintButton" class="controlsButton"></div>
-          <img
-            id="sizeVisualizer"
-            src="/img/paintCursor/14.png"
-            draggable="false"
-          />
-          <input
-            type="range"
-            min="0"
-            max="14"
-            class="sliderPaint"
-            id="paintSlider"
-          />
-          <div class="tooltipPaint">
-            <div id="tooltipLabelPaint"></div>
-            <img
-              id="paintImgUd"
-              src="img/cursors/portadas/cccc.png"
-              draggable="false"
-            />
-          </div>
-
-          <div id="paletteContainer">
-            <div class="paletteRow row1">
-              <div class="paletteColor black active"></div>
-              <div class="paletteColor darkGrey"></div>
-              <div class="paletteColor darkRed"></div>
-              <div class="paletteColor lightRed"></div>
-              <div class="paletteColor orange"></div>
-              <div class="paletteColor mediumYellow"></div>
-              <div class="paletteColor darkGreen"></div>
-              <div class="paletteColor mediumDarkBlue"></div>
-              <div class="paletteColor darkBlue"></div>
-              <div class="paletteColor darkPurple"></div>
-            </div>
-            <div class="paletteRow row2">
-              <div class="paletteColor white"></div>
-              <div class="paletteColor lightGrey"></div>
-              <div class="paletteColor salmon"></div>
-              <div class="paletteColor pink"></div>
-              <div class="paletteColor darkYellow"></div>
-              <div class="paletteColor lightYellow"></div>
-              <div class="paletteColor lightGreen"></div>
-              <div class="paletteColor lightBlue"></div>
-              <div class="paletteColor mediumLightBlue"></div>
-              <div class="paletteColor lightPurple"></div>
-            </div>
-            <div class="paletteColor eraseContainer erase"></div>
-          </div>
-          <input type="color" />
-
-        </div>
-      </div>
-
-      <div id="loginScreen">
-        <div id="loginContainer">
-          <div class="formTittle">Login</div>
-          <div class="formContainer">
-            <div class="formRow">
-              <div class="formLabel">Name:</div>
-              <input type="text" placeholder="Name..." id="campoNameLogin" />
-            </div>
-            <div class="formRow">
-              <div class="formLabel">Password:</div>
-              <input
-                type="password"
-                placeholder="Password..."
-                id="campoPasswordLogin"
-                class="passwordField"
-              />
-              <img
-                draggable="false"
-                class="unlockPassIconCalvo unlockPassIcon unlockPassIconLogin"
-                src="img/unlockPassIconCalvo.png"
-              />
-              <img
-                draggable="false"
-                class="unlockPassIconShadow unlockPassIcon unlockPassIconLogin"
-                src="img/unlockPassIconShadow.png"
-              />
-              <img
-                draggable="false"
-                class="unlockPassIconHands unlockPassIcon unlockPassIconLogin"
-                src="img/unlockPassIconHands.png"
-              />
-            </div>
-            <div class="formRowCheckbox">
-              <input type="checkbox" id="stayLoged" />
-              <div class="formLabelCheckbox">Stay loged</div>
-            </div>
-            <div id="errorLabelLogin"></div>
-            <div id="loginSubmit">Submit</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="registerScreen">
-        <div id="registerContainer">
-          <div class="formTittle">Register</div>
-          <div class="formContainer">
-            <div class="formRow2">
-              <div class="formLabel">Name:</div>
-              <input type="text" placeholder="Name..." id="campoNameRegister" />
-            </div>
-            <div class="formRow2">
-              <div class="formLabel">Password:</div>
-              <input
-                type="password"
-                placeholder="Password..."
-                id="campoPasswordRegister"
-                class="passwordField"
-              />
-              <img
-                draggable="false"
-                class="unlockPassIconCalvo unlockPassIcon unlockPassIconRegister"
-                src="img/unlockPassIconCalvo.png"
-              />
-              <img
-                draggable="false"
-                class="unlockPassIconShadow unlockPassIcon unlockPassIconRegister"
-                src="img/unlockPassIconShadow.png"
-              />
-              <img
-                draggable="false"
-                class="unlockPassIconHands unlockPassIcon unlockPassIconRegister"
-                src="img/unlockPassIconHands.png"
-              />
-            </div>
-            <div class="formRow2">
-              <div class="formLabel">Rep Password:</div>
-              <input
-                type="password"
-                placeholder="Repeat password..."
-                id="campoPasswordRepeatRegister"
-                class="passwordField"
-              />
-              <img
-                draggable="false"
-                class="unlockPassIconCalvo unlockPassIcon unlockPassIconRegister"
-                src="img/unlockPassIconCalvo.png"
-              />
-              <img
-                draggable="false"
-                class="unlockPassIconShadow unlockPassIcon unlockPassIconRegister"
-                src="img/unlockPassIconShadow.png"
-              />
-              <img
-                draggable="false"
-                class="unlockPassIconHands unlockPassIcon unlockPassIconRegister"
-                src="img/unlockPassIconHands.png"
-              />
-            </div>
-            <div id="errorLabelRegister"></div>
-            <div id="registerSubmit">Submit</div>
-          </div>
-        </div>
-      </div>
-
-      <button
-        class="ButtonCc1"
-        onclick="mostrarImagen('Cc1', [0.5, 0.5], [1000,2000,3000])"
-        onmouseover="mostrarImagenPreview('Cc1')"
-      ></button>
-      <button
-        class="ButtonCc2"
-        onclick="mostrarImagen('Cc2', [0.5, 0.5], [1000,2000,3000])"
-        onmouseover="mostrarImagenPreview('Cc2')"
-      ></button>
-      <button
-        class="ButtonCc3"
-        onclick="mostrarImagen('Cc3', [0.7, 0.7], [1000,2000,3000])"
-        onmouseover="mostrarImagenPreview('Cc3')"
-      ></button>
-      <button
-        class="ButtonCc4"
-        onclick="mostrarImagen('Cc4', [0.7, 0.7], [1000,2000,3000])"
-        onmouseover="mostrarImagenPreview('Cc4')"
-      ></button>
-      <button
-        class="ButtonCc5"
-        onclick="mostrarImagen('Cc5', [0.7, 0.7], [1000,2000,3000])"
-        onmouseover="mostrarImagenPreview('Cc5')"
-      ></button>
-      <button
-        class="ButtonCc6"
-        onclick="mostrarImagen('Cc6', [0.5, 0.5], [1000,2000,3000])"
-        onmouseover="mostrarImagenPreview('Cc6')"
-      ></button>
-      <button
-        class="ButtonCc7"
-        onclick="mostrarImagen('Cc7', [0.5, 0.5], [1000,2000,3000])"
-        onmouseover="mostrarImagenPreview('Cc7')"
-      ></button>
-      <button
-        class="ButtonCc8"
-        onclick="mostrarImagen('Cc8', [0.6, 0.6], [1000,2000,3000])"
-        onmouseover="mostrarImagenPreview('Cc8')"
-      ></button>
-
-      <img id="Cc1" src="img/Cc/Cc1.png" alt="Imagen a pantalla completa" />
-      <img id="Cc1preview" src="img/Cc/Cc1.png" alt="Imagen preview boton" />
-
-      <img id="Cc2" src="img/Cc/Cc2.png" alt="Imagen a pantalla completa" />
-      <img id="Cc2preview" src="img/Cc/Cc2.png" alt="Imagen preview boton" />
-
-      <img id="Cc3" src="img/Cc/Cc3.png" alt="Imagen a pantalla completa" />
-      <img id="Cc3preview" src="img/Cc/Cc3.png" alt="Imagen preview boton" />
-
-      <img id="Cc4" src="img/Cc/Cc4.png" alt="Imagen a pantalla completa" />
-      <img id="Cc4preview" src="img/Cc/Cc4.png" alt="Imagen preview boton" />
-
-      <img id="Cc5" src="img/Cc/Cc5.png" alt="Imagen a pantalla completa" />
-      <img id="Cc5preview" src="img/Cc/Cc5.png" alt="Imagen preview boton" />
-
-      <img id="Cc6" src="img/Cc/Cc6.png" alt="Imagen a pantalla completa" />
-      <img id="Cc6preview" src="img/Cc/Cc6.png" alt="Imagen preview boton" />
-
-      <img id="Cc7" src="img/Cc/Cc7.png" alt="Imagen a pantalla completa" />
-      <img id="Cc7preview" src="img/Cc/Cc7.png" alt="Imagen preview boton" />
-
-      <img id="Cc8" src="img/Cc/Cc8.png" alt="Imagen a pantalla completa" />
-      <img id="Cc8preview" src="img/Cc/Cc8.png" alt="Imagen preview boton" />
+<head>
+  <title>D A M</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="img/favicon.png " id="icon" />
+  <script src="main.js"></script>
+</head>
+
+<body>
+  <img id="underwater" draggable="false" />
+  <img id="underwaterTransi" draggable="false" />
+  <div id="filterUnderwater">
+    <svg id="svgUnderwater">
+      <defs>
+        <filter id="distort">
+          <feTurbulence id="turbulence" baseFrequency="0.01 0.01" numOctaves="1" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="R" />
+        </filter>
+      </defs>
+      <rect width="100%" height="100%" filter="url(#distort)" fill="none" />
+    </svg>
+
+    <!--<div id="colorColumn"></div>-->
+
+    <div id="settingsImgContainer">
+      <img id="settingsImg" src="img/settingsNight.png" draggable="false" />
+      <img id="settingsImgLight" src="img/settingsNight.png" draggable="false" />
     </div>
-    <script>
-      function mostrarImagen(imageId, opacity, times) {
-        console.log(`ImageID: ${imageId}`);
-        console.log(`Opcity: ${opacity}`);
-        console.log(`Times: ${times}`);
-        var imagen = document.getElementById(imageId);
+    <div id="settingsContainer">
+      <div class="container">
+        <div class="switch">
+          <label for="toggle">
+            <input id="toggle" class="toggle-switch" type="checkbox" />
+            <div class="sun-moon">
+              <div class="dots"></div>
+            </div>
+            <div class="background">
+              <div class="stars1"></div>
+              <div class="stars2"></div>
+            </div>
+            <div class="fill"></div>
+          </label>
+        </div>
+      </div>
+
+      <div id="rtxContainer">
+        <img id="rtxON" class="rtxImg" src="img/rtxON.png" draggable="false" />
+        <img id="rtxOFF" class="rtxImg" src="img/rtxOFF.png" draggable="false" />
+        <img id="rtxBLANK" class="rtxImg" src="img/rtxBLANK.png" draggable="false" />
+        <img id="rtxGREEN" class="rtxImg" src="img/rtxGREEN.png" draggable="false" />
+      </div>
+      <div id="volumenContainer">
+        <img id="volumenImg" class="volumenImgNight" draggable="false" />
+        <div id="volumenImgDropShadow"></div>
+        <input type="range" min="0" max="100" class="slider" id="volumeSlider" />
+        <div class="tooltip" id="tooltip">
+          <div id="tooltipLabel"></div>
+          <img id="volumenImgUd" src="img/cursors/portadas/cccc.png" draggable="false" />
+        </div>
+      </div>
+    </div>
+
+    <div class="coinsContainer">
+      <div id="coinsContainerAnimationContainer"></div>
+      <img class="coinsContainerCoin" src="img/coin.png" draggable="false" />
+      <div class="coinLabel"></div>
+    </div>
+
+    <div id="helloMessage">ㅤ</div>
+
+    <div id="modifiersContainer"></div>
+
+    <div id="skinsContainer">
+      <div class="titulo">SKINS</div>
+      <div class="hr"></div>
+
+      <div class="skinContainer skinContainerFirst">
+        <div class="boxshadow">
+          <div class="boxshadowNight"></div>
+          <div class="boxshadowDay"></div>
+        </div>
+
+        <img class="candado" src="img/lock.png" draggable="false" />
+        <div class="skinContainerLock"></div>
+
+        <div class="skinContainerNotVisible">
+          <div class="tituloSkinNotVisible">Cc</div>
+          <div class="priceContainerNotVisible">
+            <div>Price:</div>
+            <div class="price">FREE</div>
+            <img class="coin" src="img/coin.png" draggable="false" />
+            <img class="coinBlur" src="img/coin.png" draggable="false" />
+          </div>
+        </div>
+
+        <img class="skinPortada" src="img/cursors/portadas/cccc.png" draggable="false" />
+        <div class="tituloSkin">Cc</div>
+        <div class="releaseDate">Released: 26/09/2024</div>
+        <div class="priceContainer">
+          <div>Price:</div>
+          <div class="priceNormal">FREE</div>
+          <img class="coin" src="img/coinNormal.png" draggable="false" />
+        </div>
+        <div class="tier common">Common</div>
+        <div class="buttonThemeContainer">
+          <div class="buttonTheme buttonThemeNight">
+            <img class="buttonThemeImg" src="img/moonIcon.png" alt="img/cursors/cccc.webp" draggable="false" />
+          </div>
+          <div class="buttonTheme buttonThemeDay">
+            <img class="buttonThemeImg" src="img/sunIcon.png" alt="img/cursors/cccc.webp" draggable="false" />
+          </div>
+        </div>
+        <div class="skinContainerBackdropFilter"></div>
+      </div>
+
+      <div class="skinContainer">
+        <div class="boxshadow">
+          <div class="boxshadowNight"></div>
+          <div class="boxshadowDay"></div>
+        </div>
+
+        <img class="candado" src="img/lock.png" draggable="false" />
+        <div class="skinContainerLock"></div>
+
+        <div class="skinContainerNotVisible">
+          <div class="tituloSkinNotVisible">Cc Veraniego</div>
+          <div class="priceContainerNotVisible">
+            <div>Price:</div>
+            <div class="price">FREE</div>
+            <img class="coin" src="img/coin.png" draggable="false" />
+            <img class="coinBlur" src="img/coin.png" draggable="false" />
+          </div>
+        </div>
+
+        <img class="skinPortada" src="img/cursors/portadas/cccc_veraniego.png" draggable="false" />
+        <div class="tituloSkin">Cc Veraniego</div>
+        <div class="releaseDate">Released: 26/09/2024</div>
+        <div class="priceContainer">
+          <div>Price:</div>
+          <div class="priceNormal">FREE</div>
+          <img class="coin" src="img/coinNormal.png" draggable="false" />
+        </div>
+        <div class="tier common">Common</div>
+        <div class="buttonThemeContainer">
+          <div class="buttonTheme buttonThemeNight">
+            <img class="buttonThemeImg" src="img/moonIcon.png" alt="img/cursors/cccc_veraniego.webp"
+              draggable="false" />
+          </div>
+          <div class="buttonTheme buttonThemeDay">
+            <img class="buttonThemeImg" src="img/sunIcon.png" alt="img/cursors/cccc_veraniego.webp" draggable="false" />
+          </div>
+        </div>
+        <div class="skinContainerBackdropFilter"></div>
+      </div>
+
+      <div class="skinContainer">
+        <div class="boxshadow">
+          <div class="boxshadowNight"></div>
+          <div class="boxshadowDay"></div>
+        </div>
+
+        <img class="candado" src="img/lock.png" draggable="false" />
+        <div class="skinContainerLock"></div>
+
+        <div class="skinContainerNotVisible">
+          <div class="tituloSkinNotVisible">Cc Krillin</div>
+          <div class="priceContainerNotVisible">
+            <div>Price:</div>
+            <div class="price">200</div>
+            <img class="coin" src="img/coin.png" draggable="false" />
+            <img class="coinBlur" src="img/coin.png" draggable="false" />
+          </div>
+        </div>
+
+        <img class="skinPortada" src="img/cursors/portadas/cccc_krillin.png" draggable="false" />
+        <div class="tituloSkin">Cc Krillin</div>
+        <div class="releaseDate">Released: 26/09/2024</div>
+        <div class="priceContainer">
+          <div>Price:</div>
+          <div class="priceNormal">200</div>
+          <img class="coin" src="img/coinNormal.png" draggable="false" />
+        </div>
+        <div class="tier rare">Rare</div>
+        <div class="buttonThemeContainer">
+          <div class="buttonTheme buttonThemeNight">
+            <img class="buttonThemeImg" src="img/moonIcon.png" alt="img/cursors/cccc_krillin.webp" draggable="false" />
+          </div>
+          <div class="buttonTheme buttonThemeDay">
+            <img class="buttonThemeImg" src="img/sunIcon.png" alt="img/cursors/cccc_krillin.webp" draggable="false" />
+          </div>
+        </div>
+        <div class="skinContainerBackdropFilter"></div>
+      </div>
+
+      <div class="skinContainer">
+        <div class="boxshadow">
+          <div class="boxshadowNight"></div>
+          <div class="boxshadowDay"></div>
+        </div>
+
+        <img class="candado" src="img/lock.png" draggable="false" />
+        <div class="skinContainerLock"></div>
+
+        <div class="skinContainerNotVisible">
+          <div class="tituloSkinNotVisible">Cc Avatar</div>
+          <div class="priceContainerNotVisible">
+            <div>Price:</div>
+            <div class="price">1000</div>
+            <img class="coin" src="img/coin.png" draggable="false" />
+            <img class="coinBlur" src="img/coin.png" draggable="false" />
+          </div>
+        </div>
+
+        <img class="skinPortada" src="img/cursors/portadas/cccc_avatar.png" draggable="false" />
+        <div class="tituloSkin">Cc Avatar</div>
+        <div class="releaseDate">Released: 26/09/2024</div>
+        <div class="priceContainer">
+          <div>Price:</div>
+          <div class="priceNormal">1000</div>
+          <img class="coin" src="img/coinNormal.png" draggable="false" />
+        </div>
+        <div class="tier epic">Epic</div>
+        <div class="buttonThemeContainer">
+          <div class="buttonTheme buttonThemeNight">
+            <img class="buttonThemeImg" src="img/moonIcon.png" alt="img/cursors/cccc_avatar.webp" draggable="false" />
+          </div>
+          <div class="buttonTheme buttonThemeDay">
+            <img class="buttonThemeImg" src="img/sunIcon.png" alt="img/cursors/cccc_avatar.webp" draggable="false" />
+          </div>
+        </div>
+        <div class="skinContainerBackdropFilter"></div>
+      </div>
+
+      <div class="skinContainer">
+        <div class="boxshadow">
+          <div class="boxshadowNight"></div>
+          <div class="boxshadowDay"></div>
+        </div>
+
+        <img class="candado" src="img/lock.png" draggable="false" />
+        <div class="skinContainerLock"></div>
+
+        <div class="skinContainerNotVisible">
+          <div class="tituloSkinNotVisible">Cc Galaxy</div>
+          <div class="priceContainerNotVisible">
+            <div>Price:</div>
+            <div class="price">2000</div>
+            <img class="coin" src="img/coin.png" draggable="false" />
+            <img class="coinBlur" src="img/coin.png" draggable="false" />
+          </div>
+        </div>
+
+        <img class="skinPortada" src="img/cursors/portadas/cccc_galaxy.png" draggable="false" />
+        <div class="tituloSkin">Cc Galaxy</div>
+        <div class="releaseDate">Released: 01/10/2024</div>
+        <div class="priceContainer">
+          <div>Price:</div>
+          <div class="priceNormal">2000</div>
+          <img class="coin" src="img/coinNormal.png" draggable="false" />
+        </div>
+        <div class="tier legendary">Legendary</div>
+        <div class="buttonThemeContainer">
+          <div class="buttonTheme buttonThemeNight">
+            <img class="buttonThemeImg" src="img/moonIcon.png" alt="img/cursors/cccc_galaxy.webp" draggable="false" />
+          </div>
+          <div class="buttonTheme buttonThemeDay">
+            <img class="buttonThemeImg" src="img/sunIcon.png" alt="img/cursors/cccc_galaxy.webp" draggable="false" />
+          </div>
+        </div>
+        <div class="skinContainerBackdropFilter"></div>
+      </div>
+
+      <div class="skinContainer">
+        <div class="boxshadow">
+          <div class="boxshadowNight"></div>
+          <div class="boxshadowDay"></div>
+        </div>
+
+        <img class="candado" src="img/lock.png" draggable="false" />
+        <div class="skinContainerLock"></div>
+
+        <div class="skinContainerNotVisible">
+          <div class="tituloSkinNotVisible">Cc Buceo</div>
+          <div class="priceContainerNotVisible">
+            <div>Price:</div>
+            <div class="price">2000</div>
+            <img class="coin" src="img/coin.png" draggable="false" />
+            <img class="coinBlur" src="img/coin.png" draggable="false" />
+          </div>
+        </div>
+
+        <img class="skinPortada" src="img/cursors/portadas/cccc_buceo.png" draggable="false" />
+        <div class="tituloSkin">Cc Buceo</div>
+        <div class="releaseDate">Released: 09/10/2024</div>
+        <div class="priceContainer">
+          <div>Price:</div>
+          <div class="priceNormal">2000</div>
+          <img class="coin" src="img/coinNormal.png" draggable="false" />
+        </div>
+        <div class="tier legendary">Legendary</div>
+        <div class="buttonThemeContainer">
+          <div class="buttonTheme buttonThemeNight">
+            <img class="buttonThemeImg" src="img/moonIcon.png" alt="img/cursors/cccc_buceo.webp" draggable="false" />
+          </div>
+          <div class="buttonTheme buttonThemeLock">
+            <img class="buttonThemeImg" src="img/lockIcon.png" alt="img/cursors/cccc_buceo.webp" draggable="false" />
+          </div>
+        </div>
+        <div class="skinContainerBackdropFilter"></div>
+      </div>
+
+      <div class="skinContainer">
+        <div class="boxshadow">
+          <div class="boxshadowNight"></div>
+          <div class="boxshadowDay"></div>
+        </div>
+
+        <img class="candado" src="img/lock.png" draggable="false" />
+        <div class="skinContainerLock"></div>
+
+        <div class="skinContainerNotVisible">
+          <div class="tituloSkinNotVisible">Cc Jefe de Estudios</div>
+          <div class="priceContainerNotVisible">
+            <div>Price:</div>
+            <div class="price">500</div>
+            <img class="coin" src="img/coin.png" draggable="false" />
+            <img class="coinBlur" src="img/coin.png" draggable="false" />
+          </div>
+        </div>
+
+        <img class="skinPortada" src="img/cursors/portadas/cccc_jefeEstudios.png" draggable="false" />
+        <div class="tituloSkin">Cc Jefe de Estudios</div>
+        <div class="releaseDate">Released: 14/10/2024</div>
+        <div class="priceContainer">
+          <div>Price:</div>
+          <div class="priceNormal">500</div>
+          <img class="coin" src="img/coinNormal.png" draggable="false" />
+        </div>
+        <div class="tier rare">Rare</div>
+        <div class="buttonThemeContainer">
+          <div class="buttonTheme buttonThemeNight">
+            <img class="buttonThemeImg" src="img/moonIcon.png" alt="img/cursors/cccc_jefeEstudios.webp"
+              draggable="false" />
+          </div>
+          <div class="buttonTheme buttonThemeDay">
+            <img class="buttonThemeImg" src="img/sunIcon.png" alt="img/cursors/cccc_jefeEstudios.webp"
+              draggable="false" />
+          </div>
+        </div>
+        <div class="skinContainerBackdropFilter"></div>
+      </div>
+
+      <div class="skinContainer">
+        <div class="boxshadow">
+          <div class="boxshadowNight"></div>
+          <div class="boxshadowDay"></div>
+        </div>
+
+        <img class="candado" src="img/lock.png" draggable="false" />
+        <div class="skinContainerLock"></div>
+
+        <div class="skinContainerNotVisible">
+          <div class="tituloSkinNotVisible">Cc ????</div>
+          <div class="priceContainerNotVisible">
+            <div>Price:</div>
+            <div class="price">????</div>
+            <img class="coin" src="img/coin.png" draggable="false" />
+            <img class="coinBlur" src="img/coin.png" draggable="false" />
+          </div>
+        </div>
+
+        <img class="skinPortada" src="img/cursors/portadas/cccc_noSkin.png" draggable="false" />
+        <div class="tituloSkin">Cc ????</div>
+        <div class="releaseDate">Released: 26/09/2024</div>
+        <div class="priceContainer">
+          <div>Price:</div>
+          <div class="priceNormal">????</div>
+          <img class="coin" src="img/coinNormal.png" draggable="false" />
+        </div>
+        <div class="tier legendary">Legendary</div>
+        <div class="buttonThemeContainer">
+          <div class="buttonTheme buttonThemeNight">
+            <img class="buttonThemeImg" src="img/moonIcon.png" draggable="false" />
+          </div>
+          <div class="buttonTheme buttonThemeDay">
+            <img class="buttonThemeImg" src="img/sunIcon.png" draggable="false" />
+          </div>
+        </div>
+        <div class="skinContainerBackdropFilter"></div>
+      </div>
+
+      <div class="skinContainer skinContainerLast">
+        <div class="boxshadow">
+          <div class="boxshadowNight"></div>
+          <div class="boxshadowDay"></div>
+        </div>
+
+        <img class="candado" src="img/lock.png" draggable="false" />
+        <div class="skinContainerLock"></div>
+
+        <div class="skinContainerNotVisible">
+          <div class="tituloSkinNotVisible">Cc ????</div>
+          <div class="priceContainerNotVisible">
+            <div>Price:</div>
+            <div class="price">????</div>
+            <img class="coin" src="img/coin.png" draggable="false" />
+            <img class="coinBlur" src="img/coin.png" draggable="false" />
+          </div>
+        </div>
+
+        <img class="skinPortada" src="img/cursors/portadas/cccc_noSkin.png" draggable="false" />
+        <div class="tituloSkin">Cc ????</div>
+        <div class="releaseDate">Released: 26/09/2024</div>
+        <div class="priceContainer">
+          <div>Price:</div>
+          <div class="priceNormal">????</div>
+          <img class="coin" src="img/coinNormal.png" draggable="false" />
+        </div>
+        <div class="tier legendary">Legendary</div>
+        <div class="buttonThemeContainer">
+          <div class="buttonTheme buttonThemeNight">
+            <img class="buttonThemeImg" src="img/moonIcon.png" draggable="false" />
+          </div>
+          <div class="buttonTheme buttonThemeDay">
+            <img class="buttonThemeImg" src="img/sunIcon.png" draggable="false" />
+          </div>
+        </div>
+        <div class="skinContainerBackdropFilter"></div>
+      </div>
+    </div>
+
+    <div id="flechaHitbloxPlusSkins"></div>
+    <img id="flechaaSkins" draggable="false" />
+    <div id="menuLabelSkins">S K I N S</div>
+    <div id="flechaHitbloxPlusModifiers"></div>
+    <img id="flechaaModifiers" draggable="false" />
+    <div id="menuLabelModifiers">M O D I F I E R S</div>
+
+    <img id="fondoGalaxyGreen" src="img/fondoGreen.gif" />
+    <img id="fondoGalaxy" src="" />
+    <img id="customCursor" alt="Custom Cursor" />
+    <img id="customCursorPurpleish" alt="Custom Cursor" />
+    <img id="cursorPaint" />
+    <img id="cursorPaintErase" />
+
+    <div class="boxx">
+      <a draggable="false" href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1572"
+        target="_blank">
+        <div class="card card1">
+          <div class="img">
+            <img draggable="false" src="img/g_datos.png" />
+          </div>
+          <div class="info">
+            <h4 id="title">Datos</h4>
+          </div>
+        </div>
+      </a>
+      <a draggable="false" href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1577"
+        target="_blank">
+        <div class="card card2">
+          <div class="img">
+            <img draggable="false" src="img/g_moviles.png" />
+          </div>
+          <div class="info">
+            <h4 id="title">Móviles</h4>
+          </div>
+        </div>
+      </a>
+      <a draggable="false" href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1574"
+        target="_blank">
+        <div class="card card3">
+          <div class="img">
+            <img draggable="false" src="img/g_empresas.png" />
+          </div>
+          <div class="info">
+            <h4 id="title">Empresa</h4>
+          </div>
+        </div>
+      </a>
+      <a draggable="false" href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1573"
+        target="_blank">
+        <div class="card card4">
+          <div class="img">
+            <img draggable="false" src="img/g_interfaces.png" />
+          </div>
+          <div class="info">
+            <h4 id="title">Interfaces</h4>
+          </div>
+        </div>
+      </a>
+      <a draggable="false" href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1576"
+        target="_blank">
+        <div class="card card5">
+          <div class="img">
+            <img draggable="false" src="img/g_servicios_y_procesos.png" />
+          </div>
+          <div class="info">
+            <h4 id="title">Servicios y procesos</h4>
+          </div>
+        </div>
+      </a>
+      <a draggable="false" href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1578"
+        target="_blank">
+        <div class="card card6">
+          <div class="img">
+            <img draggable="false" src="img/g_sistemas_empresariales.png" />
+          </div>
+          <div class="info">
+            <h4 id="title">Sistemas empresariales</h4>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <nav>
+      <a draggable="false" id="horario">Horario</a>
+      <a draggable="false" id="notas">Notas</a>
+      <a draggable="false" id="loginButton">Login</a>
+      <a draggable="false" id="registerButton">Register</a>
+      <img draggable="false" id="logoutButton" />
+    </nav>
+
+    <div id="horarioImgContainer">
+      <img draggable="false" id="horarioImg" src="img/Calendario_Escolar_Night.png" />
+    </div>
+
+    <div id="notebookContainer">
+      <div id="notebook">
+        <div class="hard" page="1">
+          <div class="portada"></div>
+          <img class="portadaMask" src="img/notasBackgound_mask.png" draggable="false" />
+          <div class="notasBackdropFilter"></div>
+          <h1 class="h3">
+            <span data-z  data-z-event="pointer" data-z-depth="10px" data-z-eventRotation="1.5deg">
+              <img width="490" height="591" src="img/h1Border.png">
+            </span>
+          </h1>
+          <h1 class="h1">
+            <span data-z  data-z-event="pointer" data-z-depth="20px" data-z-eventRotation="10deg">
+              <img width="360" height="290" src="img/h1Text.png">
+            </span>
+            <!--<span data-z data-z-event="pointer" data-z-depth="20px"
+              data-z-eventRotation="10deg">calvitium</span>
+            <span data-z data-z-event="pointer" data-z-depth="20px"
+              data-z-eventRotation="10deg">hominis</span>
+            <span data-z data-z-event="pointer" data-z-depth="20px"
+              data-z-eventRotation="10deg">libello</span>-->
+          </h1>
+        </div>
+        <div class="hard" page="2">
+          <div class="portadaBack"></div>
+          <img class="portadaBackMask" src="img/notasPortadaBack_Mask.png" draggable="false" />
+
+          <h1 class="h2">
+            <span data-z  data-z-event="pointer" data-z-depth="20px" data-z-eventRotation="10deg">
+              <img width="360" height="290" src="img/h1Text.png">
+            </span>
+            <!--<span data-z data-z data-z-event="pointer" data-z-depth="20px" data-z-eventRotation="10deg">calvitium</span>
+            <span data-z data-z data-z-event="pointer" data-z-depth="20px" data-z-eventRotation="10deg">hominis</span>
+            <span data-z data-z data-z-event="pointer" data-z-depth="20px" data-z-eventRotation="10deg">libello</span>-->
+          </h1>
+          <h1 class="h4">
+            <span data-z  data-z-event="pointer" data-z-depth="10px" data-z-eventRotation="1.5deg">
+              <img width="490" height="591" src="img/h1Border.png">
+            </span>
+          </h1>
+        </div>
+
+        <div page="3" class="shadow">
+          <div class="paper paperRight hoja1">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">3</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="4">
+          <div class="paper paperLeft hoja2">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">4</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="5">
+          <div class="paper paperRight hoja3">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">5</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="6">
+          <div class="paper paperLeft hoja4">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">6</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="7">
+          <div class="paper paperRight hoja5">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">7</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="8">
+          <div class="paper paperLeft hoja1">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">8</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="9">
+          <div class="paper paperRight hoja3">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">9</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="10">
+          <div class="paper paperLeft hoja5">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">10</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="11">
+          <div class="paper paperRight hoja4">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">11</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="12">
+          <div class="paper paperLeft hoja2">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">12</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="13">
+          <div class="paper paperRight hoja1">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">13</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="14">
+          <div class="paper paperLeft hoja4">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">14</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="15">
+          <div class="paper paperRight hoja5">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">15</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="16">
+          <div class="paper paperLeft hoja2">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">16</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="17">
+          <div class="paper paperRight hoja3">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">17</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="18">
+          <div class="paper paperLeft hoja1">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">18</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="19">
+          <div class="paper paperRight hoja5">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">19</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="20">
+          <div class="paper paperLeft hoja4">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">20</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="21">
+          <div class="paper paperRight hoja1">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">21</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="22">
+          <div class="paper paperLeft hoja2">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">22</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="23">
+          <div class="paper paperRight hoja3">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">23</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="24">
+          <div class="paper paperLeft hoja4">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">24</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="25">
+          <div class="paper paperRight hoja1">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">25</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="26">
+          <div class="paper paperLeft hoja5">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">26</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="27">
+          <div class="paper paperRight hoja4">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">27</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="28">
+          <div class="paper paperLeft hoja1">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">28</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="29">
+          <div class="paper paperRight hoja2">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">29</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="30">
+          <div class="paper paperLeft hoja3">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">30</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="31">
+          <div class="paper paperRight hoja5">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">31</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="32">
+          <div class="paper paperLeft hoja2">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">32</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="33">
+          <div class="paper paperRight hoja4">
+            <div class="text textRight" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationRight">33</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div page="34">
+          <div class="paper paperLeft hoja1">
+            <div class="text textLeft" contenteditable spellcheck="false"></div>
+            <div class="numeration numerationLeft">34</div>
+            <div class="paint"></div>
+          </div>
+        </div>
+
+        <div class="hard fixed" page="35">
+          <div class="contraportadaBack"></div>
+        </div>
+        <div class="hard" page="36">
+          <div class="portadaBack"></div>
+          <div class="notasBackdropFilter"></div>
+        </div>
+      </div>
+
+      <div id="controls">
+        <input type="text" id="page-number" autocomplete="off" maxlength="2" />/
+        <div id="number-pages"></div>
+        <div id="writeButton" class="controlsButton active"></div>
+        <div id="paintButton" class="controlsButton"></div>
+        <img id="sizeVisualizer" src="/img/paintCursor/14.png" draggable="false" />
+        <input type="range" min="0" max="14" class="sliderPaint" id="paintSlider" />
+        <div class="tooltipPaint">
+          <div id="tooltipLabelPaint"></div>
+          <img id="paintImgUd" src="img/cursors/portadas/cccc.png" draggable="false" />
+        </div>
+
+        <div id="paletteContainer">
+          <div class="paletteRow row1">
+            <div class="paletteColor black active"></div>
+            <div class="paletteColor darkGrey"></div>
+            <div class="paletteColor darkRed"></div>
+            <div class="paletteColor lightRed"></div>
+            <div class="paletteColor orange"></div>
+            <div class="paletteColor mediumYellow"></div>
+            <div class="paletteColor darkGreen"></div>
+            <div class="paletteColor mediumDarkBlue"></div>
+            <div class="paletteColor darkBlue"></div>
+            <div class="paletteColor darkPurple"></div>
+          </div>
+          <div class="paletteRow row2">
+            <div class="paletteColor white"></div>
+            <div class="paletteColor lightGrey"></div>
+            <div class="paletteColor salmon"></div>
+            <div class="paletteColor pink"></div>
+            <div class="paletteColor darkYellow"></div>
+            <div class="paletteColor lightYellow"></div>
+            <div class="paletteColor lightGreen"></div>
+            <div class="paletteColor lightBlue"></div>
+            <div class="paletteColor mediumLightBlue"></div>
+            <div class="paletteColor lightPurple"></div>
+          </div>
+          <div class="paletteColor eraseContainer erase"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="loginScreen">
+      <div id="loginContainer">
+        <div class="formTittle">Login</div>
+        <div class="formContainer">
+          <div class="formRow">
+            <div class="formLabel">Name:</div>
+            <input type="text" placeholder="Name..." id="campoNameLogin" />
+          </div>
+          <div class="formRow">
+            <div class="formLabel">Password:</div>
+            <input type="password" placeholder="Password..." id="campoPasswordLogin" class="passwordField" />
+            <img draggable="false" class="unlockPassIconCalvo unlockPassIcon unlockPassIconLogin"
+              src="img/unlockPassIconCalvo.png" />
+            <img draggable="false" class="unlockPassIconShadow unlockPassIcon unlockPassIconLogin"
+              src="img/unlockPassIconShadow.png" />
+            <img draggable="false" class="unlockPassIconHands unlockPassIcon unlockPassIconLogin"
+              src="img/unlockPassIconHands.png" />
+          </div>
+          <div class="formRowCheckbox">
+            <input type="checkbox" id="stayLoged" />
+            <div class="formLabelCheckbox">Stay loged</div>
+          </div>
+          <div id="errorLabelLogin"></div>
+          <div id="loginSubmit">Submit</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="registerScreen">
+      <div id="registerContainer">
+        <div class="formTittle">Register</div>
+        <div class="formContainer">
+          <div class="formRow2">
+            <div class="formLabel">Name:</div>
+            <input type="text" placeholder="Name..." id="campoNameRegister" />
+          </div>
+          <div class="formRow2">
+            <div class="formLabel">Password:</div>
+            <input type="password" placeholder="Password..." id="campoPasswordRegister" class="passwordField" />
+            <img draggable="false" class="unlockPassIconCalvo unlockPassIcon unlockPassIconRegister"
+              src="img/unlockPassIconCalvo.png" />
+            <img draggable="false" class="unlockPassIconShadow unlockPassIcon unlockPassIconRegister"
+              src="img/unlockPassIconShadow.png" />
+            <img draggable="false" class="unlockPassIconHands unlockPassIcon unlockPassIconRegister"
+              src="img/unlockPassIconHands.png" />
+          </div>
+          <div class="formRow2">
+            <div class="formLabel">Rep Password:</div>
+            <input type="password" placeholder="Repeat password..." id="campoPasswordRepeatRegister"
+              class="passwordField" />
+            <img draggable="false" class="unlockPassIconCalvo unlockPassIcon unlockPassIconRegister"
+              src="img/unlockPassIconCalvo.png" />
+            <img draggable="false" class="unlockPassIconShadow unlockPassIcon unlockPassIconRegister"
+              src="img/unlockPassIconShadow.png" />
+            <img draggable="false" class="unlockPassIconHands unlockPassIcon unlockPassIconRegister"
+              src="img/unlockPassIconHands.png" />
+          </div>
+          <div id="errorLabelRegister"></div>
+          <div id="registerSubmit">Submit</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="ButtonCc1" onclick="mostrarImagen('Cc1', [0.5, 0.5], [1000,2000,3000])"
+      onmouseover="mostrarImagenPreview('Cc1')"></button>
+    <button class="ButtonCc2" onclick="mostrarImagen('Cc2', [0.5, 0.5], [1000,2000,3000])"
+      onmouseover="mostrarImagenPreview('Cc2')"></button>
+    <button class="ButtonCc3" onclick="mostrarImagen('Cc3', [0.7, 0.7], [1000,2000,3000])"
+      onmouseover="mostrarImagenPreview('Cc3')"></button>
+    <button class="ButtonCc4" onclick="mostrarImagen('Cc4', [0.7, 0.7], [1000,2000,3000])"
+      onmouseover="mostrarImagenPreview('Cc4')"></button>
+    <button class="ButtonCc5" onclick="mostrarImagen('Cc5', [0.7, 0.7], [1000,2000,3000])"
+      onmouseover="mostrarImagenPreview('Cc5')"></button>
+    <button class="ButtonCc6" onclick="mostrarImagen('Cc6', [0.5, 0.5], [1000,2000,3000])"
+      onmouseover="mostrarImagenPreview('Cc6')"></button>
+    <button class="ButtonCc7" onclick="mostrarImagen('Cc7', [0.5, 0.5], [1000,2000,3000])"
+      onmouseover="mostrarImagenPreview('Cc7')"></button>
+    <button class="ButtonCc8" onclick="mostrarImagen('Cc8', [0.6, 0.6], [1000,2000,3000])"
+      onmouseover="mostrarImagenPreview('Cc8')"></button>
+
+    <img id="Cc1" src="img/Cc/Cc1.png" alt="Imagen a pantalla completa" />
+    <img id="Cc1preview" src="img/Cc/Cc1.png" alt="Imagen preview boton" />
+
+    <img id="Cc2" src="img/Cc/Cc2.png" alt="Imagen a pantalla completa" />
+    <img id="Cc2preview" src="img/Cc/Cc2.png" alt="Imagen preview boton" />
+
+    <img id="Cc3" src="img/Cc/Cc3.png" alt="Imagen a pantalla completa" />
+    <img id="Cc3preview" src="img/Cc/Cc3.png" alt="Imagen preview boton" />
+
+    <img id="Cc4" src="img/Cc/Cc4.png" alt="Imagen a pantalla completa" />
+    <img id="Cc4preview" src="img/Cc/Cc4.png" alt="Imagen preview boton" />
+
+    <img id="Cc5" src="img/Cc/Cc5.png" alt="Imagen a pantalla completa" />
+    <img id="Cc5preview" src="img/Cc/Cc5.png" alt="Imagen preview boton" />
+
+    <img id="Cc6" src="img/Cc/Cc6.png" alt="Imagen a pantalla completa" />
+    <img id="Cc6preview" src="img/Cc/Cc6.png" alt="Imagen preview boton" />
+
+    <img id="Cc7" src="img/Cc/Cc7.png" alt="Imagen a pantalla completa" />
+    <img id="Cc7preview" src="img/Cc/Cc7.png" alt="Imagen preview boton" />
+
+    <img id="Cc8" src="img/Cc/Cc8.png" alt="Imagen a pantalla completa" />
+    <img id="Cc8preview" src="img/Cc/Cc8.png" alt="Imagen preview boton" />
+  </div>
+  <script>
+    function mostrarImagen(imageId, opacity, times) {
+      console.log(`ImageID: ${imageId}`);
+      console.log(`Opcity: ${opacity}`);
+      console.log(`Times: ${times}`);
+      var imagen = document.getElementById(imageId);
+      imagen.style.opacity = 0;
+
+      setTimeout(function () {
+        imagen.style.display = "block";
         imagen.style.opacity = 0;
+      }, 0);
 
-        setTimeout(function () {
-          imagen.style.display = "block";
-          imagen.style.opacity = 0;
-        }, 0);
+      setTimeout(function () {
+        imagen.style.opacity = opacity[0];
+      }, times[0]);
 
-        setTimeout(function () {
-          imagen.style.opacity = opacity[0];
-        }, times[0]);
+      setTimeout(function () {
+        imagen.style.opacity = opacity[1];
+      }, times[1]);
 
-        setTimeout(function () {
-          imagen.style.opacity = opacity[1];
-        }, times[1]);
+      setTimeout(function () {
+        imagen.style.opacity = 0;
+      }, times[2]);
 
-        setTimeout(function () {
-          imagen.style.opacity = 0;
-        }, times[2]);
-
-        setTimeout(function () {
-          imagen.style.opacity = "0";
-          imagen.style.display = "none";
-        }, 8000);
-      }
-
-      function mostrarImagenPreview(imageId) {
-        var imagen = document.getElementById(imageId + "preview");
+      setTimeout(function () {
         imagen.style.opacity = "0";
+        imagen.style.display = "none";
+      }, 8000);
+    }
 
-        setTimeout(function () {
-          imagen.style.display = "block";
-          imagen.style.opacity = "0";
-        }, 0);
+    function mostrarImagenPreview(imageId) {
+      var imagen = document.getElementById(imageId + "preview");
+      imagen.style.opacity = "0";
 
-        setTimeout(function () {
-          imagen.style.opacity = "1";
-        }, 200);
+      setTimeout(function () {
+        imagen.style.display = "block";
+        imagen.style.opacity = "0";
+      }, 0);
 
-        setTimeout(function () {
-          imagen.style.opacity = "1";
-        }, 2500);
+      setTimeout(function () {
+        imagen.style.opacity = "1";
+      }, 200);
 
-        setTimeout(function () {
-          imagen.style.opacity = "0";
-        }, 2600);
+      setTimeout(function () {
+        imagen.style.opacity = "1";
+      }, 2500);
 
-        setTimeout(function () {
-          imagen.style.opacity = "0";
-          imagen.style.display = "none";
-        }, 8000);
-      }
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="libs/turn.min.js"></script>
-    <script src="libs/turn.js"></script>
-    <script src="libs/ztext.min.js"></script>
-    <script src="libs/virtualpointer.js"></script>
-    <script src="libs/eventrecorder.js"></script>
-  </body>
+      setTimeout(function () {
+        imagen.style.opacity = "0";
+      }, 2600);
+
+      setTimeout(function () {
+        imagen.style.opacity = "0";
+        imagen.style.display = "none";
+      }, 8000);
+    }
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="libs/turn.min.js"></script>
+  <script src="libs/turn.js"></script>
+  <script src="libs/ztext.min.js"></script>
+  <script src="libs/virtualpointer.js"></script>
+  <script src="libs/eventrecorder.js"></script>
+</body>
+
 </html>

@@ -83,6 +83,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let paints = document.getElementsByClassName("paint");
   let sizeVisualizer = document.getElementById("sizeVisualizer");
   const page1Hitbox = document.getElementById("page1hitbox");
+  const paginasCargadas = {};
+
 
   /* CAMBIO DE CURSOR */
 
@@ -1155,7 +1157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
       // Intentar verificar las credenciales
-      const idLogeado = await verificarUsuarioInicioSesion(
+      idLogeado = await verificarUsuarioInicioSesion(
         campoNameLogin.value,
         campoPasswordLogin.value
       );
@@ -1191,6 +1193,12 @@ document.addEventListener("DOMContentLoaded", function () {
       loadCursorSelection(idLogeado);
 
       cargarNotas(idLogeado);
+
+      horarioImg.style.setProperty(
+        "transform",
+        "translateX(-10px) scale(0.02, 0.02)",
+        "important"
+      );  
 
       // Cerrar el formulario de inicio de sesión
       loginScreen.click();
@@ -1501,7 +1509,14 @@ document.addEventListener("DOMContentLoaded", function () {
       // Actualizar estado de los elementos
       actualizarEstadoElementosSesion();
 
-      // Recargar la página o redirigir si es necesario
+
+      horarioImg.style.setProperty(
+        "transform",
+        "translateX(-75px) scale(0.02, 0.02)",
+        "important"
+      );
+
+
       location.reload();
     });
   }
@@ -3597,6 +3612,16 @@ function setNormalPrice(skinContainer, price) {
           boxx.style.marginRight = "800px";
           allESC.style.marginLeft = "-400px";
           helloMessage.style.marginLeft = "-400px";
+          horarioImg.style.setProperty(
+            "transition",
+            "margin-left 0.9s ease, margin-top 1.3s ease, transform 0.9s ease, filter 2s ease",
+            "important"
+          );
+          horarioImg.style.setProperty(
+            "transform",
+            "translateX(-410px) scale(0.02, 0.02)",
+            "important"
+          );
         }, 10);
       } else {
         notebook.style.opacity = "0";
@@ -3605,6 +3630,16 @@ function setNormalPrice(skinContainer, price) {
         allESC.style.marginLeft = "0px";
         helloMessage.style.marginLeft = "0px";
         notas.classList.remove("active");
+        horarioImg.style.setProperty(
+          "transition",
+          "margin-left 0.9s ease, margin-top 1.3s ease, transform 0.9s ease, filter 2s ease",
+          "important"
+        );
+        horarioImg.style.setProperty(
+          "transform",
+          "translateX(-10px) scale(0.02, 0.02)",
+          "important"
+        );
 
         paintOF();
 
@@ -3628,19 +3663,25 @@ function setNormalPrice(skinContainer, price) {
   window.addEventListener("load", function () {
     horarioImg.style.transition = "none";
 
-    // Configura el estado inicial de `horarioImg` con `!important`
-    horarioImg.style.setProperty("display", "none", "important");
-    horarioImg.style.setProperty("opacity", "0", "important");
     horarioImg.style.setProperty("margin-left", "350px", "important");
     horarioImg.style.setProperty("margin-top", "900px", "important");
-    horarioImg.style.setProperty(
-      "transform",
-      "translateX(-48px) scale(0.07, 0.01)",
-      "important"
-    );
+    if(idLogeado){
+      horarioImg.style.setProperty(
+        "transform",
+        "translateX(-10px) scale(0.02, 0.02)",
+        "important"
+      );
+    }else{
+      horarioImg.style.setProperty(
+        "transform",
+        "translateX(-75px) scale(0.02, 0.02)",
+        "important"
+      );
+    }
+
     horarioImg.style.setProperty(
       "filter",
-      "drop-shadow(10px 10px 20px #000000b3) blur(100px)",
+      "drop-shadow(10px 10px 20px #000000b3) brightness(0) saturate(100%) invert(87%) sepia(12%) saturate(575%) hue-rotate(179deg) brightness(96%) contrast(91%)",
       "important"
     );
 
@@ -3664,7 +3705,7 @@ function setNormalPrice(skinContainer, price) {
               // Configura el estilo para la animación de entrada
               horarioImg.style.setProperty(
                 "transition",
-                "opacity 1.5s ease, margin-left 0.9s ease, margin-top 0.5s ease, transform 1s ease, filter 0.5s ease",
+                "margin-left 0.9s ease, margin-top 0.5s ease, transform 1s ease, filter 0.5s ease",
                 "important"
               );
               horarioImg.style.setProperty("opacity", "1", "important");
@@ -3676,7 +3717,7 @@ function setNormalPrice(skinContainer, price) {
               );
               horarioImg.style.setProperty(
                 "filter",
-                "drop-shadow(10px 10px 20px #000000b3) blur(0px)",
+                "drop-shadow(10px 10px 20px #000000b3)",
                 "important"
               );
               horarioImg.style.setProperty("margin-top", "-40px", "important");
@@ -3688,30 +3729,39 @@ function setNormalPrice(skinContainer, price) {
             // Configura el estilo para la animación de salida
             horarioImg.style.setProperty(
               "transition",
-              "opacity 1.5s ease, margin-left 0.9s ease, margin-top 1.3s ease, transform 1s ease, filter 5s ease",
+              "margin-left 0.9s ease, margin-top 1.3s ease, transform 1s ease, filter 2s ease",
               "important"
             );
-            horarioImg.style.setProperty("opacity", "0", "important");
+            horarioImg.style.setProperty("opacity", "1", "important");
             horarioImg.style.setProperty("margin-left", "350px", "important");
-            horarioImg.style.setProperty(
-              "transform",
-              "translateX(-48px) scale(0.07, 0.01)",
-              "important"
-            );
+            if(idLogeado){
+              horarioImg.style.setProperty(
+                "transform",
+                "translateX(-10px) scale(0.02, 0.02)",
+                "important"
+              );
+            }else{
+              horarioImg.style.setProperty(
+                "transform",
+                "translateX(-75px) scale(0.02, 0.02)",
+                "important"
+              );
+            }
+            console.log(idLogeado);
             horarioImg.style.setProperty(
               "filter",
-              "drop-shadow(10px 10px 20px #000000b3) blur(100px)",
+              "drop-shadow(10px 10px 20px #000000b3) brightness(0) saturate(100%) invert(87%) sepia(12%) saturate(575%) hue-rotate(179deg) brightness(96%) contrast(91%)",
               "important"
             );
-            horarioImg.style.setProperty("margin-top", "900px", "important");
+            horarioImg.style.setProperty("margin-top", "898px", "important");
             boxx.style.marginLeft = "0px";
             allESC.style.marginLeft = "0px";
             helloMessage.style.marginLeft = "0px";
-
-            setTimeout(() => {
-              horarioImg.style.setProperty("display", "none", "important");
-            }, 1000);
           }
+
+          setTimeout(() => {
+            horarioImg.style.setProperty("display", "flex", "important");
+          }, 1000);
 
           setTimeout(() => {
             horarioAnimating = false;
@@ -3918,6 +3968,7 @@ function setNormalPrice(skinContainer, price) {
       const pageNumber = pageElement.getAttribute("page");
       const content = textElement.innerHTML;
       notas[pageNumber] = content;
+
     });
 
     const notasJSON = JSON.stringify(notas);
@@ -3942,30 +3993,25 @@ function setNormalPrice(skinContainer, price) {
   });
 
   async function cargarNotas(idLogeado) {
-    // Obtenemos las notas desde la base de datos
     const notasJSON = await obtenerNotasDeUsuario(idLogeado);
-
     if (notasJSON) {
-      // Convertimos la cadena JSON a un objeto
-      const notas = JSON.parse(notasJSON);
-
-      // Iteramos sobre las páginas y colocamos el contenido en los elementos correspondientes
-      for (const pageNumber in notas) {
-        const content = notas[pageNumber];
-
-        // Seleccionamos el elemento 'text' correspondiente a la página
-        const textElement = document.querySelector(
-          `[page="${pageNumber}"] .text`
-        );
-
-        if (textElement) {
-          textElement.innerHTML = content;
-        }
-      }
+       const notas = JSON.parse(notasJSON);
+ 
+       // Iterar sobre todas las páginas de notas y verificar
+       for (const pageNumber in notas) {
+          const content = notas[pageNumber];
+          const textElement = document.querySelector(`[page="${pageNumber}"] .text`);
+          if (textElement) {
+             textElement.innerHTML = content;
+             //console.log(`Cargando contenido en la página ${pageNumber}:`, content);
+          } else {
+             //console.warn(`No se encontró el contenedor de texto para la página ${pageNumber}`);
+          }
+       }
     } else {
-      console.log("No hay notas para cargar o ocurrió un error al obtenerlas.");
+       console.log("No hay notas para cargar o ocurrió un error al obtenerlas.");
     }
-  }
+ }
 
   let textSelected = true;
   let paintChangesBuffer = {};
@@ -4510,21 +4556,22 @@ function setNormalPrice(skinContainer, price) {
   async function obtenerDibujosDeUsuario(idUsuario) {
     const url = `${supabaseUrl}?id=eq.${idUsuario}`;
     try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          apikey: supabaseKey,
-          Authorization: `Bearer ${supabaseKey}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      return data.length > 0 ? data[0].dibujos : null;
+       const response = await fetch(url, {
+          method: "GET",
+          headers: {
+             apikey: supabaseKey,
+             Authorization: `Bearer ${supabaseKey}`,
+             "Content-Type": "application/json",
+          },
+       });
+       const data = await response.json();
+       console.log("Dibujos obtenidos de la base de datos:", data);
+       return data.length > 0 ? data[0].dibujos : null;
     } catch (error) {
-      console.error("Error al obtener los dibujos:", error);
-      return null;
+       console.error("Error al obtener los dibujos:", error);
+       return null;
     }
-  }
+ }
 
   const h2 = document.querySelector(".h2");
 
@@ -4542,7 +4589,9 @@ function setNormalPrice(skinContainer, price) {
           .find('[page="35"]')
           .toggleClass("fixed", page !== 36);
       },
-      turned: function (event, page) {},
+      turned: function (event, page) {
+        cargarDatosPaginasCercanas(page);
+      },
     },
   });
 
@@ -4611,34 +4660,28 @@ function setNormalPrice(skinContainer, price) {
 
   function renderizarDibujos(pixelDataArray, container) {
     pixelDataArray.forEach((pixelData) => {
-      const { x, y, color } = pixelData;
-      const pixel = container.querySelector(
-        `.pixel[data-x="${x}"][data-y="${y}"]`
-      );
-      if (pixel) {
-        pixel.style.backgroundColor = color;
-        pixel.dataset.color = color;
-      }
+       const { x, y, color } = pixelData;
+       const pixel = container.querySelector(`.pixel[data-x="${x}"][data-y="${y}"]`);
+       if (pixel) {
+          pixel.style.backgroundColor = color || "transparent"; // Aplica el color o transparente
+          pixel.dataset.color = color || "transparent";
+       } else {
+          //console.warn(`No se encontró el píxel en (${x}, ${y}) en el contenedor de la página.`);
+       }
     });
-  }
+ }
 
-  function generarCuadriculaDePixelesEnContenedor(container) {
-    if (container.dataset.initialized) {
-      console.log(
-        "El contenedor ya está inicializado, saliendo de la función."
-      );
-      return;
-    }
+ function generarCuadriculaDePixelesEnContenedor(container) {
+  if (container.dataset.initialized) return;
 
-    container.innerHTML = "";
-    const pixelSize = 7;
-    const containerWidth = 450;
-    const containerHeight = 700;
-    const pixelsHorizontal = Math.floor(containerWidth / pixelSize);
-    const pixelsVertical = Math.floor(containerHeight / pixelSize);
+  const pixelSize = 7;
+  const containerWidth = 450;
+  const containerHeight = 700;
+  const pixelsHorizontal = Math.floor(containerWidth / pixelSize);
+  const pixelsVertical = Math.floor(containerHeight / pixelSize);
 
-    for (let y = 0; y < pixelsVertical; y++) {
-      for (let x = 0; x < pixelsHorizontal; x++) {
+  for (let y = 0; y < pixelsVertical; y++) {
+     for (let x = 0; x < pixelsHorizontal; x++) {
         const pixel = document.createElement("div");
         pixel.classList.add("pixel");
         pixel.style.width = `${pixelSize}px`;
@@ -4650,9 +4693,67 @@ function setNormalPrice(skinContainer, price) {
         pixel.dataset.x = x;
         pixel.dataset.y = y;
         container.appendChild(pixel);
-      }
-    }
-
-    container.dataset.initialized = true;
+     }
   }
+
+  container.dataset.initialized = true;
+}
+
+function cargarDatosPaginasCercanas(paginaActual) {
+  const paginasACargar = [paginaActual - 2, paginaActual - 1, paginaActual, paginaActual + 1, paginaActual + 2];
+
+  paginasACargar.forEach((pagina) => {
+     if (pagina > 0 && pagina <= $("#notebook").turn("pages")) { // Asegúrate de que la página esté dentro de los límites
+        if (!paginasCargadas[pagina]) { // Verifica si la página ya fue cargada
+           const paintContainer = document.querySelector(`[page="${pagina}"] .paint`);
+           if (paintContainer) generarCuadriculaDePixelesEnContenedor(paintContainer);
+           
+           cargarDatosDePagina(pagina);
+           paginasCargadas[pagina] = true; // Marca la página como cargada
+        }
+     }
+  });
+}
+
+
+async function cargarDatosDePagina(pageNumber) {
+  // Verifica si la página ya fue cargada
+  if (paginasCargadas[pageNumber]) {
+     console.log(`La página ${pageNumber} ya fue cargada anteriormente.`);
+     return;
+  }
+
+  // Marcar la página como cargada antes de cargar datos para evitar duplicaciones
+  paginasCargadas[pageNumber] = true;
+
+  // Carga las notas de la página
+  const notasJSON = await obtenerNotasDeUsuario(idLogeado);
+  if (notasJSON) {
+     const notas = JSON.parse(notasJSON);
+     const content = notas[pageNumber];
+
+     const textElement = document.querySelector(`[page="${pageNumber}"] .text`);
+     if (textElement) {
+        textElement.innerHTML = content;
+        //console.log(`Notas cargadas en la página ${pageNumber}:`, content);
+     } else {
+        //console.warn(`No se encontró el contenedor de texto para la página ${pageNumber}`);
+     }
+  }
+
+  // Carga los dibujos de la página
+  const dibujosJSON = await obtenerDibujosDeUsuario(idLogeado);
+  if (dibujosJSON) {
+     const dibujos = JSON.parse(dibujosJSON);
+     const paintContainer = document.querySelector(`[page="${pageNumber}"] .paint`);
+
+     if (paintContainer && dibujos[pageNumber]) {
+        renderizarDibujos(dibujos[pageNumber], paintContainer);
+        //console.log(`Dibujos cargados en la página ${pageNumber}`);
+     } else {
+        //console.warn(`No se encontró el contenedor de dibujos para la página ${pageNumber}`);
+     }
+  }
+}
+
 });
