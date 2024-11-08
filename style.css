@@ -413,7 +413,7 @@ nav a:hover {
 #loginScreen,
 #registerScreen {
   z-index: -1;
-  opacity: 2;
+  opacity: 0;
 }
 
 #registerScreen.active {
