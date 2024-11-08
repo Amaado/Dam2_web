@@ -86,6 +86,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const paginasCargadas = {};
 
 
+
+
   /* CAMBIO DE CURSOR */
 
   let idLogeado = localStorage.getItem("idLogeado");
@@ -430,6 +432,7 @@ document.addEventListener("DOMContentLoaded", function () {
         flechaaModifiers.src = "img/flechaDay.png";
       }
       if (logoutButton) {
+        //setImageFromCacheOrAssign(logoutButton,"logoutDay", "img/logoutDay.png");
         logoutButton.src = "img/logoutDay.png";
       }
     } else {
@@ -454,6 +457,7 @@ document.addEventListener("DOMContentLoaded", function () {
         flechaaModifiers.src = "img/flechaNight.png";
       }
       if (logoutButton) {
+        //setImageFromCacheOrAssign(logoutButton,"logoutNight", "img/logoutNight.png");
         logoutButton.src = "img/logoutNight.png";
       }
     }
