@@ -520,8 +520,7 @@
       <a draggable="false" id="loginButton">Login</a>
       <a draggable="false" id="registerButton">Register</a>
       <img draggable="false" id="logoutButton" />
-      <button onclick="capturarImagen()">Capturar como imagen</button>
-      <img id="imagen" alt="captura" />
+      <button onclick="capturarImagen()">Capturar</button>
     </nav>
 
 
@@ -530,6 +529,7 @@
     </div>
 
     <div id="notebookContainer">
+      <img id="notebookImg" class="notebookImgSingle"/>
       <div id="notebook">
         <div class="hard" page="1">
           <div class="portada"></div>
@@ -1047,7 +1047,9 @@
         const contenedor = document.getElementById('notebook');
         html2canvas(contenedor, { backgroundColor: null }).then((canvas) => {
             const imgData = canvas.toDataURL('image/png');
-            document.getElementById('imagen').src = imgData;
+            const notebookImg = document.getElementById('notebookImg');
+            notebookImg.src = imgData;
+            notebook.style.display = "flex";
         });
     }
 

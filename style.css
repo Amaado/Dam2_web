@@ -2944,3 +2944,25 @@ div.img img {
   font-family: register;
   font-size: 0.5cm;
 }
+
+#notebookImg{
+  position: absolute;
+  height: 700px;
+  width: auto;
+  z-index: 200;
+  margin-top: -110px;
+    /*filter: brightness(0) saturate(100%) invert(63%) sepia(28%) saturate(5111%) hue-rotate(84deg) brightness(116%) contrast(125%);
+  opacity: 0.5;*/
+}
+
+.notebookImgDouble{
+  margin-left: 1165px;
+}
+
+.notebookImgSingleFront{
+  margin-left: 715px;
+}
+
+.notebookImgSingle{
+  margin-left: 1615px;
+}
