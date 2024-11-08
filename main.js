@@ -398,8 +398,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* CAMBIOS DE ESTILO CUANDO CAMBIO DE TEMA */
-
-  checkbox.checked = localStorage.getItem("checkboxStatus") === "true";
+  let checkboxStatus = localStorage.getItem("checkboxStatus");
+  
+  if (checkboxStatus === null) {
+      checkboxStatus = "false";
+      localStorage.setItem("checkboxStatus", checkboxStatus);
+  }
+  
+  checkbox.checked = (checkboxStatus === "true");
 
   function applyTheme() {
     if (checkbox.checked) {
