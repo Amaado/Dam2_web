@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      <div id="rtxContainer">
+      <div id="rtxContainer" class="tooltip-container tooltip-text-left" data-tooltip="Este elemento puede causar realentización de la página. Intensidad:" data-tooltipState="muy alta">
         <img id="rtxON" class="rtxImg" src="img/rtxON.png" draggable="false" />
         <img id="rtxOFF" class="rtxImg" src="img/rtxOFF.png" draggable="false" />
         <img id="rtxBLANK" class="rtxImg" src="img/rtxBLANK.png" draggable="false" />
@@ -54,7 +54,7 @@
         <img id="volumenImg" class="volumenImgNight" draggable="false" />
         <div id="volumenImgDropShadow"></div>
         <input type="range" min="0" max="100" class="slider" id="volumeSlider" />
-        <div class="tooltip" id="tooltip">
+        <div class="tooltipVolume" id="tooltipVolume">
           <div id="tooltipLabel"></div>
           <img id="volumenImgUd" src="img/cursors/portadas/cccc.png" draggable="false" />
         </div>
@@ -374,7 +374,7 @@
           </div>
         </div>
 
-        <img class="skinPortada" src="img/cursors/portadas/cccc_jefeEstudios.png" draggable="false" />
+        <img class="skinPortada" src="img/cursors/portadas/cccc_checkbox.png" draggable="false" />
         <div class="tituloSkin">Cc Checkbox</div>
         <div class="releaseDate">Released: 09/11/2024</div>
         <div class="priceContainer">
@@ -1334,7 +1334,7 @@
     
       // Eliminar la cuadrícula
       if (cblBackground) {
-        cblBackground.remove();
+        //cblBackground.remove();
         cblBackground = null;
       }
     }
@@ -1382,7 +1382,7 @@
     function isInteractiveElement(element) {
       const skinsContainer = document.getElementById("skinsContainer");
       const modifiersContainer = document.getElementById("modifiersContainer");
-      
+
       if(skinsContainer.classList.contains("active") || modifiersContainer.classList.contains("active")){
         return true;
       }
@@ -1391,7 +1391,9 @@
         element.closest(".slider") ||
         element.closest("#settingsImgContainer") ||
         element.closest("#volumenImg") ||
-        element.closest("#rtxContainer")){
+        element.closest("#rtxContainer") ||
+        element.closest("#notebook") ||
+        element.closest("#controls")){
         return true;
       }
       return (
@@ -1444,7 +1446,7 @@
     // Función para manejar el redimensionamiento de la ventana
     function handleResize() {
       if (cblBackground) {
-        cblBackground.remove();
+        //cblBackground.remove();
         cblBackground = null;
       }
       initBackground();

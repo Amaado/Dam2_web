@@ -1623,7 +1623,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "Ohh Mónica, Mónica... tu voz más melódica que una harmónica",
       ];
 
-      console.log("HELLOMESSAGE: Empresas");
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
     }
 
@@ -1646,7 +1645,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "O atiendes a Iván o te va a ir mal",
       ];
 
-      console.log("HELLOMESSAGE: Moviles y datos SIN JUEVES");
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
     }
 
@@ -1657,7 +1655,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "Iván nos enseña bien con un poco de música Zen",
       ];
 
-      console.log("HELLOMESSAGE: Moviles y datos JUEVES");
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
     }
 
@@ -1674,7 +1671,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "Sprint final, ¡ánimos!",
       ];
 
-      console.log("HELLOMESSAGE: Interfaces");
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
     }
 
@@ -1693,7 +1689,6 @@ document.addEventListener("DOMContentLoaded", function () {
         `¡Hola ${nombre}, quieres trabajar en Odoo?`,
       ];
 
-      console.log("HELLOMESSAGE: Sistemas empresariales");
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
     }
 
@@ -1712,7 +1707,6 @@ document.addEventListener("DOMContentLoaded", function () {
         `Queres atender de una vez ${nombre}? Jose Miguel se merece más`,
       ];
 
-      console.log("HELLOMESSAGE: Servicios y procesos");
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
     }
 
@@ -1731,7 +1725,6 @@ document.addEventListener("DOMContentLoaded", function () {
         `¡Hello ${nombre}, Reading-1. Genshing Impact is a game originaly...`,
       ];
 
-      console.log("HELLOMESSAGE: Inglés");
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
     }
 
@@ -1748,7 +1741,6 @@ document.addEventListener("DOMContentLoaded", function () {
         `Toca un descansillo... ¡menos mal!`,
       ];
 
-      console.log("HELLOMESSAGE: Comienzo recreo");
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
     }
 
@@ -1765,7 +1757,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "Otra vez a clase... ME DERRItOOOooo...",
       ];
 
-      console.log("HELLOMESSAGE: Final recreo");
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
     }
 
@@ -1784,7 +1775,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "Esto de ser un simple mensaje y pasarse la eternidad aquí cansa más que cualquier ciclo superior de tarde en aEstrada...",
       ];
 
-      console.log("HELLOMESSAGE: Mensaje final del día");
       helloMessage = messages[Math.floor(Math.random() * messages.length)];
     }
 
@@ -2374,24 +2364,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* VOLUMEN CONTROLLER */
   const slider = document.getElementById("volumeSlider");
-  const tooltip = document.getElementById("tooltip");
+  const tooltipVolume = document.getElementById("tooltipVolume");
   const toolttooltipLabelip = document.getElementById("tooltipLabel");
   const volumenImgUd = document.getElementById("volumenImgUd");
   const volumenImg = document.getElementById("volumenImg");
   const volumenImgDropShadow = document.getElementById("volumenImgDropShadow");
   let lastValue;
 
-  // Función para actualizar el tooltip y la imagen del volumen
+  // Función para actualizar el tooltipVolume y la imagen del volumen
   function updateTooltipAndImg() {
     let valueReal = slider.value;
     let value = slider.max - slider.value;
 
     toolttooltipLabelip.textContent = `${slider.max - value}`;
-    // Posiciona el tooltip en función del valor del slider
+    // Posiciona el tooltipVolume en función del valor del slider
     const maxSliderValue = slider.max;
     const sliderHeight = 150; // Altura total del slider en píxeles
     const offset = sliderHeight - (value / maxSliderValue) * sliderHeight - 22;
-    tooltip.style.top = `${offset}px`;
+    tooltipVolume.style.top = `${offset}px`;
 
     // Guardar el último valor si no es 0
     if (valueReal > 0) {
@@ -2400,13 +2390,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (valueReal == 100) {
-      tooltip.style.minWidth = "60px";
+      tooltipVolume.style.minWidth = "60px";
       volumenImgUd.style.left = "13px";
     } else if (valueReal > 9 && valueReal < 100) {
-      tooltip.style.minWidth = "50px";
+      tooltipVolume.style.minWidth = "50px";
       volumenImgUd.style.left = "3px";
     } else if (valueReal < 10) {
-      tooltip.style.minWidth = "37px";
+      tooltipVolume.style.minWidth = "37px";
       volumenImgUd.style.left = "-11px";
     }
 
@@ -2479,7 +2469,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // Actualizar el tooltip y el volumen en la página
+    // Actualizar el tooltipVolume y el volumen en la página
     updateTooltipAndImg();
     updateAudioMaster();
   }
@@ -2545,13 +2535,13 @@ document.addEventListener("DOMContentLoaded", function () {
   volumenImg.addEventListener("mouseenter", volumeDropShadowShow);
   volumenImg.addEventListener("mouseleave", volumeDropShadowHide);
 
-  /* MOSTRAR TOOLTIP CUANDO FOCUS */
+  /* MOSTRAR tooltipVolume CUANDO FOCUS */
   function volumeTooltipHide() {
-    tooltip.style.opacity = "0%";
+    tooltipVolume.style.opacity = "0%";
   }
 
   function volumeTooltipShow() {
-    tooltip.style.opacity = "100%";
+    tooltipVolume.style.opacity = "100%";
   }
 
   slider.addEventListener("mousedown", volumeTooltipShow);
@@ -3239,6 +3229,18 @@ function setNormalPrice(skinContainer, price) {
       cursorPurpleish.style.display = "none";
       checkboxland.style.display = "block";
       checkboxlandBackground.style.display = "block";
+      if(checkbox.checked){
+        checkboxland.classList.remove("night");
+        checkboxlandBackground.classList.remove("night");
+        checkboxland.classList.add("day");
+        checkboxlandBackground.classList.add("day");
+      }else{
+        checkboxland.classList.remove("day");
+        checkboxlandBackground.classList.remove("day");
+        checkboxland.classList.add("night");
+        checkboxlandBackground.classList.add("night");
+      }
+
       setTimeout(() => {
         resetAnimation();
         resetAnimationBackground();
@@ -3254,70 +3256,6 @@ function setNormalPrice(skinContainer, price) {
             rule.style.background = `transparent`;
             rule.style.backdropFilter = `blur(3px) `;
           }
-          if(checkbox.checked){
-            console.log("HOLAAAAAAAAAA")
-            //Day
-            if (rule.selectorText === "#checkboxland input[type='checkbox']") {
-              rule.style.setProperty("border", "2px solid #819db8");
-              rule.style.setProperty("background-color", "#bfd4e9");
-            }
-          
-            if (rule.selectorText === "#checkboxland input[type='checkbox']:checked") {
-              rule.style.setProperty("background-color", "#acc4db");
-              rule.style.setProperty("border-color", "#acc4db");
-            }
-          
-            if (rule.selectorText === "#checkboxland input[type='checkbox']:checked::before") {
-              rule.style.setProperty("color", "#345178");
-            }
-          
-            if (rule.selectorText === "#checkboxlandBackground input[type='checkbox']") {
-              rule.style.setProperty("outline", "2px solid #68654f");
-              rule.style.setProperty("background-color", "#dddcb0");
-            }
-          
-            if (rule.selectorText === "#checkboxlandBackground input[type='checkbox']:checked") {
-              rule.style.setProperty("background-color", "#68654f");
-              rule.style.setProperty("border-color", "#68654f");
-            }
-          
-            if (rule.selectorText === "#checkboxlandBackground input[type='checkbox']:checked::before") {
-              rule.style.setProperty("color", "#dddcb0");
-            }
-
-          }else{
-            //Night
-            if (rule.selectorText === "#checkboxland input[type='checkbox']") {
-              rule.style.setProperty("border", "2px solid #819db8");
-              rule.style.setProperty("background-color", "#bfd4e9");
-            }
-          
-            if (rule.selectorText === "#checkboxland input[type='checkbox']:checked") {
-              rule.style.setProperty("background-color", "#acc4db");
-              rule.style.setProperty("border-color", "#acc4db");
-            }
-          
-            if (rule.selectorText === "#checkboxland input[type='checkbox']:checked::before") {
-              rule.style.setProperty("color", "#345178");
-            }
-          
-            if (rule.selectorText === "#checkboxlandBackground input[type='checkbox']") {
-              rule.style.setProperty("outline", "2px solid #406391");
-              rule.style.setProperty("background-color", "#1c2128");
-            }
-          
-            if (rule.selectorText === "#checkboxlandBackground input[type='checkbox']:checked") {
-              rule.style.setProperty("background-color", "#345178");
-              rule.style.setProperty("border-color", "#345178");
-            }
-          
-            if (rule.selectorText === "#checkboxlandBackground input[type='checkbox']:checked::before") {
-              rule.style.setProperty("color", "#1c2128");
-            }
-
-          }
-
-
         }
 
       }, 500);     
@@ -4054,7 +3992,7 @@ function setNormalPrice(skinContainer, price) {
       cursorPurpleish.style.marginTop = "0px";
     }
 
-    // Posiciona el tooltip en función del valor del slider
+    // Posiciona el tooltipVolume en función del valor del slider
     const sliderWidth = sliderPaint.offsetWidth;
     const thumbWidth = 25; // Ancho de la bola del slider
     const tooltipOffset =
@@ -4064,7 +4002,7 @@ function setNormalPrice(skinContainer, price) {
     tooltipPaint.style.left = `${
       sliderPaint.offsetLeft + tooltipOffset - tooltipPaint.offsetWidth / 2
     }px`;
-    tooltipPaint.style.top = `${sliderPaint.offsetTop - 35}px`; // Ajusta la posición vertical del tooltip
+    tooltipPaint.style.top = `${sliderPaint.offsetTop - 35}px`; // Ajusta la posición vertical del tooltipVolume
 
     selectedRadius = sliderPaint.value;
 
@@ -4072,35 +4010,35 @@ function setNormalPrice(skinContainer, price) {
     localStorage.setItem("sliderPaintValue", valueReal);
   }
 
-  // Muestra el tooltip cuando el ratón está presionado
+  // Muestra el tooltipVolume cuando el ratón está presionado
   function showTooltip() {
     tooltipPaint.style.opacity = "1";
     isMouseDown = true;
   }
 
-  // Oculta el tooltip cuando el ratón se suelta
+  // Oculta el tooltipVolume cuando el ratón se suelta
   function hideTooltip() {
     tooltipPaint.style.opacity = "0";
     isMouseDown = false;
   }
 
-  // Solo actualiza el tooltip si el ratón está presionado
+  // Solo actualiza el tooltipVolume si el ratón está presionado
   function handleSliderMove() {
     if (isMouseDown) {
       updateTooltipPaint();
     }
   }
 
-  // Añadir los eventos de mostrar y ocultar tooltip
+  // Añadir los eventos de mostrar y ocultar tooltipVolume
   sliderPaint.addEventListener("mousedown", showTooltip);
   document.addEventListener("mouseup", hideTooltip);
   sliderPaint.addEventListener("input", handleSliderMove);
 
-  // Iniciar el tooltip con el valor del slider si está en localStorage
+  // Iniciar el tooltipVolume con el valor del slider si está en localStorage
   if (localStorage.getItem("sliderPaintValue")) {
     sliderPaint.value = localStorage.getItem("sliderPaintValue");
     updateTooltipPaint();
-    tooltipPaint.style.opacity = "0"; // Ocultar el tooltip inicialmente
+    tooltipPaint.style.opacity = "0"; // Ocultar el tooltipVolume inicialmente
   }
 
   /* CONTROLAR QUE EL TEXTO DE LA LIBRETA NO SOBREPASE EL CONTENEDOR */
@@ -5027,6 +4965,99 @@ function setNormalPrice(skinContainer, price) {
   }
 
 
+
+
+  /* TOOLTIPS */
+
+  const tooltipContainers = document.querySelectorAll('.tooltip-container');
+
+  tooltipContainers.forEach(tooltipContainer => {
+    let timer;
+    let lastMousePosition = { x: 0, y: 0 };
+    let tooltipVisible = false;
+    let tooltip;
+  
+    tooltipContainer.addEventListener('mouseenter', function(e) {
+      resetTimer(e);
+    });
+  
+    tooltipContainer.addEventListener('mousemove', function(ev) {
+      lastMousePosition.x = ev.clientX;
+      lastMousePosition.y = ev.clientY;
+      if (!tooltipVisible) {
+        resetTimer(ev);
+      }
+    });
+  
+    tooltipContainer.addEventListener('mouseleave', function() {
+      clearTimeout(timer);
+      removeTooltip();
+      tooltipVisible = false;
+    });
+  
+    function resetTimer(event) {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        showTooltip(lastMousePosition.x, lastMousePosition.y);
+        tooltipVisible = true;
+      }, 1500); // 1.5 segundos de retraso antes de mostrar el tooltip
+    }
+  
+    function showTooltip(mouseX, mouseY) {
+      if (!tooltip) {
+        tooltip = createTooltip();
+      }
+  
+      const isLeftAligned = tooltipContainer.classList.contains("tooltip-text-left");
+  
+      // Posicionar el tooltip en función de si está alineado a la izquierda o derecha
+      if (isLeftAligned) {
+        tooltip.style.left = "auto";
+        tooltip.style.right = `${window.innerWidth - mouseX + 15}px`; // Ajuste respecto a la derecha
+      } else {
+        tooltip.style.right = "auto";
+        tooltip.style.left = `${mouseX + 15}px`; // Ajuste respecto a la izquierda
+      }
+  
+      tooltip.style.top = `${mouseY - 30}px`;
+      tooltip.style.visibility = 'visible';
+      setTimeout(() => (tooltip.style.opacity = '0.9'), 10); // Transición a completamente visible
+    }
+  
+    function createTooltip() {
+      const newTooltip = document.createElement('div');
+      newTooltip.className = 'tooltip-text';
+      newTooltip.style.opacity = '0'; // Inicialmente transparente
+  
+      // Texto principal del tooltip
+      const mainText = tooltipContainer.getAttribute('data-tooltip').replace(/\\n/g, '\n');
+      
+      // Creación de contenedor principal y contenido estilizado
+      const mainTextNode = document.createTextNode(mainText);
+      const styledText = document.createElement('span');
+      styledText.className = 'tooltip-highlight';
+      styledText.textContent = 'Texto destacado';
+      
+      // Estructura HTML dentro del tooltip
+      newTooltip.appendChild(mainTextNode);
+      newTooltip.appendChild(document.createElement('br')); // Salto de línea
+      newTooltip.appendChild(styledText);
+  
+      document.body.appendChild(newTooltip);
+      return newTooltip;
+    }
+  
+    function removeTooltip() {
+      if (tooltip) {
+        tooltip.style.opacity = '0'; // Inicia la transición a invisible
+        setTimeout(() => {
+          tooltip.style.visibility = 'hidden';
+          tooltip.remove();
+          tooltip = null;
+        }, 500); // Espera 500 ms para completar la transición antes de eliminar
+      }
+    }
+  });
 
 
 
