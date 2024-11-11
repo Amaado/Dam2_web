@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const paginasCargadas = {};
   const checkboxland = document.getElementById("checkboxland");
   let isMouseDown = false;
-
+  const checkboxlandBackground = document.getElementById('checkboxlandBackground');
 
 
   /* CAMBIO DE CURSOR */
@@ -3189,6 +3189,7 @@ function setNormalPrice(skinContainer, price) {
       cursor.style.display = "block";
       cursorPurpleish.style.display = "block";
       checkboxland.style.display = "none";
+      checkboxlandBackground.style.display = "none";
       stopAnimation();
     }
 
@@ -3207,6 +3208,7 @@ function setNormalPrice(skinContainer, price) {
       cursor.style.display = "none";
       cursorPurpleish.style.display = "none";
       checkboxland.style.display = "block";
+      checkboxlandBackground.style.display = "block";
       setTimeout(() => {
         resetAnimation();
       }, 500);
@@ -4914,6 +4916,9 @@ function setNormalPrice(skinContainer, price) {
       }
     }
   }
+
+
+
 
 
 });

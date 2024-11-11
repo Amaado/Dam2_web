@@ -53,6 +53,8 @@
   -moz-user-select: none;
   -ms-user-select: none;
   touch-action: none;
+  overflow: hidden;
+
 }
 
 a:link,
@@ -2993,6 +2995,7 @@ div.img img {
 /*Color not checked*/
 #checkboxland input[type="checkbox"] {
   appearance: none;
+  box-sizing: border-box;
   width: 20px;
   height: 20px;
   border: 2px solid #819db8;
@@ -3022,4 +3025,29 @@ div.img img {
   height: 100vh;
   /*background-color: #22b14c;*/
   z-index: -100;
+  overflow: hidden;
+  pointer-events: all;
+  overflow: hidden;
+}
+
+/*Color not checked*/
+#checkboxlandBackground input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  outline: 2px solid #819db8;
+  border-radius: 3px;
+  background-color: #bfd4e9;
+}
+
+/*Color check*/
+#checkboxlandBackground input[type="checkbox"]:checked {
+  background-color: #345178;
+  border-color: #345178;
+}
+
+/*Color tick*/
+#checkboxlandBackground input[type="checkbox"]:checked::before {
+  color: #bfd4e9;
+  content: "✔";
 }

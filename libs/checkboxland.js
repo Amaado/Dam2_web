@@ -22,6 +22,8 @@ class Checkboxland {
 
     return this._data[y][x];
   }
+
+// Subclase para #checkboxland (Animación principal)
 /*
   setCheckboxValue(x, y, newValue) {
     const isWithinDisplay = x >= 0 && y >= 0 && x < this.dimensions[0] && y < this.dimensions[1];
@@ -50,8 +52,13 @@ class Checkboxland {
         if (checkboxEl.checked === Boolean(newValue)) return;
         checkboxEl.checked = Boolean(newValue);
       }
-  }*/
+  }
+*/
 
+
+
+// Subclase para #checkboxlandBackground (Fondo interactivo)
+    /*
     setCheckboxValue(x, y, newValue) {
         const isWithinDisplay = x >= 0 && y >= 0 && x < this.dimensions[0] && y < this.dimensions[1];
         _checkForValidValue(newValue);  // Verifica que el valor sea válido
@@ -79,6 +86,8 @@ class Checkboxland {
             checkboxEl.style.opacity = newValue === 0 ? "0" : "1"; // Oculta o muestra el checkbox basado en el valor
         }
     }
+*/
+
 
   getData() {
     const clonedData = this._data.map(row => row.slice());
