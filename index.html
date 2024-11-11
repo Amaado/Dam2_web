@@ -69,7 +69,11 @@
 
     <div id="helloMessage">ㅤ</div>
 
-    <div id="modifiersContainer"></div>
+    <div id="modifiersContainer">
+      <div style="left: -45px;" class="titulo">MODIFIERS</div>
+      <div class="hr"></div>
+      <div class="betaLabel"></div>
+    </div>
 
     <div id="skinsContainer">
       <div class="titulo">SKINS</div>
@@ -1105,180 +1109,354 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
   <script src="main.js"></script>
 
-  <script type="module">
-// Importamos Checkboxland
-import { Checkboxland } from './libs/checkboxland.js';
-
-// Función auxiliar necesaria
-function _checkForValidValue(value) {
-  if (value === 0 || value === 1 || value === 2) return;
-  throw new Error(`${value} is not a valid checkbox value.`);
-}
-
-// Subclase para #checkboxlandBackground (Fondo interactivo)
-class CheckboxlandBackground extends Checkboxland {
-  setCheckboxValue(x, y, newValue) {
-    const isWithinDisplay =
-      x >= 0 && y >= 0 && x < this.dimensions[0] && y < this.dimensions[1];
-
-    _checkForValidValue(newValue);
-
-    if (!isWithinDisplay) return;
-    this._data[y][x] = newValue;
-
-    const checkboxEl = this.displayEl.children[y]?.children[x];
-    if (!checkboxEl) {
-      console.warn(`Checkbox en posición (x: ${x}, y: ${y}) no encontrado.`);
-      return;
+  <script type="module">// Importamos Checkboxland
+    import { Checkboxland } from './libs/checkboxland.js';
+    
+    // Función auxiliar necesaria
+    function _checkForValidValue(value) {
+      if (value === 0 || value === 1 || value === 2) return;
+      throw new Error(`${value} is not a valid checkbox value.`);
     }
-
-    // Establece el estado checked en función de newValue
-    checkboxEl.checked = Boolean(newValue);
-  }
-}
-
-// CHECKBOXLAND BACKGROUND INTERACTIVO EN #checkboxlandBackground
-let cblBackground;
-
-// Función para inicializar el fondo interactivo
-function init() {
-  // Obtenemos el tamaño del contenedor
-  const container = document.getElementById('checkboxlandBackground');
-  const containerWidth = container.clientWidth;
-  const containerHeight = container.clientHeight;
-
-  // Definimos el tamaño deseado para los checkboxes
-  const checkboxSize = 20; // Puedes ajustar este valor
-
-  // Calculamos el número de columnas y filas
-  const cols = Math.floor(containerWidth / checkboxSize);
-  const rows = Math.floor(containerHeight / checkboxSize);
-
-  const dimensions = `${cols}x${rows}`;
-
-  cblBackground = new CheckboxlandBackground({
-    dimensions: dimensions,
-    selector: '#checkboxlandBackground',
-    interactive: true,
-  });
-
-  // Ajustamos el tamaño de los checkboxes para llenar el contenedor
-  const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-  checkboxes.forEach(checkbox => {
-    checkbox.style.width = `${checkboxSize}px`;
-    checkbox.style.height = `${checkboxSize}px`;
-    checkbox.style.margin = '0';
-    checkbox.style.padding = '0';
-  });
-
-  // Ajustamos el tamaño de las celdas de la cuadrícula
-  const rowsElements = container.querySelectorAll('.cbl-row');
-  rowsElements.forEach(row => {
-    row.style.height = `${checkboxSize}px`;
-  });
-
-  // Limpia cualquier dato previo
-  cblBackground.clearData();
-
-  // Configura el manejador de clics
-  cblBackground.onClick(pulse); // Usamos la función 'pulse'
-}
-
-// Función de pulso (onda expansiva circular)
-function pulse({ x, y }) {
-  let originX = x;
-  let originY = y;
-
-  const pulseStateMatrix = cblBackground.getEmptyMatrix({ fillValue: 'Ω' });
-  const startTime = performance.now();
-
-  const intervalId = setInterval(function propagateCircle() {
-    let isOmegaFound = false;
-    let elapsedTime = performance.now() - startTime;
-
-    for (let matY = 0; matY < pulseStateMatrix.length; matY++) {
-      for (let matX = 0; matX < pulseStateMatrix[matY].length; matX++) {
-        let xDistanceToOrigin = Math.abs(originX - matX);
-        let yDistanceToOrigin = Math.abs(originY - matY);
-        let distanceToOrigin = Math.hypot(xDistanceToOrigin, yDistanceToOrigin);
-
-        let calculatedPulseState = distanceToOrigin > (elapsedTime / 100) ? 'Ω' : '@';
-
-        if (pulseStateMatrix[matY][matX] !== calculatedPulseState) {
-          let currentCheckboxValue = cblBackground.getCheckboxValue(matX, matY);
-          let newCheckboxValue = currentCheckboxValue === 0 ? 1 : 0;
-          cblBackground.setCheckboxValue(matX, matY, newCheckboxValue); // Alternar checkbox
-          pulseStateMatrix[matY][matX] = calculatedPulseState;
+    
+    // Subclase para #checkboxland (Animación principal)
+    class CheckboxlandMain extends Checkboxland {
+      setCheckboxValue(x, y, newValue) {
+        const isWithinDisplay =
+          x >= 0 && y >= 0 && x < this.dimensions[0] && y < this.dimensions[1];
+        _checkForValidValue(newValue);  // Verifica que el valor sea válido
+    
+        if (!isWithinDisplay) return;
+    
+        this._data[y][x] = newValue; // Guarda el nuevo valor en la matriz interna _data
+    
+        const checkboxEl = this.displayEl.children[y]?.children[x];
+        if (!checkboxEl) {
+          console.warn(`Checkbox en posición (x: ${x}, y: ${y}) no encontrado.`);
+          return;
         }
-
-        if (!isOmegaFound && pulseStateMatrix[matY][matX] === 'Ω') {
-          isOmegaFound = true;
+    
+        // Estado indeterminado si el valor es 2
+        if (newValue === 2) {
+          if (checkboxEl.indeterminate) return;
+          checkboxEl.indeterminate = true;
+          checkboxEl.checked = false;
+          checkboxEl.style.opacity = "1"; // Máxima opacidad para el estado indeterminado
+        } else {
+          // Quita el estado indeterminado si ya estaba configurado
+          if (checkboxEl.indeterminate) {
+            checkboxEl.indeterminate = false;
+          }
+    
+          // Establece el estado checked en función de newValue
+          checkboxEl.checked = Boolean(newValue);
+          checkboxEl.style.opacity = newValue === 0 ? "0" : "1"; // Oculta o muestra el checkbox basado en el valor
         }
       }
     }
-
-    if (!isOmegaFound) {
-      clearInterval(intervalId);
+    
+    // ANIMACIÓN PRINCIPAL EN #checkboxland
+    // Inicializa CheckboxlandMain con resolución de 128x128 en el contenedor #checkboxland
+    const cbl = new CheckboxlandMain({
+      dimensions: "128x128",
+      selector: "#checkboxland",
+    });
+    
+    // Generar rutas de imágenes secuencialmente
+    const frames = [];
+    for (let i = 1; i <= 100; i++) {
+      const frameNumber = String(i).padStart(4, '0');
+      frames.push(`img/cursors/cccc/${frameNumber}.png`);
     }
-  }, 16); // Intervalo de 16 ms para suavizar la animación
-}
-
-// Inicializa el fondo interactivo
-init();
-
-// Opcional: Manejo del redimensionamiento de la ventana
-window.addEventListener('resize', () => {
-  // Elimina la cuadrícula existente
-  cblBackground.remove();
-  // Vuelve a inicializar
-  init();
-});
-
-
-
-// Función para determinar si un elemento es interactivo
-function isInteractiveElement(element) {
-  return (
-    element.closest('a, button, input, select, textarea, [onclick], .interactive-element') !== null
-  );
-}
-
-// Función para manejar los clics en el documento
-function handleDocumentClick(event) {
-  const clickedElement = event.target;
-
-  if (isInteractiveElement(clickedElement)) {
-    // El elemento maneja su propio evento
-    return;
-  }
-
-  // Obtener las coordenadas del clic relativo a #checkboxlandBackground
-  const backgroundRect = cblBackground.displayEl.getBoundingClientRect();
-  const x = event.clientX - backgroundRect.left;
-  const y = event.clientY - backgroundRect.top;
-
-  // Calcular las coordenadas en la cuadrícula
-  const checkboxWidth = backgroundRect.width / cblBackground.dimensions[0];
-  const checkboxHeight = backgroundRect.height / cblBackground.dimensions[1];
-
-  const gridX = Math.floor(x / checkboxWidth);
-  const gridY = Math.floor(y / checkboxHeight);
-
-  // Verificar si las coordenadas están dentro de la cuadrícula
-  if (
-    gridX >= 0 &&
-    gridX < cblBackground.dimensions[0] &&
-    gridY >= 0 &&
-    gridY < cblBackground.dimensions[1]
-  ) {
-    // Llamar a la función pulse
-    pulse({ x: gridX, y: gridY });
-  }
-}
-
-// Agrega el listener al documento
-document.addEventListener('click', handleDocumentClick);
-  
+    
+    // Función para cargar y redimensionar cada cuadro de imagen
+    async function loadFrame(url) {
+      const img = new Image();
+      img.src = url;
+      await img.decode();
+    
+      const canvas = document.createElement('canvas');
+      canvas.width = 128;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, -50, -50, 150, 150);
+      const imageData = ctx.getImageData(0, 0, 128, 128).data;
+      return createMatrixFromImageData(imageData, 128, 128);
+    }
+    
+    // Convierte los datos de imagen a matriz de Checkboxland
+    function createMatrixFromImageData(imageData, width, height) {
+      const matrix = [];
+      let row = [];
+    
+      for (let i = 0; i < imageData.length; i += 4) {
+        const isFilled = imageData[i + 3] > 128 ? 1 : 0;
+        row.push(isFilled);
+        if (row.length === width) {
+          matrix.push(row);
+          row = [];
+        }
+      }
+      return matrix;
+    }
+    
+    // Declaración del intervalo de animación
+    let animationInterval;
+    
+    // Función para iniciar la animación
+    function playAnimation() {
+      let frameIndex = 0;
+      clearInterval(animationInterval);
+    
+      animationInterval = setInterval(async () => {
+        const matrix = await loadFrame(frames[frameIndex]);
+        cbl.setData(matrix);
+        frameIndex = (frameIndex + 1) % frames.length;
+      }, 100);
+    }
+    
+    // Función para detener y limpiar la animación
+    function stopAnimation() {
+      clearInterval(animationInterval);
+    
+      // Crear una matriz vacía (solo ceros) para borrar la cuadrícula
+      const emptyMatrix = Array(128).fill().map(() => Array(128).fill(0));
+      cbl.setData(emptyMatrix); // Establece la cuadrícula con la matriz vacía
+    }
+    
+    // Función para reiniciar la animación
+    function resetAnimation() {
+      stopAnimation();
+      playAnimation();
+    }
+    
+    // Exponer funciones para control desde el DOM
+    window.playAnimation = playAnimation;
+    window.stopAnimation = stopAnimation;
+    window.resetAnimation = resetAnimation;
+    
+    // Inicia la animación por primera vez
+    playAnimation();
+    
+    // CHECKBOXLAND BACKGROUND INTERACTIVO EN #checkboxlandBackground
+    
+    // Subclase para #checkboxlandBackground (Fondo interactivo)
+    class CheckboxlandBackground extends Checkboxland {
+      setCheckboxValue(x, y, newValue) {
+        const isWithinDisplay =
+          x >= 0 && y >= 0 && x < this.dimensions[0] && y < this.dimensions[1];
+    
+        _checkForValidValue(newValue);
+    
+        if (!isWithinDisplay) return;
+        this._data[y][x] = newValue;
+    
+        const checkboxEl = this.displayEl.children[y]?.children[x];
+        if (!checkboxEl) {
+          console.warn(`Checkbox en posición (x: ${x}, y: ${y}) no encontrado.`);
+          return;
+        }
+    
+        // Establece el estado checked en función de newValue
+        checkboxEl.checked = Boolean(newValue);
+      }
+    }
+    
+    let cblBackground;
+    let lastPos = null;
+    let pulseIntervals = [];
+    let isBackgroundActive = false;
+    
+    // Función para inicializar el fondo interactivo
+    function initBackground() {
+      if (isBackgroundActive) return; // Evitar múltiples inicializaciones
+      isBackgroundActive = true;
+    
+      // Obtenemos el tamaño del contenedor
+      const container = document.getElementById('checkboxlandBackground');
+      container.style.setProperty("opacity", "100%", "important");
+      const containerWidth = container.clientWidth;
+      const containerHeight = container.clientHeight;
+    
+      // Definimos el tamaño deseado para los checkboxes
+      const checkboxSize = 20; // Puedes ajustar este valor
+    
+      // Calculamos el número de columnas y filas
+      const cols = Math.floor(containerWidth / checkboxSize);
+      const rows = Math.floor(containerHeight / checkboxSize);
+    
+      const dimensions = `${cols}x${rows}`;
+    
+      cblBackground = new CheckboxlandBackground({
+        dimensions: dimensions,
+        selector: '#checkboxlandBackground',
+        interactive: true,
+      });
+    
+      // Ajustamos el tamaño de los checkboxes para llenar el contenedor
+      const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.style.width = `${checkboxSize}px`;
+        checkbox.style.height = `${checkboxSize}px`;
+        checkbox.style.margin = '0';
+        checkbox.style.padding = '0';
+      });
+    
+      // Ajustamos el tamaño de las celdas de la cuadrícula
+      const rowsElements = container.querySelectorAll('.cbl-row');
+      rowsElements.forEach(row => {
+        row.style.height = `${checkboxSize}px`;
+      });
+    
+      // Limpia cualquier dato previo
+      cblBackground.clearData();
+    
+      // Configura el manejador de clics
+      document.addEventListener('click', handleDocumentClick);
+    
+      // Manejo del redimensionamiento de la ventana
+      window.addEventListener('resize', handleResize);
+    }
+    
+    // Función para limpiar eventos y eliminar la cuadrícula
+    function stopAnimationBackground() {
+      if (!isBackgroundActive) return;
+      isBackgroundActive = false;
+    
+      // Eliminar los intervalos de pulso
+      pulseIntervals.forEach(intervalId => clearInterval(intervalId));
+      pulseIntervals = [];
+    
+      // Eliminar el listener de clic
+      document.removeEventListener('click', handleDocumentClick);
+    
+      // Eliminar el listener de resize
+      window.removeEventListener('resize', handleResize);
+    
+      // Eliminar la cuadrícula
+      if (cblBackground) {
+        cblBackground.remove();
+        cblBackground = null;
+      }
+    }
+    
+    // Función para reiniciar la animación del background
+    function resetAnimationBackground() {
+      stopAnimationBackground();
+      initBackground();
+    }
+    
+    // Función para manejar los clics en el documento
+    function handleDocumentClick(event) {
+      const clickedElement = event.target;
+    
+      if (isInteractiveElement(clickedElement)) {
+        // El elemento maneja su propio evento
+        return;
+      }
+    
+      // Obtener las coordenadas del clic relativo a #checkboxlandBackground
+      const backgroundRect = cblBackground.displayEl.getBoundingClientRect();
+      const x = event.clientX - backgroundRect.left;
+      const y = event.clientY - backgroundRect.top;
+    
+      // Calcular las coordenadas en la cuadrícula
+      const checkboxWidth = backgroundRect.width / cblBackground.dimensions[0];
+      const checkboxHeight = backgroundRect.height / cblBackground.dimensions[1];
+    
+      const gridX = Math.floor(x / checkboxWidth);
+      const gridY = Math.floor(y / checkboxHeight);
+    
+      // Verificar si las coordenadas están dentro de la cuadrícula
+      if (
+        gridX >= 0 &&
+        gridX < cblBackground.dimensions[0] &&
+        gridY >= 0 &&
+        gridY < cblBackground.dimensions[1]
+      ) {
+        // Llamar a la función pulse
+        pulse({ x: gridX, y: gridY });
+      }
+    }
+    
+    // Función para determinar si un elemento es interactivo
+    function isInteractiveElement(element) {
+      const skinsContainer = document.getElementById("skinsContainer");
+      const modifiersContainer = document.getElementById("modifiersContainer");
+      
+      if(skinsContainer.classList.contains("active") || modifiersContainer.classList.contains("active")){
+        return true;
+      }
+      if(element.closest(".background") ||
+        element.closest(".switch") ||
+        element.closest(".slider") ||
+        element.closest("#settingsImgContainer") ||
+        element.closest("#volumenImg") ||
+        element.closest("#rtxContainer")){
+        return true;
+      }
+      return (
+        element.closest('a, button, input, select, textarea, [onclick], .interactive-element') !== null
+      );
+    }
+    
+    // Función de pulso (onda expansiva circular)
+    function pulse({ x, y }) {
+      let originX = x;
+      let originY = y;
+    
+      const pulseStateMatrix = cblBackground.getEmptyMatrix({ fillValue: 'Ω' });
+      const startTime = performance.now();
+    
+      const intervalId = setInterval(function propagateCircle() {
+        let isOmegaFound = false;
+        let elapsedTime = performance.now() - startTime;
+    
+        for (let matY = 0; matY < pulseStateMatrix.length; matY++) {
+          for (let matX = 0; matX < pulseStateMatrix[matY].length; matX++) {
+            let xDistanceToOrigin = Math.abs(originX - matX);
+            let yDistanceToOrigin = Math.abs(originY - matY);
+            let distanceToOrigin = Math.hypot(xDistanceToOrigin, yDistanceToOrigin);
+    
+            let calculatedPulseState = distanceToOrigin > (elapsedTime / 100) ? 'Ω' : '@';
+    
+            if (pulseStateMatrix[matY][matX] !== calculatedPulseState) {
+              let currentCheckboxValue = cblBackground.getCheckboxValue(matX, matY);
+              let newCheckboxValue = currentCheckboxValue === 0 ? 1 : 0;
+              cblBackground.setCheckboxValue(matX, matY, newCheckboxValue); // Alternar checkbox
+              pulseStateMatrix[matY][matX] = calculatedPulseState;
+            }
+    
+            if (!isOmegaFound && pulseStateMatrix[matY][matX] === 'Ω') {
+              isOmegaFound = true;
+            }
+          }
+        }
+    
+        if (!isOmegaFound) {
+          clearInterval(intervalId);
+          pulseIntervals = pulseIntervals.filter(id => id !== intervalId);
+        }
+      }, 16); // Intervalo de 16 ms para suavizar la animación
+    
+      pulseIntervals.push(intervalId);
+    }
+    
+    // Función para manejar el redimensionamiento de la ventana
+    function handleResize() {
+      if (cblBackground) {
+        cblBackground.remove();
+        cblBackground = null;
+      }
+      initBackground();
+    }
+    
+    // Inicializa el fondo interactivo por primera vez
+    //window.initBackground = initBackground;
+    
+    // Exponer funciones para control desde el DOM
+    window.stopAnimationBackground = stopAnimationBackground;
+    window.resetAnimationBackground = resetAnimationBackground;
+    
   </script>
 
 </body>

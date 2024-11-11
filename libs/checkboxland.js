@@ -23,7 +23,7 @@ class Checkboxland {
     return this._data[y][x];
   }
 
-// Subclase para #checkboxland (Animación principal)
+// Subclase para #checkboxlandBackground
 /*
   setCheckboxValue(x, y, newValue) {
     const isWithinDisplay = x >= 0 && y >= 0 && x < this.dimensions[0] && y < this.dimensions[1];
@@ -57,7 +57,7 @@ class Checkboxland {
 
 
 
-// Subclase para #checkboxlandBackground (Fondo interactivo)
+// Subclase para #checkboxland
     /*
     setCheckboxValue(x, y, newValue) {
         const isWithinDisplay = x >= 0 && y >= 0 && x < this.dimensions[0] && y < this.dimensions[1];
@@ -200,7 +200,7 @@ function _textDimensionsToArray(textDimensions) {
 
 function _createInitialCheckboxDisplay(displayEl, data) {
   displayEl.innerHTML = '';
-  displayEl.style.overflowX = 'auto';
+  displayEl.style.overflowX = 'hidden';
   displayEl.setAttribute('aria-hidden', true);
   data.forEach(rowData => {
     const rowEl = document.createElement('div');

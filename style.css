@@ -53,7 +53,6 @@
   -moz-user-select: none;
   -ms-user-select: none;
   touch-action: none;
-  overflow: hidden;
 
 }
 
@@ -683,6 +682,7 @@ input[type="password"]::placeholder {
   min-width: 550px;
   overflow: hidden; /* Para evitar que el pseudo-elemento se salga de los bordes */
   transition: transform 2s; /* Solo la transición del scale */
+  backdrop-filter: blur(2px) brightness(70%);
 }
 
 .card::before {
@@ -1345,6 +1345,7 @@ div.img img {
   gap: 20px;
   overflow-y: auto;
   overflow-x: hidden;
+  box-shadow: -10px -10px 14px 0px rgba(0, 0, 0, 0.3);
 }
 
 /* Scroll personalizado para WebKit (Chrome, Safari) */
@@ -1418,9 +1419,12 @@ div.img img {
   white-space: nowrap;
   justify-content: center;
   align-items: center;
+  transition: left 0.5s ease;
 }
 
 #menuLabelModifiers.active {
+  left: 14vw;
+  color: #bab58d96;
 }
 
 #skinsContainer {
@@ -1439,6 +1443,7 @@ div.img img {
   gap: 20px;
   overflow-y: auto;
   overflow-x: hidden;
+  box-shadow: 10px 10px 14px 0px rgba(0, 0, 0, 0.3);
 }
 
 /* Scroll personalizado para WebKit (Chrome, Safari) */
@@ -1512,9 +1517,11 @@ div.img img {
   white-space: nowrap;
   justify-content: center;
   align-items: center;
+  transition: left 0.5s ease;
 }
 
 #menuLabelSkins.active {
+  left: 10vw;
 }
 
 .coinsContainer {
@@ -1600,22 +1607,6 @@ div.img img {
   width: 30px;
   max-height: 120px;
   font-size: 36px;
-  transform-origin: top;
-  line-height: 1;
-  transform: scaleY(5) translateX(-40px) translateY(20px);
-  font-family: "verti";
-  top: -120px;
-  margin-top: 20px;
-  color: #bfd4e9;
-}
-
-.tituloModifier {
-  position: relative;
-  display: flex;
-  width: 30px;
-  max-height: 120px;
-  font-size: 36px;
-  left: -45px;
   transform-origin: top;
   line-height: 1;
   transform: scaleY(5) translateX(-40px) translateY(20px);
@@ -2978,18 +2969,18 @@ div.img img {
   height: 800px;
   display: none;
   position: absolute;
-  transform: scale(0.118);
+  transform: scale(0.075);
   overflow: hidden !important;
   /*background-color: #22b14c;*/
-  margin-left: -288px;
-  margin-top: -285px;
+  margin-left: -306px;
+  margin-top: -304px;
   pointer-events: none;
   transition: transform 0.1s ease-in-out;
   z-index: 200;
 }
 
 #checkboxland.clicked{
-  transform: scale(0.15);
+  transform: scale(0.105);
 }
 
 /*Color not checked*/
@@ -3005,13 +2996,13 @@ div.img img {
 
 /*Color check*/
 #checkboxland input[type="checkbox"]:checked {
-  background-color: #345178;
-  border-color: #345178;
+  background-color: #acc4db;
+  border-color: #acc4db;
 }
 
 /*Color tick*/
 #checkboxland input[type="checkbox"]:checked::before {
-  color: #bfd4e9;
+  color: #345178;
   content: "✔";
 }
 
@@ -3035,9 +3026,9 @@ div.img img {
   appearance: none;
   width: 20px;
   height: 20px;
-  outline: 2px solid #819db8;
+  outline: 2px solid #406391;
   border-radius: 3px;
-  background-color: #bfd4e9;
+  background-color: #1c2128;
 }
 
 /*Color check*/
@@ -3048,6 +3039,17 @@ div.img img {
 
 /*Color tick*/
 #checkboxlandBackground input[type="checkbox"]:checked::before {
-  color: #bfd4e9;
+  color: #1c2128;
   content: "✔";
+}
+
+.{
+  color: #dddcb0;
+  color: #313842;
+  color: #dddcb0;
+  color: #68654f;
+  color: #bab58d;
+  color: ;
+  color: ;
+
 }

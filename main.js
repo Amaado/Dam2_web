@@ -571,6 +571,20 @@ document.addEventListener("DOMContentLoaded", function () {
           rule.style.border = "2px solid #313842"; // Cambiar el borde en hover
         }
 
+        if (rule.selectorText === "#modifiersContainer") {
+          rule.style.background = `linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
+          rule.style.background = `-webkit-linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
+          rule.style.background = `-moz-linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
+        }
+        if (rule.selectorText === "#modifiersContainer::-webkit-scrollbar-thumb") {
+          rule.style.backgroundColor = "#313842";
+        }
+        if (
+          rule.selectorText === "#modifiersContainer::-webkit-scrollbar-thumb:hover"
+        ) {
+          rule.style.backgroundColor = "#68654f";
+        }
+
         /* SKINS CONTAINER COLOR */
         if (rule.selectorText === "#skinsContainer") {
           rule.style.background = `linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
@@ -697,6 +711,20 @@ document.addEventListener("DOMContentLoaded", function () {
           rule.style.backgroundColor = "#1c2128"; // Cambiar el color de fondo en hover del botón login
           rule.style.border = "2px solid #bfd4e9b1"; // Cambiar el borde en hover
           rule.style.color = "#bfd4e9";
+        }
+
+        if (rule.selectorText === "#modifiersContainer") {
+          rule.style.background = `linear-gradient(180deg,#1c2128 10%, #737f8b 200%)`;
+          rule.style.background = `-webkit-linear-gradient(180deg,#1c2128 10%, #737f8b 200%)`;
+          rule.style.background = `-moz-linear-gradient(180deg,#1c2128 10%, #737f8b 200%)`;
+        }
+        if (rule.selectorText === "#modifiersContainer::-webkit-scrollbar-thumb") {
+          rule.style.backgroundColor = "#737f8b";
+        }
+        if (
+          rule.selectorText === "#modifiersContainer::-webkit-scrollbar-thumb:hover"
+        ) {
+          rule.style.backgroundColor = "#bfd4e9";
         }
 
         if (rule.selectorText === "#skinsContainer") {
@@ -3191,6 +3219,8 @@ function setNormalPrice(skinContainer, price) {
       checkboxland.style.display = "none";
       checkboxlandBackground.style.display = "none";
       stopAnimation();
+      stopAnimationBackground();
+      applyTheme();
     }
 
 
@@ -3211,7 +3241,86 @@ function setNormalPrice(skinContainer, price) {
       checkboxlandBackground.style.display = "block";
       setTimeout(() => {
         resetAnimation();
-      }, 500);
+        resetAnimationBackground();
+
+        const sheet = document.styleSheets[0];
+        for (let i = 0; i < sheet.cssRules.length; i++) {
+          const rule = sheet.cssRules[i];
+          if (rule.selectorText === "#skinsContainer") {
+            rule.style.background = `transparent`;
+            rule.style.backdropFilter = `blur(3px) `;
+          }
+          if (rule.selectorText === "#modifiersContainer") {
+            rule.style.background = `transparent`;
+            rule.style.backdropFilter = `blur(3px) `;
+          }
+          if(checkbox.checked){
+            console.log("HOLAAAAAAAAAA")
+            //Day
+            if (rule.selectorText === "#checkboxland input[type='checkbox']") {
+              rule.style.setProperty("border", "2px solid #819db8");
+              rule.style.setProperty("background-color", "#bfd4e9");
+            }
+          
+            if (rule.selectorText === "#checkboxland input[type='checkbox']:checked") {
+              rule.style.setProperty("background-color", "#acc4db");
+              rule.style.setProperty("border-color", "#acc4db");
+            }
+          
+            if (rule.selectorText === "#checkboxland input[type='checkbox']:checked::before") {
+              rule.style.setProperty("color", "#345178");
+            }
+          
+            if (rule.selectorText === "#checkboxlandBackground input[type='checkbox']") {
+              rule.style.setProperty("outline", "2px solid #68654f");
+              rule.style.setProperty("background-color", "#dddcb0");
+            }
+          
+            if (rule.selectorText === "#checkboxlandBackground input[type='checkbox']:checked") {
+              rule.style.setProperty("background-color", "#68654f");
+              rule.style.setProperty("border-color", "#68654f");
+            }
+          
+            if (rule.selectorText === "#checkboxlandBackground input[type='checkbox']:checked::before") {
+              rule.style.setProperty("color", "#dddcb0");
+            }
+
+          }else{
+            //Night
+            if (rule.selectorText === "#checkboxland input[type='checkbox']") {
+              rule.style.setProperty("border", "2px solid #819db8");
+              rule.style.setProperty("background-color", "#bfd4e9");
+            }
+          
+            if (rule.selectorText === "#checkboxland input[type='checkbox']:checked") {
+              rule.style.setProperty("background-color", "#acc4db");
+              rule.style.setProperty("border-color", "#acc4db");
+            }
+          
+            if (rule.selectorText === "#checkboxland input[type='checkbox']:checked::before") {
+              rule.style.setProperty("color", "#345178");
+            }
+          
+            if (rule.selectorText === "#checkboxlandBackground input[type='checkbox']") {
+              rule.style.setProperty("outline", "2px solid #406391");
+              rule.style.setProperty("background-color", "#1c2128");
+            }
+          
+            if (rule.selectorText === "#checkboxlandBackground input[type='checkbox']:checked") {
+              rule.style.setProperty("background-color", "#345178");
+              rule.style.setProperty("border-color", "#345178");
+            }
+          
+            if (rule.selectorText === "#checkboxlandBackground input[type='checkbox']:checked::before") {
+              rule.style.setProperty("color", "#1c2128");
+            }
+
+          }
+
+
+        }
+
+      }, 500);     
     }
 
     /* SKIN BUCEO */
