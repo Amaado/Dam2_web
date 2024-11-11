@@ -84,7 +84,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let sizeVisualizer = document.getElementById("sizeVisualizer");
   const page1Hitbox = document.getElementById("page1hitbox");
   const paginasCargadas = {};
-
+  const checkboxland = document.getElementById("checkboxland");
+  let isMouseDown = false;
 
 
 
@@ -216,7 +217,12 @@ document.addEventListener("DOMContentLoaded", function () {
           cursorSrc ||
           (theme === "day" ? DEFAULT_DAY_CURSOR : DEFAULT_NIGHT_CURSOR);
         const cursorPurpleishSrc = insertPurpleishBeforeExtension(cursor.src);
-        cursorPurpleish.src = cursorPurpleishSrc;
+
+        if (cursorPurpleishSrc.includes("cccc_krillin") || cursorPurpleishSrc.includes("cccc_jefeEstudios")) {
+          cursorPurpleish.style.display = "none";
+        }else{
+          cursorPurpleish.src = cursorPurpleishSrc;
+        }
       }
     }
 
@@ -401,13 +407,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* CAMBIOS DE ESTILO CUANDO CAMBIO DE TEMA */
   let checkboxStatus = localStorage.getItem("checkboxStatus");
-  
+
   if (checkboxStatus === null) {
-      checkboxStatus = "false";
-      localStorage.setItem("checkboxStatus", checkboxStatus);
+    checkboxStatus = "false";
+    localStorage.setItem("checkboxStatus", checkboxStatus);
   }
-  
-  checkbox.checked = (checkboxStatus === "true");
+
+  checkbox.checked = checkboxStatus === "true";
 
   function applyTheme() {
     if (checkbox.checked) {
@@ -423,7 +429,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (cursor && cursorPurpleish) {
         cursor.src = dayCursorSrc;
-        cursorPurpleish.src = insertPurpleishBeforeExtension(dayCursorSrc);
+        if (dayCursorSrc.includes("cccc_krillin") || dayCursorSrc.includes("cccc_jefeEstudios")) {
+          cursorPurpleish.style.display = "none";
+        }else{
+          cursorPurpleish.src = insertPurpleishBeforeExtension(dayCursorSrc);
+        }
       }
       if (flechaaSkins) {
         flechaaSkins.src = "img/flechaDay.png";
@@ -448,7 +458,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (cursor && cursorPurpleish) {
         cursor.src = nightCursorSrc;
-        cursorPurpleish.src = insertPurpleishBeforeExtension(nightCursorSrc);
+        if (nightCursorSrc.includes("cccc_krillin") || nightCursorSrc.includes("cccc_jefeEstudios")) {
+          cursorPurpleish.style.display = "none";
+        }else{
+          cursorPurpleish.src = insertPurpleishBeforeExtension(nightCursorSrc);
+        }
       }
       if (flechaaSkins) {
         flechaaSkins.src = "img/flechaNight.png";
@@ -1208,7 +1222,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "transform",
         "translateX(-10px) scale(0.02, 0.02)",
         "important"
-      );  
+      );
 
       // Cerrar el formulario de inicio de sesión
       loginScreen.click();
@@ -1519,13 +1533,11 @@ document.addEventListener("DOMContentLoaded", function () {
       // Actualizar estado de los elementos
       actualizarEstadoElementosSesion();
 
-
       horarioImg.style.setProperty(
         "transform",
         "translateX(-75px) scale(0.02, 0.02)",
         "important"
       );
-
 
       location.reload();
     });
@@ -1872,78 +1884,169 @@ document.addEventListener("DOMContentLoaded", function () {
   const maxAnimations = 15;
 
   function animationCoinCursor(event) {
-    //Comprobar actividad estadoCheckboxRTX
-    if (!estadoCheckboxRTX) {
-      return;
-    }
+    if (filterUnderwater.classList.contains("active")) {
+      if (!estadoCheckboxRTX) {
+        return;
+      }
+      
+      if (activeAnimations >= maxAnimations) {
+        console.log("Solo se pueden tener 15 monedas en la pantalla simultáneamente");
+        return; // Salir de la función si se ha alcanzado el límite
+      }
+      
+      // Obtener la altura de la pantalla
+      const screenHeight = window.innerHeight;
+      
+      activeAnimations++;
+      
+      // Generar un número aleatorio entre 1 y 10
+      const randomNumber = Math.floor(Math.random() * 10) + 1;
+      
+      // Crear una imagen
+      const img = document.createElement("img");
+      img.src ="img/animationCoinsCursor/B/B" + "_" + randomNumber + ".gif" + "?t=" + new Date().getTime();
+      
+      console.log("img/animationCoinsCursor/B/B" + "_" + randomNumber + ".gif");
+      
+      // Agregar una clase para el estilo
+      img.classList.add("fullscreenImage-CursorCoinAnim");
+      
+      // Posicionar la imagen donde se hizo clic (en `left` y `top`)
+      img.style.left = `${event.clientX}px`;
+      img.style.top = `${event.clientY}px`; // Establece la posición inicial en la altura del clic
+      img.style.marginTop = "300px";
+      
+      // Agregar la imagen al cuerpo del documento
+      filterUnderwater.appendChild(img);
+      
+      // Aplicar máscara y comenzar la animación en espiral con un ligero retraso
+      img.style.maskImage = 'linear-gradient(to top, transparent 20%, black 20%)';
+      img.style.webkitMaskImage = 'linear-gradient(to top, transparent 20%, black 20%)';
+      
+      setTimeout(() => {
+        moverEnEspiral(img);
+      }, 700);
+      
+      // Animar la imagen hacia abajo después de un pequeño retraso
+      setTimeout(() => {
+        img.style.marginTop = "800px";
+      }, 500);
+      
+      setTimeout(() => {
+        filterUnderwater.removeChild(img);
+        activeAnimations--;
+      }, 12000);
+    }else{
+            //Comprobar actividad estadoCheckboxRTX
+      if (!estadoCheckboxRTX) {
+        return;
+      }
 
-    if (activeAnimations >= maxAnimations) {
-      console.log(
-        "Solo se pueden tener 15 monedas en la pantalla simultaneamente"
-      );
-      return; // Salir de la función si se ha alcanzado el límite
-    }
+      if (activeAnimations >= maxAnimations) {
+        console.log(
+          "Solo se pueden tener 15 monedas en la pantalla simultaneamente"
+        );
+        return; // Salir de la función si se ha alcanzado el límite
+      }
 
-    // Obtener la altura de la pantalla y calcular la altura de cada sección
-    const screenHeight = window.innerHeight;
-    const sectionHeight = screenHeight / 29;
+      // Obtener la altura de la pantalla y calcular la altura de cada sección
+      const screenHeight = window.innerHeight;
+      const sectionHeight = screenHeight / 29;
 
-    // Calcular en qué sección se hizo clic
-    const section = Math.floor(event.clientY / sectionHeight) + 1;
+      // Calcular en qué sección se hizo clic
+      const section = Math.floor(event.clientY / sectionHeight) + 1;
 
-    if (section >= 5 || section == 3) {
-      return;
-    }
+      if (section > 6) {
+        return;
+      }
 
-    activeAnimations++;
+      activeAnimations++;
 
-    // Generar un número aleatorio entre 1 y 10
-    const randomNumber = Math.floor(Math.random() * 10) + 1;
+      // Generar un número aleatorio entre 1 y 10
+      const randomNumber = Math.floor(Math.random() * 10) + 1;
 
-    // Crear una imagen
-    const img = document.createElement("img");
-    img.src =
-      "img/animationCoinsCursor/" +
-      section +
-      "/" +
-      section +
-      "_" +
-      randomNumber +
-      ".gif" +
-      "?t=" +
-      new Date().getTime();
-
-    console.log(
-      "img/animationCoinsCursor/" +
+      // Crear una imagen
+      const img = document.createElement("img");
+      img.src =
+        "img/animationCoinsCursor/" +
         section +
         "/" +
         section +
         "_" +
         randomNumber +
-        ".gif"
-    );
+        ".gif" +
+        "?t=" +
+        new Date().getTime();
 
-    // Agregar una clase para el estilo
-    img.classList.add("fullscreenImage-CursorCoinAnim");
+      console.log(
+        "img/animationCoinsCursor/" +
+          section +
+          "/" +
+          section +
+          "_" +
+          randomNumber +
+          ".gif"
+      );
 
-    // Posicionar la imagen donde se hizo clic
-    img.style.left = `${event.clientX}px`;
+      // Agregar una clase para el estilo
+      img.classList.add("fullscreenImage-CursorCoinAnim");
 
-    // Agregar la imagen al cuerpo del documento
-    filterUnderwater.appendChild(img);
+      // Posicionar la imagen donde se hizo clic
+      img.style.left = `${event.clientX}px`;
 
-    setTimeout(() => {
-      if (filterUnderwater.classList.contains("active")) {
-        //TODO: crear animacion sin fondo para cuando está SkinBuceo
+      img.style.maskImage = 'none';
+      img.style.webkitMaskImage = 'none';
+
+      // Agregar la imagen al cuerpo del documento
+      filterUnderwater.appendChild(img);
+
+      setTimeout(() => {
+        img.style.opacity = "0%";
+      }, 10500);
+      setTimeout(() => {
+        filterUnderwater.removeChild(img);
+        activeAnimations--;
+      }, 11500);
+    }
+  }
+
+
+  const speed = 0.08; // Incremento más rápido del ángulo
+  const expansionRate = 3; // Incremento del radio para expandir el movimiento en espiral rápidamente
+  
+  function moverEnEspiral(img) {
+    // Restablece el ángulo y radio de cada imagen para iniciar en el origen
+    img._angle = 0; // Ángulo inicial específico para cada imagen
+    img._radius = 100; // Radio inicial específico para comenzar cerca del centro
+    
+    const maxRadius = 800; // Limitar el radio de movimiento a 800px en cada dirección
+  
+    function animar() {
+      // Calcula el valor de margin-left para oscilar entre -800px y 800px
+      const marginLeft = img._radius * Math.cos(img._angle);
+  
+      // Aplica el movimiento mediante margin-left
+      img.style.marginLeft = `${marginLeft}px`;
+  
+      // Incrementa el ángulo para el movimiento en espiral
+      img._angle += speed;
+  
+      // Incrementa el radio hasta el límite de 800px
+      if (img._radius < maxRadius) {
+        img._radius += expansionRate;
       }
-    }, 500);
-    setTimeout(() => {
-      img.style.opacity = "0%";
-    }, 10500);
-    setTimeout(() => {
-      filterUnderwater.removeChild(img);
-      activeAnimations--;
-    }, 11500);
+  
+      // Reinicia el radio y el ángulo para que la espiral vuelva a empezar
+      if (img._angle >= 2 * Math.PI) { // Un ciclo completo
+        img._angle = 0; 
+      }
+  
+      // Llama a la función animar en el siguiente fotograma
+      requestAnimationFrame(animar);
+    }
+  
+    // Inicia la animación
+    animar();
   }
 
   function animationCoin(ultimaCifra, longitud) {
@@ -2054,6 +2157,11 @@ document.addEventListener("DOMContentLoaded", function () {
       imgBackgroundAnim.style.zIndex = zIndexValue + 1;
       imgNumberAnim.style.zIndex = zIndexValue + 2;
       zIndexValue = zIndexValue < 198 ? zIndexValue + 1 : 60;
+
+      imgNumberAnim.draggable = false;
+      imgBackgroundAnim.draggable = false;
+      imgBackgroundAnim.draggable = false;
+
 
       coinsContainerAnimationContainer.appendChild(imgNumberAnim);
       coinsContainerAnimationContainer.appendChild(imgCoinAnim);
@@ -2945,16 +3053,26 @@ function setNormalPrice(skinContainer, price) {
       cursorPaint.style.top = e.clientY - cursorPaintSizeY / 2 + "px";
       cursorPaintErase.style.left = e.clientX - cursorPaintSizeX / 2 + "px";
       cursorPaintErase.style.top = e.clientY - cursorPaintSizeY / 2 + "px";
+      if(checkboxland){
+        checkboxland.style.left = e.clientX - cursorSize / 2 + "px"; // Centrar en X
+        checkboxland.style.top = e.clientY - cursorSize / 2 + "px"; // Centrar en Y
+      }
     });
 
     document.addEventListener("mousedown", function () {
       cursor.classList.add("clicked");
       cursorPurpleish.classList.add("clicked");
+      if(checkboxland){
+        checkboxland.classList.add("clicked");
+      }
     });
 
     document.addEventListener("mouseup", function () {
       cursor.classList.remove("clicked");
       cursorPurpleish.classList.remove("clicked");
+      if(checkboxland){
+        checkboxland.classList.remove("clicked");
+      }
     });
 
     document.addEventListener("mouseover", function (e) {
@@ -3049,7 +3167,6 @@ function setNormalPrice(skinContainer, price) {
     if (!cursorSrc.includes("cccc_krillin")) {
       cursorPurpleish.style.display = "block";
     }
-
     if (!cursorSrc.includes("cccc_galaxy")) {
       cursor.style.opacity = "100%";
       cursor.style.transition =
@@ -3057,7 +3174,6 @@ function setNormalPrice(skinContainer, price) {
       fondo.style.display = "none";
       fondoGreen.style.display = "none";
     }
-
     if (!cursorSrc.includes("cccc_buceo")) {
       underwaterTransi.style.display = "none";
       underwaterTransi.className = "";
@@ -3066,18 +3182,34 @@ function setNormalPrice(skinContainer, price) {
       filterUnderwater.className = "";
       filterUnderwater.style.mask = "none";
     }
-
     if (!cursorSrc.includes("cccc_jefeEstudios")) {
       cursorPurpleish.style.display = "block";
     }
+    if (!cursorSrc.includes("cccc_checkbox")) {
+      cursor.style.display = "block";
+      cursorPurpleish.style.display = "block";
+      checkboxland.style.display = "none";
+      stopAnimation();
+    }
 
-    /* SKINS NO PURPLEISH */
-    if (cursorSrc.includes("cccc_krillin")) {
+
+
+    /* HANDLE NO PURPLEISH CURSORS (there's more code) */
+
+    if (cursorSrc.includes("cccc_krillin") || cursorSrc.includes("cccc_jefeEstudios")) {
       cursorPurpleish.style.display = "none";
     }
 
-    if (cursorSrc.includes("cccc_jefeEstudios")) {
+
+    /* SKIN CHECKBOX */
+
+    if (cursorSrc.includes("cccc_checkbox")) {
+      cursor.style.display = "none";
       cursorPurpleish.style.display = "none";
+      checkboxland.style.display = "block";
+      setTimeout(() => {
+        resetAnimation();
+      }, 500);
     }
 
     /* SKIN BUCEO */
@@ -3675,13 +3807,13 @@ function setNormalPrice(skinContainer, price) {
 
     horarioImg.style.setProperty("margin-left", "350px", "important");
     horarioImg.style.setProperty("margin-top", "900px", "important");
-    if(idLogeado){
+    if (idLogeado) {
       horarioImg.style.setProperty(
         "transform",
         "translateX(-10px) scale(0.02, 0.02)",
         "important"
       );
-    }else{
+    } else {
       horarioImg.style.setProperty(
         "transform",
         "translateX(-75px) scale(0.02, 0.02)",
@@ -3744,13 +3876,13 @@ function setNormalPrice(skinContainer, price) {
             );
             horarioImg.style.setProperty("opacity", "1", "important");
             horarioImg.style.setProperty("margin-left", "350px", "important");
-            if(idLogeado){
+            if (idLogeado) {
               horarioImg.style.setProperty(
                 "transform",
                 "translateX(-10px) scale(0.02, 0.02)",
                 "important"
               );
-            }else{
+            } else {
               horarioImg.style.setProperty(
                 "transform",
                 "translateX(-75px) scale(0.02, 0.02)",
@@ -3978,7 +4110,6 @@ function setNormalPrice(skinContainer, price) {
       const pageNumber = pageElement.getAttribute("page");
       const content = textElement.innerHTML;
       notas[pageNumber] = content;
-
     });
 
     const notasJSON = JSON.stringify(notas);
@@ -4005,23 +4136,25 @@ function setNormalPrice(skinContainer, price) {
   async function cargarNotas(idLogeado) {
     const notasJSON = await obtenerNotasDeUsuario(idLogeado);
     if (notasJSON) {
-       const notas = JSON.parse(notasJSON);
- 
-       // Iterar sobre todas las páginas de notas y verificar
-       for (const pageNumber in notas) {
-          const content = notas[pageNumber];
-          const textElement = document.querySelector(`[page="${pageNumber}"] .text`);
-          if (textElement) {
-             textElement.innerHTML = content;
-             //console.log(`Cargando contenido en la página ${pageNumber}:`, content);
-          } else {
-             //console.warn(`No se encontró el contenedor de texto para la página ${pageNumber}`);
-          }
-       }
+      const notas = JSON.parse(notasJSON);
+
+      // Iterar sobre todas las páginas de notas y verificar
+      for (const pageNumber in notas) {
+        const content = notas[pageNumber];
+        const textElement = document.querySelector(
+          `[page="${pageNumber}"] .text`
+        );
+        if (textElement) {
+          textElement.innerHTML = content;
+          //console.log(`Cargando contenido en la página ${pageNumber}:`, content);
+        } else {
+          //console.warn(`No se encontró el contenedor de texto para la página ${pageNumber}`);
+        }
+      }
     } else {
-       console.log("No hay notas para cargar o ocurrió un error al obtenerlas.");
+      console.log("No hay notas para cargar o ocurrió un error al obtenerlas.");
     }
- }
+  }
 
   let textSelected = true;
   let paintChangesBuffer = {};
@@ -4566,22 +4699,22 @@ function setNormalPrice(skinContainer, price) {
   async function obtenerDibujosDeUsuario(idUsuario) {
     const url = `${supabaseUrl}?id=eq.${idUsuario}`;
     try {
-       const response = await fetch(url, {
-          method: "GET",
-          headers: {
-             apikey: supabaseKey,
-             Authorization: `Bearer ${supabaseKey}`,
-             "Content-Type": "application/json",
-          },
-       });
-       const data = await response.json();
-       console.log("Dibujos obtenidos de la base de datos:", data);
-       return data.length > 0 ? data[0].dibujos : null;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log("Dibujos obtenidos de la base de datos:", data);
+      return data.length > 0 ? data[0].dibujos : null;
     } catch (error) {
-       console.error("Error al obtener los dibujos:", error);
-       return null;
+      console.error("Error al obtener los dibujos:", error);
+      return null;
     }
- }
+  }
 
   const h2 = document.querySelector(".h2");
 
@@ -4670,28 +4803,30 @@ function setNormalPrice(skinContainer, price) {
 
   function renderizarDibujos(pixelDataArray, container) {
     pixelDataArray.forEach((pixelData) => {
-       const { x, y, color } = pixelData;
-       const pixel = container.querySelector(`.pixel[data-x="${x}"][data-y="${y}"]`);
-       if (pixel) {
-          pixel.style.backgroundColor = color || "transparent"; // Aplica el color o transparente
-          pixel.dataset.color = color || "transparent";
-       } else {
-          //console.warn(`No se encontró el píxel en (${x}, ${y}) en el contenedor de la página.`);
-       }
+      const { x, y, color } = pixelData;
+      const pixel = container.querySelector(
+        `.pixel[data-x="${x}"][data-y="${y}"]`
+      );
+      if (pixel) {
+        pixel.style.backgroundColor = color || "transparent"; // Aplica el color o transparente
+        pixel.dataset.color = color || "transparent";
+      } else {
+        //console.warn(`No se encontró el píxel en (${x}, ${y}) en el contenedor de la página.`);
+      }
     });
- }
+  }
 
- function generarCuadriculaDePixelesEnContenedor(container) {
-  if (container.dataset.initialized) return;
+  function generarCuadriculaDePixelesEnContenedor(container) {
+    if (container.dataset.initialized) return;
 
-  const pixelSize = 7;
-  const containerWidth = 450;
-  const containerHeight = 700;
-  const pixelsHorizontal = Math.floor(containerWidth / pixelSize);
-  const pixelsVertical = Math.floor(containerHeight / pixelSize);
+    const pixelSize = 7;
+    const containerWidth = 450;
+    const containerHeight = 700;
+    const pixelsHorizontal = Math.floor(containerWidth / pixelSize);
+    const pixelsVertical = Math.floor(containerHeight / pixelSize);
 
-  for (let y = 0; y < pixelsVertical; y++) {
-     for (let x = 0; x < pixelsHorizontal; x++) {
+    for (let y = 0; y < pixelsVertical; y++) {
+      for (let x = 0; x < pixelsHorizontal; x++) {
         const pixel = document.createElement("div");
         pixel.classList.add("pixel");
         pixel.style.width = `${pixelSize}px`;
@@ -4703,68 +4838,82 @@ function setNormalPrice(skinContainer, price) {
         pixel.dataset.x = x;
         pixel.dataset.y = y;
         container.appendChild(pixel);
-     }
+      }
+    }
+
+    container.dataset.initialized = true;
   }
 
-  container.dataset.initialized = true;
-}
+  function cargarDatosPaginasCercanas(paginaActual) {
+    const paginasACargar = [
+      paginaActual - 2,
+      paginaActual - 1,
+      paginaActual,
+      paginaActual + 1,
+      paginaActual + 2,
+    ];
 
-function cargarDatosPaginasCercanas(paginaActual) {
-  const paginasACargar = [paginaActual - 2, paginaActual - 1, paginaActual, paginaActual + 1, paginaActual + 2];
+    paginasACargar.forEach((pagina) => {
+      if (pagina > 0 && pagina <= $("#notebook").turn("pages")) {
+        // Asegúrate de que la página esté dentro de los límites
+        if (!paginasCargadas[pagina]) {
+          // Verifica si la página ya fue cargada
+          const paintContainer = document.querySelector(
+            `[page="${pagina}"] .paint`
+          );
+          if (paintContainer)
+            generarCuadriculaDePixelesEnContenedor(paintContainer);
 
-  paginasACargar.forEach((pagina) => {
-     if (pagina > 0 && pagina <= $("#notebook").turn("pages")) { // Asegúrate de que la página esté dentro de los límites
-        if (!paginasCargadas[pagina]) { // Verifica si la página ya fue cargada
-           const paintContainer = document.querySelector(`[page="${pagina}"] .paint`);
-           if (paintContainer) generarCuadriculaDePixelesEnContenedor(paintContainer);
-           
-           cargarDatosDePagina(pagina);
-           paginasCargadas[pagina] = true; // Marca la página como cargada
+          cargarDatosDePagina(pagina);
+          paginasCargadas[pagina] = true; // Marca la página como cargada
         }
-     }
-  });
-}
-
-
-async function cargarDatosDePagina(pageNumber) {
-  // Verifica si la página ya fue cargada
-  if (paginasCargadas[pageNumber]) {
-     console.log(`La página ${pageNumber} ya fue cargada anteriormente.`);
-     return;
+      }
+    });
   }
 
-  // Marcar la página como cargada antes de cargar datos para evitar duplicaciones
-  paginasCargadas[pageNumber] = true;
+  async function cargarDatosDePagina(pageNumber) {
+    // Verifica si la página ya fue cargada
+    if (paginasCargadas[pageNumber]) {
+      console.log(`La página ${pageNumber} ya fue cargada anteriormente.`);
+      return;
+    }
 
-  // Carga las notas de la página
-  const notasJSON = await obtenerNotasDeUsuario(idLogeado);
-  if (notasJSON) {
-     const notas = JSON.parse(notasJSON);
-     const content = notas[pageNumber];
+    // Marcar la página como cargada antes de cargar datos para evitar duplicaciones
+    paginasCargadas[pageNumber] = true;
 
-     const textElement = document.querySelector(`[page="${pageNumber}"] .text`);
-     if (textElement) {
+    // Carga las notas de la página
+    const notasJSON = await obtenerNotasDeUsuario(idLogeado);
+    if (notasJSON) {
+      const notas = JSON.parse(notasJSON);
+      const content = notas[pageNumber];
+
+      const textElement = document.querySelector(
+        `[page="${pageNumber}"] .text`
+      );
+      if (textElement) {
         textElement.innerHTML = content;
         //console.log(`Notas cargadas en la página ${pageNumber}:`, content);
-     } else {
+      } else {
         //console.warn(`No se encontró el contenedor de texto para la página ${pageNumber}`);
-     }
-  }
+      }
+    }
 
-  // Carga los dibujos de la página
-  const dibujosJSON = await obtenerDibujosDeUsuario(idLogeado);
-  if (dibujosJSON) {
-     const dibujos = JSON.parse(dibujosJSON);
-     const paintContainer = document.querySelector(`[page="${pageNumber}"] .paint`);
+    // Carga los dibujos de la página
+    const dibujosJSON = await obtenerDibujosDeUsuario(idLogeado);
+    if (dibujosJSON) {
+      const dibujos = JSON.parse(dibujosJSON);
+      const paintContainer = document.querySelector(
+        `[page="${pageNumber}"] .paint`
+      );
 
-     if (paintContainer && dibujos[pageNumber]) {
+      if (paintContainer && dibujos[pageNumber]) {
         renderizarDibujos(dibujos[pageNumber], paintContainer);
         //console.log(`Dibujos cargados en la página ${pageNumber}`);
-     } else {
+      } else {
         //console.warn(`No se encontró el contenedor de dibujos para la página ${pageNumber}`);
-     }
+      }
+    }
   }
-}
 
 
 });

@@ -5,7 +5,6 @@
   <title>D A M</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/png" href="img/favicon.png " id="icon" />
-  <script src="main.js"></script>
 </head>
 
 <body>
@@ -362,6 +361,47 @@
         <div class="skinContainerLock"></div>
 
         <div class="skinContainerNotVisible">
+          <div class="tituloSkinNotVisible">Cc Checkbox</div>
+          <div class="priceContainerNotVisible">
+            <div>Price:</div>
+            <div class="price">500</div>
+            <img class="coin" src="img/coin.png" draggable="false" />
+            <img class="coinBlur" src="img/coin.png" draggable="false" />
+          </div>
+        </div>
+
+        <img class="skinPortada" src="img/cursors/portadas/cccc_jefeEstudios.png" draggable="false" />
+        <div class="tituloSkin">Cc Checkbox</div>
+        <div class="releaseDate">Released: 09/11/2024</div>
+        <div class="priceContainer">
+          <div>Price:</div>
+          <div class="priceNormal">500</div>
+          <img class="coin" src="img/coinNormal.png" draggable="false" />
+        </div>
+        <div class="tier rare">Rare</div>
+        <div class="buttonThemeContainer">
+          <div class="buttonTheme buttonThemeNight">
+            <img class="buttonThemeImg" src="img/moonIcon.png" alt="img/cursors/cccc_checkbox.webp"
+              draggable="false" />
+          </div>
+          <div class="buttonTheme buttonThemeDay">
+            <img class="buttonThemeImg" src="img/sunIcon.png" alt="img/cursors/cccc_checkbox.webp"
+              draggable="false" />
+          </div>
+        </div>
+        <div class="skinContainerBackdropFilter"></div>
+      </div>
+
+      <div class="skinContainer">
+        <div class="boxshadow">
+          <div class="boxshadowNight"></div>
+          <div class="boxshadowDay"></div>
+        </div>
+
+        <img class="candado" src="img/lock.png" draggable="false" />
+        <div class="skinContainerLock"></div>
+
+        <div class="skinContainerNotVisible">
           <div class="tituloSkinNotVisible">Cc ????</div>
           <div class="priceContainerNotVisible">
             <div>Price:</div>
@@ -522,7 +562,7 @@
       <img draggable="false" id="logoutButton" />
       <button onclick="capturarImagen()">Capturar</button>
     </nav>
-
+    <div id="checkboxland"></div>
 
     <div id="horarioImgContainer">
       <img draggable="false" id="horarioImg" src="img/Calendario_Escolar_Night.png" />
@@ -942,6 +982,8 @@
       </div>
     </div>
 
+    <div id="checkboxlandBackground"></div>
+
     <button class="ButtonCc1" onclick="mostrarImagen('Cc1', [0.5, 0.5], [1000,2000,3000])"
       onmouseover="mostrarImagenPreview('Cc1')"></button>
     <button class="ButtonCc2" onclick="mostrarImagen('Cc2', [0.5, 0.5], [1000,2000,3000])"
@@ -1054,11 +1096,171 @@
     }
 
   </script>
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="libs/turn.min.js"></script>
   <script src="libs/turn.js"></script>
   <script src="libs/ztext.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+  <script src="main.js"></script>
+
+  <script type="module">
+    import { Checkboxland } from './libs/checkboxland.js';
+
+    // ANIMACIÓN PRINCIPAL EN #checkboxland
+    // Inicializa Checkboxland con resolución de 128x128 en el contenedor #checkboxland
+    const cbl = new Checkboxland({
+      dimensions: "128x128",
+      selector: "#checkboxland",
+    });
+
+    // Generar rutas de imágenes secuencialmente
+    const frames = [];
+    for (let i = 1; i <= 100; i++) {
+      const frameNumber = String(i).padStart(4, '0');
+      frames.push(`img/cursors/cccc/${frameNumber}.png`);
+    }
+
+    // Función para cargar y redimensionar cada cuadro de imagen
+    async function loadFrame(url) {
+      const img = new Image();
+      img.src = url;
+      await img.decode();
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 128;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, -50, -50, 150, 150);
+      const imageData = ctx.getImageData(0, 0, 128, 128).data;
+      return createMatrixFromImageData(imageData, 128, 128);
+    }
+
+    // Convierte los datos de imagen a matriz de Checkboxland
+    function createMatrixFromImageData(imageData, width, height) {
+      const matrix = [];
+      let row = [];
+
+      for (let i = 0; i < imageData.length; i += 4) {
+        const isFilled = imageData[i + 3] > 128 ? 1 : 0;
+        row.push(isFilled);
+        if (row.length === width) {
+          matrix.push(row);
+          row = [];
+        }
+      }
+      return matrix;
+    }
+
+    // Declaración del intervalo de animación
+    let animationInterval;
+
+    // Función para iniciar la animación
+    function playAnimation() {
+      let frameIndex = 0;
+      clearInterval(animationInterval);
+
+      animationInterval = setInterval(async () => {
+        const matrix = await loadFrame(frames[frameIndex]);
+        cbl.setData(matrix);
+        frameIndex = (frameIndex + 1) % frames.length;
+      }, 100);
+    }
+
+    // Función para detener y limpiar la animación
+    function stopAnimation() {
+      clearInterval(animationInterval);
+
+      // Crear una matriz vacía (solo ceros) para borrar la cuadrícula
+      const emptyMatrix = Array(128).fill().map(() => Array(128).fill(0));
+      cbl.setData(emptyMatrix); // Establece la cuadrícula con la matriz vacía
+    }
+
+    // Función para reiniciar la animación
+    function resetAnimation() {
+      stopAnimation();
+      playAnimation();
+    }
+
+    // Exponer funciones para control desde el DOM
+    window.playAnimation = playAnimation;
+    window.stopAnimation = stopAnimation;
+    window.resetAnimation = resetAnimation;
+
+    // Inicia la animación por primera vez
+    playAnimation();
+
+
+
+
+    // CHECKBOXLAND BACKGROUND INTERACTIVO EN #checkboxlandBackground
+    const dimensions = '44x15';
+    let cblBackground;
+    let lastPos = null;
+
+    function init(existingCbl) {
+      // Inicia Checkboxland en el contenedor #checkboxlandBackground
+      cblBackground = !!existingCbl ? existingCbl : new Checkboxland('#checkboxlandBackground', { dimensions });
+
+      // Limpia cualquier dato previo
+      cblBackground.clearData();
+
+      // Imprime el texto inicial en coordenadas específicas
+      cblBackground.print('click', { x: 10, y: 0 });
+      cblBackground.print('2 boxes', { x: 2, y: 8 });
+
+      // Configura el manejador de clics
+      cblBackground.onClick(handleClick);
+
+      return cblBackground;
+    }
+
+    function handleClick({ x, y, checkbox }) {
+      // Guarda la posición del primer clic, y en el segundo clic dibuja
+      if (!lastPos) {
+        lastPos = { x, y };
+        return;
+      }
+      draw(lastPos, { x, y });
+      lastPos = null;
+    }
+
+    function draw(start, end) {
+      // Obtiene los datos actuales del estado de las casillas
+      const data = cblBackground.getData();
+
+      // Determina los límites del área a dibujar
+      const minX = Math.min(start.x, end.x);
+      const maxX = Math.max(start.x, end.x);
+      const minY = Math.min(start.y, end.y);
+      const maxY = Math.max(start.y, end.y);
+
+      // Actualiza el estado de las casillas para dibujar el rectángulo
+      for (let y = minY; y <= maxY; y += 1) {
+        for (let x = minX; x <= maxX; x += 1) {
+          data[y][x] = 1;
+        }
+      }
+      cblBackground.setData(data); // Aplica los cambios en Checkboxland
+    }
+
+    function cleanUp() {
+      // Limpia el evento onClick para evitar duplicaciones
+      cblBackground.onClick.cleanUp();
+    }
+
+    // Inicializa el fondo interactivo de Checkboxland
+    init();
+
+    // Exporta las funciones según sea necesario
+    export {
+      init,
+      cleanUp,
+      dimensions,
+    };
+  
+  </script>
 
 </body>
 

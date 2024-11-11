@@ -47,7 +47,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  cursor: none;
+  /*cursor: none;*/
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -175,7 +175,7 @@ body {
   flex-direction: column;
   transition: background-color 0.75s ease;
   overflow: hidden;
-  cursor: none;
+  /*cursor: none;*/
 }
 
 #customCursor {
@@ -2062,7 +2062,7 @@ div.img img {
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
-  cursor: none;
+  /*cursor: none;*/
 
   z-index: -10;
   /*filter: brightness(0) saturate(100%) invert(16%) sepia(95%) saturate(5554%) hue-rotate(357deg) brightness(105%) contrast(116%);*/
@@ -2071,22 +2071,22 @@ div.img img {
 #filterUnderwater {
   display: flex;
   width: 100vw;
-  height: 150%;
+  height: 100vh;
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
-  cursor: none;
+  /*cursor: none;*/
 }
 
 #filterUnderwater.active {
   filter: url(#distort);
   display: flex;
   width: 100vw;
-  height: 150%;
+  height: 100vh;
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
-  cursor: none;
+  /*cursor: none;*/
 }
 
 #filterUnderwater,
@@ -2112,7 +2112,11 @@ div.img img {
   user-select: none;
   pointer-events: none;
   z-index: 190;
-  transition: opacity 1s ease, margin-top 1s ease;
+  transition: opacity 1s ease, margin-top 3s ease, margin-left 0.5s ease;
+
+   /* Aplicamos una máscara que quita el 20% inferior */
+   mask-image: linear-gradient(to top, transparent 20%, black 20%);
+   -webkit-mask-image: linear-gradient(to top, transparent 20%, black 20%);
 }
 
 /* RTX BUTTON */
@@ -2948,7 +2952,7 @@ div.img img {
   position: absolute;
   height: 700px;
   width: auto;
-  z-index: 200;
+  z-index: 199;
   margin-top: -110px;
     /*filter: brightness(0) saturate(100%) invert(63%) sepia(28%) saturate(5111%) hue-rotate(84deg) brightness(116%) contrast(125%);
   opacity: 0.5;*/
@@ -2964,4 +2968,58 @@ div.img img {
 
 .notebookImgSingle{
   margin-left: 1615px;
+}
+
+
+#checkboxland{
+  width: 800px;
+  height: 800px;
+  display: none;
+  position: absolute;
+  transform: scale(0.118);
+  overflow: hidden !important;
+  /*background-color: #22b14c;*/
+  margin-left: -288px;
+  margin-top: -285px;
+  pointer-events: none;
+  transition: transform 0.1s ease-in-out;
+  z-index: 200;
+}
+
+#checkboxland.clicked{
+  transform: scale(0.15);
+}
+
+/*Color not checked*/
+#checkboxland input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #819db8;
+  border-radius: 3px;
+  background-color: #bfd4e9;
+}
+
+/*Color check*/
+#checkboxland input[type="checkbox"]:checked {
+  background-color: #345178;
+  border-color: #345178;
+}
+
+/*Color tick*/
+#checkboxland input[type="checkbox"]:checked::before {
+  color: #bfd4e9;
+  content: "✔";
+}
+
+
+
+
+
+#checkboxlandBackground{
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  /*background-color: #22b14c;*/
+  z-index: -100;
 }
