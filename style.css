@@ -47,7 +47,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  /*cursor: none;*/
+  cursor: none;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -176,7 +176,7 @@ body {
   flex-direction: column;
   transition: background-color 0.75s ease;
   overflow: hidden;
-  /*cursor: none;*/
+  cursor: none;
 }
 
 #customCursor {
@@ -2085,7 +2085,7 @@ div.img img {
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
-  /*cursor: none;*/
+  cursor: none;
 
   z-index: -10;
   /*filter: brightness(0) saturate(100%) invert(16%) sepia(95%) saturate(5554%) hue-rotate(357deg) brightness(105%) contrast(116%);*/
@@ -2098,7 +2098,7 @@ div.img img {
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
-  /*cursor: none;*/
+  cursor: none;
 }
 
 #filterUnderwater.active {
@@ -2109,7 +2109,7 @@ div.img img {
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
-  /*cursor: none;*/
+  cursor: none;
 }
 
 #filterUnderwater,
