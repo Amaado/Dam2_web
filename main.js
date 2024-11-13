@@ -4972,7 +4972,7 @@ function setNormalPrice(skinContainer, price) {
   const tooltipContainers = document.querySelectorAll('.tooltip-container');
 
   tooltipContainers.forEach(tooltipContainer => {
-    let timer;
+    let timer;  // Mover el timer dentro del loop para manejarlo localmente por cada container
     let lastMousePosition = { x: 0, y: 0 };
     let tooltipVisible = false;
     let tooltip;
@@ -4986,6 +4986,8 @@ function setNormalPrice(skinContainer, price) {
       lastMousePosition.y = ev.clientY;
       if (!tooltipVisible) {
         resetTimer(ev);
+      } else if (tooltip) {
+        positionTooltip(tooltip, ev.clientX, ev.clientY);
       }
     });
   
@@ -4997,65 +4999,80 @@ function setNormalPrice(skinContainer, price) {
   
     function resetTimer(event) {
       clearTimeout(timer);
-      timer = setTimeout(() => {
-        showTooltip(lastMousePosition.x, lastMousePosition.y);
-        tooltipVisible = true;
-      }, 1500); // 1.5 segundos de retraso antes de mostrar el tooltip
+      if (tooltipContainer.classList.contains("tooltip-textTimerRtx")) {
+        timer = setTimeout(() => {
+          showTooltip(lastMousePosition.x, lastMousePosition.y);
+          tooltipVisible = true;
+        }, 500);
+
+      }else if (tooltipContainer.classList.contains("tooltip-textTimerInfo")) {
+        timer = setTimeout(() => {
+          showTooltip(lastMousePosition.x, lastMousePosition.y);
+          tooltipVisible = true;
+        }, 10);
+
+      }/*else{
+        timer = setTimeout(() => {
+          showTooltip(lastMousePosition.x, lastMousePosition.y);
+          tooltipVisible = true;
+        }, 1500);
+
+      }*/
+
     }
   
     function showTooltip(mouseX, mouseY) {
       if (!tooltip) {
         tooltip = createTooltip();
       }
-  
-      const isLeftAligned = tooltipContainer.classList.contains("tooltip-text-left");
-  
-      // Posicionar el tooltip en función de si está alineado a la izquierda o derecha
-      if (isLeftAligned) {
-        tooltip.style.left = "auto";
-        tooltip.style.right = `${window.innerWidth - mouseX + 15}px`; // Ajuste respecto a la derecha
-      } else {
-        tooltip.style.right = "auto";
-        tooltip.style.left = `${mouseX + 15}px`; // Ajuste respecto a la izquierda
-      }
-  
+      tooltip.style.left = `${mouseX + 15}px`;
       tooltip.style.top = `${mouseY - 30}px`;
       tooltip.style.visibility = 'visible';
-      setTimeout(() => (tooltip.style.opacity = '0.9'), 10); // Transición a completamente visible
+      setTimeout(() => tooltip.style.opacity = '0.9', 10);  // Transición a completamente visible
     }
   
     function createTooltip() {
-      const newTooltip = document.createElement('div');
+      let newTooltip = document.createElement('div');
       newTooltip.className = 'tooltip-text';
-      newTooltip.style.opacity = '0'; // Inicialmente transparente
+
+      if (tooltipContainer.classList.contains("tooltip-text-left")) {
+        newTooltip.classList.add('tooltip-text-left');
+      }
   
       // Texto principal del tooltip
-      const mainText = tooltipContainer.getAttribute('data-tooltip').replace(/\\n/g, '\n');
-      
-      // Creación de contenedor principal y contenido estilizado
-      const mainTextNode = document.createTextNode(mainText);
-      const styledText = document.createElement('span');
-      styledText.className = 'tooltip-highlight';
-      styledText.textContent = 'Texto destacado';
-      
-      // Estructura HTML dentro del tooltip
-      newTooltip.appendChild(mainTextNode);
-      newTooltip.appendChild(document.createElement('br')); // Salto de línea
-      newTooltip.appendChild(styledText);
+      const mainText = document.createElement('div');
+      mainText.textContent = tooltipContainer.getAttribute('data-tooltip');
+      newTooltip.appendChild(mainText);
+  
+      const newTooltipHighlight = document.createElement('span');
+      newTooltipHighlight.className = 'tooltip-textHighlight';
+      newTooltipHighlight.textContent = "Intensidad: ";
+      newTooltip.appendChild(newTooltipHighlight);
+
+      const newTooltipState = document.createElement('span');
+      newTooltipState.className = 'tooltip-textState';
+      newTooltipState.textContent = tooltipContainer.getAttribute('data-tooltipState');
+      newTooltipHighlight.appendChild(newTooltipState);
   
       document.body.appendChild(newTooltip);
+      newTooltip.style.opacity = '0';
       return newTooltip;
     }
   
     function removeTooltip() {
       if (tooltip) {
-        tooltip.style.opacity = '0'; // Inicia la transición a invisible
+        tooltip.style.opacity = '0';  // Inicia la transición a invisible
         setTimeout(() => {
           tooltip.style.visibility = 'hidden';
           tooltip.remove();
-          tooltip = null;
+          tooltip = null;  // Limpiar la referencia para permitir la recreación
         }, 500); // Espera 500 ms para completar la transición antes de eliminar
       }
+    }
+  
+    function positionTooltip(tooltip, mouseX, mouseY) {
+      tooltip.style.left = `${mouseX + 15}px`;
+      tooltip.style.top = `${mouseY - 30}px`;
     }
   });
 

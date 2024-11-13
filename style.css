@@ -3108,19 +3108,62 @@ div.img img {
 
 .tooltip-text {
   position: absolute;
-  background-color: rgb(29, 28, 28); 
-  color: #BCAA81; 
+  background-color: #1c2128; 
+  color: #bfd4e9; 
   padding: 3px;
   border-radius: 7px;
-  border: 1px solid #BCAA81;
+  /*border: 1px solid #bfd4e9;*/
   visibility: hidden;
   opacity: 0; 
   transition: opacity 0.5s ease; 
   pointer-events: none; 
-  box-shadow:  0px 0px 20px rgba(0, 0, 0, 0.3);
+  filter: drop-shadow(0px 0px 20px rgba(0, 0, 0, 0.734));
+  box-shadow: 0 0 5px 0px #bfd4e9 inset;
+  text-align: justify;
+  width: 220px;
+  height: 111px;
+  padding: 7px;
+  margin-top: 25px;
+  margin-left: 20px;
 }
 
-.tooltip-highlight {
-  color: #ffcc00; /* Cambia el color del texto estilizado */
+.tooltip-text.tooltip-text-left {
+  margin-left: -265px;
+}
+
+.tooltip-textHighlight {
   font-weight: bold;
+  /*background-color: #1c2128; */
+  top: 20px;
+  left: 2px;
+  position: relative;
+  padding: 10px;
+  box-shadow: 0 0 10px 0px #bfd4e9;
+  border: 1px solid #bfd4e9;
+  border-radius: 7px;
+  filter: drop-shadow(0px 0px 5px #bfd4e9);
+}
+
+.tooltip-textState {
+  position: relative;
+  background-color: #390f11;
+  color: #fa434c;
+  border: 1px solid #fa434c;
+  border-radius: 7px;
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
+  left: 2px;
+  padding: 4px;
+}
+
+.info{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: auto;
+  filter: brightness(0) saturate(100%) invert(88%) sepia(10%) saturate(755%) hue-rotate(181deg) brightness(95%) contrast(92%);
+  pointer-events: all;
+  z-index: 150;
 }
