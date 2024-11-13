@@ -88,7 +88,6 @@ document.addEventListener("DOMContentLoaded", function () {
   let isMouseDown = false;
   const checkboxlandBackground = document.getElementById('checkboxlandBackground');
 
-
   /* CAMBIO DE CURSOR */
 
   let idLogeado = localStorage.getItem("idLogeado");
@@ -420,12 +419,24 @@ document.addEventListener("DOMContentLoaded", function () {
       // Light theme
       body.style.backgroundColor = "#dddcb0";
       body.style.color = "#313842";
+
       cards.forEach((card) => {
         card.style.borderColor = "#242e3ccb";
+        card.style.color = "#242e3ccb";
       });
+
       buttons.forEach((button) => {
         button.style.backgroundColor = "#dddcb0";
       });
+
+      horarioImg.src = "img/Calendario_Escolar_Day.png";
+      if(!horarioImg.classList.contains("active")){
+        horarioImg.classList.add("horarioImgDay");
+        if(horarioImg.classList.contains("horarioImgNight")){
+          horarioImg.classList.remove("horarioImgNight");
+        }
+      }
+     
 
       if (cursor && cursorPurpleish) {
         cursor.src = dayCursorSrc;
@@ -449,12 +460,25 @@ document.addEventListener("DOMContentLoaded", function () {
       // Dark theme
       body.style.backgroundColor = "#1c2128";
       body.style.color = "#bfd4e9";
+      
       cards.forEach((card) => {
         card.style.borderColor = "grey";
+        card.style.color = "#bfd4e9";
+
       });
+
       buttons.forEach((button) => {
         button.style.backgroundColor = "#262b31";
       });
+
+      horarioImg.src = "img/Calendario_Escolar_Night.png";
+      if(!horarioImg.classList.contains("active")){
+        horarioImg.classList.add("horarioImgNight");
+        if(horarioImg.classList.contains("horarioImgDay")){
+          horarioImg.classList.remove("horarioImgDay");
+        }
+      }
+
 
       if (cursor && cursorPurpleish) {
         cursor.src = nightCursorSrc;
@@ -570,11 +594,11 @@ document.addEventListener("DOMContentLoaded", function () {
           rule.style.color = "#313842";
           rule.style.border = "2px solid #313842"; // Cambiar el borde en hover
         }
-
+        
         if (rule.selectorText === "#modifiersContainer") {
-          rule.style.background = `linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
-          rule.style.background = `-webkit-linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
-          rule.style.background = `-moz-linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
+          rule.style.background = `linear-gradient(0deg, #2d1e03 10%, #dddcb0 300%)`;
+          rule.style.background = `-webkit-linear-gradient(0deg, #2d1e03 10%, #dddcb0 300%)`;
+          rule.style.background = `-moz-linear-gradient(0deg, #2d1e03 10%, #dddcb0 300%)`;
         }
         if (rule.selectorText === "#modifiersContainer::-webkit-scrollbar-thumb") {
           rule.style.backgroundColor = "#313842";
@@ -712,12 +736,13 @@ document.addEventListener("DOMContentLoaded", function () {
           rule.style.border = "2px solid #bfd4e9b1"; // Cambiar el borde en hover
           rule.style.color = "#bfd4e9";
         }
-
+        
         if (rule.selectorText === "#modifiersContainer") {
-          rule.style.background = `linear-gradient(180deg,#1c2128 10%, #737f8b 200%)`;
-          rule.style.background = `-webkit-linear-gradient(180deg,#1c2128 10%, #737f8b 200%)`;
-          rule.style.background = `-moz-linear-gradient(180deg,#1c2128 10%, #737f8b 200%)`;
+          rule.style.background = `linear-gradient(0deg, #1c2128 10%, #737f8b 300%)`;
+          rule.style.background = `-webkit-linear-gradient(0deg, #1c2128 10%, #737f8b 300%)`;
+          rule.style.background = `-moz-linear-gradient(0deg, #1c2128 10%, #737f8b 300%)`;
         }
+        
         if (rule.selectorText === "#modifiersContainer::-webkit-scrollbar-thumb") {
           rule.style.backgroundColor = "#737f8b";
         }
@@ -3855,7 +3880,7 @@ function setNormalPrice(skinContainer, price) {
     horarioImg.style.transition = "none";
 
     horarioImg.style.setProperty("margin-left", "350px", "important");
-    horarioImg.style.setProperty("margin-top", "900px", "important");
+    horarioImg.style.setProperty("margin-top", "40px", "important");
     if (idLogeado) {
       horarioImg.style.setProperty(
         "transform",
@@ -3869,13 +3894,6 @@ function setNormalPrice(skinContainer, price) {
         "important"
       );
     }
-
-    horarioImg.style.setProperty(
-      "filter",
-      "drop-shadow(10px 10px 20px #000000b3) brightness(0) saturate(100%) invert(87%) sepia(12%) saturate(575%) hue-rotate(179deg) brightness(96%) contrast(91%)",
-      "important"
-    );
-
     // Espera un tiempo adicional para asegurar que todo esté completamente renderizado
     setTimeout(() => {
       // Activa la transición en el primer clic
@@ -3891,6 +3909,7 @@ function setNormalPrice(skinContainer, price) {
           horarioEstado = !horarioEstado;
 
           if (horarioEstado) {
+            horarioImg.classList.add("active");
             horarioImg.style.setProperty("display", "flex", "important");
             setTimeout(() => {
               // Configura el estilo para la animación de entrada
@@ -3906,18 +3925,22 @@ function setNormalPrice(skinContainer, price) {
                 "translateX(-350px) scale(1, 1)",
                 "important"
               );
-              horarioImg.style.setProperty(
-                "filter",
-                "drop-shadow(10px 10px 20px #000000b3)",
-                "important"
-              );
-              horarioImg.style.setProperty("margin-top", "-40px", "important");
+
+              if(horarioImg.classList.contains("horarioImgDay")){
+                horarioImg.classList.remove("horarioImgDay");
+              }
+              if(horarioImg.classList.contains("horarioImgNight")){
+                horarioImg.classList.remove("horarioImgNight");
+              }
+
+              horarioImg.style.setProperty("margin-top", "-420px", "important");
               boxx.style.marginLeft = "800px";
               allESC.style.marginLeft = "400px";
               helloMessage.style.marginLeft = "400px";
             }, 10);
           } else {
             // Configura el estilo para la animación de salida
+            horarioImg.classList.remove("active");
             horarioImg.style.setProperty(
               "transition",
               "margin-left 0.9s ease, margin-top 1.3s ease, transform 1s ease, filter 2s ease",
@@ -3938,13 +3961,18 @@ function setNormalPrice(skinContainer, price) {
                 "important"
               );
             }
-            console.log(idLogeado);
-            horarioImg.style.setProperty(
-              "filter",
-              "drop-shadow(10px 10px 20px #000000b3) brightness(0) saturate(100%) invert(87%) sepia(12%) saturate(575%) hue-rotate(179deg) brightness(96%) contrast(91%)",
-              "important"
-            );
-            horarioImg.style.setProperty("margin-top", "898px", "important");
+
+            if(horarioImg.classList.contains("horarioImgDay") || horarioImg.classList.contains("horarioImgNight")){
+              
+            }else{
+              if(checkbox.checked){
+                horarioImg.classList.add("horarioImgDay");
+              }else{
+                horarioImg.classList.add("horarioImgNight");
+              }
+            }
+
+            horarioImg.style.setProperty("margin-top", "40px", "important");
             boxx.style.marginLeft = "0px";
             allESC.style.marginLeft = "0px";
             helloMessage.style.marginLeft = "0px";
@@ -4969,112 +4997,129 @@ function setNormalPrice(skinContainer, price) {
 
   /* TOOLTIPS */
 
-  const tooltipContainers = document.querySelectorAll('.tooltip-container');
+const tooltipContainers = document.querySelectorAll('.tooltip-container');
 
-  tooltipContainers.forEach(tooltipContainer => {
-    let timer;  // Mover el timer dentro del loop para manejarlo localmente por cada container
-    let lastMousePosition = { x: 0, y: 0 };
-    let tooltipVisible = false;
-    let tooltip;
-  
-    tooltipContainer.addEventListener('mouseenter', function(e) {
-      resetTimer(e);
-    });
-  
-    tooltipContainer.addEventListener('mousemove', function(ev) {
-      lastMousePosition.x = ev.clientX;
-      lastMousePosition.y = ev.clientY;
-      if (!tooltipVisible) {
-        resetTimer(ev);
-      } else if (tooltip) {
-        positionTooltip(tooltip, ev.clientX, ev.clientY);
-      }
-    });
-  
-    tooltipContainer.addEventListener('mouseleave', function() {
-      clearTimeout(timer);
-      removeTooltip();
-      tooltipVisible = false;
-    });
-  
-    function resetTimer(event) {
-      clearTimeout(timer);
-      if (tooltipContainer.classList.contains("tooltip-textTimerRtx")) {
-        timer = setTimeout(() => {
-          showTooltip(lastMousePosition.x, lastMousePosition.y);
-          tooltipVisible = true;
-        }, 500);
+tooltipContainers.forEach(tooltipContainer => {
+  let timer; 
+  let lastMousePosition = { x: 0, y: 0 };
+  let tooltipVisible = false;
+  let tooltip;
 
-      }else if (tooltipContainer.classList.contains("tooltip-textTimerInfo")) {
-        timer = setTimeout(() => {
-          showTooltip(lastMousePosition.x, lastMousePosition.y);
-          tooltipVisible = true;
-        }, 10);
+  tooltipContainer.addEventListener('mouseenter', function(e) {
+    clearTimeout(timer);
+    resetTimer(e);
+  });
 
-      }/*else{
-        timer = setTimeout(() => {
-          showTooltip(lastMousePosition.x, lastMousePosition.y);
-          tooltipVisible = true;
-        }, 1500);
-
-      }*/
-
-    }
-  
-    function showTooltip(mouseX, mouseY) {
-      if (!tooltip) {
-        tooltip = createTooltip();
-      }
-      tooltip.style.left = `${mouseX + 15}px`;
-      tooltip.style.top = `${mouseY - 30}px`;
-      tooltip.style.visibility = 'visible';
-      setTimeout(() => tooltip.style.opacity = '0.9', 10);  // Transición a completamente visible
-    }
-  
-    function createTooltip() {
-      let newTooltip = document.createElement('div');
-      newTooltip.className = 'tooltip-text';
-
-      if (tooltipContainer.classList.contains("tooltip-text-left")) {
-        newTooltip.classList.add('tooltip-text-left');
-      }
-  
-      // Texto principal del tooltip
-      const mainText = document.createElement('div');
-      mainText.textContent = tooltipContainer.getAttribute('data-tooltip');
-      newTooltip.appendChild(mainText);
-  
-      const newTooltipHighlight = document.createElement('span');
-      newTooltipHighlight.className = 'tooltip-textHighlight';
-      newTooltipHighlight.textContent = "Intensidad: ";
-      newTooltip.appendChild(newTooltipHighlight);
-
-      const newTooltipState = document.createElement('span');
-      newTooltipState.className = 'tooltip-textState';
-      newTooltipState.textContent = tooltipContainer.getAttribute('data-tooltipState');
-      newTooltipHighlight.appendChild(newTooltipState);
-  
-      document.body.appendChild(newTooltip);
-      newTooltip.style.opacity = '0';
-      return newTooltip;
-    }
-  
-    function removeTooltip() {
-      if (tooltip) {
-        tooltip.style.opacity = '0';  // Inicia la transición a invisible
-        setTimeout(() => {
-          tooltip.style.visibility = 'hidden';
-          tooltip.remove();
-          tooltip = null;  // Limpiar la referencia para permitir la recreación
-        }, 500); // Espera 500 ms para completar la transición antes de eliminar
-      }
-    }
-  
-    function positionTooltip(tooltip, mouseX, mouseY) {
-      tooltip.style.left = `${mouseX + 15}px`;
-      tooltip.style.top = `${mouseY - 30}px`;
+  tooltipContainer.addEventListener('mousemove', function(ev) {
+    lastMousePosition.x = ev.clientX;
+    lastMousePosition.y = ev.clientY;
+    if (!tooltipVisible) {
+      resetTimer(ev);
+    } else if (tooltip) {
+      positionTooltip(tooltip, ev.clientX, ev.clientY);
     }
   });
+
+  tooltipContainer.addEventListener('mouseleave', function() {
+    clearTimeout(timer);
+    if (tooltip) {
+      tooltip.style.opacity = '0';  // Inicia la transición de desaparición
+      setTimeout(() => removeTooltip(), 100);  // Espera brevemente antes de eliminar
+    }
+    tooltipVisible = false;
+  });
+
+  function resetTimer(event) {
+    clearTimeout(timer);
+    if (tooltipContainer.classList.contains("tooltip-textTimerRtx")) {
+      timer = setTimeout(() => showTooltip(lastMousePosition.x, lastMousePosition.y), 500);
+    } else if (tooltipContainer.classList.contains("tooltip-textTimerInfo")) {
+      timer = setTimeout(() => showTooltip(lastMousePosition.x, lastMousePosition.y), 10);
+    }/* else {
+      timer = setTimeout(() => showTooltip(lastMousePosition.x, lastMousePosition.y), 1500);
+    }*/
+  }
+
+  function showTooltip(mouseX, mouseY) {
+    if (!tooltipVisible) {
+      tooltip = createTooltip();
+      positionTooltip(tooltip, mouseX, mouseY);
+      tooltip.style.visibility = 'visible';
+      tooltip.style.opacity = '1';
+      tooltipVisible = true;
+    }
+  }
+
+  function createTooltip() {
+    let newTooltip = document.createElement('div');
+    newTooltip.className = 'tooltip-text';
+  
+    if (tooltipContainer.classList.contains("tooltip-text-left")) {
+      newTooltip.classList.add('tooltip-text-left');
+    }
+  
+    const mainText = document.createElement('div');
+    mainText.textContent = tooltipContainer.getAttribute('data-tooltip');
+    newTooltip.appendChild(mainText);
+  
+    const newTooltipHighlight = document.createElement('span');
+    newTooltipHighlight.className = 'tooltip-textHighlight';
+    newTooltipHighlight.textContent = "Intensidad: ";
+    newTooltip.appendChild(newTooltipHighlight);
+  
+    const newTooltipState = document.createElement('span');
+    newTooltipState.className = 'tooltip-textState';
+    newTooltipState.textContent = tooltipContainer.getAttribute('data-tooltipState');
+  
+    if (newTooltipState.textContent == "Media") {
+      newTooltipState.classList.add("media");
+  
+    }else if (newTooltipState.textContent == "Alta") {
+      newTooltipState.style.width = "55px";
+      newTooltipState.classList.add("alta");
+      const imgAlta = document.createElement('img');
+      imgAlta.src = 'img/tooltipFireEmoji.gif';
+      imgAlta.className = 'tooltipFireEmoji tooltipFireEmojiAlta';
+      
+      newTooltipState.appendChild(imgAlta);
+  
+    } else if (newTooltipState.textContent == "Muy alta") {
+      newTooltipState.style.width = "90px";
+      newTooltipState.classList.add("muyAlta");
+      const imgMuyAlta1 = document.createElement('img');
+      imgMuyAlta1.src = 'img/tooltipFireEmoji.gif';
+      imgMuyAlta1.className = 'tooltipFireEmoji tooltipFireEmojiMuyAlta';
+
+      newTooltipState.appendChild(imgMuyAlta1);
+
+    }else if (newTooltipState.textContent == "Extrema") {
+      newTooltipState.classList.add("extrema");
+      const imgExtrema = document.createElement('img');
+      imgExtrema.src = 'img/tooltipFireSimulation.webp';
+      imgExtrema.className = 'tooltipFireSimulation';
+  
+      newTooltipState.appendChild(imgExtrema);
+    }
+  
+    newTooltipHighlight.appendChild(newTooltipState);
+    document.body.appendChild(newTooltip);
+    newTooltip.style.opacity = '0';
+    return newTooltip;
+  }
+
+  function removeTooltip() {
+    if (tooltip) {
+      tooltip.remove();
+      tooltip = null;
+    }
+  }
+
+  function positionTooltip(tooltip, mouseX, mouseY) {
+    tooltip.style.left = `${mouseX + 15}px`;
+    tooltip.style.top = `${mouseY - 30}px`;
+  }
+});
+
 
 
 

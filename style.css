@@ -760,7 +760,7 @@ div.img img {
   border-radius: 5px;
 }
 
-#title {
+.title {
   font-size: 24px;
 }
 
@@ -1329,10 +1329,40 @@ div.img img {
   background: linear-gradient(to right, #cbca8f 0%, #edeba4 100%);
 }
 
+.betaLabelContainer{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 8px;
+  width: 100%;
+  height: 10px;
+}
+
+.betaLabelInfo{
+  position: relative;
+  background-color: transparent;
+  border-radius: 22px;
+  color: red;
+  border: 2px solid red;
+  height: 22px;
+  min-width: 22px;
+  text-align: center;
+  transform: scale(0.6);
+}
+
+.betaLabel{
+  position: relative;
+  display: flex;
+  width: 60%;
+  font-size: 15px;
+  line-height: 1.2;
+  color: red;
+  text-align: justify;
+}
+
 #modifiersContainer {
-  background: linear-gradient(180deg, #2d1e03 10%, #dddcb0 200%);
-  background: -webkit-linear-gradient(180deg, #c4bc95f4 10%, #dddcb0 200%);
-  background: -moz-linear-gradient(180deg, #c4bc95f4 10%, #dddcb0 200%);
   position: fixed;
   width: 15vw;
   height: 100vh;
@@ -2470,14 +2500,22 @@ div.img img {
   color: black;
   pointer-events: none;
   display: flex;
+  top: 50vh;
   right: 0;
   opacity: 1;
   margin-left: 350px;
-  margin-top: 898px;
+  /*margin-top: -898px;*/
   transform: translateX(-10px) scale(0.02, 0.02);
-  filter: drop-shadow(10px 10px 20px #000000b3) brightness(0) saturate(100%) invert(87%) sepia(12%) saturate(575%) hue-rotate(179deg) brightness(96%) contrast(91%);
   transition: margin-left 0.9s ease, margin-top 1.3s ease,
     transform 1s ease, filter 1.5s ease;
+}
+
+.horarioImgDay{
+  filter: drop-shadow(10px 10px 20px #000000b3) brightness(0) saturate(100%) invert(16%) sepia(4%) saturate(100%) hue-rotate(176deg) brightness(97%) contrast(83%);
+}
+
+.horarioImgNight{
+  filter: drop-shadow(10px 10px 20px #000000b3) brightness(0) saturate(100%) invert(87%) sepia(12%) saturate(575%) hue-rotate(179deg) brightness(96%) contrast(91%);
 }
 
 #notebookContainer {
@@ -3138,26 +3176,47 @@ div.img img {
   left: 2px;
   position: relative;
   padding: 10px;
-  box-shadow: 0 0 10px 0px #bfd4e9;
-  border: 1px solid #bfd4e9;
+  /*box-shadow: 0 0 10px 0px #bfd4e9;
+  border: 1px solid #bfd4e9;*/
   border-radius: 7px;
   filter: drop-shadow(0px 0px 5px #bfd4e9);
 }
 
 .tooltip-textState {
   position: relative;
-  background-color: #390f11;
-  color: #fa434c;
-  border: 1px solid #fa434c;
   border-radius: 7px;
   font-weight: bold;
   display: inline-block;
-  text-align: center;
-  left: 2px;
+  text-align: left;
+  left: 8px;
   padding: 4px;
 }
 
-.info{
+.tooltip-textState.media{
+  background-color: #503910;
+  color: #faba43;
+  border: 1px solid #faba43;
+}
+
+.tooltip-textState.alta{
+  background-color: #643712;
+  color: #fa9543;
+  border: 1px solid #fa9543;
+}
+
+.tooltip-textState.muyAlta{
+  background-color: #5a1706;
+  color: #fa6843;
+  border: 1px solid #fa6843;
+}
+
+.tooltip-textState.extrema{
+  background-color: #390f11;
+  color: #fa434c;
+  border: 1px solid #fa434c;
+}
+
+.information{
   position: absolute;
   top: 10px;
   right: 10px;
@@ -3166,4 +3225,47 @@ div.img img {
   filter: brightness(0) saturate(100%) invert(88%) sepia(10%) saturate(755%) hue-rotate(181deg) brightness(95%) contrast(92%);
   pointer-events: all;
   z-index: 150;
+}
+
+.tooltipFireSimulation{
+  position: absolute;
+  width: 80px;
+  height: 60px;
+  margin-left: -74px;
+  margin-top: -36px;
+  mix-blend-mode: color-dodge;
+  opacity: 60%;
+  animation: iluminacion 1.5s infinite;
+}
+
+.tooltipFireEmoji{
+  position: absolute;
+  width: 25px;
+  height: auto;
+  margin-top: -5px;
+}
+
+.tooltipFireEmojiAlta{
+  margin-left: -3px;
+  filter: hue-rotate(30deg);
+}
+
+.tooltipFireEmojiMuyAlta{
+  margin-left: -2px;
+  animation: iluminacion 1.5s infinite;
+}
+
+@keyframes iluminacion {
+  0% {
+    filter: drop-shadow(0px 0px 5px #fbfcc1   );
+  }
+  25% {
+    filter: drop-shadow(0px 0px 5px #fa8a26   );
+  }
+  75% {
+    filter: drop-shadow(0px 0px 5px #f62e0d  );
+  }
+  100% {
+    filter: drop-shadow(0px 0px 5px #fbd455   );
+  }
 }
