@@ -3880,7 +3880,7 @@ function setNormalPrice(skinContainer, price) {
     horarioImg.style.transition = "none";
 
     horarioImg.style.setProperty("margin-left", "350px", "important");
-    horarioImg.style.setProperty("margin-top", "40px", "important");
+    horarioImg.style.setProperty("margin-top", "37px", "important");
     if (idLogeado) {
       horarioImg.style.setProperty(
         "transform",
@@ -3972,7 +3972,7 @@ function setNormalPrice(skinContainer, price) {
               }
             }
 
-            horarioImg.style.setProperty("margin-top", "40px", "important");
+            horarioImg.style.setProperty("margin-top", "37px", "important");
             boxx.style.marginLeft = "0px";
             allESC.style.marginLeft = "0px";
             helloMessage.style.marginLeft = "0px";
