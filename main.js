@@ -87,6 +87,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const checkboxland = document.getElementById("checkboxland");
   let isMouseDown = false;
   const checkboxlandBackground = document.getElementById('checkboxlandBackground');
+  const stage = document.querySelector(".stage");
+  const notebookLogoLleno = document.getElementById('notebookLogoLleno');
+  const notebookLogoVacio = document.getElementById('notebookLogoVacio');
+  const pageNumber = document.getElementById("page-number");
+
+
 
   /* CAMBIO DE CURSOR */
 
@@ -456,6 +462,13 @@ document.addEventListener("DOMContentLoaded", function () {
         //setImageFromCacheOrAssign(logoutButton,"logoutDay", "img/logoutDay.png");
         logoutButton.src = "img/logoutDay.png";
       }
+      notebookLogoLleno.src="img/libsIconLleno_day.png";
+      notebookLogoVacio.src="img/libsIconVacio_day.png";
+      settingsImgLight.src="img/settingsDay.png";
+      settingsImg.src="img/settingsDay.png";
+      pageNumber.style.backgroundColor = "#313842";
+      pageNumber.style.color = "#dddcb0";
+
     } else {
       // Dark theme
       body.style.backgroundColor = "#1c2128";
@@ -498,6 +511,12 @@ document.addEventListener("DOMContentLoaded", function () {
         //setImageFromCacheOrAssign(logoutButton,"logoutNight", "img/logoutNight.png");
         logoutButton.src = "img/logoutNight.png";
       }
+      notebookLogoLleno.src="img/libsIconLleno_night.png";
+      notebookLogoVacio.src="img/libsIconVacio_night.png";
+      settingsImgLight.src="img/settingsNight.png";
+      settingsImg.src="img/settingsNight.png";
+      pageNumber.style.backgroundColor = "#bfd4e9";
+      pageNumber.style.color = "#313842";
     }
 
     ajustesColorLoginYregister(checkbox);
@@ -596,9 +615,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         
         if (rule.selectorText === "#modifiersContainer") {
-          rule.style.background = `linear-gradient(0deg, #2d1e03 10%, #dddcb0 300%)`;
-          rule.style.background = `-webkit-linear-gradient(0deg, #2d1e03 10%, #dddcb0 300%)`;
-          rule.style.background = `-moz-linear-gradient(0deg, #2d1e03 10%, #dddcb0 300%)`;
+          rule.style.background = `linear-gradient(0deg, #dddcb0 10%, #2d1e03 200%)`;
+          rule.style.background = `-webkit-linear-gradient(0deg, #dddcb0 10%, #2d1e03 200%)`;
+          rule.style.background = `-moz-linear-gradient(0deg, #dddcb0 10%, #2d1e03 200%)`;
         }
         if (rule.selectorText === "#modifiersContainer::-webkit-scrollbar-thumb") {
           rule.style.backgroundColor = "#313842";
@@ -611,9 +630,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         /* SKINS CONTAINER COLOR */
         if (rule.selectorText === "#skinsContainer") {
-          rule.style.background = `linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
-          rule.style.background = `-webkit-linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
-          rule.style.background = `-moz-linear-gradient(180deg,#dddcb0 10%, #2d1e03 150%)`;
+          rule.style.background = `linear-gradient(180deg,#dddcb0 10%, #2d1e03 200%)`;
+          rule.style.background = `-webkit-linear-gradient(180deg,#dddcb0 10%, #2d1e03 200%)`;
+          rule.style.background = `-moz-linear-gradient(180deg,#dddcb0 10%, #2d1e03 200%)`;
         }
         if (rule.selectorText === "#skinsContainer::-webkit-scrollbar-thumb") {
           rule.style.backgroundColor = "#313842";
@@ -738,9 +757,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         
         if (rule.selectorText === "#modifiersContainer") {
-          rule.style.background = `linear-gradient(0deg, #1c2128 10%, #737f8b 300%)`;
-          rule.style.background = `-webkit-linear-gradient(0deg, #1c2128 10%, #737f8b 300%)`;
-          rule.style.background = `-moz-linear-gradient(0deg, #1c2128 10%, #737f8b 300%)`;
+          rule.style.background = `linear-gradient(0deg, #1c2128 10%, #737f8b 200%)`;
+          rule.style.background = `-webkit-linear-gradient(0deg, #1c2128 10%, #737f8b 200%)`;
+          rule.style.background = `-moz-linear-gradient(0deg, #1c2128 10%, #737f8b 200%)`;
         }
         
         if (rule.selectorText === "#modifiersContainer::-webkit-scrollbar-thumb") {
@@ -3812,22 +3831,83 @@ function setNormalPrice(skinContainer, price) {
     if (horarioEstado) {
       return;
     }
-    if (!notasAnimating) {
-      notasAnimating = true;
-
-      notasEstado = !notasEstado;
-
-      if (notasEstado) {
-        notebook.style.display = "flex";
-        controls.style.display = "flex";
-        notas.classList.add("active");
-
-        setTimeout(() => {
-          notebook.style.opacity = "1";
-          controls.style.opacity = "1";
-          boxx.style.marginRight = "800px";
-          allESC.style.marginLeft = "-400px";
-          helloMessage.style.marginLeft = "-400px";
+  
+    if (isNotInPage1) {
+      $("#notebook").turn("page", 1);
+      setTimeout(() => ejecutarAnim(), 500);
+    } else {
+      ejecutarAnim();
+    }
+  
+    function ejecutarAnim() {
+      if (!notasAnimating) {
+        notasAnimating = true;
+  
+        notasEstado = !notasEstado;
+  
+        if (notasEstado) {
+          notebook.style.display = "flex";
+          controls.style.display = "flex";
+          notas.classList.add("active");
+  
+          setTimeout(() => {
+            boxx.style.marginRight = "800px";
+            allESC.style.marginLeft = "-400px";
+            helloMessage.style.marginLeft = "-400px";
+            horarioImg.style.setProperty(
+              "transition",
+              "margin-left 0.9s ease, margin-top 1.3s ease, transform 0.9s ease, filter 2s ease",
+              "important"
+            );
+            horarioImg.style.setProperty(
+              "transform",
+              "translateX(-410px) scale(0.02, 0.02)",
+              "important"
+            );
+            notebookLogoVacio.style.setProperty(
+              "transition",
+              "transform 0.9s ease",
+              "important"
+            );
+            notebookLogoVacio.style.setProperty(
+              "transform",
+              "translateX(-400px)  translateY(10px)",
+              "important"
+            );
+            notebookLogoLleno.style.setProperty(
+              "transition",
+              "transform 0.9s ease, opacity 0.2s ease",
+              "important"
+            );
+            notebookLogoLleno.style.setProperty(
+              "transform",
+              "translateX(-400px)  translateY(10px)",
+              "important"
+            );
+  
+            stage.style.display = "block";
+            stage.style.animation = 'appear 2.2s ease';
+            notebookLogoLleno.style.opacity = "0";
+  
+            setTimeout(() => {
+              notebook.style.opacity = "1";
+              controls.style.opacity = "1";
+            }, 1900);
+  
+            setTimeout(() => {
+              stage.style.display = "none";
+            }, 2200);
+  
+          }, 10);
+        }
+  
+        if (!notasEstado) {
+          notebook.style.opacity = "0";
+          controls.style.opacity = "0";
+          boxx.style.marginRight = "0px";
+          allESC.style.marginLeft = "0px";
+          helloMessage.style.marginLeft = "0px";
+          notas.classList.remove("active");
           horarioImg.style.setProperty(
             "transition",
             "margin-left 0.9s ease, margin-top 1.3s ease, transform 0.9s ease, filter 2s ease",
@@ -3835,41 +3915,69 @@ function setNormalPrice(skinContainer, price) {
           );
           horarioImg.style.setProperty(
             "transform",
-            "translateX(-410px) scale(0.02, 0.02)",
+            "translateX(-10px) scale(0.02, 0.02)",
             "important"
           );
-        }, 10);
-      } else {
-        notebook.style.opacity = "0";
-        controls.style.opacity = "0";
-        boxx.style.marginRight = "0px";
-        allESC.style.marginLeft = "0px";
-        helloMessage.style.marginLeft = "0px";
-        notas.classList.remove("active");
-        horarioImg.style.setProperty(
-          "transition",
-          "margin-left 0.9s ease, margin-top 1.3s ease, transform 0.9s ease, filter 2s ease",
-          "important"
-        );
-        horarioImg.style.setProperty(
-          "transform",
-          "translateX(-10px) scale(0.02, 0.02)",
-          "important"
-        );
-
-        paintOF();
-
+          notebookLogoLleno.style.setProperty(
+            "transition",
+            "transform 0.9s ease, opacity 0.2s ease",
+            "important"
+          );
+          notebookLogoLleno.style.setProperty(
+            "transform",
+            "translateX(0px)  translateY(10px)",
+            "important"
+          );
+          notebookLogoVacio.style.setProperty(
+            "transition",
+            "transform 0.9s ease",
+            "important"
+          );
+          notebookLogoVacio.style.setProperty(
+            "transform",
+            "translateX(0px)  translateY(10px)",
+            "important"
+          );
+          paintOF();
+  
+          stage.style.display = "block";
+          stage.style.animation = 'disappear 2.2s ease';
+  
+          setTimeout(() => {
+            stage.style.display = "none";
+            notebookLogoLleno.style.opacity = "1";
+          }, 2000);
+  
+          setTimeout(() => {
+            notebook.style.display = "none";
+            controls.style.display = "none";
+          }, 1000);
+        }
+  
         setTimeout(() => {
-          notebook.style.display = "none";
-          controls.style.display = "none";
-        }, 1000);
+          notasAnimating = false;
+        }, 2300);
       }
-
-      setTimeout(() => {
-        notasAnimating = false;
-      }, 1100);
     }
   });
+
+
+/*
+  function capturarImagen() {
+    const notebook = document.getElementById('notebook');
+    const page1 = notebook.querySelector('[page="1"]'); // Seleccionar la página 1
+
+    if (page1) {
+        html2canvas(page1, { backgroundColor: null }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            const notebookImg = document.getElementById('portadaScreenthsoot');
+            notebookImg.src = imgData;
+            notebookImg.style.display = "flex";
+        });
+    } else {
+        console.error('La página 1 no se encuentra en el notebook.');
+    }
+}*/
 
   /* HORARIO TRANSICION */
 
@@ -3880,7 +3988,7 @@ function setNormalPrice(skinContainer, price) {
     horarioImg.style.transition = "none";
 
     horarioImg.style.setProperty("margin-left", "350px", "important");
-    horarioImg.style.setProperty("margin-top", "37px", "important");
+    horarioImg.style.setProperty("margin-top", "47px", "important");
     if (idLogeado) {
       horarioImg.style.setProperty(
         "transform",
@@ -3925,6 +4033,26 @@ function setNormalPrice(skinContainer, price) {
                 "translateX(-350px) scale(1, 1)",
                 "important"
               );
+              notebookLogoVacio.style.setProperty(
+                "transition",
+                "transform 0.9s ease",
+                "important"
+              );
+              notebookLogoVacio.style.setProperty(
+                "transform",
+                "translateX(400px) translateY(10px)",
+                "important"
+              );
+              notebookLogoLleno.style.setProperty(
+                "transition",
+                "transform 0.9s ease, opacity 0.2s ease",
+                "important"
+              );
+              notebookLogoLleno.style.setProperty(
+                "transform",
+                "translateX(400px) translateY(10px)",
+                "important"
+              );
 
               if(horarioImg.classList.contains("horarioImgDay")){
                 horarioImg.classList.remove("horarioImgDay");
@@ -3948,6 +4076,27 @@ function setNormalPrice(skinContainer, price) {
             );
             horarioImg.style.setProperty("opacity", "1", "important");
             horarioImg.style.setProperty("margin-left", "350px", "important");
+            notebookLogoLleno.style.setProperty(
+              "transition",
+              "transform 0.9s ease, opacity 0.2s ease",
+              "important"
+            );
+            notebookLogoLleno.style.setProperty(
+              "transform",
+              "translateX(0px) translateY(10px)",
+              "important"
+            );
+            notebookLogoVacio.style.setProperty(
+              "transition",
+              "transform 0.9s ease",
+              "important"
+            );
+            notebookLogoVacio.style.setProperty(
+              "transform",
+              "translateX(0px) translateY(10px)",
+              "important"
+            );
+
             if (idLogeado) {
               horarioImg.style.setProperty(
                 "transform",
@@ -3972,7 +4121,7 @@ function setNormalPrice(skinContainer, price) {
               }
             }
 
-            horarioImg.style.setProperty("margin-top", "37px", "important");
+            horarioImg.style.setProperty("margin-top", "47px", "important");
             boxx.style.marginLeft = "0px";
             allESC.style.marginLeft = "0px";
             helloMessage.style.marginLeft = "0px";
@@ -4562,6 +4711,7 @@ function setNormalPrice(skinContainer, price) {
           cursorPurpleish.style.marginTop = "96.6px";
           break;
       }
+      console.log(cursorPaint.src);
     }
   }
 
@@ -4794,6 +4944,7 @@ function setNormalPrice(skinContainer, price) {
   }
 
   const h2 = document.querySelector(".h2");
+  let isNotInPage1 = false;
 
   $("#notebook").turn({
     acceleration: true,
@@ -4810,6 +4961,7 @@ function setNormalPrice(skinContainer, price) {
           .toggleClass("fixed", page !== 36);
       },
       turned: function (event, page) {
+        isNotInPage1 = page !== 1;
         cargarDatosPaginasCercanas(page);
       },
     },
