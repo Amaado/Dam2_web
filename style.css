@@ -416,6 +416,7 @@ nav a:hover {
 }
 
 
+
 #registerScreen.active {
   position: absolute;
   display: flex;
@@ -1350,16 +1351,18 @@ div.img img {
   min-width: 22px;
   text-align: center;
   transform: scale(0.6);
+  margin-top: -1px;
 }
 
 .betaLabel{
   position: relative;
   display: flex;
-  width: 60%;
+  width: 80%;
   font-size: 15px;
-  line-height: 1.2;
+  line-height: 1.5;
   color: red;
   text-align: justify;
+  margin-left: -27px;
 }
 
 #modifiersContainer {
@@ -2350,14 +2353,24 @@ div.img img {
   width: 50px;
   height: 50px;
   border-radius: 10px;
-  border: 4px solid #1c2128;
-  background-color: #1c2128;
-  box-shadow: 0px 0px 20px -5px #07080a inset; /*1c2128*/
-  filter: drop-shadow(0px 0px 2px #15181db9);
   transition: opacity 0.2s ease;
   pointer-events: none;
   z-index: -1;
   opacity: 0%;
+}
+
+#volumenImgDropShadow.night{
+  border: 4px solid #1c2128;
+  background-color: #1c2128;
+  box-shadow: 0px 0px 20px -5px #07080a inset;
+  filter: drop-shadow(0px 0px 2px #15181db9);
+}
+
+#volumenImgDropShadow.day{
+  border: 4px solid #dddcb0;
+  background-color: #dddcb0;
+  box-shadow: 0px 0px 20px -5px #07080a9a inset;
+  filter: drop-shadow(0px 0px 2px #b6b591ad);
 }
 
 .volumenImgNight {
@@ -2368,6 +2381,7 @@ div.img img {
 }
 
 .volumenImgDay {
+  filter: brightness(0) saturate(100%) invert(39%) sepia(11%) saturate(975%) hue-rotate(350deg) brightness(89%) contrast(82%);
   transition: filter 0.5s ease;
 }
 
@@ -2434,6 +2448,10 @@ div.img img {
   margin-top: 85px;
   transition: opacity 0.5s ease;
   opacity: 0%;
+
+  background:  #8C7760;
+  background: #dddcb0;
+  background: #2d1e03;
 }
 
 #volumenImgUd {
@@ -2750,10 +2768,8 @@ div.img img {
   margin-left: 15px;
   transition: filter 0.5s ease, background-color 0.5s ease,
     background-image 0.5s ease;
-  box-shadow: 0px 0px 20px -5px #07080a41 inset; /*1c2128*/
-  filter: drop-shadow(0px 0px 2px #15181db9) brightness(0) saturate(100%)
-    invert(87%) sepia(13%) saturate(470%) hue-rotate(175deg) brightness(97%)
-    contrast(88%);
+  box-shadow: 0px 0px 20px -5px #0a07079f inset; /*1c2128*/
+  filter: brightness(0) saturate(100%) invert(87%) sepia(13%) saturate(470%) hue-rotate(175deg) brightness(97%) contrast(88%);
 }
 
 #paletteContainer {
@@ -2785,7 +2801,6 @@ div.img img {
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  background-color: #34527a;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -2793,8 +2808,6 @@ div.img img {
   margin-left: 10px;
   transition: box-shadow 0.4s ease, filter 0.4s ease, margin-top 0.2s ease,
     margin-left 0.2s ease, transform 0.2s ease;
-  box-shadow: 0px 0px 0px 0px #dbedff;
-  filter: drop-shadow(0px 0px 0px #dbedff);
 }
 
 .paletteColor.active {
@@ -3556,3 +3569,18 @@ div.img img {
 .layer:nth-child(114) { transform: translateZ(-160.5px) rotateY(180deg); }
 .layer:nth-child(115) { transform: translateZ(-164px) rotateY(180deg); }
 
+
+
+
+
+canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 0, 0, 0.007);
+  pointer-events: all;
+  z-index: -1;
+}

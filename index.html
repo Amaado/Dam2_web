@@ -5,11 +5,84 @@
   <title>D A M</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/png" href="img/favicon.png " id="icon" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
   <img id="underwater" draggable="false" />
   <img id="underwaterTransi" draggable="false" />
+  <canvas id="bubbleCanvas"></canvas>
+
+  <img id="fondoGalaxyGreen" src="img/fondoGreen.gif" />
+  <img id="fondoGalaxy" src="" />
+  <img id="customCursor" alt="Custom Cursor" />
+  <img id="customCursorPurpleish" alt="Custom Cursor" />
+  <img id="cursorPaint" />
+  <img id="cursorPaintErase" />
+
+  <div id="loginScreen">
+    <div id="loginContainer">
+      <div class="formTittle">Login</div>
+      <div class="formContainer">
+        <div class="formRow">
+          <div class="formLabel">Name:</div>
+          <input type="text" placeholder="Name..." id="campoNameLogin" />
+        </div>
+        <div class="formRow">
+          <div class="formLabel">Password:</div>
+          <input type="password" placeholder="Password..." id="campoPasswordLogin" class="passwordField" />
+          <img draggable="false" class="unlockPassIconCalvo unlockPassIcon unlockPassIconLogin"
+            src="img/unlockPassIconCalvo.png" />
+          <img draggable="false" class="unlockPassIconShadow unlockPassIcon unlockPassIconLogin"
+            src="img/unlockPassIconShadow.png" />
+          <img draggable="false" class="unlockPassIconHands unlockPassIcon unlockPassIconLogin"
+            src="img/unlockPassIconHands.png" />
+        </div>
+        <div class="formRowCheckbox">
+          <input type="checkbox" id="stayLoged" />
+          <div class="formLabelCheckbox">Stay loged</div>
+        </div>
+        <div id="errorLabelLogin"></div>
+        <div id="loginSubmit">Submit</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="registerScreen">
+    <div id="registerContainer">
+      <div class="formTittle">Register</div>
+      <div class="formContainer">
+        <div class="formRow2">
+          <div class="formLabel">Name:</div>
+          <input type="text" placeholder="Name..." id="campoNameRegister" />
+        </div>
+        <div class="formRow2">
+          <div class="formLabel">Password:</div>
+          <input type="password" placeholder="Password..." id="campoPasswordRegister" class="passwordField" />
+          <img draggable="false" class="unlockPassIconCalvo unlockPassIcon unlockPassIconRegister"
+            src="img/unlockPassIconCalvo.png" />
+          <img draggable="false" class="unlockPassIconShadow unlockPassIcon unlockPassIconRegister"
+            src="img/unlockPassIconShadow.png" />
+          <img draggable="false" class="unlockPassIconHands unlockPassIcon unlockPassIconRegister"
+            src="img/unlockPassIconHands.png" />
+        </div>
+        <div class="formRow2">
+          <div class="formLabel">Rep Password:</div>
+          <input type="password" placeholder="Repeat password..." id="campoPasswordRepeatRegister"
+            class="passwordField" />
+          <img draggable="false" class="unlockPassIconCalvo unlockPassIcon unlockPassIconRegister"
+            src="img/unlockPassIconCalvo.png" />
+          <img draggable="false" class="unlockPassIconShadow unlockPassIcon unlockPassIconRegister"
+            src="img/unlockPassIconShadow.png" />
+          <img draggable="false" class="unlockPassIconHands unlockPassIcon unlockPassIconRegister"
+            src="img/unlockPassIconHands.png" />
+        </div>
+        <div id="errorLabelRegister"></div>
+        <div id="registerSubmit">Submit</div>
+      </div>
+    </div>
+  </div>
+
   <div id="filterUnderwater">
     <svg id="svgUnderwater">
       <defs>
@@ -51,7 +124,7 @@
         <img id="rtxGREEN" class="rtxImg" src="img/rtxGREEN.png" draggable="false" />
       </div>
       <div id="volumenContainer">
-        <img id="volumenImg" class="volumenImgNight" draggable="false" />
+        <img id="volumenImg" draggable="false" />
         <div id="volumenImgDropShadow"></div>
         <input type="range" min="0" max="100" class="slider" id="volumeSlider" />
         <div class="tooltipVolume" id="tooltipVolume">
@@ -74,7 +147,7 @@
       <div class="hr"></div>
       <div class="betaLabelContainer">
         <div class="betaLabelInfo">i</div>
-        <div class="betaLabel">Esta función está en BETA. Vuelve más tarde para poder disfrutar de ella.</div>
+        <div class="betaLabel">ㅤ Esta función está en BETA. Vuelve más tarde para poder disfrutar de ella.</div>
       </div>
     </div>
 
@@ -486,13 +559,6 @@
     <div id="flechaHitbloxPlusModifiers"></div>
     <img id="flechaaModifiers" draggable="false" />
     <div id="menuLabelModifiers">M O D I F I E R S</div>
-
-    <img id="fondoGalaxyGreen" src="img/fondoGreen.gif" />
-    <img id="fondoGalaxy" src="" />
-    <img id="customCursor" alt="Custom Cursor" />
-    <img id="customCursorPurpleish" alt="Custom Cursor" />
-    <img id="cursorPaint" />
-    <img id="cursorPaintErase" />
 
     <div class="boxx">
       <a draggable="false" href="https://www.edu.xunta.gal/centros/ieslosadadieguez/aulavirtual/course/view.php?id=1572"
@@ -1085,70 +1151,6 @@
       <div class="layer lateral layerBackwords"><img src="img/notasBackgoundBackNoCuarzo.png"></div>
       <div class="layer lateral layerBackwords"><img src="img/notasBackgoundBackNoCuarzo.png"></div>
       
-    </div>
-
-
-    <div id="loginScreen">
-      <div id="loginContainer">
-        <div class="formTittle">Login</div>
-        <div class="formContainer">
-          <div class="formRow">
-            <div class="formLabel">Name:</div>
-            <input type="text" placeholder="Name..." id="campoNameLogin" />
-          </div>
-          <div class="formRow">
-            <div class="formLabel">Password:</div>
-            <input type="password" placeholder="Password..." id="campoPasswordLogin" class="passwordField" />
-            <img draggable="false" class="unlockPassIconCalvo unlockPassIcon unlockPassIconLogin"
-              src="img/unlockPassIconCalvo.png" />
-            <img draggable="false" class="unlockPassIconShadow unlockPassIcon unlockPassIconLogin"
-              src="img/unlockPassIconShadow.png" />
-            <img draggable="false" class="unlockPassIconHands unlockPassIcon unlockPassIconLogin"
-              src="img/unlockPassIconHands.png" />
-          </div>
-          <div class="formRowCheckbox">
-            <input type="checkbox" id="stayLoged" />
-            <div class="formLabelCheckbox">Stay loged</div>
-          </div>
-          <div id="errorLabelLogin"></div>
-          <div id="loginSubmit">Submit</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="registerScreen">
-      <div id="registerContainer">
-        <div class="formTittle">Register</div>
-        <div class="formContainer">
-          <div class="formRow2">
-            <div class="formLabel">Name:</div>
-            <input type="text" placeholder="Name..." id="campoNameRegister" />
-          </div>
-          <div class="formRow2">
-            <div class="formLabel">Password:</div>
-            <input type="password" placeholder="Password..." id="campoPasswordRegister" class="passwordField" />
-            <img draggable="false" class="unlockPassIconCalvo unlockPassIcon unlockPassIconRegister"
-              src="img/unlockPassIconCalvo.png" />
-            <img draggable="false" class="unlockPassIconShadow unlockPassIcon unlockPassIconRegister"
-              src="img/unlockPassIconShadow.png" />
-            <img draggable="false" class="unlockPassIconHands unlockPassIcon unlockPassIconRegister"
-              src="img/unlockPassIconHands.png" />
-          </div>
-          <div class="formRow2">
-            <div class="formLabel">Rep Password:</div>
-            <input type="password" placeholder="Repeat password..." id="campoPasswordRepeatRegister"
-              class="passwordField" />
-            <img draggable="false" class="unlockPassIconCalvo unlockPassIcon unlockPassIconRegister"
-              src="img/unlockPassIconCalvo.png" />
-            <img draggable="false" class="unlockPassIconShadow unlockPassIcon unlockPassIconRegister"
-              src="img/unlockPassIconShadow.png" />
-            <img draggable="false" class="unlockPassIconHands unlockPassIcon unlockPassIconRegister"
-              src="img/unlockPassIconHands.png" />
-          </div>
-          <div id="errorLabelRegister"></div>
-          <div id="registerSubmit">Submit</div>
-        </div>
-      </div>
     </div>
 
     <div id="checkboxlandBackground"></div>

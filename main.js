@@ -93,6 +93,211 @@ document.addEventListener("DOMContentLoaded", function () {
   const pageNumber = document.getElementById("page-number");
   const notebook = document.getElementById("notebook");
   const controls = document.getElementById("controls");
+  const volumenImg = document.getElementById("volumenImg");
+  const volumenImgDropShadow = document.getElementById("volumenImgDropShadow");
+
+
+
+
+
+/* BUBBLES */
+let animationFrameId;
+let bubbles = []; // Lista global de burbujas
+let particles = []; // Lista global de partículas para explosión
+let ctx; // Contexto del canvas global
+let canvas; // Referencia al canvas
+let resizeListener, clickListener; // Referencias a los eventListeners dinámicos
+
+// Función para activar el canvas y empezar la animación
+function startBubbles() {
+    // Verifica si el canvas ya existe
+    if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.id = 'bubbleCanvas';
+        document.body.appendChild(canvas);
+        initializeCanvas(); // Inicializa el canvas y el contexto
+    }
+
+    // Añade los eventListeners necesarios
+    addEventListeners();
+
+    // Verifica si el contexto está configurado
+    if (!ctx) {
+        console.error('El contexto del canvas no se pudo inicializar.');
+        return;
+    }
+
+    // Inicia la animación
+    updateBubbles();
+}
+
+// Función para desactivar el canvas y detener la animación
+function stopBubbles() {
+    if (canvas) {
+        cancelAnimationFrame(animationFrameId); // Detiene la animación
+        canvas.remove(); // Elimina el canvas del DOM
+        bubbles = []; // Limpia las burbujas para liberar memoria
+        particles = []; // Limpia las partículas
+        ctx = null; // Limpia el contexto
+        canvas = null; // Limpia la referencia al canvas
+
+        // Elimina los eventListeners para ahorrar recursos
+        removeEventListeners();
+    }
+}
+
+// Inicializa el canvas y su contexto
+function initializeCanvas() {
+    if (!canvas) return;
+
+    ctx = canvas.getContext('2d'); // Asignar el contexto a la variable global
+
+    // Ajusta el tamaño inicial del canvas
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+// Añade los eventListeners necesarios
+function addEventListeners() {
+    if (!canvas) return;
+
+    // Listener para redimensionar el canvas
+    resizeListener = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', resizeListener);
+
+    // Listener para generar burbujas al hacer clic
+    clickListener = (e) => {
+        const numBubbles = Math.floor(Math.random() * 8) + 1; // Número aleatorio entre 1 y 8
+        for (let i = 0; i < numBubbles; i++) {
+            bubbles.push(createBubbleAt(e.clientX, e.clientY));
+        }
+    };
+    window.addEventListener('click', clickListener);
+}
+
+// Elimina los eventListeners añadidos
+function removeEventListeners() {
+    if (resizeListener) {
+        window.removeEventListener('resize', resizeListener);
+        resizeListener = null;
+    }
+    if (clickListener) {
+        window.removeEventListener('click', clickListener);
+        clickListener = null;
+    }
+}
+
+// Crea una burbuja con propiedades iniciales aleatorias
+function createBubbleAt(x, y) {
+    return {
+        x: x,
+        y: y,
+        radius: Math.random() * 7 + 1, // Tamaño entre 1 y 8
+        speed: Math.random() * 2 + 1, // Velocidad inicial entre 1 y 3
+        oscillationAmplitude: Math.random() * 20 + 5, // Amplitud de oscilación
+        oscillationSpeed: Math.random() * 0.04 + 0.01, // Velocidad de oscilación
+        startX: x, // Posición inicial X para oscilación
+        opacity: 0.3, // Opacidad inicial
+        delay: Math.random() * 1000, // Retraso hasta 1 segundo
+        startTime: Date.now(), // Tiempo de inicio
+        active: false // Inactiva hasta que pase el retraso
+    };
+}
+
+// Crea partículas para la explosión
+function createExplosion(x, y) {
+    for (let i = 0; i < 10; i++) { // 10 partículas por explosión
+        particles.push({
+            x: x,
+            y: y,
+            radius: Math.random() * 2 + 1, // Tamaño entre 1 y 3
+            speedX: (Math.random() - 0.5) * 4, // Velocidad horizontal aleatoria
+            speedY: (Math.random() - 0.5) * 4, // Velocidad vertical aleatoria
+            opacity: 1, // Opacidad inicial
+            decay: Math.random() * 0.05 + 0.01 // Velocidad de desvanecimiento
+        });
+    }
+}
+
+// Dibuja una burbuja
+function drawBubble(bubble) {
+    if (!ctx) return;
+
+    const outerGradient = ctx.createRadialGradient(
+        bubble.x, bubble.y, bubble.radius,
+        bubble.x, bubble.y, bubble.radius * 1.5
+    );
+    outerGradient.addColorStop(0, `rgba(255, 255, 255, ${bubble.opacity})`);
+    outerGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+    ctx.beginPath();
+    ctx.arc(bubble.x, bubble.y, bubble.radius * 1.5, 0, Math.PI * 2);
+    ctx.fillStyle = outerGradient;
+    ctx.fill();
+}
+
+// Dibuja una partícula
+function drawParticle(particle) {
+    if (!ctx) return;
+
+    ctx.beginPath();
+    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 255, ${particle.opacity})`;
+    ctx.fill();
+}
+
+// Actualiza las burbujas en la animación
+function updateBubbles() {
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Actualiza las burbujas
+    for (let i = 0; i < bubbles.length; i++) {
+        const bubble = bubbles[i];
+
+        if (!bubble.active && Date.now() - bubble.startTime >= bubble.delay) {
+            bubble.active = true;
+        }
+
+        if (bubble.active) {
+            bubble.y -= bubble.speed;
+            bubble.x = bubble.startX + Math.sin(bubble.y * bubble.oscillationSpeed) * bubble.oscillationAmplitude;
+
+            if (bubble.y + bubble.radius < 0) {
+                createExplosion(bubble.x, bubble.y); // Crea la explosión
+                bubbles.splice(i, 1);
+                i--;
+            } else {
+                drawBubble(bubble);
+            }
+        }
+    }
+
+    // Actualiza las partículas
+    for (let i = 0; i < particles.length; i++) {
+        const particle = particles[i];
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        particle.opacity -= particle.decay;
+
+        if (particle.opacity <= 0) {
+            particles.splice(i, 1);
+            i--;
+        } else {
+            drawParticle(particle);
+        }
+    }
+
+    animationFrameId = requestAnimationFrame(updateBubbles);
+}
+
+
+
+
 
 
   /* CAMBIO DE CURSOR */
@@ -467,8 +672,9 @@ document.addEventListener("DOMContentLoaded", function () {
       notebookLogoVacio.src="img/libsIconVacio_day.png";
       settingsImgLight.src="img/settingsDay.png";
       settingsImg.src="img/settingsDay.png";
-      pageNumber.style.backgroundColor = "#313842";
+      pageNumber.style.backgroundColor = "#71604E";
       pageNumber.style.color = "#dddcb0";
+      controls.style.color = "#71604E";
 
     } else {
       // Dark theme
@@ -518,6 +724,8 @@ document.addEventListener("DOMContentLoaded", function () {
       settingsImg.src="img/settingsNight.png";
       pageNumber.style.backgroundColor = "#bfd4e9";
       pageNumber.style.color = "#313842";
+      controls.style.color = "#bfd4e9";
+
     }
 
     ajustesColorLoginYregister(checkbox);
@@ -548,6 +756,9 @@ document.addEventListener("DOMContentLoaded", function () {
       formLabelCheckbox.forEach(function (labelCheckbox) {
         labelCheckbox.style.color = "#313842";
       });
+
+      volumenImg.className = "volumenImgDay";
+      volumenImgDropShadow.className = "day";
 
       const sheet = document.styleSheets[0]; // Asume que es la primera hoja de estilos
       for (let i = 0; i < sheet.cssRules.length; i++) {
@@ -667,6 +878,52 @@ document.addEventListener("DOMContentLoaded", function () {
         if (rule.selectorText === ".skinContainerLock") {
           rule.style.backgroundColor = "rgba(45, 42, 34, 0.542)"; // Cambia 'nuevo_color' por el valor de color deseado
         }
+
+        if (rule.selectorText === '.slider') {
+          rule.style.backgroundColor = "#C4C28E";
+        }
+        if (rule.selectorText === '.slider::-webkit-slider-thumb') {
+          rule.style.filter = "brightness(0) saturate(100%) invert(39%) sepia(11%) saturate(975%) hue-rotate(350deg) brightness(89%) contrast(82%)";
+        }
+        if (rule.selectorText === '.slider::-moz-range-thumb') {
+          rule.style.filter = "brightness(0) saturate(100%) invert(39%) sepia(11%) saturate(975%) hue-rotate(350deg) brightness(89%) contrast(82%)";
+        }
+        if (rule.selectorText === '.tooltipVolume') {
+          rule.style.backgroundColor = "#71604E";
+          rule.style.color = "#dddcb0";
+        }
+        if (rule.selectorText === '.sliderPaint') {
+          rule.style.backgroundColor = "#C4C28E";
+        }
+        if (rule.selectorText === '.sliderPaint::-webkit-slider-thumb') {
+          rule.style.filter = "brightness(0) saturate(100%) invert(39%) sepia(11%) saturate(975%) hue-rotate(350deg) brightness(89%) contrast(82%)";
+        }
+        if (rule.selectorText === '.sliderPaint::-moz-range-thumb') {
+          rule.style.filter = "brightness(0) saturate(100%) invert(39%) sepia(11%) saturate(975%) hue-rotate(350deg) brightness(89%) contrast(82%)";
+        }
+        if (rule.selectorText === '.tooltipPaint') {
+          rule.style.backgroundColor = "#71604E";
+          rule.style.color = "#dddcb0";
+        }
+
+        if (rule.selectorText === '.controlsButton') {
+          rule.style.boxShadow = "0px 0px 20px -5px #0a07079f inset";
+          rule.style.filter = "brightness(0) saturate(100%) invert(39%) sepia(11%) saturate(975%) hue-rotate(350deg) brightness(89%) contrast(82%)";
+        }
+        if (rule.selectorText === '#writeButton.active') {
+          rule.style.backgroundColor = "#71604E";
+          rule.style.filter = 'drop-shadow(0px 0px 2px #DEDCB2)';
+          rule.style.backgroundImage = "url('img/writeIconDay.png')";
+        }
+        if (rule.selectorText === '#paintButton.active') {
+          rule.style.backgroundColor = "#71604E";
+          rule.style.filter = 'drop-shadow(0px 0px 2px #DEDCB2)';
+          rule.style.backgroundImage = "url('img/paintIconDay.png')";
+        }
+        if (rule.selectorText === '.paletteColor.active') {
+          rule.style.boxShadow = '0px 0px 0px 3px #fffedb';
+          rule.style.filter = 'drop-shadow(0px 0px 5px #71604E)';
+        }
       }
     } else {
       if (loginContainer) {
@@ -690,6 +947,9 @@ document.addEventListener("DOMContentLoaded", function () {
       formLabelCheckbox.forEach(function (labelCheckbox) {
         labelCheckbox.style.color = "#bfd4e9";
       });
+
+      volumenImg.className = "volumenImgNight";
+      volumenImgDropShadow.className = "night";
 
       const sheet = document.styleSheets[0]; // Asume que es la primera hoja de estilos
       for (let i = 0; i < sheet.cssRules.length; i++) {
@@ -808,6 +1068,52 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (rule.selectorText === ".skinContainerLock") {
           rule.style.backgroundColor = "rgba(119, 119, 119, 0.342)"; // Cambia 'nuevo_color' por el valor de color deseado
+        }
+
+        if (rule.selectorText === '.slider') {
+          rule.style.backgroundColor = "#bfd4e9ac";
+        }
+        if (rule.selectorText === '.slider::-webkit-slider-thumb') {
+          rule.style.filter = "brightness(0) saturate(100%) invert(31%) sepia(16%) saturate(1647%) hue-rotate(174deg) brightness(89%) contrast(89%)";
+        }
+        if (rule.selectorText === '.slider::-moz-range-thumb') {
+          rule.style.filter = "brightness(0) saturate(100%) invert(31%) sepia(16%) saturate(1647%) hue-rotate(174deg) brightness(89%) contrast(89%)";
+        }
+        if (rule.selectorText === '.tooltipVolume') {
+          rule.style.backgroundColor = "#34527a";
+          rule.style.color = "#bfd4e9ac";
+        }
+        if (rule.selectorText === '.sliderPaint') {
+          rule.style.backgroundColor = "#bfd4e9ac";
+        }
+        if (rule.selectorText === '.sliderPaint::-webkit-slider-thumb') {
+          rule.style.filter = "brightness(0) saturate(100%) invert(31%) sepia(16%) saturate(1647%) hue-rotate(174deg) brightness(89%) contrast(89%)";
+        }
+        if (rule.selectorText === '.sliderPaint::-moz-range-thumb') {
+          rule.style.filter = "brightness(0) saturate(100%) invert(31%) sepia(16%) saturate(1647%) hue-rotate(174deg) brightness(89%) contrast(89%)";
+        }
+        if (rule.selectorText === '.tooltipPaint') {
+          rule.style.backgroundColor = "#34527a";
+          rule.style.color = "#bfd4e9ac";
+        }
+
+        if (rule.selectorText === '.controlsButton') {
+          rule.style.boxShadow = "0px 0px 20px -5px #0a070741 inset";
+          rule.style.filter = "brightness(0) saturate(100%) invert(87%) sepia(13%) saturate(470%) hue-rotate(175deg) brightness(97%) contrast(88%)";
+        }
+        if (rule.selectorText === '#writeButton.active') {
+          rule.style.backgroundColor = "#bfd4e9";
+          rule.style.filter = 'drop-shadow(0px 0px 2px #15181db9)';
+          rule.style.backgroundImage = "url('img/writeIconNight.png')";
+        }
+        if (rule.selectorText === '#paintButton.active') {
+          rule.style.backgroundColor = "#bfd4e9";
+          rule.style.filter = 'drop-shadow(0px 0px 2px #15181db9)';
+          rule.style.backgroundImage = "url('img/paintIconNight.png')";
+        }
+        if (rule.selectorText === '.paletteColor.active') {
+          rule.style.boxShadow = '0px 0px 0px 3px #dbedff';
+          rule.style.filter = 'drop-shadow(0px 0px 5px #dbedff)';
         }
       }
     }
@@ -2413,8 +2719,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const tooltipVolume = document.getElementById("tooltipVolume");
   const toolttooltipLabelip = document.getElementById("tooltipLabel");
   const volumenImgUd = document.getElementById("volumenImgUd");
-  const volumenImg = document.getElementById("volumenImg");
-  const volumenImgDropShadow = document.getElementById("volumenImgDropShadow");
   let lastValue;
 
   // Función para actualizar el tooltipVolume y la imagen del volumen
@@ -3194,6 +3498,8 @@ function setNormalPrice(skinContainer, price) {
       }
     });
 
+
+
     /* PURPLEISH EN EL SCROLL DE SKINS */
 
     if (skinsContainer) {
@@ -3256,6 +3562,7 @@ function setNormalPrice(skinContainer, price) {
       underwater.className = "";
       filterUnderwater.className = "";
       filterUnderwater.style.mask = "none";
+      stopBubbles();
     }
     if (!cursorSrc.includes("cccc_jefeEstudios")) {
       cursorPurpleish.style.display = "block";
@@ -3452,6 +3759,7 @@ function setNormalPrice(skinContainer, price) {
         filterUnderwater.className = "active";
         syncTransition(filterUnderwater, underwaterTransi); // Sincroniza la transición si es necesario
       }
+      startBubbles();
     }
 
     /* SKIN GALAXY */
@@ -5282,6 +5590,7 @@ tooltipContainers.forEach(tooltipContainer => {
     tooltip.style.top = `${mouseY - 30}px`;
   }
 });
+
 
 
 
