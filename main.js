@@ -91,7 +91,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const notebookLogoLleno = document.getElementById('notebookLogoLleno');
   const notebookLogoVacio = document.getElementById('notebookLogoVacio');
   const pageNumber = document.getElementById("page-number");
-
+  const notebook = document.getElementById("notebook");
+  const controls = document.getElementById("controls");
 
 
   /* CAMBIO DE CURSOR */
@@ -3003,6 +3004,12 @@ function setNormalPrice(skinContainer, price) {
           rule.style.right = "0px";
         }
       }
+
+      notebookLogoLleno.style.display = "block";
+      notebookLogoVacio.style.display = "block";
+      notebook.style.display = "flex";
+      stage.style.display = "block";
+      
     } else {
       // El usuario no ha iniciado sesión
       // Mostrar botones de Login y Register
@@ -3082,6 +3089,11 @@ function setNormalPrice(skinContainer, price) {
           rule.style.right = "-55px";
         }
       }
+
+      notebookLogoLleno.style.display = "none";
+      notebookLogoVacio.style.display = "none";
+      notebook.style.display = "none";
+      stage.style.display = "none";
     }
   }
 
@@ -3824,8 +3836,6 @@ function setNormalPrice(skinContainer, price) {
 
   let notasEstado = false;
   let notasAnimating = false;
-  const notebook = document.getElementById("notebook");
-  const controls = document.getElementById("controls");
 
   notas.addEventListener("click", function () {
     if (horarioEstado) {
