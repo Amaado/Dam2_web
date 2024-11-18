@@ -3008,8 +3008,8 @@ function setNormalPrice(skinContainer, price) {
 
       notebookLogoLleno.style.display = "block";
       notebookLogoVacio.style.display = "block";
-      notebook.style.display = "flex";
-      stage.style.display = "block";
+      notebook.style.display = "none";
+      stage.style.display = "none";
       
     } else {
       // El usuario no ha iniciado sesión
