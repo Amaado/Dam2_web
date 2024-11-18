@@ -1561,6 +1561,7 @@ document.addEventListener("DOMContentLoaded", function () {
         await loadCursorSelection(idLogeado);
         cargarNotas(idLogeado);
         cargarDibujosEnTodasLasPaginas();
+        actualizarEstadoElementosSesion();
       } catch (error) {
         console.error("Error durante el inicio de sesión automático:", error);
       }
