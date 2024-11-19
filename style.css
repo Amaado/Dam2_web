@@ -3383,6 +3383,23 @@ div.img img {
   }
 }
 
+@keyframes appearReverse {
+  0% {
+    transform: translateX(0px) scale3d(0.01, 0.01, 0.01) rotateY(-90.5deg) rotateX(0deg);
+    top: 872px;
+    left: 199px;
+  }
+  85% {
+    transform: translateX(150px) scale3d(0.8, 0.8, 0.8)  rotateY(180deg) rotateX(20deg);
+    top: -400px;
+  }
+  100% {
+    transform: translateX(150px) scale3d(0.62, 0.62, 0.62) rotateY(180deg) rotateX(0deg);
+    top: -215px;
+    left: 690px;
+  }
+}
+
 @keyframes disappear {
   100% {
     transform: scale3d(0.01, 0.01, 0.01) rotateY(89.5deg) rotateX(0deg);
@@ -3395,6 +3412,23 @@ div.img img {
   }
   0% {
     transform: scale3d(0.62, 0.62, 0.62) rotateY(360deg) rotateX(0deg);
+    top: -215px;
+    left: 690px;
+  }
+}
+
+@keyframes disappearReverse {
+  100% {
+    transform: translateX(0px) scale3d(0.01, 0.01, 0.01) rotateY(-90.5deg) rotateX(0deg);
+    top: 872px;
+    left: 199px;
+  }
+  15% {
+    transform: translateX(150px) scale3d(0.8, 0.8, 0.8)  rotateY(180deg) rotateX(20deg);
+    top: -400px;
+  }
+  0% {
+    transform: translateX(150px) scale3d(0.62, 0.62, 0.62) rotateY(180deg) rotateX(0deg);
     top: -215px;
     left: 690px;
   }
@@ -3706,7 +3740,52 @@ canvas {
   z-index: -1;
 }
 
-.clone{
-  mtop: -600px;
-
+.cloneLeft, .clone34{
+  top: -5px;
+  right: 20px;
+  transform: scale(1.07) rotateY(180deg);
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: black;
 }
+
+.cloneRight, .clone3{
+  top: -5px;
+  left: 40px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.paperr {
+  position: absolute;
+  display: flex;
+  height: 98%;
+  width: 98%;
+  filter: drop-shadow(0px 0px 0px #000000b3);
+  font-size: 24px;
+}
+
+.paperr .text{
+  line-height: 35px;
+  width:90%;
+  overflow: hidden;
+  outline: none;
+}
+
+.paperr .numeration{
+  font-size: 40px;
+}
+
+.paperr .paint{
+  transform: scale(1.5);
+  top: 180px;
+  left: 180px;
+}
+/*
+.paperr .pixel{
+  width: 35px !important;
+  height: 35px !important;
+}*/

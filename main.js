@@ -4150,7 +4150,7 @@ function setNormalPrice(skinContainer, price) {
     if (horarioEstado) {
       return;
     }
-  
+    
     ejecutarAnim();
   
     function ejecutarAnim() {
@@ -4198,14 +4198,22 @@ function setNormalPrice(skinContainer, price) {
               "translateX(-400px)  translateY(10px)",
               "important"
             );
-  
+
+
             stage.style.display = "block";
-            stage.style.animation = 'appear 2.2s ease';
             notebookLogoLleno.style.opacity = "0";
+
+            if(thisPaperReverse){
+              stage.style.animation = 'appearReverse 2.2s ease';
+            }else{
+              stage.style.animation = 'appear 2.2s ease';
+            }
+
 
 
             
-            abrirPag10();
+            abrirPag();
+
 
           
   
@@ -4215,7 +4223,7 @@ function setNormalPrice(skinContainer, price) {
             }, 1900);
   
             setTimeout(() => {
-              //stage.style.display = "none";
+              stage.style.display = "none";
             }, 2200);
   
           }, 10);
@@ -4262,12 +4270,16 @@ function setNormalPrice(skinContainer, price) {
   
 
 
-          cerrarPag10();
+          cerrarPag();
 
 
 
           stage.style.display = "block";
-          stage.style.animation = 'disappear 2.2s ease';
+          if(thisPaperReverse){
+            stage.style.animation = 'disappearReverse 2.2s ease';
+          }else{
+            stage.style.animation = 'disappear 2.2s ease';
+          }
   
           setTimeout(() => {
             stage.style.display = "none";
@@ -4289,155 +4301,175 @@ function setNormalPrice(skinContainer, price) {
 
 
 
-  function abrirPag3(){
+  function selectPag0() {
+    const paginasIzquierda = []; // Vacío porque no hay elementos en esta selección
+    const paginasDerecha = document.querySelectorAll('.marcoPrincipal, .paginasIzq, .paginasDer, .contraportada');
+    return { paginasIzquierda, paginasDerecha };
+}
+
+function selectPag3() {
     const paginasIzquierda = document.querySelectorAll('.marcoPrincipal');
     const paginasDerecha = document.querySelectorAll('.paginasIzq, .paginasDer, .contraportada');
-  
-    // Restablecer valores iniciales para páginas de la izquierda
-    paginasIzquierda.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '360px');
-      pagina.style.setProperty('--ry', '0deg');
-      pagina.style.setProperty('--tz-transition', '50px');
-      pagina.style.transition = 'transform 1s 1.2s ease';
-    });
-  
-    // Restablecer valores iniciales para páginas de la derecha
-    paginasDerecha.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '360px');
-      pagina.style.setProperty('--ry', '0deg');
-      pagina.style.setProperty('--tz-transition', '0px');
-      pagina.style.transition = 'transform 1s 1.2s ease';
-    });
-  
-    // Forzar reflujo
-    document.body.offsetHeight;
-  
-    // Aplicar valores finales para páginas de la izquierda
-    paginasIzquierda.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '-360px');
-      pagina.style.setProperty('--ry', '-180deg');
-      pagina.style.setProperty('--tz-transition', '150px');
-    });
-  
-    // Aplicar valores finales para páginas de la derecha
-    paginasDerecha.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '360px');
-      pagina.style.setProperty('--ry', '0deg');
-      // Si necesitas cambiar --ry o --tz-transition, hazlo aquí
-    });
-  }
+    return { paginasIzquierda, paginasDerecha };
+}
 
-  function cerrarPag3(){
-    const paginasIzquierda = document.querySelectorAll('.marcoPrincipal');
-    const paginasDerecha = document.querySelectorAll('.paginasIzq, .paginasDer, .contraportada');
-  
-    // Restablecer valores iniciales para páginas de la izquierda
-    paginasIzquierda.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '-360px');
-      pagina.style.setProperty('--ry', '-180deg');
-      pagina.style.setProperty('--tz-transition', '0px');
-      pagina.style.transition = 'transform 1s ease';
-    });
-  
-    // Restablecer valores iniciales para páginas de la derecha
-    paginasDerecha.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '360px');
-      pagina.style.setProperty('--ry', '0deg');
-      pagina.style.transition = 'transform 1s ease';
-    });
-  
-    // Forzar reflujo
-    document.body.offsetHeight;
-  
-    // Aplicar valores finales para páginas de la izquierda
-    paginasIzquierda.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '-360px');
-      pagina.style.setProperty('--ry', '-180deg');
-      pagina.style.setProperty('--tz-transition', '0px');
-    });
-  
-    // Aplicar valores finales para páginas de la derecha
-    paginasDerecha.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '-360px');
-      pagina.style.setProperty('--ry', '-180deg');
-    });
-  }
-
-
-  
-  function abrirPag10(){
+function selectPag10() {
     const paginasIzquierda = document.querySelectorAll('.marcoPrincipal, .paginasIzq');
     const paginasDerecha = document.querySelectorAll('.paginasDer, .contraportada');
-  
-    // Restablecer valores iniciales para páginas de la izquierda
-    paginasIzquierda.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '360px');
-      pagina.style.setProperty('--ry', '0deg');
-      pagina.style.setProperty('--tz-transition', '50px');
-      pagina.style.transition = 'transform 1s 1.2s ease';
-    });
-  
-    // Restablecer valores iniciales para páginas de la derecha
-    paginasDerecha.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '360px');
-      pagina.style.setProperty('--ry', '0deg');
-      pagina.style.setProperty('--tz-transition', '0px');
-      pagina.style.transition = 'transform 1s 1.2s ease';
-    });
-  
+    return { paginasIzquierda, paginasDerecha };
+}
+
+function selectPag34() {
+    const paginasIzquierda = document.querySelectorAll('.marcoPrincipal, .paginasIzq, .paginasDer');
+    const paginasDerecha = document.querySelectorAll('.contraportada');
+    return { paginasIzquierda, paginasDerecha };
+}
+
+function selectPag36() {
+    const paginasIzquierda = document.querySelectorAll('.marcoPrincipal, .paginasIzq, .paginasDer, .contraportada');
+    const paginasDerecha = []; // Vacío porque no hay elementos en esta selección
+    return { paginasIzquierda, paginasDerecha };
+}
+
+
+
+function abrirPag() {
+    let paginasIzquierda = [];
+    let paginasDerecha = [];
+
+    // Selecciona los elementos según el valor de `thisPaper`
+    if (thisPaper === 0 || thisPaper === 1) {
+        ({ paginasIzquierda, paginasDerecha } = selectPag0());
+        return;
+    } else if (thisPaper === 2 || thisPaper === 3) {
+        ({ paginasIzquierda, paginasDerecha } = selectPag3());
+    } else if (thisPaper === 34 || thisPaper === 35) {
+        ({ paginasIzquierda, paginasDerecha } = selectPag34());
+    } else if (thisPaper === 36 || thisPaper === 37) {
+        ({ paginasIzquierda, paginasDerecha } = selectPag36());
+        return;
+    } else {
+        ({ paginasIzquierda, paginasDerecha } = selectPag10());
+    }
+
+    // Aplica los estilos a las páginas seleccionadas
+    if (paginasIzquierda.length > 0) {
+        paginasIzquierda.forEach((pagina) => {
+            pagina.style.setProperty('--tx', '360px');
+            pagina.style.setProperty('--ry', '0deg');
+            pagina.style.setProperty('--tz-transition', '50px');
+            pagina.style.transition = 'transform 1s 1.2s ease';
+        });
+    }
+
+    if (paginasDerecha.length > 0) {
+        paginasDerecha.forEach((pagina) => {
+            pagina.style.setProperty('--tx', '360px');
+            pagina.style.setProperty('--ry', '0deg');
+            pagina.style.setProperty('--tz-transition', '0px');
+            pagina.style.transition = 'transform 1s 1.2s ease';
+        });
+    }
+
     // Forzar reflujo
     document.body.offsetHeight;
-  
-    // Aplicar valores finales para páginas de la izquierda
-    paginasIzquierda.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '-360px');
-      pagina.style.setProperty('--ry', '-180deg');
-      pagina.style.setProperty('--tz-transition', '150px');
-    });
-  
-    // Aplicar valores finales para páginas de la derecha
-    paginasDerecha.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '360px');
-      pagina.style.setProperty('--ry', '0deg');
-      // Si necesitas cambiar --ry o --tz-transition, hazlo aquí
-    });
+
+    if (paginasIzquierda.length > 0) {
+        paginasIzquierda.forEach((pagina) => {
+            pagina.style.setProperty('--tx', '-360px');
+            pagina.style.setProperty('--ry', '-180deg');
+            pagina.style.setProperty('--tz-transition', '150px');
+        });
+    }
+
+    if (paginasDerecha.length > 0) {
+        paginasDerecha.forEach((pagina) => {
+            pagina.style.setProperty('--tx', '360px');
+            pagina.style.setProperty('--ry', '0deg');
+            // Cambios adicionales si son necesarios
+        });
+    }
+}
+
+
+function cerrarPag() {
+  let paginasIzquierda = [];
+  let paginasDerecha = [];
+
+  console.log('Valor de thisPaper:', thisPaper);
+
+  // Selección de elementos según `thisPaper`
+  if (thisPaper === 0 || thisPaper === 1) {
+      ({ paginasIzquierda, paginasDerecha } = selectPag0());
+      console.log('Estoy en el if de  selectPag0()');
+      return;
+  } else if (thisPaper === 2 || thisPaper === 3) {
+      ({ paginasIzquierda, paginasDerecha } = selectPag3());
+      console.log('Estoy en el if de  selectPag3()');
+  } else if (thisPaper === 34 || thisPaper === 35) {
+      ({ paginasIzquierda, paginasDerecha } = selectPag34());
+      console.log('Estoy en el if de  selectPag34()');
+  } else if (thisPaper === 36 || thisPaper === 37) {
+      ({ paginasIzquierda, paginasDerecha } = selectPag36());
+      console.log('Estoy en el if de  selectPag36()');
+      return;
+      
+  } else {
+      ({ paginasIzquierda, paginasDerecha } = selectPag10());
+      console.log('Estoy en el if de  selectPag10()');
   }
 
-  function cerrarPag100(){
-    const paginasIzquierda = document.querySelectorAll('.marcoPrincipal');
-    const paginasDerecha = document.querySelectorAll('.paginasIzq, .paginasDer, .contraportada');
-  
-    // Restablecer valores iniciales para páginas de la izquierda
-    paginasIzquierda.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '-360px');
-      pagina.style.setProperty('--ry', '-180deg');
-      pagina.style.setProperty('--tz-transition', '0px');
-      pagina.style.transition = 'transform 1s ease';
-    });
-  
-    // Restablecer valores iniciales para páginas de la derecha
-    paginasDerecha.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '360px');
-      pagina.style.setProperty('--ry', '0deg');
-      pagina.style.transition = 'transform 1s ease';
-    });
-  
-    // Forzar reflujo
-    document.body.offsetHeight;
-  
-    // Aplicar valores finales para páginas de la izquierda
-    paginasIzquierda.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '-360px');
-      pagina.style.setProperty('--ry', '-180deg');
-      pagina.style.setProperty('--tz-transition', '0px');
-    });
-  
-    // Aplicar valores finales para páginas de la derecha
-    paginasDerecha.forEach((pagina) => {
-      pagina.style.setProperty('--tx', '-360px');
-      pagina.style.setProperty('--ry', '-180deg');
-    });
+  // Verifica las páginas seleccionadas
+  console.log('paginasIzquierda:', paginasIzquierda);
+  console.log('paginasDerecha:', paginasDerecha);
+
+  // Aplica estilos a las páginas de la izquierda
+  if (paginasIzquierda.length > 0) {
+      paginasIzquierda.forEach((pagina) => {
+          pagina.style.setProperty('--tx', '-360px');
+          pagina.style.setProperty('--ry', '-180deg');
+          pagina.style.setProperty('--tz-transition', '50px');
+          pagina.style.transition = 'transform 0.5s ease';
+      });
   }
+
+  // Aplica estilos a las páginas de la derecha
+  if (paginasDerecha.length > 0) {
+      paginasDerecha.forEach((pagina) => {
+          pagina.style.setProperty('--tx', '360px');
+          pagina.style.setProperty('--ry', '0deg');
+          pagina.style.setProperty('--tz-transition', '0px');
+          pagina.style.transition = 'transform 0.5s ease';
+      });
+  }
+
+  // Forzar reflujo
+  document.body.offsetHeight;
+  
+
+  
+  setTimeout(() => {
+      if (paginasIzquierda.length > 0) {
+          paginasIzquierda.forEach((pagina) => {
+              pagina.style.setProperty('--tx', '-360px', 'important');
+              pagina.style.setProperty('--ry', '-180deg', 'important');
+          });
+      }
+
+      if (paginasDerecha.length > 0) {
+          paginasDerecha.forEach((pagina) => {
+            pagina.style.setProperty('--tx', '-360px', 'important');
+            pagina.style.setProperty('--ry', '-180deg', 'important');
+
+          });
+      }
+  }, 10);
+  /**/
+}
+
+
+
+  
 
   
 
@@ -5423,7 +5455,8 @@ function setNormalPrice(skinContainer, price) {
   }
 
   const h2 = document.querySelector(".h2");
-  let actualPage = 1;
+  let thisPaper = 0;
+  let thisPaperReverse = false;
 
   $("#notebook").turn({
     acceleration: true,
@@ -5441,36 +5474,7 @@ function setNormalPrice(skinContainer, price) {
       },
       turned: function (event, page) {
         cargarDatosPaginasCercanas(page);
-
-        let currentPaper = $(`#notebook [page="${page}"] .paper`);
-        if(2 > page){
-          actualPage = page;
-          console.log("actualPage: "+actualPage);
-        } else if(page == 3 || page == 2){
-          actualPage = 3;
-          console.log("actualPage: "+actualPage);
-        }else if(page == 34 || page == 35){
-          actualPage = 34;
-          console.log("actualPage: "+actualPage);
-        }else if(page == 36){
-          actualPage = 36;
-          console.log("actualPage: "+actualPage);
-        }else{
-          actualPage = page;
-          console.log("actualPage: "+actualPage);
-
-          if (currentPaper.attr("class").includes("Left")) {
-            let clonedPaper = currentPaper.clone();
-            clonedPaper.addClass("clone");
-            $("#cloneLeft").append(currentPaper.clone());
-            console.log(currentPaper);
-          } else if (currentPaper.attr("class").includes("Right")) {
-            let clonedPaper = currentPaper.clone();
-            clonedPaper.addClass("clone");
-            $("#cloneRight").append(currentPaper.clone());
-            console.log(currentPaper);
-          }
-        }
+        clonePageLogic(page);
       },
     },
   });
@@ -5488,8 +5492,93 @@ function setNormalPrice(skinContainer, price) {
 
     $("#page-number").blur(function () {
       $("#notebook").turn("page", $("#page-number").val());
+      clonePageLogic(page);
     });
   });
+
+
+  function clonePageLogic(page) {
+    thisPaper = page;
+    thisPaperReverse = false;
+  
+    if (page === 2 || page === 3) {
+      // Caso especial para las páginas 2 y 3
+      let currentPaper = $(`#notebook [page="3"] .paper`);
+      if (currentPaper.length > 0) {
+        let clonedPaper = currentPaper.clone();
+        clonedPaper.addClass("clone3");
+  
+        // Quitar atributos y clases no deseadas
+        clonedPaper.removeClass(function (index, className) {
+          return (className.match(/paper\d+(Left|Right)/) || []).join(" ");
+        });
+        clonedPaper.removeClass("paper").addClass("paperr");
+        clonedPaper.find(".text").removeAttr("contenteditable");
+  
+        // Eliminar cualquier elemento existente en #clone3
+        $("#clone3 .paperr").remove();
+  
+        // Añadir el nuevo clon
+        $("#clone3").append(clonedPaper);
+        console.log("Elemento clonado/reemplazado en #clone3:", clonedPaper);
+      }
+    } else if (page === 34 || page === 35) {
+      // Caso especial para las páginas 34 y 35
+      let currentPaper = $(`#notebook [page="34"] .paper`);
+      if (currentPaper.length > 0) {
+        let clonedPaper = currentPaper.clone();
+        clonedPaper.addClass("clone34");
+  
+        // Quitar atributos y clases no deseadas
+        clonedPaper.removeClass(function (index, className) {
+          return (className.match(/paper\d+(Left|Right)/) || []).join(" ");
+        });
+        clonedPaper.removeClass("paper").addClass("paperr");
+  
+        // Eliminar cualquier elemento existente en #clone34
+        $("#clone34 .paperr").remove();
+  
+        // Añadir el nuevo clon
+        $("#clone34").append(clonedPaper);
+        console.log("Elemento clonado/reemplazado en #clone34:", clonedPaper);
+      }
+    } else if (page === 36 || page === 37) {
+      thisPaperReverse = true;
+    } else {
+      // Rango general para el resto de páginas (4-32)
+      let leftPage = page % 2 === 0 ? page : page - 1; // Página izquierda
+      let rightPage = page % 2 === 0 ? page + 1 : page; // Página derecha
+  
+      // Procesar ambas páginas
+      [leftPage, rightPage].forEach((targetPage) => {
+        let currentPaper = $(`#notebook [page="${targetPage}"] .paper`);
+        if (currentPaper.length > 0) {
+          let clonedPaper = currentPaper.clone();
+  
+          // Invertir la determinación de izquierda/derecha
+          let isLeft = targetPage % 2 === 0; // Ahora, páginas pares como izquierda
+          clonedPaper.addClass(isLeft ? "cloneLeft" : "cloneRight");
+  
+          // Quitar atributos y clases no deseadas
+          clonedPaper.removeClass(function (index, className) {
+            return (className.match(/paper\d+(Left|Right)/) || []).join(" ");
+          });
+          clonedPaper.removeClass("paper").addClass("paperr");
+  
+          // Eliminar cualquier elemento existente en el contenedor correspondiente
+          let targetContainer = isLeft ? "#cloneLeft" : "#cloneRight";
+          $(`${targetContainer} .paperr`).remove();
+  
+          // Añadir el nuevo clon
+          $(targetContainer).append(clonedPaper);
+          console.log(
+            `Elemento clonado/reemplazado en ${targetContainer}:`,
+            clonedPaper
+          );
+        }
+      });
+    }
+  }
 
   async function cargarDibujosEnTodasLasPaginas() {
     const dibujosJSON = await obtenerDibujosDeUsuario(idLogeado);
