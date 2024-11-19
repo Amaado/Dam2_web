@@ -4207,6 +4207,12 @@ function setNormalPrice(skinContainer, price) {
             stage.style.display = "block";
             stage.style.animation = 'appear 2.2s ease';
             notebookLogoLleno.style.opacity = "0";
+
+
+            
+            abrirPag3();
+
+          
   
             setTimeout(() => {
               notebook.style.opacity = "1";
@@ -4259,6 +4265,12 @@ function setNormalPrice(skinContainer, price) {
           );
           paintOF();
   
+
+
+          cerrarPag3();
+
+
+
           stage.style.display = "block";
           stage.style.animation = 'disappear 2.2s ease';
   
@@ -4280,17 +4292,83 @@ function setNormalPrice(skinContainer, price) {
     }
   });
 
-  const stageDiv = document.querySelector('.stage');
 
-  // Verifica si existe el elemento
-  if (stageDiv) {
-      // Cuenta los hijos directos del elemento
-      const childCount = stageDiv.children.length;
 
-      console.log(`Número de hijos directos: ${childCount}`);
-  } else {
-      console.log('No se encontró ningún elemento con la clase "stage".');
+  function abrirPag3(){
+    const paginasIzquierda = document.querySelectorAll('.marcoPrincipal');
+    const paginasDerecha = document.querySelectorAll('.paginasIzq, .paginasDer, .contraportada');
+  
+    // Restablecer valores iniciales para páginas de la izquierda
+    paginasIzquierda.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '360px');
+      pagina.style.setProperty('--ry', '0deg');
+      pagina.style.setProperty('--tz-transition', '50px');
+      pagina.style.transition = 'transform 1s 1.2s ease';
+    });
+  
+    // Restablecer valores iniciales para páginas de la derecha
+    paginasDerecha.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '360px');
+      pagina.style.setProperty('--ry', '0deg');
+      pagina.style.setProperty('--tz-transition', '0px');
+      pagina.style.transition = 'transform 1s 1.2s ease';
+    });
+  
+    // Forzar reflujo
+    document.body.offsetHeight;
+  
+    // Aplicar valores finales para páginas de la izquierda
+    paginasIzquierda.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '-360px');
+      pagina.style.setProperty('--ry', '-180deg');
+      pagina.style.setProperty('--tz-transition', '150px');
+    });
+  
+    // Aplicar valores finales para páginas de la derecha
+    paginasDerecha.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '360px');
+      pagina.style.setProperty('--ry', '0deg');
+      // Si necesitas cambiar --ry o --tz-transition, hazlo aquí
+    });
   }
+
+  function cerrarPag3(){
+    const paginasIzquierda = document.querySelectorAll('.marcoPrincipal');
+    const paginasDerecha = document.querySelectorAll('.paginasIzq, .paginasDer, .contraportada');
+  
+    // Restablecer valores iniciales para páginas de la izquierda
+    paginasIzquierda.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '-360px');
+      pagina.style.setProperty('--ry', '-180deg');
+      pagina.style.setProperty('--tz-transition', '0px');
+      pagina.style.transition = 'transform 1s ease';
+    });
+  
+    // Restablecer valores iniciales para páginas de la derecha
+    paginasDerecha.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '360px');
+      pagina.style.setProperty('--ry', '0deg');
+      pagina.style.transition = 'transform 1s ease';
+    });
+  
+    // Forzar reflujo
+    document.body.offsetHeight;
+  
+    // Aplicar valores finales para páginas de la izquierda
+    paginasIzquierda.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '-360px');
+      pagina.style.setProperty('--ry', '-180deg');
+      pagina.style.setProperty('--tz-transition', '0px');
+    });
+  
+    // Aplicar valores finales para páginas de la derecha
+    paginasDerecha.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '-360px');
+      pagina.style.setProperty('--ry', '-180deg');
+    });
+  }
+
+  
 
 /*
   function capturarImagen() {
