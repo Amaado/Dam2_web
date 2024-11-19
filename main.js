@@ -4214,7 +4214,7 @@ function setNormalPrice(skinContainer, price) {
             }, 1900);
   
             setTimeout(() => {
-              stage.style.display = "none";
+              //stage.style.display = "none";
             }, 2200);
   
           }, 10);
@@ -4280,6 +4280,17 @@ function setNormalPrice(skinContainer, price) {
     }
   });
 
+  const stageDiv = document.querySelector('.stage');
+
+  // Verifica si existe el elemento
+  if (stageDiv) {
+      // Cuenta los hijos directos del elemento
+      const childCount = stageDiv.children.length;
+
+      console.log(`Número de hijos directos: ${childCount}`);
+  } else {
+      console.log('No se encontró ningún elemento con la clase "stage".');
+  }
 
 /*
   function capturarImagen() {

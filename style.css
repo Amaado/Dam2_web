@@ -3331,12 +3331,23 @@ div.img img {
   perspective: 9999px;
   transform-style: preserve-3d;
   display: none;
-  transform: scale3d(0.4, 0.01, 0.01) rotateY(89.5deg);
   z-index: 199;
+
+  transform: scale3d(0.62, 0.62, 0.62) rotateY(0deg) rotateX(0deg);
+  top: -215px;
+  left: 690px;
   /*
   animation: appear 2s ease;
 
   animation-delay: 2s;
+
+  animation-fill-mode: forwards;
+
+
+
+
+
+  top: -215px;
 
 
   animation: rotate3D 10s infinite linear;
@@ -3367,7 +3378,7 @@ div.img img {
   }
   100% {
     transform: scale3d(0.62, 0.62, 0.62) rotateY(360deg) rotateX(0deg);
-    top: -211px;
+    top: -215px;
     left: 690px;
   }
 }
@@ -3384,7 +3395,7 @@ div.img img {
   }
   0% {
     transform: scale3d(0.62, 0.62, 0.62) rotateY(360deg) rotateX(0deg);
-    top: -211px;
+    top: -215px;
     left: 690px;
   }
 }
@@ -3413,6 +3424,10 @@ div.img img {
   height: 980px;
   position: absolute;
   transform-style: preserve-3d;
+  transform: translateX(var(--tx, 0px))
+             rotateY(var(--ry, 0deg))
+             rotateY(var(--ry-additional, 0deg))
+             translateZ(var(--tz));
 }
 
 .layer3D{
@@ -3432,145 +3447,220 @@ div.img img {
 }
 
 
-.layer.marcoPrincipal{
+.layer.highContrast{
   filter: contrast(150%);
 }
 
+/*
+/* Marco Principal - separations of 1px 
+.layer:nth-child(1)  { transform: translateZ(0px); }
+.layer:nth-child(2)  { transform: translateZ(-1px); }
+.layer:nth-child(3)  { transform: translateZ(-2px); }
+.layer:nth-child(4)  { transform: translateZ(-3px); }
+.layer:nth-child(5)  { transform: translateZ(-4px); }
+.layer:nth-child(6)  { transform: translateZ(-5px); }
+.layer:nth-child(7)  { transform: translateZ(-6px); }
+.layer:nth-child(8)  { transform: translateZ(-7px); }
+.layer:nth-child(9)  { transform: translateZ(-8px); }
+.layer:nth-child(10) { transform: translateZ(-9px); }
+.layer:nth-child(11) { transform: translateZ(-10px); }
+.layer:nth-child(12) { transform: translateZ(-11px); }
+.layer:nth-child(13) { transform: translateZ(-12px); }
+.layer:nth-child(14) { transform: translateZ(-13px); }
+.layer:nth-child(15) { transform: translateZ(-14px); }
+.layer:nth-child(16) { transform: translateZ(-15px); }
+.layer:nth-child(17) { transform: translateZ(-16px); }
+.layer:nth-child(18) { transform: translateZ(-17px); }
+.layer:nth-child(19) { transform: translateZ(-18px); }
+.layer:nth-child(20) { transform: translateZ(-19px); }
+.layer:nth-child(21) { transform: translateZ(-20px); }
+.layer:nth-child(22) { transform: translateZ(-21px); }
+.layer:nth-child(23) { transform: translateZ(-22px); }
+.layer:nth-child(24) { transform: translateZ(-23px); }
+.layer:nth-child(25) { transform: translateZ(-24px); }
+.layer:nth-child(26) { transform: translateZ(-25px); }
+.layer:nth-child(27) { transform: translateZ(-26px); }
+.layer:nth-child(28) { transform: translateZ(-27px); }
+.layer:nth-child(29) { transform: translateZ(-28px); }
+.layer:nth-child(30) { transform: translateZ(-29px); }
+.layer:nth-child(31) { transform: translateZ(-30px); }
+.layer:nth-child(32) { transform: translateZ(-31px); }
+.layer:nth-child(33) { transform: translateZ(-32px); }
+.layer:nth-child(34) { transform: translateZ(-33px); }
 
-/* RELIEVE MARCO - saltos de 0.5px */
-.layer:nth-child(1) { transform: translateZ(0.5px); }
-.layer:nth-child(2) { transform: translateZ(-0.5px); }
-.layer:nth-child(3) { transform: translateZ(-1px); }
-.layer:nth-child(4) { transform: translateZ(-1.5px); }
-.layer:nth-child(5) { transform: translateZ(-2px); }
-.layer:nth-child(6) { transform: translateZ(-2.5px); }
-.layer:nth-child(7) { transform: translateZ(-3px); }
-.layer:nth-child(8) { transform: translateZ(-3.5px); }
-.layer:nth-child(9) { transform: translateZ(-4px); }
-.layer:nth-child(10) { transform: translateZ(-4.5px); }
-.layer:nth-child(11) { transform: translateZ(-5px); }
-.layer:nth-child(12) { transform: translateZ(-5.5px); }
-.layer:nth-child(13) { transform: translateZ(-6px); }
-.layer:nth-child(14) { transform: translateZ(-6.5px); }
-.layer:nth-child(15) { transform: translateZ(-7px); }
-.layer:nth-child(16) { transform: translateZ(-7.5px); }
-.layer:nth-child(17) { transform: translateZ(-8px); }
-.layer:nth-child(18) { transform: translateZ(-8.5px); }
-.layer:nth-child(19) { transform: translateZ(-9px); }
-.layer:nth-child(20) { transform: translateZ(-9.5px); }
-.layer:nth-child(21) { transform: translateZ(-10px); }
-.layer:nth-child(22) { transform: translateZ(-10.5px); }
-.layer:nth-child(23) { transform: translateZ(-11px); }
-.layer:nth-child(24) { transform: translateZ(-11.5px); }
-.layer:nth-child(25) { transform: translateZ(-12px); }
-.layer:nth-child(26) { transform: translateZ(-12.5px); }
-.layer:nth-child(27) { transform: translateZ(-13px); }
-.layer:nth-child(28) { transform: translateZ(-13.5px); }
-.layer:nth-child(29) { transform: translateZ(-14px); }
-.layer:nth-child(30) { transform: translateZ(-14.5px); }
-.layer:nth-child(31) { transform: translateZ(-15px); }
-.layer:nth-child(32) { transform: translateZ(-15.5px); }
-.layer:nth-child(33) { transform: translateZ(-16px); }
-.layer:nth-child(34) { transform: translateZ(-16.5px); }
-.layer:nth-child(35) { transform: translateZ(-17px); }
-.layer:nth-child(36) { transform: translateZ(-17.5px); }
-.layer:nth-child(37) { transform: translateZ(-18px); }
-.layer:nth-child(38) { transform: translateZ(-18.5px); }
-.layer:nth-child(39) { transform: translateZ(-19px); }
-.layer:nth-child(40) { transform: translateZ(-19.5px); }
-.layer:nth-child(41) { transform: translateZ(-20px); }
-.layer:nth-child(42) { transform: translateZ(-20.5px); }
-.layer:nth-child(43) { transform: translateZ(-21px); }
-.layer:nth-child(44) { transform: translateZ(-21.5px); }
-.layer:nth-child(45) { transform: translateZ(-22px); }
-.layer:nth-child(46) { transform: translateZ(-22.5px); }
-.layer:nth-child(47) { transform: translateZ(-23px); }
-.layer:nth-child(48) { transform: translateZ(-23.5px); }
-.layer:nth-child(49) { transform: translateZ(-24px); }
-.layer:nth-child(50) { transform: translateZ(-24.5px); }
-.layer:nth-child(51) { transform: translateZ(-25px); }
+/* notasBackgound_mask - transition layer 
+.layer:nth-child(35) { transform: translateZ(-34px); }
 
-/* notasBackgound_mask - transición suave a 0.5px */
-.layer:nth-child(52) { transform: translateZ(-25.5px); }
+ Título del libro - separations of 1.6px 
+.layer:nth-child(36) { transform: translateZ(-35.6px); }
+.layer:nth-child(37) { transform: translateZ(-37.2px); }
+.layer:nth-child(38) { transform: translateZ(-38.8px); }
+.layer:nth-child(39) { transform: translateZ(-40.4px); }
+.layer:nth-child(40) { transform: translateZ(-42px); }
+.layer:nth-child(41) { transform: translateZ(-43.6px); }
 
-/* h1 - saltos de 1.5px */
-.layer:nth-child(53) { transform: translateZ(-26.5px); }
-.layer:nth-child(54) { transform: translateZ(-28px); }
-.layer:nth-child(55) { transform: translateZ(-29.5px); }
-.layer:nth-child(56) { transform: translateZ(-31px); }
-.layer:nth-child(57) { transform: translateZ(-32.5px); }
-.layer:nth-child(58) { transform: translateZ(-34px); }
-.layer:nth-child(59) { transform: translateZ(-35.5px); }
-.layer:nth-child(60) { transform: translateZ(-37px); }
-.layer:nth-child(61) { transform: translateZ(-38.5px); }
-.layer:nth-child(62) { transform: translateZ(-40px); }
-.layer:nth-child(63) { transform: translateZ(-41.5px); }
-.layer:nth-child(64) { transform: translateZ(-43px); }
-.layer:nth-child(65) { transform: translateZ(-44.5px); }
-.layer:nth-child(66) { transform: translateZ(-46px); }
-.layer:nth-child(67) { transform: translateZ(-47.5px); }
+/* Marco interior - separations of 1.6px 
+.layer:nth-child(42) { transform: translateZ(-45.2px); }
+.layer:nth-child(43) { transform: translateZ(-46.8px); }
+.layer:nth-child(44) { transform: translateZ(-48.4px); }
+.layer:nth-child(45) { transform: translateZ(-50px); }
+.layer:nth-child(46) { transform: translateZ(-51.6px); }
+.layer:nth-child(47) { transform: translateZ(-53.2px); }
 
-/* marco interior - saltos de 1px */
-.layer:nth-child(68) { transform: translateZ(-48.5px); }
-.layer:nth-child(69) { transform: translateZ(-49.5px); }
-.layer:nth-child(70) { transform: translateZ(-50.5px); }
-.layer:nth-child(71) { transform: translateZ(-51.5px); }
-.layer:nth-child(72) { transform: translateZ(-52.5px); }
-.layer:nth-child(73) { transform: translateZ(-53.5px); }
-.layer:nth-child(74) { transform: translateZ(-54.5px); }
-.layer:nth-child(75) { transform: translateZ(-55.5px); }
-.layer:nth-child(76) { transform: translateZ(-56.5px); }
-.layer:nth-child(77) { transform: translateZ(-57.5px); }
-.layer:nth-child(78) { transform: translateZ(-58.5px); }
-.layer:nth-child(79) { transform: translateZ(-59.5px); }
-.layer:nth-child(80) { transform: translateZ(-60.5px); }
-.layer:nth-child(81) { transform: translateZ(-61.5px); }
-.layer:nth-child(82) { transform: translateZ(-62.5px); }
-.layer:nth-child(83) { transform: translateZ(-63.5px) rotateY(180deg); }
+/* Transición - separations of 1px 
+.layer:nth-child(48) { transform: translateZ(-54.2px) rotateY(180deg); }
+.layer:nth-child(49) { transform: translateZ(-55.2px); }
 
-/* nuevo hijo después del rotateY(180deg) */
-.layer:nth-child(84) { transform: translateZ(-66.5px); }
+/* Portada interior - separations of 1.2px 
+.layer:nth-child(50) { transform: translateZ(-56.4px); }
+.layer:nth-child(51) { transform: translateZ(-57.6px); }
+.layer:nth-child(52) { transform: translateZ(-58.8px); }
+.layer:nth-child(53) { transform: translateZ(-60px); }
 
-/* transición a "páginas" - saltos de 3.5px */
-.layer:nth-child(85) { transform: translateZ(-70px); }
-.layer:nth-child(86) { transform: translateZ(-73.5px); }
-.layer:nth-child(87) { transform: translateZ(-77px); }
-.layer:nth-child(88) { transform: translateZ(-80.5px); }
-.layer:nth-child(89) { transform: translateZ(-84px); }
+/* Páginas - separations of 6px 
+.layer:nth-child(54) { transform: translateZ(-66px); }
+.layer:nth-child(55) { transform: translateZ(-72px); }
+.layer:nth-child(56) { transform: translateZ(-78px); }
+.layer:nth-child(57) { transform: translateZ(-84px); }
+.layer:nth-child(58) { transform: translateZ(-90px); }
+.layer:nth-child(59) { transform: translateZ(-96px); }
+.layer:nth-child(60) { transform: translateZ(-102px); }
+.layer:nth-child(61) { transform: translateZ(-108px); }
+.layer:nth-child(62) { transform: translateZ(-114px); }
+.layer:nth-child(63) { transform: translateZ(-120px); }
+.layer:nth-child(64) { transform: translateZ(-126px); }
+.layer:nth-child(65) { transform: translateZ(-132px); }
+.layer:nth-child(66) { transform: translateZ(-138px); }
+.layer:nth-child(67) { transform: translateZ(-144px); }
+.layer:nth-child(68) { transform: translateZ(-150px); }
 
-/* páginas - saltos de 3px */
-.layer:nth-child(90) { transform: translateZ(-87px); }
-.layer:nth-child(91) { transform: translateZ(-90px); }
-.layer:nth-child(92) { transform: translateZ(-93px); }
-.layer:nth-child(93) { transform: translateZ(-96px); }
-.layer:nth-child(94) { transform: translateZ(-99px); }
-.layer:nth-child(95) { transform: translateZ(-102px); }
-.layer:nth-child(96) { transform: translateZ(-105px); }
-.layer:nth-child(97) { transform: translateZ(-108px); }
-.layer:nth-child(98) { transform: translateZ(-111px); }
-.layer:nth-child(99) { transform: translateZ(-114px); }
-.layer:nth-child(100) { transform: translateZ(-117px); }
-.layer:nth-child(101) { transform: translateZ(-120px); }
-.layer:nth-child(102) { transform: translateZ(-123px); }
-.layer:nth-child(103) { transform: translateZ(-126px); }
-.layer:nth-child(104) { transform: translateZ(-129px); }
+/* Contraportada interior - separations of 1.2px 
+.layer:nth-child(69) { transform: translateZ(-151.2px); }
+.layer:nth-child(70) { transform: translateZ(-152.4px); }
+.layer:nth-child(71) { transform: translateZ(-153.6px); }
+.layer:nth-child(72) { transform: translateZ(-154.8px); }
 
-.layer:nth-child(105) { transform: translateZ(-129px); }
-.layer:nth-child(106) { transform: translateZ(-132.5px); }
-.layer:nth-child(107) { transform: translateZ(-136px); }
-.layer:nth-child(108) { transform: translateZ(-139.5px); }
-.layer:nth-child(109) { transform: translateZ(-143px); }
+/* Contraportada layer 
+.layer:nth-child(73) { transform: translateZ(-156px); }
 
-.layer:nth-child(110) { transform: translateZ(-146.5px); }
-
-.layer:nth-child(111) { transform: translateZ(-150px) rotateY(180deg); }
-.layer:nth-child(112) { transform: translateZ(-153.5px) rotateY(180deg); }
-.layer:nth-child(113) { transform: translateZ(-157px) rotateY(180deg); }
-.layer:nth-child(114) { transform: translateZ(-160.5px) rotateY(180deg); }
-.layer:nth-child(115) { transform: translateZ(-164px) rotateY(180deg); }
+/* Contraportada exterior - separations of 1.2px 
+.layer:nth-child(74) { transform: translateZ(-157.2px) rotateY(180deg); }
+.layer:nth-child(75) { transform: translateZ(-158.4px) rotateY(180deg); }
+.layer:nth-child(76) { transform: translateZ(-159.6px) rotateY(180deg); }
+.layer:nth-child(77) { transform: translateZ(-160.8px) rotateY(180deg); }*/
 
 
+/* Marco Principal - separaciones de 1px */
+.layer:nth-child(1)  { --tz: 0px; }
+.layer:nth-child(2)  { --tz: -1px; }
+.layer:nth-child(3)  { --tz: -2px; }
+.layer:nth-child(4)  { --tz: -3px; }
+.layer:nth-child(5)  { --tz: -4px; }
+.layer:nth-child(6)  { --tz: -5px; }
+.layer:nth-child(7)  { --tz: -6px; }
+.layer:nth-child(8)  { --tz: -7px; }
+.layer:nth-child(9)  { --tz: -8px; }
+.layer:nth-child(10) { --tz: -9px; }
+.layer:nth-child(11) { --tz: -10px; }
+.layer:nth-child(12) { --tz: -11px; }
+.layer:nth-child(13) { --tz: -12px; }
+.layer:nth-child(14) { --tz: -13px; }
+.layer:nth-child(15) { --tz: -14px; }
+.layer:nth-child(16) { --tz: -15px; }
+.layer:nth-child(17) { --tz: -16px; }
+.layer:nth-child(18) { --tz: -17px; }
+.layer:nth-child(19) { --tz: -18px; }
+.layer:nth-child(20) { --tz: -19px; }
+.layer:nth-child(21) { --tz: -20px; }
+.layer:nth-child(22) { --tz: -21px; }
+.layer:nth-child(23) { --tz: -22px; }
+.layer:nth-child(24) { --tz: -23px; }
+.layer:nth-child(25) { --tz: -24px; }
+.layer:nth-child(26) { --tz: -25px; }
+.layer:nth-child(27) { --tz: -26px; }
+.layer:nth-child(28) { --tz: -27px; }
+.layer:nth-child(29) { --tz: -28px; }
+.layer:nth-child(30) { --tz: -29px; }
+.layer:nth-child(31) { --tz: -30px; }
+.layer:nth-child(32) { --tz: -31px; }
+.layer:nth-child(33) { --tz: -32px; }
+.layer:nth-child(34) { --tz: -33px; }
 
+/* notasBackgound_mask - capa de transición */
+.layer:nth-child(35) { --tz: -34px; }
+
+/* Título del libro - separaciones de 1.6px */
+.layer:nth-child(36) { --tz: -35.6px; }
+.layer:nth-child(37) { --tz: -37.2px; }
+.layer:nth-child(38) { --tz: -38.8px; }
+.layer:nth-child(39) { --tz: -40.4px; }
+.layer:nth-child(40) { --tz: -42px; }
+.layer:nth-child(41) { --tz: -43.6px; }
+
+/* Marco interior - separaciones de 1.6px */
+.layer:nth-child(42) { --tz: -45.2px; }
+.layer:nth-child(43) { --tz: -46.8px; }
+.layer:nth-child(44) { --tz: -48.4px; }
+.layer:nth-child(45) { --tz: -50px; }
+.layer:nth-child(46) { --tz: -51.6px; }
+.layer:nth-child(47) { --tz: -53.2px; }
+
+/* Transición - separaciones de 1px */
+.layer:nth-child(48) { --tz: -54.2px; --ry-additional: 180deg; }
+.layer:nth-child(49) { --tz: -55.2px; }
+
+/* Portada interior - separaciones de 1.2px */
+.layer:nth-child(50) { --tz: -56.4px; }
+.layer:nth-child(51) { --tz: -57.6px; }
+.layer:nth-child(52) { --tz: -58.8px; }
+.layer:nth-child(53) { --tz: -60px; }
+
+/* Páginas - separaciones de 6px */
+.layer:nth-child(54) { --tz: -66px; }
+.layer:nth-child(55) { --tz: -72px; }
+.layer:nth-child(56) { --tz: -78px; }
+.layer:nth-child(57) { --tz: -84px; }
+.layer:nth-child(58) { --tz: -90px; }
+.layer:nth-child(59) { --tz: -96px; }
+.layer:nth-child(60) { --tz: -102px; }
+.layer:nth-child(61) { --tz: -108px; }
+.layer:nth-child(62) { --tz: -114px; }
+.layer:nth-child(63) { --tz: -120px; }
+.layer:nth-child(64) { --tz: -126px; }
+.layer:nth-child(65) { --tz: -132px; }
+.layer:nth-child(66) { --tz: -138px; }
+.layer:nth-child(67) { --tz: -144px; }
+.layer:nth-child(68) { --tz: -150px; }
+
+/* Contraportada interior - separaciones de 1.2px */
+.layer:nth-child(69) { --tz: -151.2px; }
+.layer:nth-child(70) { --tz: -152.4px; }
+.layer:nth-child(71) { --tz: -153.6px; }
+.layer:nth-child(72) { --tz: -154.8px; }
+
+/* Contraportada */
+.layer:nth-child(73) { --tz: -156px; }
+
+/* Contraportada exterior - separaciones de 1.2px */
+.layer:nth-child(74) { --tz: -157.2px; --ry-additional: 180deg; }
+.layer:nth-child(75) { --tz: -158.4px; --ry-additional: 180deg; }
+.layer:nth-child(76) { --tz: -159.6px; --ry-additional: 180deg; }
+.layer:nth-child(77) { --tz: -160.8px; --ry-additional: 180deg; }
+
+
+
+
+.marcoPrincipal {
+  --tx: -360px;
+  --ry: 180deg;
+}
+
+/* Para las páginas y contraportada */
+.paginasIzq,
+.paginasDer,
+.contraportada {
+  --tx: 360px;
+}
 
 
 canvas {
