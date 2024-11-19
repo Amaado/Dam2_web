@@ -4151,12 +4151,7 @@ function setNormalPrice(skinContainer, price) {
       return;
     }
   
-    if (isNotInPage1) {
-      $("#notebook").turn("page", 1);
-      setTimeout(() => ejecutarAnim(), 500);
-    } else {
-      ejecutarAnim();
-    }
+    ejecutarAnim();
   
     function ejecutarAnim() {
       if (!notasAnimating) {
@@ -4210,7 +4205,7 @@ function setNormalPrice(skinContainer, price) {
 
 
             
-            abrirPag3();
+            abrirPag10();
 
           
   
@@ -4267,7 +4262,7 @@ function setNormalPrice(skinContainer, price) {
   
 
 
-          cerrarPag3();
+          cerrarPag10();
 
 
 
@@ -4333,6 +4328,82 @@ function setNormalPrice(skinContainer, price) {
   }
 
   function cerrarPag3(){
+    const paginasIzquierda = document.querySelectorAll('.marcoPrincipal');
+    const paginasDerecha = document.querySelectorAll('.paginasIzq, .paginasDer, .contraportada');
+  
+    // Restablecer valores iniciales para páginas de la izquierda
+    paginasIzquierda.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '-360px');
+      pagina.style.setProperty('--ry', '-180deg');
+      pagina.style.setProperty('--tz-transition', '0px');
+      pagina.style.transition = 'transform 1s ease';
+    });
+  
+    // Restablecer valores iniciales para páginas de la derecha
+    paginasDerecha.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '360px');
+      pagina.style.setProperty('--ry', '0deg');
+      pagina.style.transition = 'transform 1s ease';
+    });
+  
+    // Forzar reflujo
+    document.body.offsetHeight;
+  
+    // Aplicar valores finales para páginas de la izquierda
+    paginasIzquierda.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '-360px');
+      pagina.style.setProperty('--ry', '-180deg');
+      pagina.style.setProperty('--tz-transition', '0px');
+    });
+  
+    // Aplicar valores finales para páginas de la derecha
+    paginasDerecha.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '-360px');
+      pagina.style.setProperty('--ry', '-180deg');
+    });
+  }
+
+
+  
+  function abrirPag10(){
+    const paginasIzquierda = document.querySelectorAll('.marcoPrincipal, .paginasIzq');
+    const paginasDerecha = document.querySelectorAll('.paginasDer, .contraportada');
+  
+    // Restablecer valores iniciales para páginas de la izquierda
+    paginasIzquierda.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '360px');
+      pagina.style.setProperty('--ry', '0deg');
+      pagina.style.setProperty('--tz-transition', '50px');
+      pagina.style.transition = 'transform 1s 1.2s ease';
+    });
+  
+    // Restablecer valores iniciales para páginas de la derecha
+    paginasDerecha.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '360px');
+      pagina.style.setProperty('--ry', '0deg');
+      pagina.style.setProperty('--tz-transition', '0px');
+      pagina.style.transition = 'transform 1s 1.2s ease';
+    });
+  
+    // Forzar reflujo
+    document.body.offsetHeight;
+  
+    // Aplicar valores finales para páginas de la izquierda
+    paginasIzquierda.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '-360px');
+      pagina.style.setProperty('--ry', '-180deg');
+      pagina.style.setProperty('--tz-transition', '150px');
+    });
+  
+    // Aplicar valores finales para páginas de la derecha
+    paginasDerecha.forEach((pagina) => {
+      pagina.style.setProperty('--tx', '360px');
+      pagina.style.setProperty('--ry', '0deg');
+      // Si necesitas cambiar --ry o --tz-transition, hazlo aquí
+    });
+  }
+
+  function cerrarPag100(){
     const paginasIzquierda = document.querySelectorAll('.marcoPrincipal');
     const paginasDerecha = document.querySelectorAll('.paginasIzq, .paginasDer, .contraportada');
   
@@ -5352,7 +5423,7 @@ function setNormalPrice(skinContainer, price) {
   }
 
   const h2 = document.querySelector(".h2");
-  let isNotInPage1 = false;
+  let actualPage = 1;
 
   $("#notebook").turn({
     acceleration: true,
@@ -5369,8 +5440,37 @@ function setNormalPrice(skinContainer, price) {
           .toggleClass("fixed", page !== 36);
       },
       turned: function (event, page) {
-        isNotInPage1 = page !== 1;
         cargarDatosPaginasCercanas(page);
+
+        let currentPaper = $(`#notebook [page="${page}"] .paper`);
+        if(2 > page){
+          actualPage = page;
+          console.log("actualPage: "+actualPage);
+        } else if(page == 3 || page == 2){
+          actualPage = 3;
+          console.log("actualPage: "+actualPage);
+        }else if(page == 34 || page == 35){
+          actualPage = 34;
+          console.log("actualPage: "+actualPage);
+        }else if(page == 36){
+          actualPage = 36;
+          console.log("actualPage: "+actualPage);
+        }else{
+          actualPage = page;
+          console.log("actualPage: "+actualPage);
+
+          if (currentPaper.attr("class").includes("Left")) {
+            let clonedPaper = currentPaper.clone();
+            clonedPaper.addClass("clone");
+            $("#cloneLeft").append(currentPaper.clone());
+            console.log(currentPaper);
+          } else if (currentPaper.attr("class").includes("Right")) {
+            let clonedPaper = currentPaper.clone();
+            clonedPaper.addClass("clone");
+            $("#cloneRight").append(currentPaper.clone());
+            console.log(currentPaper);
+          }
+        }
       },
     },
   });
