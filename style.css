@@ -63,6 +63,58 @@ a:visited {
   position: relative;
 }
 
+
+a.understrokeAnim {
+	position: relative;
+	text-decoration: none;
+	line-height: 1;
+}
+
+a.understrokeAnim:after {
+	position: absolute;
+	z-index: -1;
+  bottom: 46px;
+	left:198px;
+	height: 3px;
+	content: "";
+	transition: transform 0.2s ease;
+	transform: scaleX(0);
+	transform-origin: 0 0;
+	background-color: currentColor;
+  border-radius: 3px;
+
+}
+
+a.understrokeAnim:hover:after {
+	transform: scaleX(1);
+}
+
+a.understrokeAnim:nth-of-type(1):after {
+  width: 63px;
+}
+
+a.understrokeAnim:nth-of-type(2):after {
+  width: 84px;
+}
+
+a.understrokeAnim:nth-of-type(3):after {
+  width: 96px;
+}
+
+a.understrokeAnim:nth-of-type(4):after {
+  width: 110px;
+}
+
+a.understrokeAnim:nth-of-type(5):after {
+  width: 223px;
+}
+
+a.understrokeAnim:nth-of-type(6):after {
+  width: 261px;
+}
+
+
+
 .h1,
 .h2, .h3, .h4 {
   margin-top: -486px;
@@ -233,6 +285,7 @@ body {
   background-repeat: no-repeat; /* No repetir el fondo */
   background-position: center; /* Centrar el fondo */
   opacity: 100%;
+  transition: margin-left 0.5s ease, margin-top 0.5s ease;
 }
 
 #fondoGalaxy.clicked {
@@ -256,6 +309,7 @@ body {
   background-position: center; /* Centrar el fondo */
   z-index: 199; /* Asegúrate de que fondoGalaxyGreen esté por encima de fondoGalaxy si se superponen */
   opacity: 1%;
+  transition: margin-left 0.5s ease, margin-top 0.5s ease;
 }
 
 #fondoGalaxyGreen.clicked {
@@ -467,15 +521,132 @@ nav a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50px;
-  width: 200px;
+  border-radius: 0px;
+  width: auto;
   height: 100px;
   z-index: 12;
   font-size: 80px;
   transform: scaleY(0.9);
   font-family: "register";
   white-space: nowrap;
+  overflow: hidden;
+  left: 45px;
+  color: #bfd4e9;
 }
+
+
+.formTittle::before {
+  content: '';
+  font-family: inherit;
+  font-size: inherit;
+  white-space: nowrap;
+}
+
+.formTittle.animate.login::before {
+  animation: formTextLogin 2s steps(5, end) forwards;
+}
+
+.formTittle.animate.register::before {
+  animation: formTextRegister 2s steps(8, end) forwards;
+}
+
+.formTittle.animate::after {
+  content: '';
+  font-family: inherit;
+  font-size: inherit;
+  position: absolute;
+  right: 20px;
+  animation: chars 1.9s steps(8, end) forwards;
+  color: #cce1f7;
+  filter: drop-shadow(0 0 3px #bfd4e9);
+}
+
+.formTittle.login.animate::after {
+  bottom: -6px;
+}
+
+.formTittle.register.animate::after {
+  bottom: -4px;
+}
+
+
+@keyframes formTextLogin {
+  0% { content: 'ㅤ'; }
+  20% { content: 'Lㅤ'; }
+  40% { content: 'Loㅤ'; }
+  60% { content: 'Logㅤ'; }
+  80% { content: 'Logiㅤ'; }
+  100% { content: 'Loginㅤ'; }
+}
+
+/* Animación para "Register" */
+@keyframes formTextRegister {
+  0% { content: 'ㅤ'; }
+  12.5% { content: 'Rㅤ'; }
+  25% { content: 'Reㅤ'; }
+  37.5% { content: 'Regㅤ'; }
+  50% { content: 'Regiㅤ'; }
+  62.5% { content: 'Regisㅤ'; }
+  75% { content: 'Registㅤ'; }
+  87.5% { content: 'Registeㅤ'; }
+  100% { content: 'Registerㅤ'; }
+}
+
+
+/* Rotación de caracteres */
+@keyframes chars {
+  0% { content: 'a'; }
+  2% { content: 'M'; }
+  4% { content: 'b'; }
+  6% { content: 'N'; }
+  8% { content: 'c'; }
+  10% { content: 'O'; }
+  12% { content: 'd'; }
+  14% { content: 'P'; }
+  16% { content: 'e'; }
+  18% { content: 'Q'; }
+  20% { content: 'f'; }
+  22% { content: 'R'; }
+  24% { content: 'g'; }
+  26% { content: 'S'; }
+  28% { content: 'h'; }
+  30% { content: 'T'; }
+  32% { content: 'i'; }
+  34% { content: 'U'; }
+  36% { content: 'j'; }
+  38% { content: 'V'; }
+  40% { content: 'k'; }
+  42% { content: 'Z'; }
+  44% { content: 'l'; }
+  46% { content: 'X'; }
+  48% { content: 'm'; }
+  50% { content: 'Y'; }
+  52% { content: 'n'; }
+  54% { content: 'Z'; }
+  56% { content: 'o'; }
+  58% { content: 'A'; }
+  60% { content: 'p'; }
+  62% { content: 'B'; }
+  64% { content: 'q'; }
+  66% { content: 'C'; }
+  68% { content: 'r'; }
+  70% { content: 'D'; }
+  72% { content: 's'; }
+  74% { content: 'E'; }
+  76% { content: 't'; }
+  78% { content: 'F'; }
+  80% { content: 'u'; }
+  82% { content: 'G'; }
+  84% { content: 'v'; }
+  86% { content: 'H'; }
+  88% { content: 'Z'; }
+  90% { content: 'I'; }
+  92% { content: 'x'; }
+  94% { content: 'J'; }
+  96% { content: 'y'; }
+  98% { content: 'K'; }
+}
+
 
 .formContainer {
   position: relative;
@@ -489,6 +660,7 @@ nav a:hover {
   height: 400px;
   z-index: 12;
   font-weight: bold;
+  top: 20px;
 }
 
 .formRow {
@@ -3333,38 +3505,12 @@ div.img img {
   display: none;
   z-index: 199;
 
+  /**/
   transform: scale3d(0.62, 0.62, 0.62) rotateY(0deg) rotateX(0deg);
   top: -215px;
   left: 690px;
-  /*
-  animation: appear 2s ease;
-
-  animation-delay: 2s;
-
-  animation-fill-mode: forwards;
-
-
-
-
-
-  top: -215px;
-
-
-  animation: rotate3D 10s infinite linear;
-  transform: rotateY(90.5deg);
-  */
 }
 
-
-/* Animación 3D */
-@keyframes rotate3D {
-  100% {
-    transform: rotateY(0deg);
-  }
-  100% {
-    transform: rotateY(360deg);
-  }
-}
 
 @keyframes appear {
   0% {
@@ -3484,104 +3630,6 @@ div.img img {
 .layer.highContrast{
   filter: contrast(150%);
 }
-
-/*
-/* Marco Principal - separations of 1px 
-.layer:nth-child(1)  { transform: translateZ(0px); }
-.layer:nth-child(2)  { transform: translateZ(-1px); }
-.layer:nth-child(3)  { transform: translateZ(-2px); }
-.layer:nth-child(4)  { transform: translateZ(-3px); }
-.layer:nth-child(5)  { transform: translateZ(-4px); }
-.layer:nth-child(6)  { transform: translateZ(-5px); }
-.layer:nth-child(7)  { transform: translateZ(-6px); }
-.layer:nth-child(8)  { transform: translateZ(-7px); }
-.layer:nth-child(9)  { transform: translateZ(-8px); }
-.layer:nth-child(10) { transform: translateZ(-9px); }
-.layer:nth-child(11) { transform: translateZ(-10px); }
-.layer:nth-child(12) { transform: translateZ(-11px); }
-.layer:nth-child(13) { transform: translateZ(-12px); }
-.layer:nth-child(14) { transform: translateZ(-13px); }
-.layer:nth-child(15) { transform: translateZ(-14px); }
-.layer:nth-child(16) { transform: translateZ(-15px); }
-.layer:nth-child(17) { transform: translateZ(-16px); }
-.layer:nth-child(18) { transform: translateZ(-17px); }
-.layer:nth-child(19) { transform: translateZ(-18px); }
-.layer:nth-child(20) { transform: translateZ(-19px); }
-.layer:nth-child(21) { transform: translateZ(-20px); }
-.layer:nth-child(22) { transform: translateZ(-21px); }
-.layer:nth-child(23) { transform: translateZ(-22px); }
-.layer:nth-child(24) { transform: translateZ(-23px); }
-.layer:nth-child(25) { transform: translateZ(-24px); }
-.layer:nth-child(26) { transform: translateZ(-25px); }
-.layer:nth-child(27) { transform: translateZ(-26px); }
-.layer:nth-child(28) { transform: translateZ(-27px); }
-.layer:nth-child(29) { transform: translateZ(-28px); }
-.layer:nth-child(30) { transform: translateZ(-29px); }
-.layer:nth-child(31) { transform: translateZ(-30px); }
-.layer:nth-child(32) { transform: translateZ(-31px); }
-.layer:nth-child(33) { transform: translateZ(-32px); }
-.layer:nth-child(34) { transform: translateZ(-33px); }
-
-/* notasBackgound_mask - transition layer 
-.layer:nth-child(35) { transform: translateZ(-34px); }
-
- Título del libro - separations of 1.6px 
-.layer:nth-child(36) { transform: translateZ(-35.6px); }
-.layer:nth-child(37) { transform: translateZ(-37.2px); }
-.layer:nth-child(38) { transform: translateZ(-38.8px); }
-.layer:nth-child(39) { transform: translateZ(-40.4px); }
-.layer:nth-child(40) { transform: translateZ(-42px); }
-.layer:nth-child(41) { transform: translateZ(-43.6px); }
-
-/* Marco interior - separations of 1.6px 
-.layer:nth-child(42) { transform: translateZ(-45.2px); }
-.layer:nth-child(43) { transform: translateZ(-46.8px); }
-.layer:nth-child(44) { transform: translateZ(-48.4px); }
-.layer:nth-child(45) { transform: translateZ(-50px); }
-.layer:nth-child(46) { transform: translateZ(-51.6px); }
-.layer:nth-child(47) { transform: translateZ(-53.2px); }
-
-/* Transición - separations of 1px 
-.layer:nth-child(48) { transform: translateZ(-54.2px) rotateY(180deg); }
-.layer:nth-child(49) { transform: translateZ(-55.2px); }
-
-/* Portada interior - separations of 1.2px 
-.layer:nth-child(50) { transform: translateZ(-56.4px); }
-.layer:nth-child(51) { transform: translateZ(-57.6px); }
-.layer:nth-child(52) { transform: translateZ(-58.8px); }
-.layer:nth-child(53) { transform: translateZ(-60px); }
-
-/* Páginas - separations of 6px 
-.layer:nth-child(54) { transform: translateZ(-66px); }
-.layer:nth-child(55) { transform: translateZ(-72px); }
-.layer:nth-child(56) { transform: translateZ(-78px); }
-.layer:nth-child(57) { transform: translateZ(-84px); }
-.layer:nth-child(58) { transform: translateZ(-90px); }
-.layer:nth-child(59) { transform: translateZ(-96px); }
-.layer:nth-child(60) { transform: translateZ(-102px); }
-.layer:nth-child(61) { transform: translateZ(-108px); }
-.layer:nth-child(62) { transform: translateZ(-114px); }
-.layer:nth-child(63) { transform: translateZ(-120px); }
-.layer:nth-child(64) { transform: translateZ(-126px); }
-.layer:nth-child(65) { transform: translateZ(-132px); }
-.layer:nth-child(66) { transform: translateZ(-138px); }
-.layer:nth-child(67) { transform: translateZ(-144px); }
-.layer:nth-child(68) { transform: translateZ(-150px); }
-
-/* Contraportada interior - separations of 1.2px 
-.layer:nth-child(69) { transform: translateZ(-151.2px); }
-.layer:nth-child(70) { transform: translateZ(-152.4px); }
-.layer:nth-child(71) { transform: translateZ(-153.6px); }
-.layer:nth-child(72) { transform: translateZ(-154.8px); }
-
-/* Contraportada layer 
-.layer:nth-child(73) { transform: translateZ(-156px); }
-
-/* Contraportada exterior - separations of 1.2px 
-.layer:nth-child(74) { transform: translateZ(-157.2px) rotateY(180deg); }
-.layer:nth-child(75) { transform: translateZ(-158.4px) rotateY(180deg); }
-.layer:nth-child(76) { transform: translateZ(-159.6px) rotateY(180deg); }
-.layer:nth-child(77) { transform: translateZ(-160.8px) rotateY(180deg); }*/
 
 
 /* Marco Principal - separaciones de 1px */
