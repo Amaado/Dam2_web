@@ -675,6 +675,8 @@ function updateBubbles() {
       pageNumber.style.backgroundColor = "#71604E";
       pageNumber.style.color = "#dddcb0";
       controls.style.color = "#71604E";
+      menuLabelSkins.style.color = "#313842";
+      menuLabelModifiers.style.color = "#313842";
 
     } else {
       // Dark theme
@@ -725,7 +727,8 @@ function updateBubbles() {
       pageNumber.style.backgroundColor = "#bfd4e9";
       pageNumber.style.color = "#313842";
       controls.style.color = "#bfd4e9";
-
+      menuLabelSkins.style.color = "#bfd4e9";
+      menuLabelModifiers.style.color = "#bfd4e9";
     }
 
     ajustesColorLoginYregister(checkbox);
@@ -924,6 +927,21 @@ function updateBubbles() {
           rule.style.boxShadow = '0px 0px 0px 3px #fffedb';
           rule.style.filter = 'drop-shadow(0px 0px 5px #71604E)';
         }
+        if (rule.selectorText === '.information') {
+          rule.style.filter = 'brightness(0) saturate(100%) invert(20%) sepia(12%) saturate(792%) hue-rotate(176deg) brightness(87%) contrast(89%)';
+        }
+        if (rule.selectorText === '.tooltip-text') {
+          rule.style.backgroundColor = "#dddcb0";
+          rule.style.color = "#313842";
+          rule.boxShadow = "0 0 5px 0px #313842 inset";
+        }
+        if (rule.selectorText === '.tooltip-textHighlight') {
+          rule.style.filter = "drop-shadow(0px 0px 5px #313842)";
+        }
+        if (rule.selectorText === '.formTittle.animate::after') {
+          rule.style.filter = "drop-shadow(0 0 3px #313842)";
+          rule.style.color = "#434c59";
+        }
       }
     } else {
       if (loginContainer) {
@@ -1114,6 +1132,21 @@ function updateBubbles() {
         if (rule.selectorText === '.paletteColor.active') {
           rule.style.boxShadow = '0px 0px 0px 3px #dbedff';
           rule.style.filter = 'drop-shadow(0px 0px 5px #dbedff)';
+        }
+        if (rule.selectorText === '.information') {
+          rule.style.filter = 'brightness(0) saturate(100%) invert(88%) sepia(10%) saturate(755%) hue-rotate(181deg) brightness(95%) contrast(92%)';
+        }
+        if (rule.selectorText === '.tooltip-text') {
+          rule.style.backgroundColor = "#1c2128";
+          rule.style.color = "#bfd4e9";
+          rule.boxShadow = "0 0 5px 0px #bfd4e9 inset";
+        }
+        if (rule.selectorText === '.tooltip-textHighlight') {
+          rule.style.filter = "drop-shadow(0px 0px 5px #bfd4e9)";
+        }
+        if (rule.selectorText === '.formTittle.animate::after') {
+          rule.style.filter = "drop-shadow(0 0 3px #bfd4e9)";
+          rule.style.color = "#cce1f7";
         }
       }
     }
@@ -1447,6 +1480,11 @@ function updateBubbles() {
 
   loginButton.addEventListener("click", function () {
     if (!loginScreen.classList.contains("active") && !isAnimatingLogin) {
+      const loginTittle = document.querySelector(".formTittle.login");
+      loginTittle.classList.remove("animate");
+      void loginTittle.offsetWidth;
+      loginTittle.classList.add("animate");
+
       isAnimatingLogin = true;
       loginScreen.classList.add("active");
       loginScreen.style.backdropFilter = "blur(5px)";
@@ -1618,6 +1656,12 @@ function updateBubbles() {
 
   registerButton.addEventListener("click", function () {
     if (!registerScreen.classList.contains("active") && !isAnimatingRegister) {
+
+      const registerTittle = document.querySelector(".formTittle.register");
+      registerTittle.classList.remove("animate");
+      void registerTittle.offsetWidth;
+      registerTittle.classList.add("animate");
+
       isAnimatingRegister = true;
       registerScreen.classList.add("active");
       registerScreen.style.backdropFilter = "blur(5px)";
@@ -4163,6 +4207,7 @@ function setNormalPrice(skinContainer, price) {
           notebook.style.display = "flex";
           controls.style.display = "flex";
           notas.classList.add("active");
+          writeButton.click();
   
           setTimeout(() => {
             boxx.style.marginRight = "800px";
@@ -4782,6 +4827,10 @@ function resetPag() {
       cursor.style.marginTop = "0px";
       cursorPurpleish.style.marginLeft = "0px";
       cursorPurpleish.style.marginTop = "0px";
+      fondo.style.marginLeft = "0px";
+      fondo.style.marginTop = "0px";
+      fondoGreen.style.marginLeft = "0px";
+      fondoGreen.style.marginTop = "0px";
     }
 
     // Posiciona el tooltipVolume en función del valor del slider
@@ -5060,6 +5109,10 @@ function resetPag() {
           cursor.style.marginTop = "50px";
           cursorPurpleish.style.marginLeft = "50px";
           cursorPurpleish.style.marginTop = "50px";
+          fondo.style.marginLeft = "50px";
+          fondo.style.marginTop = "50px";
+          fondoGreen.style.marginLeft = "50px";
+          fondoGreen.style.marginTop = "50px";
           break;
 
         case "1":
@@ -5069,6 +5122,10 @@ function resetPag() {
           cursor.style.marginTop = "53.3px";
           cursorPurpleish.style.marginLeft = "53.3px";
           cursorPurpleish.style.marginTop = "53.3px";
+          fondo.style.marginLeft = "53.3px";
+          fondo.style.marginTop = "53.3px";
+          fondoGreen.style.marginLeft = "53.3px";
+          fondoGreen.style.marginTop = "53.3px";
           break;
 
         case "2":
@@ -5078,6 +5135,10 @@ function resetPag() {
           cursor.style.marginTop = "56.6px";
           cursorPurpleish.style.marginLeft = "56.6px";
           cursorPurpleish.style.marginTop = "56.6px";
+          fondo.style.marginLeft = "56.6px";
+          fondo.style.marginTop = "56.6px";
+          fondoGreen.style.marginLeft = "56.6px";
+          fondoGreen.style.marginTop = "56.6px";
           break;
 
         case "3":
@@ -5087,6 +5148,10 @@ function resetPag() {
           cursor.style.marginTop = "60px";
           cursorPurpleish.style.marginLeft = "60px";
           cursorPurpleish.style.marginTop = "60px";
+          fondo.style.marginLeft = "60px";
+          fondo.style.marginTop = "60px";
+          fondoGreen.style.marginLeft = "60px";
+          fondoGreen.style.marginTop = "60px";
           break;
 
         case "4":
@@ -5096,6 +5161,10 @@ function resetPag() {
           cursor.style.marginTop = "63.3px";
           cursorPurpleish.style.marginLeft = "63.3px";
           cursorPurpleish.style.marginTop = "63.3px";
+          fondo.style.marginLeft = "63.3px";
+          fondo.style.marginTop = "63.3px";
+          fondoGreen.style.marginLeft = "63.3px";
+          fondoGreen.style.marginTop = "63.3px";
           break;
 
         case "5":
@@ -5105,6 +5174,10 @@ function resetPag() {
           cursor.style.marginTop = "66.6px";
           cursorPurpleish.style.marginLeft = "66.6px";
           cursorPurpleish.style.marginTop = "66.6px";
+          fondo.style.marginLeft = "66.6px";
+          fondo.style.marginTop = "66.6px";
+          fondoGreen.style.marginLeft = "66.6px";
+          fondoGreen.style.marginTop = "66.6px";
           break;
 
         case "6":
@@ -5114,6 +5187,10 @@ function resetPag() {
           cursor.style.marginTop = "70px";
           cursorPurpleish.style.marginLeft = "70px";
           cursorPurpleish.style.marginTop = "70px";
+          fondo.style.marginLeft = "70px";
+          fondo.style.marginTop = "70px";
+          fondoGreen.style.marginLeft = "70px";
+          fondoGreen.style.marginTop = "70px";
           break;
 
         case "7":
@@ -5123,6 +5200,10 @@ function resetPag() {
           cursor.style.marginTop = "73.3px";
           cursorPurpleish.style.marginLeft = "73.3px";
           cursorPurpleish.style.marginTop = "73.3px";
+          fondo.style.marginLeft = "73.3px";
+          fondo.style.marginTop = "73.3px";
+          fondoGreen.style.marginLeft = "73.3px";
+          fondoGreen.style.marginTop = "73.3px";
           break;
 
         case "8":
@@ -5132,6 +5213,10 @@ function resetPag() {
           cursor.style.marginTop = "76.6px";
           cursorPurpleish.style.marginLeft = "76.6px";
           cursorPurpleish.style.marginTop = "76.6px";
+          fondo.style.marginLeft = "76.6px";
+          fondo.style.marginTop = "76.6px";
+          fondoGreen.style.marginLeft = "76.6px";
+          fondoGreen.style.marginTop = "76.6px";
           break;
 
         case "9":
@@ -5141,6 +5226,10 @@ function resetPag() {
           cursor.style.marginTop = "80px";
           cursorPurpleish.style.marginLeft = "80px";
           cursorPurpleish.style.marginTop = "80px";
+          fondo.style.marginLeft = "80px";
+          fondo.style.marginTop = "80px";
+          fondoGreen.style.marginLeft = "80px";
+          fondoGreen.style.marginTop = "80px";
           break;
 
         case "10":
@@ -5150,6 +5239,10 @@ function resetPag() {
           cursor.style.marginTop = "83.3px";
           cursorPurpleish.style.marginLeft = "83.3px";
           cursorPurpleish.style.marginTop = "83.3px";
+          fondo.style.marginLeft = "83.3px";
+          fondo.style.marginTop = "83.3px";
+          fondoGreen.style.marginLeft = "83.3px";
+          fondoGreen.style.marginTop = "83.3px";
           break;
 
         case "11":
@@ -5159,6 +5252,10 @@ function resetPag() {
           cursor.style.marginTop = "86.6px";
           cursorPurpleish.style.marginLeft = "86.6px";
           cursorPurpleish.style.marginTop = "86.6px";
+          fondo.style.marginLeft = "86.6px";
+          fondo.style.marginTop = "86.6px";
+          fondoGreen.style.marginLeft = "86.6px";
+          fondoGreen.style.marginTop = "86.6px";
           break;
 
         case "12":
@@ -5168,6 +5265,10 @@ function resetPag() {
           cursor.style.marginTop = "90px";
           cursorPurpleish.style.marginLeft = "90px";
           cursorPurpleish.style.marginTop = "90px";
+          fondo.style.marginLeft = "90px";
+          fondo.style.marginTop = "90px";
+          fondoGreen.style.marginLeft = "90px";
+          fondoGreen.style.marginTop = "90px";
           break;
 
         case "13":
@@ -5177,6 +5278,10 @@ function resetPag() {
           cursor.style.marginTop = "93.3px";
           cursorPurpleish.style.marginLeft = "93.3px";
           cursorPurpleish.style.marginTop = "93.3px";
+          fondo.style.marginLeft = "93.3px";
+          fondo.style.marginTop = "93.3px";
+          fondoGreen.style.marginLeft = "93.3px";
+          fondoGreen.style.marginTop = "93.3px";
           break;
 
         case "14":
@@ -5186,6 +5291,10 @@ function resetPag() {
           cursor.style.marginTop = "96.6px";
           cursorPurpleish.style.marginLeft = "96.6px";
           cursorPurpleish.style.marginTop = "96.6px";
+          fondo.style.marginLeft = "96.6px";
+          fondo.style.marginTop = "96.6px";
+          fondoGreen.style.marginLeft = "96.6px";
+          fondoGreen.style.marginTop = "96.6px";
           break;
       }
     } else {
@@ -5198,6 +5307,10 @@ function resetPag() {
           cursor.style.marginTop = "50px";
           cursorPurpleish.style.marginLeft = "50px";
           cursorPurpleish.style.marginTop = "50px";
+          fondo.style.marginLeft = "50px";
+          fondo.style.marginTop = "50px";
+          fondoGreen.style.marginLeft = "50px";
+          fondoGreen.style.marginTop = "50px";
           break;
 
         case "1":
@@ -5207,6 +5320,10 @@ function resetPag() {
           cursor.style.marginTop = "53.3px";
           cursorPurpleish.style.marginLeft = "53.3px";
           cursorPurpleish.style.marginTop = "53.3px";
+          fondo.style.marginLeft = "53.3px";
+          fondo.style.marginTop = "53.3px";
+          fondoGreen.style.marginLeft = "53.3px";
+          fondoGreen.style.marginTop = "53.3px";
           break;
 
         case "2":
@@ -5216,6 +5333,10 @@ function resetPag() {
           cursor.style.marginTop = "56.6px";
           cursorPurpleish.style.marginLeft = "56.6px";
           cursorPurpleish.style.marginTop = "56.6px";
+          fondo.style.marginLeft = "56.6px";
+          fondo.style.marginTop = "56.6px";
+          fondoGreen.style.marginLeft = "56.6px";
+          fondoGreen.style.marginTop = "56.6px";
           break;
 
         case "3":
@@ -5225,6 +5346,10 @@ function resetPag() {
           cursor.style.marginTop = "60px";
           cursorPurpleish.style.marginLeft = "60px";
           cursorPurpleish.style.marginTop = "60px";
+          fondo.style.marginLeft = "60px";
+          fondo.style.marginTop = "60px";
+          fondoGreen.style.marginLeft = "60px";
+          fondoGreen.style.marginTop = "60px";
           break;
 
         case "4":
@@ -5234,6 +5359,10 @@ function resetPag() {
           cursor.style.marginTop = "63.3px";
           cursorPurpleish.style.marginLeft = "63.3px";
           cursorPurpleish.style.marginTop = "63.3px";
+          fondo.style.marginLeft = "63.3px";
+          fondo.style.marginTop = "63.3px";
+          fondoGreen.style.marginLeft = "63.3px";
+          fondoGreen.style.marginTop = "63.3px";
           break;
 
         case "5":
@@ -5243,6 +5372,10 @@ function resetPag() {
           cursor.style.marginTop = "66.6px";
           cursorPurpleish.style.marginLeft = "66.6px";
           cursorPurpleish.style.marginTop = "66.6px";
+          fondo.style.marginLeft = "66.6px";
+          fondo.style.marginTop = "66.6px";
+          fondoGreen.style.marginLeft = "66.6px";
+          fondoGreen.style.marginTop = "66.6px";
           break;
 
         case "6":
@@ -5252,6 +5385,10 @@ function resetPag() {
           cursor.style.marginTop = "70px";
           cursorPurpleish.style.marginLeft = "70px";
           cursorPurpleish.style.marginTop = "70px";
+          fondo.style.marginLeft = "70px";
+          fondo.style.marginTop = "70px";
+          fondoGreen.style.marginLeft = "70px";
+          fondoGreen.style.marginTop = "70px";
           break;
 
         case "7":
@@ -5261,6 +5398,10 @@ function resetPag() {
           cursor.style.marginTop = "73.3px";
           cursorPurpleish.style.marginLeft = "73.3px";
           cursorPurpleish.style.marginTop = "73.3px";
+          fondo.style.marginLeft = "73.3px";
+          fondo.style.marginTop = "73.3px";
+          fondoGreen.style.marginLeft = "73.3px";
+          fondoGreen.style.marginTop = "73.3px";
           break;
 
         case "8":
@@ -5270,6 +5411,10 @@ function resetPag() {
           cursor.style.marginTop = "76.6px";
           cursorPurpleish.style.marginLeft = "76.6px";
           cursorPurpleish.style.marginTop = "76.6px";
+          fondo.style.marginLeft = "76.6px";
+          fondo.style.marginTop = "76.6px";
+          fondoGreen.style.marginLeft = "76.6px";
+          fondoGreen.style.marginTop = "76.6px";
           break;
 
         case "9":
@@ -5279,6 +5424,10 @@ function resetPag() {
           cursor.style.marginTop = "80px";
           cursorPurpleish.style.marginLeft = "80px";
           cursorPurpleish.style.marginTop = "80px";
+          fondo.style.marginLeft = "80px";
+          fondo.style.marginTop = "80px";
+          fondoGreen.style.marginLeft = "80px";
+          fondoGreen.style.marginTop = "80px";
           break;
 
         case "10":
@@ -5288,6 +5437,10 @@ function resetPag() {
           cursor.style.marginTop = "83.3px";
           cursorPurpleish.style.marginLeft = "83.3px";
           cursorPurpleish.style.marginTop = "83.3px";
+          fondo.style.marginLeft = "83.3px";
+          fondo.style.marginTop = "83.3px";
+          fondoGreen.style.marginLeft = "83.3px";
+          fondoGreen.style.marginTop = "83.3px";
           break;
 
         case "11":
@@ -5297,6 +5450,10 @@ function resetPag() {
           cursor.style.marginTop = "86.6px";
           cursorPurpleish.style.marginLeft = "86.6px";
           cursorPurpleish.style.marginTop = "86.6px";
+          fondo.style.marginLeft = "86.6px";
+          fondo.style.marginTop = "86.6px";
+          fondoGreen.style.marginLeft = "86.6px";
+          fondoGreen.style.marginTop = "86.6px";
           break;
 
         case "12":
@@ -5306,6 +5463,10 @@ function resetPag() {
           cursor.style.marginTop = "90px";
           cursorPurpleish.style.marginLeft = "90px";
           cursorPurpleish.style.marginTop = "90px";
+          fondo.style.marginLeft = "90px";
+          fondo.style.marginTop = "90px";
+          fondoGreen.style.marginLeft = "90px";
+          fondoGreen.style.marginTop = "90px";
           break;
 
         case "13":
@@ -5315,6 +5476,10 @@ function resetPag() {
           cursor.style.marginTop = "93.3px";
           cursorPurpleish.style.marginLeft = "93.3px";
           cursorPurpleish.style.marginTop = "93.3px";
+          fondo.style.marginLeft = "93.3px";
+          fondo.style.marginTop = "93.3px";
+          fondoGreen.style.marginLeft = "93.3px";
+          fondoGreen.style.marginTop = "93.3px";
           break;
 
         case "14":
@@ -5324,6 +5489,10 @@ function resetPag() {
           cursor.style.marginTop = "96.6px";
           cursorPurpleish.style.marginLeft = "96.6px";
           cursorPurpleish.style.marginTop = "96.6px";
+          fondo.style.marginLeft = "96.6px";
+          fondo.style.marginTop = "96.6px";
+          fondoGreen.style.marginLeft = "96.6px";
+          fondoGreen.style.marginTop = "96.6px";
           break;
       }
       console.log(cursorPaint.src);
@@ -5408,6 +5577,10 @@ function resetPag() {
     cursor.style.marginTop = "0px";
     cursorPurpleish.style.marginLeft = "0px";
     cursorPurpleish.style.marginTop = "0px";
+    fondo.style.marginLeft = "0px";
+    fondo.style.marginTop = "0px";
+    fondoGreen.style.marginLeft = "0px";
+    fondoGreen.style.marginTop = "0px";
 
     cursorPaint.addEventListener(
       "transitionend",
