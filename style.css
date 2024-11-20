@@ -3901,14 +3901,14 @@ canvas {
 }
 
 .hamster:before {
-  background: #693215;
+  background: #141414;
   width: 3px;
   height: 4px;
   left: 5px;
 }
 
 .hamster:after {
-  background: #693215;
+  background: #141414;
   width: 6px;
   height: 2px;
   bottom: 7px;
