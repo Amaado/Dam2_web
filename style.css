@@ -3789,3 +3789,272 @@ canvas {
   width: 35px !important;
   height: 35px !important;
 }*/
+
+
+
+/*HAMSTERS*/
+
+.wrapper {
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 175px;
+  height: 175px;
+  --hamster-speed: 0.25s;
+  --wheel-speed: 0.5s;
+  --wheel-angle: 0deg;
+  bottom: 10px;
+  right: 10px;
+}
+
+.pix, .pix:after {
+  --m: 2;
+  position: absolute;
+  width: calc(var(--w) * var(--m));
+  height: calc(var(--h) * var(--m));
+  background-size: 100%;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+
+.puff {
+  --w: 15px;
+  --h: 14px;
+  background-image: url(img/hamster/puffCoco.png);
+}
+
+:before,
+:after {
+  position: absolute;
+  content: '';
+}
+
+
+.bum.puff{
+  background-image: url(img/hamster/puffCocoBefore.png);
+}
+
+.ear {
+  background-image: url(img/hamster/earCoco.png);
+  --w: 5px;
+  --h: 5px;
+  top: -4px;
+  left: 6px;
+}
+
+.hamster {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  margin-bottom: 6px;
+  z-index: 99;
+}
+
+.hamster:before {
+  background: #693215;
+  width: 3px;
+  height: 4px;
+  left: 5px;
+}
+
+.hamster:after {
+  background: #693215;
+  width: 6px;
+  height: 2px;
+  bottom: 7px;
+  left: -3px;
+}
+
+.ear,
+.hamster:before,
+.hamster:after {
+  animation: up-down infinite var(--hamster-speed);
+}
+
+.head, .bum {
+  z-index: -1;
+  top: 0px;
+  animation: squidge var(--hamster-speed) infinite;
+}
+
+.hamster div:after {
+  background-image: url(img/hamster/earAfterCoco.png);
+  --w: 4px;
+  --h: 6px;
+  bottom: -4px;
+  animation: run var(--hamster-speed) infinite;
+}
+
+.head {
+  left: -5px;
+  --angle: 10deg;
+}
+
+.bum {
+  right: -5px;
+  --angle: -10deg;
+  /* filter: invert(1); */
+}
+
+.head:after {
+  left: 8px;
+  --run-x: -2px;
+  --angle: 6deg;
+}
+
+.bum:after {
+  right: 6px;
+  --run-x: 2px;
+  --angle: -6deg;
+}
+
+@keyframes squidge {
+  0%, 100% {
+    transform: rotate(var(--angle)) translateY(-1px);
+  }
+  50% {
+    transform: rotate(0) translateY(0);
+  }
+}
+
+@keyframes run {
+  0%, 100% {
+    transform: translateX(var(--run-x)) rotate(var(--angle));
+  }
+  50% {
+    transform: translateX(0) rotate(0);
+  }
+}
+
+@keyframes up-down {
+  0%, 100% {
+    transform: translateY(-1px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+}
+
+.wheel-frame {
+  position: relative;
+  --w: 80px;
+  --h: 80px;
+  background-image: url(img/hamster/wheelFrame.png);
+  margin-bottom: 16px;
+  pointer-events: none;
+}
+
+.wheel {
+  width: 160px;
+  height: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  transform: rotate(var(--wheel-angle));
+}
+
+.wheel.spinning {
+  animation: spin var(--wheel-speed) infinite linear;
+}
+
+.wheel.spinning .hamster {
+  animation: none;
+}
+
+.wheel-support {
+  background-image: url(img/hamster/wheelSupport.png);
+  animation: spin var(--wheel-speed) infinite linear;
+  --w: 80px;
+  --h: 80px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+input[type=range] {
+  width: var(--wheel-width);
+  padding: 0;
+  background-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type=range]:focus {
+  outline: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  background:  #fff;
+  width: var(--wheel-width);
+  height: 4px;
+  cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  margin: -8.2px 0 0 0;
+  width: 20px;
+  height: 20px;
+  background: var(--handle-color);
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #fff;
+}
+
+input[type=range]::-moz-range-track {
+  background: #fff;
+  width: var(--wheel-width);
+  height: 4px;
+  cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--handle-color);
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  border-width: 9px 0;
+  color: transparent;
+  width: var(--wheel-width);
+  height: 4px;
+  cursor: pointer;
+}
+input[type=range]::-ms-fill-lower {
+  background: #fff;
+}
+input[type=range]::-ms-fill-upper {
+  background: #fff;
+}
+input[type=range]::-ms-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--handle-color);
+  cursor: pointer;
+  margin-top: 0px;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #fff;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #fff;
+}
+
+.sign {
+  position: fixed;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(255, 255, 255);
+  bottom: 10px;
+  right: 10px;
+  font-size: 10px;
+  text-transform: none;
+}
