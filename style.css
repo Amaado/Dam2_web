@@ -3,6 +3,13 @@
 
 :root {
   --img: url("img/Cc2.png");
+
+  --puff: url('img/hamster/puffBiggie.png');
+  --puff-before: url('img/hamster/puffBiggieBefore.png');
+  --bum: url('img/hamster/puffBiggieBefore.png');
+  --ear: url('img/hamster/earBiggie.png');
+  --ear-after: url('img/hamster/earAfterBiggie.png');
+  --ear-after2: url('img/hamster/earAfterBiggie2.png');
 }
 
 ::selection {
@@ -3854,6 +3861,7 @@ canvas {
   --wheel-angle: 0deg;
   bottom: 10px;
   right: 10px;
+  z-index: 50px;
 }
 
 .pix, .pix:after {
@@ -3869,7 +3877,7 @@ canvas {
 .puff {
   --w: 15px;
   --h: 14px;
-  background-image: url(img/hamster/puffCoco.png);
+  background-image: var(--puff);
 }
 
 :before,
@@ -3880,11 +3888,11 @@ canvas {
 
 
 .bum.puff{
-  background-image: url(img/hamster/puffCocoBefore.png);
+  background-image: var(--puff-before);
 }
 
 .ear {
-  background-image: url(img/hamster/earCoco.png);
+  background-image: var(--ear);
   --w: 5px;
   --h: 5px;
   top: -4px;
@@ -3928,11 +3936,15 @@ canvas {
 }
 
 .hamster div:after {
-  background-image: url(img/hamster/earAfterCoco.png);
+  background-image: var(--ear-after2);
   --w: 4px;
   --h: 6px;
   bottom: -4px;
   animation: run var(--hamster-speed) infinite;
+}
+
+.hamster div:nth-of-type(1):after {
+  background-image: var(--ear-after);
 }
 
 .head {

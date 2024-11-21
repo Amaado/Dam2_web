@@ -6177,6 +6177,42 @@ function initHamster() {
   }, 500)
 
   setSpeed()
+
+  hamsterType="Biggie";
+  const root = document.documentElement;
+
+    switch (hamsterType) {
+      case "Biggie":
+        root.style.setProperty('--puff', "url('img/hamster/puffBiggie.png')");
+        root.style.setProperty('--puff-before', "url('img/hamster/puffBiggieBefore.png')");
+        root.style.setProperty('--bum', "url('img/hamster/puffBiggieBefore.png')");
+        root.style.setProperty('--ear', "url('img/hamster/earBiggie.png')");
+        root.style.setProperty('--ear-after', "url('img/hamster/earAfterBiggie.png')");
+        root.style.setProperty('--ear-after2', "url('img/hamster/earAfterBiggie2.png')");
+        break;
+  
+      case "Coco":
+        root.style.setProperty('--puff', "url('img/hamster/puffCoco.png')");
+        root.style.setProperty('--puff-before', "url('img/hamster/puffCocoBefore.png')");
+        root.style.setProperty('--bum', "url('img/hamster/puffCocoBefore.png')");
+        root.style.setProperty('--ear', "url('img/hamster/earCoco.png')");
+        root.style.setProperty('--ear-after', "url('img/hamster/earAfterCoco.png')");
+        root.style.setProperty('--ear-after2', "url('img/hamster/earAfterCoco2.png')");
+        break;
+  
+      case "Dior":
+        root.style.setProperty('--puff', "url('img/hamster/puffDior.png')");
+        root.style.setProperty('--puff-before', "url('img/hamster/puffDiorBefore.png')");
+        root.style.setProperty('--bum', "url('img/hamster/puffDiorBefore.png')");
+        root.style.setProperty('--ear', "url('img/hamster/earDior.png')");
+        root.style.setProperty('--ear-after', "url('img/hamster/earAfterDior.png')");
+        root.style.setProperty('--ear-after2', "url('img/hamster/earAfterDior2.png')");
+        break;
+
+      default:
+        console.error('Hamster type not recognized!');
+  }
+
 }
 
 window.addEventListener('DOMContentLoaded', initHamster)
