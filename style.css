@@ -3901,6 +3901,7 @@ canvas {
 }
 
 .hamster {
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4129,17 +4130,8 @@ input[type=range]:focus::-ms-fill-upper {
   position: absolute;
 }
 
-.hamster.biggie{
-  position: absolute;
-  bottom: 10px;
-  right: 120px;
-}
 
-.hamster.coco{
-  position: absolute;
-  bottom: 10px;
-  right: 380px;
-}
+
 
 #cageContainer{
   position: absolute;
@@ -4152,7 +4144,7 @@ input[type=range]:focus::-ms-fill-upper {
 #cage{
   width: 70%;
   height: auto;
-
+  -webkit-user-drag: none;
 }
 
 .hitbox{

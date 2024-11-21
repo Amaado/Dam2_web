@@ -6142,38 +6142,32 @@ tooltipContainers.forEach(tooltipContainer => {
 
 
 /* HAMSTERS */
+// JavaScript
 const root = document.documentElement;
 
 // Map para almacenar los intervalos de cada hámster
 const hamsterIntervals = new Map();
+
+// Variables para manejar el arrastre
+let isDragging = false;
+let currentHamster = null;
+let offsetX = 0;
+let offsetY = 0;
+let originalX = 0;
+let originalY = 0;
+let originalParent = null;
 
 function initHamster() { 
   const wrapper = document.querySelector('.wrapper');
   const wheel = document.querySelector('.wheel');
   const defaultHamsterEnergy = 1000;
 
-  // Seleccionar el hámster dentro de la rueda
-  const animatedHamsterElement = document.querySelector('.wheel .hamster');
-
-  // Configuración del hámster animado
-  const hamster = {
+  // Configuración del hámster animado en la rueda (inicialmente vacío)
+  let hamster = {
     energy: defaultHamsterEnergy,
     speedFactor: 4,
-    isRunning: true,
+    isRunning: false, // Inicialmente no hay hámster corriendo
   };
-
-  // Detectar el tipo de hámster basado en sus clases
-  let hamsterType;
-  if (animatedHamsterElement.classList.contains('dior')) {
-    hamsterType = "Dior";
-  } else if (animatedHamsterElement.classList.contains('biggie')) {
-    hamsterType = "Biggie";
-  } else if (animatedHamsterElement.classList.contains('coco')) {
-    hamsterType = "Coco";
-  } else {
-    hamsterType = "Unknown";
-    console.error('¡Tipo de hámster no reconocido para el hámster en la rueda!');
-  }
 
   // Función para ajustar la velocidad del hámster en la rueda
   const setHamsterSpeed = () => {
@@ -6210,17 +6204,7 @@ function initHamster() {
   // Configurar eventos y tipos para todos los hámsters
   const hamsters = document.querySelectorAll('.hamster');
   hamsters.forEach((hamsterElement) => {
-    let type;
-    if (hamsterElement.classList.contains('dior')) {
-      type = "Dior";
-    } else if (hamsterElement.classList.contains('biggie')) {
-      type = "Biggie";
-    } else if (hamsterElement.classList.contains('coco')) {
-      type = "Coco";
-    } else {
-      type = "Unknown";
-      console.error('Tipo de hámster no reconocido para:', hamsterElement);
-    }
+    let type = getHamsterType(hamsterElement);
 
     // Configurar imágenes para cada hámster
     setHamster(hamsterElement, type);
@@ -6233,7 +6217,12 @@ function initHamster() {
 
     hamsterElement.addEventListener("mouseleave", function () {
       setHamster(hamsterElement, type);
-      hideTooltipHamster(hamsterElement)
+      hideTooltipHamster(hamsterElement);
+    });
+
+    // Añadir eventos de arrastre
+    hamsterElement.addEventListener('mousedown', function (e) {
+      startDragHamster(e, hamsterElement);
     });
   });
 }
@@ -6344,9 +6333,207 @@ function setStrokeHamster(hamsterElement, hamsterType) {
   hamsterIntervals.set(hamsterElement, newIntervalId);
 }
 
+// Funciones para manejar el arrastre
+function startDragHamster(e, hamsterElement) {
+  isDragging = true;
+  currentHamster = hamsterElement;
+
+  // Obtener la posición actual del hámster
+  const rect = hamsterElement.getBoundingClientRect();
+  originalX = rect.left + window.scrollX;
+  originalY = rect.top + window.scrollY;
+
+  // Guardar el padre original
+  originalParent = hamsterElement.parentNode;
+
+  // Si el hámster está dentro de .wrapper (la rueda)
+  if (hamsterElement.closest('.wrapper')) {
+    // Clonar el hámster y añadirlo al documento
+    const clonedHamster = hamsterElement.cloneNode(true);
+
+    // Añadir eventos al hámster clonado
+    addHamsterEventListeners(clonedHamster);
+
+    // Añadir el hámster clonado al documento
+    document.body.appendChild(clonedHamster);
+
+    // Remover el hámster original de la rueda
+    hamsterElement.remove();
+
+    // Actualizar el hámster actual al clonado
+    currentHamster = clonedHamster;
+
+    // Ajustar el estilo del hámster clonado
+    clonedHamster.style.position = 'absolute';
+    clonedHamster.style.left = originalX + 'px';
+    clonedHamster.style.top = originalY + 'px';
+    clonedHamster.style.zIndex = 1000;
+  } else {
+    // Configurar el hámster para posicionamiento absoluto
+    hamsterElement.style.position = 'absolute';
+    hamsterElement.style.left = originalX + 'px';
+    hamsterElement.style.top = originalY + 'px';
+    hamsterElement.style.zIndex = 1000;
+  }
+
+  // Calcular el offset entre el mouse y el hámster
+  offsetX = e.clientX - originalX;
+  offsetY = e.clientY - originalY;
+
+  // Añadir event listeners para el movimiento y fin del arrastre
+  document.addEventListener('mousemove', onDragHamster);
+  document.addEventListener('mouseup', stopDragHamster);
+
+  // Prevenir comportamiento por defecto
+  e.preventDefault();
+}
+
+function onDragHamster(e) {
+  if (!isDragging || !currentHamster) return;
+
+  // Calcular nueva posición
+  const x = e.clientX - offsetX + window.scrollX;
+  const y = e.clientY - offsetY + window.scrollY;
+
+  // Actualizar la posición del hámster
+  currentHamster.style.left = x + 'px';
+  currentHamster.style.top = y + 'px';
+}
+
+function stopDragHamster(e) {
+  if (!isDragging || !currentHamster) return;
+
+  // Remover los event listeners
+  document.removeEventListener('mousemove', onDragHamster);
+  document.removeEventListener('mouseup', stopDragHamster);
+
+  // Verificar si el hámster está sobre un hitbox
+  const hamsterRect = currentHamster.getBoundingClientRect();
+  const hitboxes = document.querySelectorAll('.hitbox');
+  let droppedInHitbox = false;
+
+  hitboxes.forEach((hitbox) => {
+    const hitboxRect = hitbox.getBoundingClientRect();
+    if (
+      hamsterRect.left < hitboxRect.right &&
+      hamsterRect.right > hitboxRect.left &&
+      hamsterRect.top < hitboxRect.bottom &&
+      hamsterRect.bottom > hitboxRect.top
+    ) {
+      // El hámster está sobre este hitbox
+      droppedInHitbox = true;
+
+      // Obtener el tipo de hámster
+      let type = getHamsterType(currentHamster);
+
+      // Si el hitbox es 'hitboxSlotWeel', mover el hámster a la rueda
+      if (hitbox.id === 'hitboxSlotWeel') {
+        // Clonar el hámster y agregarlo a la rueda después de .wheel-support
+        const wheelHamster = currentHamster.cloneNode(true);
+
+        // Añadir eventos al hámster en la rueda
+        addHamsterEventListeners(wheelHamster);
+
+        // Remover el hámster original
+        currentHamster.remove();
+
+        // Remover cualquier hámster existente en la rueda
+        const existingWheelHamster = document.querySelector('.wheel .hamster');
+        if (existingWheelHamster) {
+          existingWheelHamster.remove();
+        }
+
+        // Ajustar el hámster para la rueda
+        wheelHamster.style.position = '';
+        wheelHamster.style.left = '';
+        wheelHamster.style.top = '';
+        wheelHamster.style.transform = '';
+        wheelHamster.style.zIndex = '';
+
+        // Agregar el hámster a la rueda
+        const wheelElement = document.querySelector('.wheel');
+        const wheelSupport = wheelElement.querySelector('.wheel-support');
+        wheelElement.insertBefore(wheelHamster, wheelSupport.nextSibling);
+
+        // Configurar imágenes para el hámster en la rueda
+        setHamster(wheelHamster, type);
+
+        // Iniciar el hámster en la rueda
+        hamster.isRunning = true;
+
+        // Resetear variables
+        isDragging = false;
+        currentHamster = null;
+        return;
+      } else {
+        // Mover el hámster al hitbox correspondiente
+        document.body.appendChild(currentHamster);
+
+        // Ajustar posición relativa al hitbox
+        currentHamster.style.left = (hitboxRect.left + hitboxRect.width / 2 - hamsterRect.width / 2) + 'px';
+        currentHamster.style.top = (hitboxRect.top + hitboxRect.height / 2 - hamsterRect.height / 2) + 'px';
+
+        // Actualizar el atributo 'place' del hámster
+        const hitboxId = hitbox.id; // Por ejemplo, 'hitboxSlotUpLeft'
+        const place = hitboxId.replace('hitboxSlot', 'slot'); // Remover el prefijo 'hitboxSlot'
+        currentHamster.setAttribute('place', place);
+      }
+    }
+  });
+
+  if (!droppedInHitbox) {
+    // Retornar el hámster a su posición original
+    currentHamster.style.left = originalX + 'px';
+    currentHamster.style.top = originalY + 'px';
+  }
+
+  // Resetear variables
+  isDragging = false;
+  currentHamster.style.zIndex = '';
+  currentHamster = null;
+}
+
+function getHamsterType(hamsterElement) {
+  if (hamsterElement.classList.contains('dior')) {
+    return "Dior";
+  } else if (hamsterElement.classList.contains('biggie')) {
+    return "Biggie";
+  } else if (hamsterElement.classList.contains('coco')) {
+    return "Coco";
+  } else {
+    console.error('Tipo de hámster no reconocido para:', hamsterElement);
+    return "Unknown";
+  }
+}
+
+function addHamsterEventListeners(hamsterElement) {
+  let type = getHamsterType(hamsterElement);
+
+  // Configurar imágenes para cada hámster
+  setHamster(hamsterElement, type);
+
+  // Añadir eventos de hover
+  hamsterElement.addEventListener("mouseenter", function () {
+    setStrokeHamster(hamsterElement, type);
+    showTooltipHamster(hamsterElement);
+  });
+
+  hamsterElement.addEventListener("mouseleave", function () {
+    setHamster(hamsterElement, type);
+    hideTooltipHamster(hamsterElement);
+  });
+
+  // Añadir evento de arrastre
+  hamsterElement.addEventListener('mousedown', function (e) {
+    startDragHamster(e, hamsterElement);
+  });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(initHamster, 10);
 });
+
+
 
 
 });
