@@ -4,12 +4,12 @@
 :root {
   --img: url("img/Cc2.png");
 
-  --puff: url('img/hamster/puffBiggie.png');
-  --puff-before: url('img/hamster/puffBiggieBefore.png');
-  --bum: url('img/hamster/puffBiggieBefore.png');
-  --ear: url('img/hamster/earBiggie.png');
-  --ear-after: url('img/hamster/earAfterBiggie.png');
-  --ear-after2: url('img/hamster/earAfterBiggie2.png');
+  --puff: url('img/hamster/biggie/puffBiggie.png');
+  --puff-before: url('img/hamster/biggie/puffBiggieBefore.png');
+  --bum: url('img/hamster/biggie/puffBiggieBefore.png');
+  --ear: url('img/hamster/biggie/earBiggie.png');
+  --ear-after: url('img/hamster/biggie/earAfterBiggie.png');
+  --ear-after2: url('img/hamster/biggie/earAfterBiggie2.png');
 }
 
 ::selection {
@@ -3889,6 +3889,7 @@ canvas {
 
 .bum.puff{
   background-image: var(--puff-before);
+  pointer-events: all;
 }
 
 .ear {
@@ -3906,6 +3907,7 @@ canvas {
   padding: 8px;
   margin-bottom: 6px;
   z-index: 99;
+
 }
 
 .hamster:before {
@@ -4117,4 +4119,12 @@ input[type=range]:focus::-ms-fill-upper {
   right: 10px;
   font-size: 10px;
   text-transform: none;
+}
+
+#hamsterSlider{
+  width: 200px;
+  min-height: 40px;
+  bottom: 0;
+  right: 0;
+  position: absolute;
 }

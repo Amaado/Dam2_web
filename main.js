@@ -6140,6 +6140,11 @@ tooltipContainers.forEach(tooltipContainer => {
 
 
 
+
+/* HAMSTERS */
+
+const root = document.documentElement;
+
 function initHamster() { 
   const wrapper = document.querySelector('.wrapper')
   const wheel = document.querySelector('.wheel')
@@ -6156,7 +6161,7 @@ function initHamster() {
     wrapper.style.setProperty('--wheel-angle', `${0.4 * hamster.speedFactor}deg`)
   }
 
-  document.querySelector('input').addEventListener('input', e => {
+  document.getElementById('hamsterSlider').addEventListener('input', e => {
     hamster.speedFactor = e.target.value
     setSpeed()
   })
@@ -6164,6 +6169,7 @@ function initHamster() {
   setInterval(()=> {
     if (hamster.isRunning) {
       hamster.energy -= (hamster.speedFactor * hamster.speedFactor)
+      console.log("hamster.energy"+hamster.energy);
     }
     if (hamster.isRunning && hamster.energy < 0) {
       hamster.isRunning = false
@@ -6174,49 +6180,110 @@ function initHamster() {
         wheel.classList.remove('spinning')
       }, 6 * 1000)
     }
+    
+
   }, 500)
 
   setSpeed()
 
-  hamsterType="Biggie";
-  const root = document.documentElement;
+  hamsterType="Dior";
+  setHamster();
+}
 
+
+let strokeIndex = 1; // Índice inicial
+const maxStrokes = 3; // Número máximo de imágenes en el ciclo
+let hamsterIntervalId = null;
+
+function setStrokeHamster() {
+  hamsterIntervalId = setInterval(() => {
     switch (hamsterType) {
       case "Biggie":
-        root.style.setProperty('--puff', "url('img/hamster/puffBiggie.png')");
-        root.style.setProperty('--puff-before', "url('img/hamster/puffBiggieBefore.png')");
-        root.style.setProperty('--bum', "url('img/hamster/puffBiggieBefore.png')");
-        root.style.setProperty('--ear', "url('img/hamster/earBiggie.png')");
-        root.style.setProperty('--ear-after', "url('img/hamster/earAfterBiggie.png')");
-        root.style.setProperty('--ear-after2', "url('img/hamster/earAfterBiggie2.png')");
+        root.style.setProperty('--puff', `url('img/hamster/biggie/stroke/puffBiggieStroke${strokeIndex}.png')`);
+        root.style.setProperty('--puff-before', `url('img/hamster/biggie/stroke/puffBiggieBeforeStroke${strokeIndex}.png')`);
+        root.style.setProperty('--bum', `url('img/hamster/biggie/stroke/puffBiggieBeforeStroke${strokeIndex}.png')`);
+        root.style.setProperty('--ear', `url('img/hamster/biggie/stroke/earBiggieStroke${strokeIndex}.png')`);
+        root.style.setProperty('--ear-after2', `url('img/hamster/biggie/stroke/earAfterBiggie2Stroke${strokeIndex}.png')`);
         break;
-  
+
       case "Coco":
-        root.style.setProperty('--puff', "url('img/hamster/puffCoco.png')");
-        root.style.setProperty('--puff-before', "url('img/hamster/puffCocoBefore.png')");
-        root.style.setProperty('--bum', "url('img/hamster/puffCocoBefore.png')");
-        root.style.setProperty('--ear', "url('img/hamster/earCoco.png')");
-        root.style.setProperty('--ear-after', "url('img/hamster/earAfterCoco.png')");
-        root.style.setProperty('--ear-after2', "url('img/hamster/earAfterCoco2.png')");
+        root.style.setProperty('--puff', `url('img/hamster/coco/stroke/puffCocoStroke${strokeIndex}.png')`);
+        root.style.setProperty('--puff-before', `url('img/hamster/coco/stroke/puffCocoBeforeStroke${strokeIndex}.png')`);
+        root.style.setProperty('--bum', `url('img/hamster/coco/stroke/puffCocoBeforeStroke${strokeIndex}.png')`);
+        root.style.setProperty('--ear', `url('img/hamster/coco/stroke/earCocoStroke${strokeIndex}.png')`);
+        root.style.setProperty('--ear-after2', `url('img/hamster/coco/stroke/earAfterCoco2Stroke${strokeIndex}.png')`);
         break;
-  
+
       case "Dior":
-        root.style.setProperty('--puff', "url('img/hamster/puffDior.png')");
-        root.style.setProperty('--puff-before', "url('img/hamster/puffDiorBefore.png')");
-        root.style.setProperty('--bum', "url('img/hamster/puffDiorBefore.png')");
-        root.style.setProperty('--ear', "url('img/hamster/earDior.png')");
-        root.style.setProperty('--ear-after', "url('img/hamster/earAfterDior.png')");
-        root.style.setProperty('--ear-after2', "url('img/hamster/earAfterDior2.png')");
+        root.style.setProperty('--puff', `url('img/hamster/dior/stroke/puffDiorStroke${strokeIndex}.png')`);
+        root.style.setProperty('--puff-before', `url('img/hamster/dior/stroke/puffDiorBeforeStroke${strokeIndex}.png')`);
+        root.style.setProperty('--bum', `url('img/hamster/dior/stroke/puffDiorBeforeStroke${strokeIndex}.png')`);
+        root.style.setProperty('--ear', `url('img/hamster/dior/stroke/earDiorStroke${strokeIndex}.png')`);
+        root.style.setProperty('--ear-after2', `url('img/hamster/dior/stroke/earAfterDior2Stroke${strokeIndex}.png')`);
+        break;
+
+      default:
+        console.error('Hamster stroke type not recognized!');
+    }
+
+    // Actualiza el índice del ciclo
+    strokeIndex = strokeIndex < maxStrokes ? strokeIndex + 1 : 1;
+  }, 242);
+}
+
+
+function setHamster(){
+  if (hamsterIntervalId) {
+    clearInterval(hamsterIntervalId);
+    hamsterIntervalId = null;
+  }
+
+  switch (hamsterType) {
+      case "Biggie":
+        root.style.setProperty('--puff', "url('img/hamster/biggie/puffBiggie.png')");
+        root.style.setProperty('--puff-before', "url('img/hamster/biggie/puffBiggieBefore.png')");
+        root.style.setProperty('--bum', "url('img/hamster/biggie/puffBiggieBefore.png')");
+        root.style.setProperty('--ear', "url('img/hamster/biggie/earBiggie.png')");
+        root.style.setProperty('--ear-after', "url('img/hamster/biggie/earAfterBiggie.png')");
+        root.style.setProperty('--ear-after2', "url('img/hamster/biggie/earAfterBiggie2.png')");
+        break;
+
+      case "Coco":
+        root.style.setProperty('--puff', "url('img/hamster/coco/puffCoco.png')");
+        root.style.setProperty('--puff-before', "url('img/hamster/coco/puffCocoBefore.png')");
+        root.style.setProperty('--bum', "url('img/hamster/coco/puffCocoBefore.png')");
+        root.style.setProperty('--ear', "url('img/hamster/coco/earCoco.png')");
+        root.style.setProperty('--ear-after', "url('img/hamster/coco/earAfterCoco.png')");
+        root.style.setProperty('--ear-after2', "url('img/hamster/coco/earAfterCoco2.png')");
+        break;
+
+      case "Dior":
+        root.style.setProperty('--puff', "url('img/hamster/dior/puffDior.png')");
+        root.style.setProperty('--puff-before', "url('img/hamster/dior/puffDiorBefore.png')");
+        root.style.setProperty('--bum', "url('img/hamster/dior/puffDiorBefore.png')");
+        root.style.setProperty('--ear', "url('img/hamster/dior/earDior.png')");
+        root.style.setProperty('--ear-after', "url('img/hamster/dior/earAfterDior.png')");
+        root.style.setProperty('--ear-after2', "url('img/hamster/dior/earAfterDior2.png')");
         break;
 
       default:
         console.error('Hamster type not recognized!');
   }
-
 }
 
-window.addEventListener('DOMContentLoaded', initHamster)
+
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initHamster, 10);
+});
 
 
+let bumPuf = document.querySelector(".bum.puff");
+bumPuf.addEventListener("mouseenter", function(e){
+  setStrokeHamster();
+});
+
+bumPuf.addEventListener("mouseleave", function(e){
+  setHamster();
+});
 
 });
