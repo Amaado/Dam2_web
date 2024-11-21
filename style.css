@@ -4128,3 +4128,15 @@ input[type=range]:focus::-ms-fill-upper {
   right: 0;
   position: absolute;
 }
+
+.hamster.biggie{
+  position: absolute;
+  bottom: 10px;
+  right: 120px;
+}
+
+.hamster.coco{
+  position: absolute;
+  bottom: 10px;
+  right: 180px;
+}

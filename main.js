@@ -6142,148 +6142,195 @@ tooltipContainers.forEach(tooltipContainer => {
 
 
 /* HAMSTERS */
-
 const root = document.documentElement;
 
+// Map para almacenar los intervalos de cada hámster
+const hamsterIntervals = new Map();
+
 function initHamster() { 
-  const wrapper = document.querySelector('.wrapper')
-  const wheel = document.querySelector('.wheel')
-  const defaultHamsterEnergy = 1000
+  const wrapper = document.querySelector('.wrapper');
+  const wheel = document.querySelector('.wheel');
+  const defaultHamsterEnergy = 1000;
+
+  // Seleccionar el hámster dentro de la rueda
+  const animatedHamsterElement = document.querySelector('.wheel .hamster');
+
+  // Configuración del hámster animado
   const hamster = {
     energy: defaultHamsterEnergy,
     speedFactor: 4,
     isRunning: true,
+  };
+
+  // Detectar el tipo de hámster basado en sus clases
+  let hamsterType;
+  if (animatedHamsterElement.classList.contains('dior')) {
+    hamsterType = "Dior";
+  } else if (animatedHamsterElement.classList.contains('biggie')) {
+    hamsterType = "Biggie";
+  } else if (animatedHamsterElement.classList.contains('coco')) {
+    hamsterType = "Coco";
+  } else {
+    hamsterType = "Unknown";
+    console.error('¡Tipo de hámster no reconocido para el hámster en la rueda!');
   }
 
-  const setSpeed = () => {
-    wrapper.style.setProperty('--hamster-speed', `${1 / hamster.speedFactor}s`)
-    wrapper.style.setProperty('--wheel-speed', `${2 / hamster.speedFactor}s`)
-    wrapper.style.setProperty('--wheel-angle', `${0.4 * hamster.speedFactor}deg`)
-  }
+  // Función para ajustar la velocidad del hámster en la rueda
+  const setHamsterSpeed = () => {
+    wrapper.style.setProperty('--hamster-speed', `${1 / hamster.speedFactor}s`);
+    wrapper.style.setProperty('--wheel-speed', `${2 / hamster.speedFactor}s`);
+    wrapper.style.setProperty('--wheel-angle', `${0.4 * hamster.speedFactor}deg`);
+  };
 
+  // Evento para cambiar la velocidad del hámster en la rueda
   document.getElementById('hamsterSlider').addEventListener('input', e => {
-    hamster.speedFactor = e.target.value
-    setSpeed()
-  })
+    hamster.speedFactor = e.target.value;
+    setHamsterSpeed();
+  });
 
-  setInterval(()=> {
+  // Intervalo para reducir la energía del hámster en la rueda
+  setInterval(() => {
     if (hamster.isRunning) {
-      hamster.energy -= (hamster.speedFactor * hamster.speedFactor)
-      console.log("hamster.energy"+hamster.energy);
+      hamster.energy -= (hamster.speedFactor * hamster.speedFactor);
+      console.log("hamster.energy: " + hamster.energy);
     }
     if (hamster.isRunning && hamster.energy < 0) {
-      hamster.isRunning = false
-      wheel.classList.add('spinning')
-      setTimeout(()=> {
-        hamster.energy = defaultHamsterEnergy
-        hamster.isRunning = true
-        wheel.classList.remove('spinning')
-      }, 6 * 1000)
+      hamster.isRunning = false;
+      wheel.classList.add('spinning');
+      setTimeout(() => {
+        hamster.energy = defaultHamsterEnergy;
+        hamster.isRunning = true;
+        wheel.classList.remove('spinning');
+      }, 6 * 1000);
     }
-    
+  }, 500);
 
-  }, 500)
+  setHamsterSpeed();
 
-  setSpeed()
+  // Configurar eventos y tipos para todos los hámsters
+  const hamsters = document.querySelectorAll('.hamster');
+  hamsters.forEach((hamsterElement) => {
+    let type;
+    if (hamsterElement.classList.contains('dior')) {
+      type = "Dior";
+    } else if (hamsterElement.classList.contains('biggie')) {
+      type = "Biggie";
+    } else if (hamsterElement.classList.contains('coco')) {
+      type = "Coco";
+    } else {
+      type = "Unknown";
+      console.error('Tipo de hámster no reconocido para:', hamsterElement);
+    }
 
-  hamsterType="Dior";
-  setHamster();
+    // Configurar imágenes para cada hámster
+    setHamster(hamsterElement, type);
+
+    // Añadir eventos de hover al hamsterElement completo
+    hamsterElement.addEventListener("mouseenter", function () {
+      setStrokeHamster(hamsterElement, type);
+    });
+
+    hamsterElement.addEventListener("mouseleave", function () {
+      setHamster(hamsterElement, type);
+    });
+  });
 }
 
+function setHamster(hamsterElement, hamsterType){
+  // Detener el intervalo si existe para este hámster
+  const intervalId = hamsterIntervals.get(hamsterElement);
+  if (intervalId) {
+    clearInterval(intervalId);
+    hamsterIntervals.delete(hamsterElement);
+  }
 
-let strokeIndex = 1; // Índice inicial
-const maxStrokes = 3; // Número máximo de imágenes en el ciclo
-let hamsterIntervalId = null;
+  // Establecer las propiedades CSS para el hámster específico
+  switch (hamsterType) {
+    case "Biggie":
+      hamsterElement.style.setProperty('--puff', "url('img/hamster/biggie/puffBiggie.png')");
+      hamsterElement.style.setProperty('--puff-before', "url('img/hamster/biggie/puffBiggieBefore.png')");
+      hamsterElement.style.setProperty('--bum', "url('img/hamster/biggie/puffBiggieBefore.png')");
+      hamsterElement.style.setProperty('--ear', "url('img/hamster/biggie/earBiggie.png')");
+      hamsterElement.style.setProperty('--ear-after', "url('img/hamster/biggie/earAfterBiggie.png')");
+      hamsterElement.style.setProperty('--ear-after2', "url('img/hamster/biggie/earAfterBiggie2.png')");
+      break;
 
-function setStrokeHamster() {
-  hamsterIntervalId = setInterval(() => {
+    case "Coco":
+      hamsterElement.style.setProperty('--puff', "url('img/hamster/coco/puffCoco.png')");
+      hamsterElement.style.setProperty('--puff-before', "url('img/hamster/coco/puffCocoBefore.png')");
+      hamsterElement.style.setProperty('--bum', "url('img/hamster/coco/puffCocoBefore.png')");
+      hamsterElement.style.setProperty('--ear', "url('img/hamster/coco/earCoco.png')");
+      hamsterElement.style.setProperty('--ear-after', "url('img/hamster/coco/earAfterCoco.png')");
+      hamsterElement.style.setProperty('--ear-after2', "url('img/hamster/coco/earAfterCoco2.png')");
+      break;
+
+    case "Dior":
+      hamsterElement.style.setProperty('--puff', "url('img/hamster/dior/puffDior.png')");
+      hamsterElement.style.setProperty('--puff-before', "url('img/hamster/dior/puffDiorBefore.png')");
+      hamsterElement.style.setProperty('--bum', "url('img/hamster/dior/puffDiorBefore.png')");
+      hamsterElement.style.setProperty('--ear', "url('img/hamster/dior/earDior.png')");
+      hamsterElement.style.setProperty('--ear-after', "url('img/hamster/dior/earAfterDior.png')");
+      hamsterElement.style.setProperty('--ear-after2', "url('img/hamster/dior/earAfterDior2.png')");
+      break;
+
+    default:
+      console.error('¡Tipo de hámster no reconocido!');
+  }
+}
+
+function setStrokeHamster(hamsterElement, hamsterType) {
+  // Detener cualquier intervalo anterior para este hámster
+  const intervalId = hamsterIntervals.get(hamsterElement);
+  if (intervalId) {
+    clearInterval(intervalId);
+    hamsterIntervals.delete(hamsterElement);
+  }
+
+  let strokeIndex = 1; // Reiniciar el índice de stroke
+  const maxStrokes = 3;
+
+  // Iniciar un nuevo intervalo para el hámster específico
+  const newIntervalId = setInterval(() => {
     switch (hamsterType) {
       case "Biggie":
-        root.style.setProperty('--puff', `url('img/hamster/biggie/stroke/puffBiggieStroke${strokeIndex}.png')`);
-        root.style.setProperty('--puff-before', `url('img/hamster/biggie/stroke/puffBiggieBeforeStroke${strokeIndex}.png')`);
-        root.style.setProperty('--bum', `url('img/hamster/biggie/stroke/puffBiggieBeforeStroke${strokeIndex}.png')`);
-        root.style.setProperty('--ear', `url('img/hamster/biggie/stroke/earBiggieStroke${strokeIndex}.png')`);
-        root.style.setProperty('--ear-after2', `url('img/hamster/biggie/stroke/earAfterBiggie2Stroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--puff', `url('img/hamster/biggie/stroke/puffBiggieStroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--puff-before', `url('img/hamster/biggie/stroke/puffBiggieBeforeStroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--bum', `url('img/hamster/biggie/stroke/puffBiggieBeforeStroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--ear', `url('img/hamster/biggie/stroke/earBiggieStroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--ear-after2', `url('img/hamster/biggie/stroke/earAfterBiggie2Stroke${strokeIndex}.png')`);
         break;
 
       case "Coco":
-        root.style.setProperty('--puff', `url('img/hamster/coco/stroke/puffCocoStroke${strokeIndex}.png')`);
-        root.style.setProperty('--puff-before', `url('img/hamster/coco/stroke/puffCocoBeforeStroke${strokeIndex}.png')`);
-        root.style.setProperty('--bum', `url('img/hamster/coco/stroke/puffCocoBeforeStroke${strokeIndex}.png')`);
-        root.style.setProperty('--ear', `url('img/hamster/coco/stroke/earCocoStroke${strokeIndex}.png')`);
-        root.style.setProperty('--ear-after2', `url('img/hamster/coco/stroke/earAfterCoco2Stroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--puff', `url('img/hamster/coco/stroke/puffCocoStroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--puff-before', `url('img/hamster/coco/stroke/puffCocoBeforeStroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--bum', `url('img/hamster/coco/stroke/puffCocoBeforeStroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--ear', `url('img/hamster/coco/stroke/earCocoStroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--ear-after2', `url('img/hamster/coco/stroke/earAfterCoco2Stroke${strokeIndex}.png')`);
         break;
 
       case "Dior":
-        root.style.setProperty('--puff', `url('img/hamster/dior/stroke/puffDiorStroke${strokeIndex}.png')`);
-        root.style.setProperty('--puff-before', `url('img/hamster/dior/stroke/puffDiorBeforeStroke${strokeIndex}.png')`);
-        root.style.setProperty('--bum', `url('img/hamster/dior/stroke/puffDiorBeforeStroke${strokeIndex}.png')`);
-        root.style.setProperty('--ear', `url('img/hamster/dior/stroke/earDiorStroke${strokeIndex}.png')`);
-        root.style.setProperty('--ear-after2', `url('img/hamster/dior/stroke/earAfterDior2Stroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--puff', `url('img/hamster/dior/stroke/puffDiorStroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--puff-before', `url('img/hamster/dior/stroke/puffDiorBeforeStroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--bum', `url('img/hamster/dior/stroke/puffDiorBeforeStroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--ear', `url('img/hamster/dior/stroke/earDiorStroke${strokeIndex}.png')`);
+        hamsterElement.style.setProperty('--ear-after2', `url('img/hamster/dior/stroke/earAfterDior2Stroke${strokeIndex}.png')`);
         break;
 
       default:
-        console.error('Hamster stroke type not recognized!');
+        console.error('¡Tipo de stroke de hámster no reconocido!');
     }
 
-    // Actualiza el índice del ciclo
+    // Actualizar el índice de stroke
     strokeIndex = strokeIndex < maxStrokes ? strokeIndex + 1 : 1;
   }, 242);
+
+  // Guardar el nuevo intervalo para este hámster
+  hamsterIntervals.set(hamsterElement, newIntervalId);
 }
-
-
-function setHamster(){
-  if (hamsterIntervalId) {
-    clearInterval(hamsterIntervalId);
-    hamsterIntervalId = null;
-  }
-
-  switch (hamsterType) {
-      case "Biggie":
-        root.style.setProperty('--puff', "url('img/hamster/biggie/puffBiggie.png')");
-        root.style.setProperty('--puff-before', "url('img/hamster/biggie/puffBiggieBefore.png')");
-        root.style.setProperty('--bum', "url('img/hamster/biggie/puffBiggieBefore.png')");
-        root.style.setProperty('--ear', "url('img/hamster/biggie/earBiggie.png')");
-        root.style.setProperty('--ear-after', "url('img/hamster/biggie/earAfterBiggie.png')");
-        root.style.setProperty('--ear-after2', "url('img/hamster/biggie/earAfterBiggie2.png')");
-        break;
-
-      case "Coco":
-        root.style.setProperty('--puff', "url('img/hamster/coco/puffCoco.png')");
-        root.style.setProperty('--puff-before', "url('img/hamster/coco/puffCocoBefore.png')");
-        root.style.setProperty('--bum', "url('img/hamster/coco/puffCocoBefore.png')");
-        root.style.setProperty('--ear', "url('img/hamster/coco/earCoco.png')");
-        root.style.setProperty('--ear-after', "url('img/hamster/coco/earAfterCoco.png')");
-        root.style.setProperty('--ear-after2', "url('img/hamster/coco/earAfterCoco2.png')");
-        break;
-
-      case "Dior":
-        root.style.setProperty('--puff', "url('img/hamster/dior/puffDior.png')");
-        root.style.setProperty('--puff-before', "url('img/hamster/dior/puffDiorBefore.png')");
-        root.style.setProperty('--bum', "url('img/hamster/dior/puffDiorBefore.png')");
-        root.style.setProperty('--ear', "url('img/hamster/dior/earDior.png')");
-        root.style.setProperty('--ear-after', "url('img/hamster/dior/earAfterDior.png')");
-        root.style.setProperty('--ear-after2', "url('img/hamster/dior/earAfterDior2.png')");
-        break;
-
-      default:
-        console.error('Hamster type not recognized!');
-  }
-}
-
 
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(initHamster, 10);
 });
 
-
-let bumPuf = document.querySelector(".bum.puff");
-bumPuf.addEventListener("mouseenter", function(e){
-  setStrokeHamster();
-});
-
-bumPuf.addEventListener("mouseleave", function(e){
-  setHamster();
-});
 
 });
