@@ -3859,8 +3859,8 @@ canvas {
   --hamster-speed: 0.25s;
   --wheel-speed: 0.5s;
   --wheel-angle: 0deg;
-  bottom: 10px;
-  right: 10px;
+  bottom: 32px;
+  right: 90px;
   z-index: 50px;
 }
 
@@ -4138,5 +4138,101 @@ input[type=range]:focus::-ms-fill-upper {
 .hamster.coco{
   position: absolute;
   bottom: 10px;
-  right: 180px;
+  right: 380px;
+}
+
+#cageContainer{
+  position: absolute;
+  bottom: 0;
+  right: -50px;
+  width: auto;
+  height: auto;
+}
+
+#cage{
+  width: 70%;
+  height: auto;
+
+}
+
+.hitbox{
+  position: absolute;
+  opacity: 60%;
+  pointer-events: none;
+}
+
+#hitboxSlotWorld{
+  background-color: rgba(211, 207, 0, 0.26);
+  top: 0px;
+  right: 430px;
+  width: 80dvw;
+  height: 100%;
+}
+
+#hitboxSlotUpLeft{
+  background-color: green;
+  bottom: 220px;
+  right: 302.5px;
+  width: 162.5px;
+  height: 150px;
+}
+
+#hitboxSlotUpRight{
+  background-color: #fa434c;
+  bottom: 220px;
+  right: 140px;
+  width: 162.5px;
+  height: 150px;
+}
+
+#hitboxSlotDow{
+  background-color: blue;
+  bottom: 10px;
+  right: 315px;
+  width: 150px;
+  height: 210px;
+}
+
+#hitboxSlotWeel{
+  background-color: pink;
+  bottom: 10px;
+  right: 140px;
+  width: 175px;
+  height: 210px;
+}
+
+.hamsterTooltipContainer{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.hamsterTooltip{
+  position: absolute;
+  height: 24px;
+  background-color: #07080a9c;
+  text-align: center;
+  bottom: 30px;
+  padding: 2px;
+  border-radius: 3px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.hamsterTooltipBiggie{
+  width: 110px;
+  right: -43px;
+}
+
+.hamsterTooltipCoco{
+  width: 110px;
+  right: -47px;
+}
+
+.hamsterTooltipDior{
+  width: 40px;
+  right: -13px;
 }

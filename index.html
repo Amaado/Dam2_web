@@ -638,29 +638,57 @@
     </nav>
     <div id="checkboxland"></div>
 
+    <div id="hitboxSlotWorld" class="hitbox">
+
+    </div>
+
+    <div id="cageContainer">
+      <img id="cage" src="img/hamster/cage.png"/>
+
+      <div id="hitboxSlotUpLeft" class="hitbox">
+
+      </div>
+      <div id="hitboxSlotUpRight" class="hitbox">
+
+      </div>
+      <div id="hitboxSlotDow" class="hitbox">
+
+      </div>
+      <div id="hitboxSlotWeel" class="hitbox"></div>
+    </div>
+
     <div class="wrapper">
       <div class="wheel-frame pix">
         <div class="wheel">
           <div class="wheel-support pix"></div>
-          <div class="hamster puff pix dior">
+          <div energy="1000" hunger="3000" place="slotWeel" class="hamster puff pix dior">
             <div class="ear pix"></div>
             <div class="head puff pix"></div>
             <div class="bum puff pix"></div>
+            <div class="hamsterTooltipContainer">
+              <div class="hamsterTooltip hamsterTooltipDior">Dior</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="hamster puff pix coco">
+    <div energy="1000" hunger="3000" place="slotUp" class="hamster puff pix coco">
       <div class="ear pix"></div>
       <div class="head puff pix"></div>
       <div class="bum puff pix"></div>
+      <div class="hamsterTooltipContainer">
+        <div class="hamsterTooltip hamsterTooltipCoco">Coco Channel</div>
+      </div>
     </div>
 
-    <div class="hamster puff pix biggie">
+    <div energy="1000" hunger="3000" place="slotDown" class="hamster puff pix biggie">
       <div class="ear pix"></div>
       <div class="head puff pix"></div>
       <div class="bum puff pix"></div>
+      <div class="hamsterTooltipContainer">
+        <div class="hamsterTooltip hamsterTooltipBiggie">Biggie Small's</div>
+      </div>
     </div>
 
     <input id="hamsterSlider" type="range" name="speed" min="0" max="8" value="1"><!--max="11"-->

@@ -6228,12 +6228,28 @@ function initHamster() {
     // Añadir eventos de hover al hamsterElement completo
     hamsterElement.addEventListener("mouseenter", function () {
       setStrokeHamster(hamsterElement, type);
+      showTooltipHamster(hamsterElement);
     });
 
     hamsterElement.addEventListener("mouseleave", function () {
       setHamster(hamsterElement, type);
+      hideTooltipHamster(hamsterElement)
     });
   });
+}
+
+function showTooltipHamster(hamsterElement){
+  let tooltip = hamsterElement.querySelector(".hamsterTooltip");
+  if (tooltip) {
+    tooltip.style.opacity = "1";
+  }
+}
+
+function hideTooltipHamster(hamsterElement){
+  let tooltip = hamsterElement.querySelector(".hamsterTooltip");
+  if (tooltip) {
+    tooltip.style.opacity = "0";
+  }
 }
 
 function setHamster(hamsterElement, hamsterType){
