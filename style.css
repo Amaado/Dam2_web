@@ -3860,7 +3860,7 @@ canvas {
   --wheel-speed: 0.5s;
   --wheel-angle: 0deg;
   bottom: 32px;
-  right: 90px;
+  right: 93px;
   z-index: 50px;
 }
 
@@ -4017,6 +4017,15 @@ canvas {
   pointer-events: none;
 }
 
+.wheel-frame::before{
+  width: 164px;
+  height: 164px;
+  margin-left: -2px;
+  margin-top: -2px;
+  background-image: url(img/hamster/wheelFrame2.png);
+  background-size: cover;
+}
+
 .wheel {
   width: 160px;
   height: 160px;
@@ -4153,6 +4162,7 @@ input[type=range]:focus::-ms-fill-upper {
   width: 70%;
   height: auto;
   -webkit-user-drag: none;
+  image-rendering: pixelated;
 }
 
 .hitbox{
@@ -4161,7 +4171,6 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 #hitboxSlotWorld{
-  background-color: rgba(0, 128, 0, 0.044);
   top: 0px;
   right: 430px;
   width: 80dvw;
@@ -4169,7 +4178,6 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 #hitboxSlotUpLeft{
-  background-color: rgba(211, 207, 0, 0.26);
   bottom: 221px;
   right: 303.5px;
   width: 162.5px;
@@ -4177,7 +4185,6 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 #hitboxSlotUpRight{
-  background-color: hsla(357, 95%, 62%, 0.26);
   bottom: 221px;
   right: 139px;
   width: 162.5px;
@@ -4185,7 +4192,6 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 #hitboxSlotDow{
-  background-color: rgba(0, 0, 255, 0.26);
   bottom: 9px;
   right: 316px;
   width: 150px;
@@ -4193,12 +4199,33 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 #hitboxSlotWeel{
-  background-color: rgba(255, 192, 203, 0.26);
   bottom: 9px;
   right: 140px;
   width: 174px;
   height: 210px;
 }
+
+/*
+#hitboxSlotWorld{
+  background-color: rgba(0, 128, 0, 0.044);
+}
+
+#hitboxSlotUpLeft{
+  background-color: rgba(211, 207, 0, 0.26);
+}
+
+#hitboxSlotUpRight{
+  background-color: hsla(357, 95%, 62%, 0.26);
+}
+
+#hitboxSlotDow{
+  background-color: rgba(0, 0, 255, 0.26);
+}
+
+#hitboxSlotWeel{
+  background-color: rgba(255, 192, 203, 0.26);
+}
+*/
 
 .hamsterTooltipContainer{
   position: relative;
@@ -4304,3 +4331,123 @@ input[type=range]:focus::-ms-fill-upper {
 
 
 
+/* HAMSTER EATING*/
+/* Solo aplicar estilos al hamster con clase eatingAnim */
+.hamster.eatingAnim.pix, 
+.hamster.eatingAnim.pix:after {
+  --m: 2;
+  position: absolute;
+  width: calc(var(--w) * var(--m));
+  height: calc(var(--h) * var(--m));
+  background-size: 100%;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  background: #14141400;
+}
+
+.hamster.eatingAnim.puff {
+  --w: 15px;
+  --h: 14px;
+  background-image: var(--puff);
+}
+
+.hamster.eatingAnim:before,
+.hamster.eatingAnim:after {
+  position: absolute;
+  content: '';
+}
+
+.hamster.eatingAnim .bum.puff {
+  background-image: var(--puff-before);
+  pointer-events: all;
+}
+
+.hamster.eatingAnim .ear {
+  background-image: var(--ear);
+  --w: 5px;
+  --h: 5px;
+  top: -4px;
+  left: 6px;
+}
+
+.hamster.eatingAnim {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  margin-bottom: 6px;
+  z-index: 99;
+}
+
+.hamster.eatingAnim:before {
+  background: #141414;
+  width: 3px;
+  height: 4px;
+  left: 5px;
+}
+
+.hamster.eatingAnim.grabAnim:before {
+  outline: 3px solid white;
+}
+
+.hamster.eatingAnim:after {
+  background: #141414;
+  width: 6px;
+  height: 2px;
+  bottom: 7px;
+  left: -3px;
+}
+
+.hamster.eatingAnim.grabAnim:after {
+  width: 5px;
+  border-top: 3px solid #141414;
+}
+
+.hamster.eatingAnim .ear,
+.hamster.eatingAnim:before,
+.hamster.eatingAnim:after {
+  animation: up-down infinite var(--hamster-speed);
+}
+
+.hamster.eatingAnim .head, 
+.hamster.eatingAnim .bum {
+  z-index: -1;
+  top: 0px;
+  animation: squidge var(--hamster-speed) infinite;
+}
+
+.hamster.eatingAnim div:after {
+  background-image: var(--ear-after2);
+  --w: 4px;
+  --h: 6px;
+  bottom: -4px;
+  animation: run var(--hamster-speed) infinite;
+}
+
+.hamster.eatingAnim div:nth-of-type(1):after {
+  background-image: var(--ear-after);
+}
+
+.hamster.eatingAnim .head {
+  left: -5px;
+  --angle: 10deg;
+}
+
+.hamster.eatingAnim .bum {
+  right: -5px;
+  --angle: -10deg;
+  /* filter: invert(1); */
+}
+
+.hamster.eatingAnim .head:after {
+  left: 8px;
+  --run-x: -2px;
+  --angle: 6deg;
+}
+
+.hamster.eatingAnim .bum:after {
+  right: 6px;
+  --run-x: 2px;
+  --angle: -6deg;
+}
