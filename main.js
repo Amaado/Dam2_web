@@ -6186,7 +6186,7 @@ function initHamster() {
   setInterval(() => {
     if (hamster.isRunning) {
       hamster.energy -= (hamster.speedFactor * hamster.speedFactor);
-      console.log("hamster.energy: " + hamster.energy);
+      //console.log("hamster.energy: " + hamster.energy);
     }
     if (hamster.isRunning && hamster.energy < 0) {
       hamster.isRunning = false;
@@ -6204,19 +6204,16 @@ function initHamster() {
   // Configurar eventos y tipos para todos los hámsters
   const hamsters = document.querySelectorAll('.hamster');
   hamsters.forEach((hamsterElement) => {
-    let type = getHamsterType(hamsterElement);
-
-    // Configurar imágenes para cada hámster
-    setHamster(hamsterElement, type);
+    setHamster(hamsterElement);
 
     // Añadir eventos de hover al hamsterElement completo
     hamsterElement.addEventListener("mouseenter", function () {
-      setStrokeHamster(hamsterElement, type);
+      setStrokeHamster(hamsterElement);
       showTooltipHamster(hamsterElement);
     });
 
     hamsterElement.addEventListener("mouseleave", function () {
-      setHamster(hamsterElement, type);
+      setHamster(hamsterElement);
       hideTooltipHamster(hamsterElement);
     });
 
@@ -6241,8 +6238,8 @@ function hideTooltipHamster(hamsterElement){
   }
 }
 
-function setHamster(hamsterElement, hamsterType){
-  // Detener el intervalo si existe para este hámster
+function setHamster(hamsterElement){
+  let type = getHamsterType(hamsterElement);
   const intervalId = hamsterIntervals.get(hamsterElement);
   if (intervalId) {
     clearInterval(intervalId);
@@ -6250,7 +6247,7 @@ function setHamster(hamsterElement, hamsterType){
   }
 
   // Establecer las propiedades CSS para el hámster específico
-  switch (hamsterType) {
+  switch (type) {
     case "Biggie":
       hamsterElement.style.setProperty('--puff', "url('img/hamster/biggie/puffBiggie.png')");
       hamsterElement.style.setProperty('--puff-before', "url('img/hamster/biggie/puffBiggieBefore.png')");
@@ -6283,8 +6280,9 @@ function setHamster(hamsterElement, hamsterType){
   }
 }
 
-function setStrokeHamster(hamsterElement, hamsterType) {
-  // Detener cualquier intervalo anterior para este hámster
+function setStrokeHamster(hamsterElement) {
+  let type = getHamsterType(hamsterElement);
+
   const intervalId = hamsterIntervals.get(hamsterElement);
   if (intervalId) {
     clearInterval(intervalId);
@@ -6296,7 +6294,7 @@ function setStrokeHamster(hamsterElement, hamsterType) {
 
   // Iniciar un nuevo intervalo para el hámster específico
   const newIntervalId = setInterval(() => {
-    switch (hamsterType) {
+    switch (type) {
       case "Biggie":
         hamsterElement.style.setProperty('--puff', `url('img/hamster/biggie/stroke/puffBiggieStroke${strokeIndex}.png')`);
         hamsterElement.style.setProperty('--puff-before', `url('img/hamster/biggie/stroke/puffBiggieBeforeStroke${strokeIndex}.png')`);
@@ -6343,6 +6341,10 @@ function startDragHamster(e, hamsterElement) {
   originalX = rect.left + window.scrollX;
   originalY = rect.top + window.scrollY;
 
+  hamsterElement.classList.add("grabAnim");
+  setHamster(hamsterElement);
+  hideTooltipHamster(hamsterElement);
+
   // Guardar el padre original
   originalParent = hamsterElement.parentNode;
 
@@ -6374,6 +6376,11 @@ function startDragHamster(e, hamsterElement) {
     hamsterElement.style.left = originalX + 'px';
     hamsterElement.style.top = originalY + 'px';
     hamsterElement.style.zIndex = 1000;
+
+    // Si el hámster estaba dentro de un hitbox, removerlo del hitbox
+    if (hamsterElement.parentElement.classList.contains('hitbox')) {
+      document.body.appendChild(hamsterElement);
+    }
   }
 
   // Calcular el offset entre el mouse y el hámster
@@ -6399,13 +6406,17 @@ function onDragHamster(e) {
   currentHamster.style.left = x + 'px';
   currentHamster.style.top = y + 'px';
 }
+let isStoppingDrag = false;
 
 function stopDragHamster(e) {
-  if (!isDragging || !currentHamster) return;
+  if (!isDragging || !currentHamster || isStoppingDrag) return;
+  isStoppingDrag = true;
 
   // Remover los event listeners
   document.removeEventListener('mousemove', onDragHamster);
   document.removeEventListener('mouseup', stopDragHamster);
+
+  currentHamster.classList.remove("grabAnim");
 
   // Verificar si el hámster está sobre un hitbox
   const hamsterRect = currentHamster.getBoundingClientRect();
@@ -6423,75 +6434,32 @@ function stopDragHamster(e) {
       // El hámster está sobre este hitbox
       droppedInHitbox = true;
 
-      // Obtener el tipo de hámster
-      let type = getHamsterType(currentHamster);
+      // [Resto del manejo de hitboxes...]
 
-      // Si el hitbox es 'hitboxSlotWeel', mover el hámster a la rueda
-      if (hitbox.id === 'hitboxSlotWeel') {
-        // Clonar el hámster y agregarlo a la rueda después de .wheel-support
-        const wheelHamster = currentHamster.cloneNode(true);
-
-        // Añadir eventos al hámster en la rueda
-        addHamsterEventListeners(wheelHamster);
-
-        // Remover el hámster original
-        currentHamster.remove();
-
-        // Remover cualquier hámster existente en la rueda
-        const existingWheelHamster = document.querySelector('.wheel .hamster');
-        if (existingWheelHamster) {
-          existingWheelHamster.remove();
-        }
-
-        // Ajustar el hámster para la rueda
-        wheelHamster.style.position = '';
-        wheelHamster.style.left = '';
-        wheelHamster.style.top = '';
-        wheelHamster.style.transform = '';
-        wheelHamster.style.zIndex = '';
-
-        // Agregar el hámster a la rueda
-        const wheelElement = document.querySelector('.wheel');
-        const wheelSupport = wheelElement.querySelector('.wheel-support');
-        wheelElement.insertBefore(wheelHamster, wheelSupport.nextSibling);
-
-        // Configurar imágenes para el hámster en la rueda
-        setHamster(wheelHamster, type);
-
-        // Iniciar el hámster en la rueda
-        hamster.isRunning = true;
-
-        // Resetear variables
-        isDragging = false;
-        currentHamster = null;
-        return;
-      } else {
-        // Mover el hámster al hitbox correspondiente
-        document.body.appendChild(currentHamster);
-
-        // Ajustar posición relativa al hitbox
-        currentHamster.style.left = (hitboxRect.left + hitboxRect.width / 2 - hamsterRect.width / 2) + 'px';
-        currentHamster.style.top = (hitboxRect.top + hitboxRect.height / 2 - hamsterRect.height / 2) + 'px';
-
-        // Actualizar el atributo 'place' del hámster
-        const hitboxId = hitbox.id; // Por ejemplo, 'hitboxSlotUpLeft'
-        const place = hitboxId.replace('hitboxSlot', 'slot'); // Remover el prefijo 'hitboxSlot'
-        currentHamster.setAttribute('place', place);
-      }
+      // Al final del manejo exitoso
+      isDragging = false;
+      currentHamster.style.zIndex = '';
+      currentHamster = null;
+      isStoppingDrag = false;
+      return;
     }
   });
 
   if (!droppedInHitbox) {
     // Retornar el hámster a su posición original
-    currentHamster.style.left = originalX + 'px';
-    currentHamster.style.top = originalY + 'px';
+    if (currentHamster) {
+      currentHamster.style.left = originalX + 'px';
+      currentHamster.style.top = originalY + 'px';
+      currentHamster.style.zIndex = '';
+    }
   }
 
   // Resetear variables
   isDragging = false;
-  currentHamster.style.zIndex = '';
   currentHamster = null;
+  isStoppingDrag = false;
 }
+
 
 function getHamsterType(hamsterElement) {
   if (hamsterElement.classList.contains('dior')) {
@@ -6507,19 +6475,16 @@ function getHamsterType(hamsterElement) {
 }
 
 function addHamsterEventListeners(hamsterElement) {
-  let type = getHamsterType(hamsterElement);
-
-  // Configurar imágenes para cada hámster
-  setHamster(hamsterElement, type);
+  setHamster(hamsterElement);
 
   // Añadir eventos de hover
   hamsterElement.addEventListener("mouseenter", function () {
-    setStrokeHamster(hamsterElement, type);
+    setStrokeHamster(hamsterElement);
     showTooltipHamster(hamsterElement);
   });
 
   hamsterElement.addEventListener("mouseleave", function () {
-    setHamster(hamsterElement, type);
+    setHamster(hamsterElement);
     hideTooltipHamster(hamsterElement);
   });
 
