@@ -6333,6 +6333,8 @@ function setStrokeHamster(hamsterElement) {
 
 // Funciones para manejar el arrastre
 function startDragHamster(e, hamsterElement) {
+  if (isDragging) return; // Prevenir arrastre si ya está en proceso
+
   isDragging = true;
   currentHamster = hamsterElement;
 
@@ -6391,7 +6393,6 @@ function startDragHamster(e, hamsterElement) {
   document.addEventListener('mousemove', onDragHamster);
   document.addEventListener('mouseup', stopDragHamster);
 
-  // Prevenir comportamiento por defecto
   e.preventDefault();
 }
 
@@ -6406,8 +6407,8 @@ function onDragHamster(e) {
   currentHamster.style.left = x + 'px';
   currentHamster.style.top = y + 'px';
 }
-let isStoppingDrag = false;
 
+let isStoppingDrag = false;
 function stopDragHamster(e) {
   if (!isDragging || !currentHamster || isStoppingDrag) return;
   isStoppingDrag = true;
@@ -6431,34 +6432,117 @@ function stopDragHamster(e) {
       hamsterRect.top < hitboxRect.bottom &&
       hamsterRect.bottom > hitboxRect.top
     ) {
-      // El hámster está sobre este hitbox
       droppedInHitbox = true;
 
-      // [Resto del manejo de hitboxes...]
+      // Si es el contenedor especial `hitboxSlotWeel`
+      if (hitbox.id === 'hitboxSlotWeel') {
+        handleWheelContainer();
+        resetDragVariables();
+        return;
+      }
 
-      // Al final del manejo exitoso
-      isDragging = false;
-      currentHamster.style.zIndex = '';
-      currentHamster = null;
-      isStoppingDrag = false;
+      // Para otros hitboxes, verificar si ya están ocupados
+      const hamstersInHitbox = Array.from(hitbox.querySelectorAll('.hamster')).filter(h => h !== currentHamster);
+      if (hamstersInHitbox.length > 0) {
+        // Si está ocupado, devolver al contenedor original
+        cloneHamsterToContainer(originalParent);
+        resetDragVariables();
+        return;
+      }
+
+      // Clonar el hámster y moverlo al hitbox
+      cloneHamsterToContainer(hitbox);
+
+      // Actualizar el atributo `place`
+      const hitboxId = hitbox.id;
+      const place = hitboxId.replace('hitboxSlot', 'slot');
+      currentHamster.setAttribute('place', place);
+
+      resetDragVariables();
       return;
     }
   });
 
   if (!droppedInHitbox) {
-    // Retornar el hámster a su posición original
-    if (currentHamster) {
-      currentHamster.style.left = originalX + 'px';
-      currentHamster.style.top = originalY + 'px';
-      currentHamster.style.zIndex = '';
-    }
+    // Si no se suelta en ningún hitbox, devolver al contenedor original
+    cloneHamsterToContainer(originalParent);
   }
 
-  // Resetear variables
+  resetDragVariables();
+}
+
+// Función específica para manejar el contenedor especial `wheel`
+function handleWheelContainer() {
+  const wheel = document.querySelector('.wheel');
+
+  // Verificar si ya hay un hámster en la rueda
+  const existingWheelHamster = wheel.querySelector('.hamster');
+  if (existingWheelHamster) {
+    // Si ya está ocupado, devolver al contenedor original
+    cloneHamsterToContainer(originalParent);
+    return;
+  }
+
+  // Clonar el hámster y agregarlo a la rueda
+  const clonedHamster = currentHamster.cloneNode(true);
+
+  // Añadir eventos al hámster clonado
+  addHamsterEventListeners(clonedHamster);
+
+  // Remover el hámster original
+  currentHamster.remove();
+
+  // Ajustar posición y estilo del hámster para la rueda
+  clonedHamster.style.position = '';
+  clonedHamster.style.left = '';
+  clonedHamster.style.top = '';
+  clonedHamster.style.transform = '';
+  clonedHamster.style.zIndex = '';
+
+  // Agregarlo a la rueda
+  const wheelSupport = wheel.querySelector('.wheel-support');
+  wheel.insertBefore(clonedHamster, wheelSupport.nextSibling);
+
+  // Configurar imágenes
+  setHamster(clonedHamster);
+
+  // Actualizar el atributo `place`
+  clonedHamster.setAttribute('place', 'slotWeel');
+}
+
+// Función para clonar el hámster al contenedor especificado
+function cloneHamsterToContainer(container) {
+  if (!container) return;
+
+  const clonedHamster = currentHamster.cloneNode(true);
+
+  // Añadir eventos al hámster clonado
+  addHamsterEventListeners(clonedHamster);
+
+  // Ajustar el hámster para el contenedor
+  clonedHamster.style.position = 'absolute';
+  clonedHamster.style.left = '';
+  clonedHamster.style.top = '';
+  clonedHamster.style.transform = '';
+  clonedHamster.style.zIndex = '';
+
+  // Remover el hámster original
+  currentHamster.remove();
+
+  // Agregar el hámster al contenedor
+  container.appendChild(clonedHamster);
+
+  // Configurar imágenes para el hámster clonado
+  setHamster(clonedHamster);
+}
+
+// Función para resetear las variables de arrastre
+function resetDragVariables() {
   isDragging = false;
   currentHamster = null;
   isStoppingDrag = false;
 }
+
 
 
 function getHamsterType(hamsterElement) {
