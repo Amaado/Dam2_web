@@ -6157,6 +6157,9 @@ let originalX = 0;
 let originalY = 0;
 let originalParent = null;
 
+let checkboxTooltipsShown = true;
+
+
 function initHamster() { 
   const wrapper = document.querySelector('.wrapper');
   const wheel = document.querySelector('.wheel');
@@ -6165,7 +6168,7 @@ function initHamster() {
   // Configuración del hámster animado en la rueda (inicialmente vacío)
   let hamster = {
     energy: defaultHamsterEnergy,
-    speedFactor: 4,
+    speedFactor: 1.5,
     isRunning: false, // Inicialmente no hay hámster corriendo
   };
 
@@ -6175,12 +6178,6 @@ function initHamster() {
     wrapper.style.setProperty('--wheel-speed', `${2 / hamster.speedFactor}s`);
     wrapper.style.setProperty('--wheel-angle', `${0.4 * hamster.speedFactor}deg`);
   };
-
-  // Evento para cambiar la velocidad del hámster en la rueda
-  document.getElementById('hamsterSlider').addEventListener('input', e => {
-    hamster.speedFactor = e.target.value;
-    setHamsterSpeed();
-  });
 
   // Intervalo para reducir la energía del hámster en la rueda
   setInterval(() => {
@@ -6209,11 +6206,13 @@ function initHamster() {
     // Añadir eventos de hover al hamsterElement completo
     hamsterElement.addEventListener("mouseenter", function () {
       setStrokeHamster(hamsterElement);
+      if (checkboxTooltipsShown) return;
       showTooltipHamster(hamsterElement);
     });
 
     hamsterElement.addEventListener("mouseleave", function () {
       setHamster(hamsterElement);
+      if (checkboxTooltipsShown) return;
       hideTooltipHamster(hamsterElement);
     });
 
@@ -6222,7 +6221,49 @@ function initHamster() {
       startDragHamster(e, hamsterElement);
     });
   });
+
+  const modifyHamsterSpeed = (hamster, setHamsterSpeed, targetValue, goto0) => {
+    const step = 0.10; // Incremento o decremento progresivo
+  
+    if (goto0) {
+      // Cambiar inmediatamente a 0 si goto0 es true
+      hamster.speedFactor = 0;
+      setHamsterSpeed(); // Actualizar visualmente
+      return;
+    }
+  
+    function adjustSpeed() {
+      // Si la diferencia es menor que el paso, asignamos directamente el valor objetivo
+      if (Math.abs(hamster.speedFactor - targetValue) < step) {
+        hamster.speedFactor = targetValue;
+        setHamsterSpeed(); // Actualizar visualmente
+        return; // Terminar la función
+      }
+  
+      // Incrementar o disminuir gradualmente hacia el valor objetivo
+      if (hamster.speedFactor < targetValue) {
+        hamster.speedFactor += step;
+      } else {
+        hamster.speedFactor -= step;
+      }
+  
+      setHamsterSpeed();
+      setTimeout(adjustSpeed, 20); // Intervalo de actualización
+    }
+  
+    adjustSpeed();
+  };
+  
+
+  setHamsterSpeed();
+
+  return { hamster, setHamsterSpeed, modifyHamsterSpeed };
+
 }
+
+let { hamster, setHamsterSpeed, modifyHamsterSpeed } = initHamster();
+
+
 
 function showTooltipHamster(hamsterElement){
   let tooltip = hamsterElement.querySelector(".hamsterTooltip");
@@ -6338,6 +6379,13 @@ function startDragHamster(e, hamsterElement) {
   isDragging = true;
   currentHamster = hamsterElement;
 
+
+  if (hamsterElement.closest('.wrapper')) {
+    modifyHamsterSpeed(hamster, setHamsterSpeed, 0.0, true);
+  }
+  
+
+
   // Obtener la posición actual del hámster
   const rect = hamsterElement.getBoundingClientRect();
   originalX = rect.left + window.scrollX;
@@ -6345,7 +6393,11 @@ function startDragHamster(e, hamsterElement) {
 
   hamsterElement.classList.add("grabAnim");
   setHamster(hamsterElement);
-  hideTooltipHamster(hamsterElement);
+  if (checkboxTooltipsShown){
+  }else{
+    hideTooltipHamster(hamsterElement);
+  }
+
 
   // Guardar el padre original
   originalParent = hamsterElement.parentNode;
@@ -6396,6 +6448,7 @@ function startDragHamster(e, hamsterElement) {
   e.preventDefault();
 }
 
+
 function onDragHamster(e) {
   if (!isDragging || !currentHamster) return;
 
@@ -6407,6 +6460,7 @@ function onDragHamster(e) {
   currentHamster.style.left = x + 'px';
   currentHamster.style.top = y + 'px';
 }
+
 
 let isStoppingDrag = false;
 function stopDragHamster(e) {
@@ -6438,6 +6492,7 @@ function stopDragHamster(e) {
       if (hitbox.id === 'hitboxSlotWeel') {
         handleWheelContainer();
         resetDragVariables();
+        modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
         return;
       }
 
@@ -6447,17 +6502,14 @@ function stopDragHamster(e) {
         // Si está ocupado, devolver al contenedor original
         cloneHamsterToContainer(originalParent);
         resetDragVariables();
+        if (originalParent.closest('.wrapper')) {
+          modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
+        }
         return;
       }
 
       // Clonar el hámster y moverlo al hitbox
       cloneHamsterToContainer(hitbox);
-
-      // Actualizar el atributo `place`
-      const hitboxId = hitbox.id;
-      const place = hitboxId.replace('hitboxSlot', 'slot');
-      currentHamster.setAttribute('place', place);
-
       resetDragVariables();
       return;
     }
@@ -6466,6 +6518,9 @@ function stopDragHamster(e) {
   if (!droppedInHitbox) {
     // Si no se suelta en ningún hitbox, devolver al contenedor original
     cloneHamsterToContainer(originalParent);
+    if (originalParent.closest('.wrapper')) {
+      modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
+    }
   }
 
   resetDragVariables();
@@ -6505,9 +6560,6 @@ function handleWheelContainer() {
 
   // Configurar imágenes
   setHamster(clonedHamster);
-
-  // Actualizar el atributo `place`
-  clonedHamster.setAttribute('place', 'slotWeel');
 }
 
 // Función para clonar el hámster al contenedor especificado
@@ -6564,11 +6616,13 @@ function addHamsterEventListeners(hamsterElement) {
   // Añadir eventos de hover
   hamsterElement.addEventListener("mouseenter", function () {
     setStrokeHamster(hamsterElement);
+    if (checkboxTooltipsShown) return;
     showTooltipHamster(hamsterElement);
   });
 
   hamsterElement.addEventListener("mouseleave", function () {
     setHamster(hamsterElement);
+    if (checkboxTooltipsShown) return;
     hideTooltipHamster(hamsterElement);
   });
 
