@@ -4221,44 +4221,48 @@ canvas {
 .sliderHamsterContainer{
   display: flex;
   flex-direction: row;
-  background-color: rgba(151, 153, 20, 0.589);
+  /*background-color: rgba(151, 153, 20, 0.589);*/
   pointer-events: none;
   width: 86px;
   height: 50px;
-  margin-top: -80px;
-  margin-left: -50px;
+  margin-top: -100px;
+  margin-left: -40px;
 }
 
 .sliderHamsterSliders{
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 13px;
   width: 80%;
   height: 100%;
-  background-color: rgba(226, 56, 13, 0.589);
+  /*background-color: rgba(226, 56, 13, 0.589);*/
 }
 
 .sliderHamsterIcons{
   display: flex;
   flex-direction: column;
   gap: 2px;
-  width: 40%;
+  width: 20%;
   height: 100%;
-  background-color: rgba(13, 80, 226, 0.589);
+  /*background-color: rgba(13, 80, 226, 0.589);*/
 }
 
 .sliderHamsterIcons img{
   width: 15px;
   height: 15px;
+  margin-left: -3px;
 }
 
 .sliderHamster{
+  position: relative;
   min-width: 60px;
   min-height: 5px;
   max-width: 60px;
   max-height: 5px;
   border-radius: 2px;
+  top: 5px;
 }
+
 
 input[type="range"] {
   -webkit-appearance: none;
