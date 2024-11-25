@@ -4012,17 +4012,17 @@ canvas {
   position: relative;
   --w: 80px;
   --h: 80px;
-  background-image: url(img/hamster/wheelFrame.png);
+  /*background-image: url(img/hamster/wheelFrame2.png); Not the image at all*/
   margin-bottom: 16px;
   pointer-events: none;
 }
 
 .wheel-frame::before{
-  width: 164px;
-  height: 164px;
-  margin-left: -2px;
-  margin-top: -2px;
-  background-image: url(img/hamster/wheelFrame2.png);
+  width: 168px;
+  height: 168px;
+  margin-left: -4px;
+  margin-top: -4px;
+  background-image: url(img/hamster/wheelFrame.png); /*Final wheel image*/
   background-size: cover;
 }
 
@@ -4033,6 +4033,7 @@ canvas {
   justify-content: center;
   align-items: end;
   transform: rotate(var(--wheel-angle));
+  filter: drop-shadow(3px -1px 6px rgba(0, 0, 0, 0.582));
 }
 
 .wheel.spinning {
