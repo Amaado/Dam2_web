@@ -4282,30 +4282,30 @@ canvas {
 }
 
 .sliderEnergy::-webkit-slider-thumb{
-  box-shadow: -407px 0 0 400px #e6e68d;
-  background: #e6e68d;
+  box-shadow: -407px 0 0 400px #f5f555;
+  background: #f5f555;
 }
 
 .sliderHamsterIcons img:nth-child(1){
-  filter: brightness(0) saturate(100%) invert(90%) sepia(5%) saturate(2789%) hue-rotate(12deg) brightness(106%) contrast(83%);
+  filter: brightness(0) saturate(100%) invert(71%) sepia(100%) saturate(288%) hue-rotate(11deg) brightness(117%) contrast(92%);
 }
 
 .sliderHunger::-webkit-slider-thumb{
-  box-shadow: -407px 0 0 400px #81c586;
-  background: #81c586;
+  box-shadow: -407px 0 0 400px #d3544b;
+  background: #d3544b;
 }
 
 .sliderHamsterIcons img:nth-child(2){
-  filter: brightness(0) saturate(100%) invert(77%) sepia(20%) saturate(679%) hue-rotate(74deg) brightness(90%) contrast(89%);
+  filter: brightness(0) saturate(100%) invert(44%) sepia(94%) saturate(1402%) hue-rotate(329deg) brightness(86%) contrast(91%);
 }
 
 .sliderWater::-webkit-slider-thumb{
-  box-shadow: -407px 0 0 400px #8bbfc9;
-  background: #8bbfc9;
+  box-shadow: -407px 0 0 400px #69c7da;
+  background: #69c7da;
 }
 
 .sliderHamsterIcons img:nth-child(3){
-  filter: brightness(0) saturate(100%) invert(80%) sepia(12%) saturate(765%) hue-rotate(142deg) brightness(89%) contrast(89%);
+  filter: brightness(0) saturate(100%) invert(78%) sepia(23%) saturate(838%) hue-rotate(146deg) brightness(92%) contrast(85%);
 }
 
 
