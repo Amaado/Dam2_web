@@ -4204,6 +4204,7 @@ function setNormalPrice(skinContainer, price) {
         notasEstado = !notasEstado;
   
         if (notasEstado) {
+          notebookContainer.style.display = "flex";
           notebook.style.display = "flex";
           controls.style.display = "flex";
           notas.classList.add("active");
@@ -4334,6 +4335,7 @@ function setNormalPrice(skinContainer, price) {
           setTimeout(() => {
             notebook.style.display = "none";
             controls.style.display = "none";
+            notebookContainer.style.display = "none";
           }, 1000);
         }
   
@@ -6157,7 +6159,8 @@ let originalX = 0;
 let originalY = 0;
 let originalParent = null;
 
-let checkboxTooltipsShown = true;
+let checkboxTooltipsNamesShown = true;
+let checkboxTooltipsStatesShown = true;
 
 
 function initHamster() { 
@@ -6206,13 +6209,11 @@ function initHamster() {
     // Añadir eventos de hover al hamsterElement completo
     hamsterElement.addEventListener("mouseenter", function () {
       setStrokeHamster(hamsterElement);
-      if (checkboxTooltipsShown) return;
       showTooltipHamster(hamsterElement);
     });
 
     hamsterElement.addEventListener("mouseleave", function () {
       setHamster(hamsterElement);
-      if (checkboxTooltipsShown) return;
       hideTooltipHamster(hamsterElement);
     });
 
@@ -6250,8 +6251,8 @@ function initHamster() {
       setHamsterSpeed();
       setTimeout(adjustSpeed, 20); // Intervalo de actualización
     }
-  
     adjustSpeed();
+
   };
   
 
@@ -6263,19 +6264,51 @@ function initHamster() {
 
 let { hamster, setHamsterSpeed, modifyHamsterSpeed } = initHamster();
 
+window.addEventListener("load", function () {
+  let hamsterTooltipContainers = document.querySelectorAll(".hamsterTooltipContainer");
+  let sliderHamsterContainers = document.querySelectorAll(".sliderHamsterContainer");
 
+  hamsterTooltipContainers.forEach((tooltip) => {
+    if(checkboxTooltipsNamesShown){
+      tooltip.style.opacity = "1";
+    }else{
+      tooltip.style.opacity = "0";
+    }
+  });
+  
+  sliderHamsterContainers.forEach((container) => {
+    if(checkboxTooltipsStatesShown){
+      container.style.opacity = "1";
+    }else{
+      container.style.opacity = "0";
+    }
+  });
+
+});
 
 function showTooltipHamster(hamsterElement){
-  let tooltip = hamsterElement.querySelector(".hamsterTooltip");
-  if (tooltip) {
+  let tooltip = hamsterElement.querySelector(".hamsterTooltipContainer");
+  if (!checkboxTooltipsNamesShown) {
     tooltip.style.opacity = "1";
+  }
+  
+  let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
+  if(checkboxTooltipsStatesShown){
+    tooltipStates.style.opacity = "1";
   }
 }
 
 function hideTooltipHamster(hamsterElement){
-  let tooltip = hamsterElement.querySelector(".hamsterTooltip");
-  if (tooltip) {
+  let tooltip = hamsterElement.querySelector(".hamsterTooltipContainer");
+  if (!checkboxTooltipsNamesShown) {
     tooltip.style.opacity = "0";
+  }
+
+  let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
+  if(checkboxTooltipsStatesShown){
+    if(!checkboxTooltipsNamesShown){
+      tooltipStates.style.opacity = "0";
+    }
   }
 }
 
@@ -6393,10 +6426,9 @@ function startDragHamster(e, hamsterElement) {
 
   hamsterElement.classList.add("grabAnim");
   setHamster(hamsterElement);
-  if (checkboxTooltipsShown){
-  }else{
-    hideTooltipHamster(hamsterElement);
-  }
+  hideTooltipHamster(hamsterElement);
+
+
 
 
   // Guardar el padre original
@@ -6443,7 +6475,7 @@ function startDragHamster(e, hamsterElement) {
 
   // Añadir event listeners para el movimiento y fin del arrastre
   document.addEventListener('mousemove', onDragHamster);
-  document.addEventListener('mouseup', stopDragHamster);
+  document.addEventListener('mouseup', stopDragHamster, hideTooltipHamster);
 
   e.preventDefault();
 }
@@ -6469,7 +6501,7 @@ function stopDragHamster(e) {
 
   // Remover los event listeners
   document.removeEventListener('mousemove', onDragHamster);
-  document.removeEventListener('mouseup', stopDragHamster);
+  document.removeEventListener('mouseup', stopDragHamster, hideTooltipHamster);
 
   currentHamster.classList.remove("grabAnim");
 
@@ -6616,13 +6648,11 @@ function addHamsterEventListeners(hamsterElement) {
   // Añadir eventos de hover
   hamsterElement.addEventListener("mouseenter", function () {
     setStrokeHamster(hamsterElement);
-    if (checkboxTooltipsShown) return;
     showTooltipHamster(hamsterElement);
   });
 
   hamsterElement.addEventListener("mouseleave", function () {
     setHamster(hamsterElement);
-    if (checkboxTooltipsShown) return;
     hideTooltipHamster(hamsterElement);
   });
 

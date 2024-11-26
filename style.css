@@ -2717,7 +2717,7 @@ div.img img {
 
 #notebookContainer {
   position: absolute;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -4170,6 +4170,8 @@ canvas {
   justify-content: center;
   align-items: center;
   pointer-events: none;
+    transition: opacity 0.2s ease;
+
 }
 
 .hamsterTooltip{
@@ -4181,7 +4183,6 @@ canvas {
   padding: 2px;
   border-radius: 3px;
   opacity: 1;
-  transition: opacity 0.2s ease;
 }
 
 .hamsterTooltipBiggie{
@@ -4221,7 +4222,6 @@ canvas {
 .sliderHamsterContainer{
   display: flex;
   flex-direction: row;
-  /*background-color: rgba(151, 153, 20, 0.589);*/
   pointer-events: none;
   width: 86px;
   height: 50px;
@@ -4235,7 +4235,6 @@ canvas {
   gap: 13px;
   width: 80%;
   height: 100%;
-  /*background-color: rgba(226, 56, 13, 0.589);*/
 }
 
 .sliderHamsterIcons{
@@ -4244,7 +4243,6 @@ canvas {
   gap: 2px;
   width: 20%;
   height: 100%;
-  /*background-color: rgba(13, 80, 226, 0.589);*/
 }
 
 .sliderHamsterIcons img{
@@ -4253,7 +4251,12 @@ canvas {
   margin-left: -3px;
 }
 
-.sliderHamster{
+.sliderHamster {
+  -webkit-appearance: none;
+  appearance: none; 
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
   position: relative;
   min-width: 60px;
   min-height: 5px;
@@ -4263,31 +4266,46 @@ canvas {
   top: 5px;
 }
 
-
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none; 
-  cursor: pointer;
-  outline: none;
-  overflow: hidden;
-  width: 60px;
-}
-
 /* Track: webkit browsers */
-input[type="range"]::-webkit-slider-runnable-track {
+.sliderHamster::-webkit-slider-runnable-track {
   height: 5px;
-  background: #ccc;
+  background: #7f7f7f;
   border-radius: 2px;
 }
 
-input[type="range"]::-webkit-slider-thumb {
+.sliderHamster::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none; 
-  height: 0px;
-  width: 2px;
-  background-color: #f50;
-  border-radius: 5px;
-  box-shadow: -407px 0 0 400px #f50;
+  height: 5px;
+  width: 10px;
+  border-radius: 2px;
+}
+
+.sliderEnergy::-webkit-slider-thumb{
+  box-shadow: -407px 0 0 400px #e6e68d;
+  background: #e6e68d;
+}
+
+.sliderHamsterIcons img:nth-child(1){
+  filter: brightness(0) saturate(100%) invert(90%) sepia(5%) saturate(2789%) hue-rotate(12deg) brightness(106%) contrast(83%);
+}
+
+.sliderHunger::-webkit-slider-thumb{
+  box-shadow: -407px 0 0 400px #81c586;
+  background: #81c586;
+}
+
+.sliderHamsterIcons img:nth-child(2){
+  filter: brightness(0) saturate(100%) invert(77%) sepia(20%) saturate(679%) hue-rotate(74deg) brightness(90%) contrast(89%);
+}
+
+.sliderWater::-webkit-slider-thumb{
+  box-shadow: -407px 0 0 400px #8bbfc9;
+  background: #8bbfc9;
+}
+
+.sliderHamsterIcons img:nth-child(3){
+  filter: brightness(0) saturate(100%) invert(80%) sepia(12%) saturate(765%) hue-rotate(142deg) brightness(89%) contrast(89%);
 }
 
 
