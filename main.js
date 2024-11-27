@@ -95,8 +95,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const controls = document.getElementById("controls");
   const volumenImg = document.getElementById("volumenImg");
   const volumenImgDropShadow = document.getElementById("volumenImgDropShadow");
-
-
+  const wrapper = document.querySelector('.wrapper');
+  const hitboxSlotWorld = document.getElementById("hitboxSlotWorld");
+  const cageContainer = document.getElementById("cageContainer");
 
 
 
@@ -4085,6 +4086,7 @@ function setNormalPrice(skinContainer, price) {
   menuLabelSkins.addEventListener("mouseenter", addSkinsMenuActive);
   menuLabelSkins.addEventListener("mouseleave", removeSkinsMenuActive);
 
+
   /* ACTIVAR MODIFIERS-SKINS */
 
   function addModifiersMenuActive() {
@@ -4094,15 +4096,25 @@ function setNormalPrice(skinContainer, price) {
     menuLabelModifiers.classList.add("active");
 
     if (modifiersContainer.classList.contains("active")) {
-      logoutButton.style.right = "15vw";
+      logoutButton.style.right = "16vw";
       if (settingsContainer.classList.contains("active")) {
         settingsContainer.style.marginRight = "15vw";
       }
       settingsImgContainer.style.marginRight = "15vw";
+
+      cageContainer.style.marginRight = "15vw";
+      hitboxSlotWorld.style.marginRight = "15vw";
+      wrapper.style.marginRight = "15vw";
     }
   }
 
-  function removeModifiersMenuActive() {
+  function removeModifiersMenuActive(e) {
+    if ((logoutButton.contains(e.target) ||
+        
+        wrapper.contains(e.target))) {
+      return; // Detener la ejecución si el evento ocurre en esos elementos
+    }//TODO
+
     flechaaModifiers.classList.remove("active");
     modifiersContainer.classList.remove("active");
     flechaHitbloxPlusModifiers.classList.remove("active");
@@ -4114,20 +4126,23 @@ function setNormalPrice(skinContainer, price) {
         settingsContainer.style.marginRight = "0vw";
       }
       settingsImgContainer.style.marginRight = "0vw";
+
+      cageContainer.style.marginRight = "0vw";
+      hitboxSlotWorld.style.marginRight = "0vw";
+      wrapper.style.marginRight = "0vw";
     }
   }
 
   flechaaModifiers.addEventListener("mouseenter", addModifiersMenuActive);
   flechaaModifiers.addEventListener("mouseleave", removeModifiersMenuActive);
   modifiersContainer.addEventListener("mouseenter", addModifiersMenuActive);
-  modifiersContainer.addEventListener("mouseleave", removeModifiersMenuActive);
   flechaHitbloxPlusModifiers.addEventListener(
     "mouseenter",
     addModifiersMenuActive
   );
   flechaHitbloxPlusModifiers.addEventListener(
     "mouseleave",
-    removeModifiersMenuActive
+    removeModifiersMenuActive(e)
   );
   menuLabelModifiers.addEventListener("mouseenter", addModifiersMenuActive);
   menuLabelModifiers.addEventListener("mouseleave", removeModifiersMenuActive);
@@ -6164,7 +6179,6 @@ let checkboxTooltipsStatesShown = true;
 
 
 function initHamster() { 
-  const wrapper = document.querySelector('.wrapper');
   const wheel = document.querySelector('.wheel');
   const defaultHamsterEnergy = 1000;
 

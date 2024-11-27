@@ -1553,12 +1553,17 @@ div.img img {
   display: flex;
   flex-direction: column;
   transition: transform 0.5s ease;
-  transform: translateX(100vw);
+  transform: translateX(102vw);
   gap: 20px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  /*overflow-y: auto;
+  overflow-x: hidden;*/
   box-shadow: -10px -10px 14px 0px rgba(0, 0, 0, 0.3);
 }
+
+.modifiersContainer::-webkit-scrollbar {
+  display: none; /* Oculta la barra en navegadores basados en Webkit */
+}
+
 
 /* Scroll personalizado para WebKit (Chrome, Safari) */
 #modifiersContainer::-webkit-scrollbar {
@@ -1602,15 +1607,17 @@ div.img img {
   background-color: transparent;
   position: fixed;
   width: 1.5vw;
-  height: 80vh;
+  height: 100vh;
   transition: transform 0.5s ease;
   transform: translateX(99vw);
   z-index: 1;
+  background-color: rgba(0, 0, 255, 0.753);
+  pointer-events: all;
 }
 
 #flechaHitbloxPlusModifiers.active {
-  transform: translateX(83vw);
-  width: 3vw;
+  transform: translateX(81vw);
+  width: 5vw;
 }
 
 #menuLabelModifiers {
@@ -2211,6 +2218,7 @@ div.img img {
   width: 60px;
   height: 60px;
   transition: right 0.5s ease;
+  z-index: 2;
 }
 
 /* UNDERWATER SKIN */
@@ -3862,6 +3870,7 @@ canvas {
   bottom: 32px;
   right: 93px;
   z-index: 50px;
+  transition: margin-right 0.5s ease;
 }
 
 .pix, .pix:after {
@@ -4092,6 +4101,7 @@ canvas {
   right: -50px;
   width: auto;
   height: auto;
+  transition: margin-right 0.5s ease;
 }
 
 #cage{
@@ -4111,6 +4121,7 @@ canvas {
   right: 430px;
   width: 80dvw;
   height: 100%;
+  transition: margin-right 0.5s ease;
 }
 
 #hitboxSlotUpLeft{
@@ -4296,7 +4307,6 @@ canvas {
 }
 
 .sliderHamsterIcons img:nth-child(2){
-  filter: brightness(0) saturate(100%) invert(44%) sepia(94%) saturate(1402%) hue-rotate(329deg) brightness(86%) contrast(91%);
 }
 
 .sliderWater::-webkit-slider-thumb{
@@ -4496,4 +4506,21 @@ canvas {
   right: 6px;
   --run-x: 2px;
   --angle: -6deg;
+}
+
+.grocery{
+  position: absolute;
+  width: 39vh;
+  height: auto;
+  bottom: 0;
+  margin-left: -1vh;
+  z-index: 200;
+}
+
+.store{
+  position: absolute;
+  width: 39vh;
+  height: auto;
+  bottom: 0;
+  z-index: 200;
 }
