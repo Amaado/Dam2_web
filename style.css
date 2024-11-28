@@ -1607,16 +1607,56 @@ div.img img {
   background-color: transparent;
   position: fixed;
   width: 1.5vw;
-  height: 100vh;
+  height: calc(100vh - 380px);
   transition: transform 0.5s ease;
   transform: translateX(99vw);
   z-index: 0;
   pointer-events: all;
+  /*background-color: rgba(0, 0, 255, 0.596);*/
+  top: 0;
 }
 
 #flechaHitbloxPlusModifiers.active {
-  transform: translateX(76vw);
-  width: 9vw;
+  transform: translateX(102vw);
+}
+
+#flechaHitbloxPlusModifiers2 {
+  background-color: transparent;
+  position: fixed;
+  width: 840px;
+  height: calc(100vh - 380px);
+  transition: right 0.5s ease;
+  z-index: 0;
+  pointer-events: all;
+  /*background-color: rgba(77, 77, 185, 0.596);*/
+  right: 100vw;
+  top: 0px;
+  z-index: 10;
+}
+
+
+#flechaHitbloxPlusModifiers2.active {
+  right: 20vw;
+}
+
+#flechaHitbloxPlusModifiers3 {
+  background-color: transparent;
+  position: fixed;
+  width: 420px;
+  height: 380px;
+  transition: right 0.5s ease;
+  z-index: 0;
+  pointer-events: all;
+  /*background-color: rgba(77, 185, 140, 0.596);*/
+  right: 100vw;
+  bottom: 0px;
+  z-index: 10;
+
+}
+
+
+#flechaHitbloxPlusModifiers3.active {
+  right: calc(420px + 15vw);
 }
 
 #menuLabelModifiers {
@@ -4533,4 +4573,20 @@ canvas {
   height: auto;
   bottom: 0;
   z-index: 200;
+  -webkit-user-drag: none;
+  z-index: 20;
+}
+
+.tendero{
+  position: absolute;
+  width: 15.5vh;
+  height: auto;
+  bottom: 0;
+  left: 14vh;
+  z-index: 200;
+  -webkit-user-drag: none;
+}
+
+.tenderoBody{
+  z-index: 19;
 }

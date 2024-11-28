@@ -98,9 +98,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const wrapper = document.querySelector('.wrapper');
   const hitboxSlotWorld = document.getElementById("hitboxSlotWorld");
   const cageContainer = document.getElementById("cageContainer");
-  const warpperHitbox = document.getElementById("warpperHitbox");
   const grocery = document.getElementById("grocery");
   const store = document.querySelector('.wrapper');
+  const flechaHitbloxPlusModifiers2 = document.getElementById("flechaHitbloxPlusModifiers2");
+  const flechaHitbloxPlusModifiers3 = document.getElementById("flechaHitbloxPlusModifiers3");
+
 
 /* BUBBLES */
 let animationFrameId;
@@ -4095,6 +4097,8 @@ function setNormalPrice(skinContainer, price) {
     modifiersContainer.classList.add("active");
     flechaHitbloxPlusModifiers.classList.add("active");
     menuLabelModifiers.classList.add("active");
+    flechaHitbloxPlusModifiers2.classList.add("active");
+    flechaHitbloxPlusModifiers3.classList.add("active");
 
     if (modifiersContainer.classList.contains("active")) {
       logoutButton.style.right = "16vw";
@@ -4106,12 +4110,11 @@ function setNormalPrice(skinContainer, price) {
       cageContainer.style.marginRight = "15vw";
       hitboxSlotWorld.style.marginRight = "15vw";
       wrapper.style.marginRight = "15vw";
-      warpperHitbox.style.marginRight = "15vw";
     }
   }
 
   function removeModifiersMenuActive(e) {
-    if (modifiersContainer.contains(e.relatedTarget)) {
+  /*  if (modifiersContainer.contains(e.relatedTarget)) {
       // El evento está dentro de modifiersContainer o de sus hijos
       return;
   }
@@ -4120,19 +4123,20 @@ function setNormalPrice(skinContainer, price) {
   if (
       logoutButton.contains(e.relatedTarget) ||
       wrapper.contains(e.relatedTarget) ||
-      warpperHitbox.contains(e.relatedTarget) ||
       flechaHitbloxPlusModifiers.contains(e.relatedTarget) ||
       grocery.contains(e.relatedTarget) ||
       store.contains(e.relatedTarget)
   ) {
       return;
-  }
+  }*/
 
 
     flechaaModifiers.classList.remove("active");
     modifiersContainer.classList.remove("active");
     flechaHitbloxPlusModifiers.classList.remove("active");
     menuLabelModifiers.classList.remove("active");
+    flechaHitbloxPlusModifiers2.classList.remove("active");
+    flechaHitbloxPlusModifiers3.classList.remove("active");
 
     if (!modifiersContainer.classList.contains("active")) {
       logoutButton.style.right = "30px";
@@ -4144,7 +4148,6 @@ function setNormalPrice(skinContainer, price) {
       cageContainer.style.marginRight = "0vw";
       hitboxSlotWorld.style.marginRight = "0vw";
       wrapper.style.marginRight = "0vw";
-      warpperHitbox.style.marginRight = "-30vw";
     }
   }
 
@@ -4156,12 +4159,13 @@ function setNormalPrice(skinContainer, price) {
     "mouseenter",
     addModifiersMenuActive
   );
-  flechaHitbloxPlusModifiers.addEventListener(
-    "mouseleave",
+  flechaHitbloxPlusModifiers2.addEventListener(
+    "mouseenter",
     removeModifiersMenuActive
   );
-  warpperHitbox.addEventListener(
-    "mouseleave",
+
+  flechaHitbloxPlusModifiers3.addEventListener(
+    "mouseenter",
     removeModifiersMenuActive
   );
 
