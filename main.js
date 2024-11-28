@@ -98,8 +98,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const wrapper = document.querySelector('.wrapper');
   const hitboxSlotWorld = document.getElementById("hitboxSlotWorld");
   const cageContainer = document.getElementById("cageContainer");
-
-
+  const warpperHitbox = document.getElementById("warpperHitbox");
+  const grocery = document.getElementById("grocery");
+  const store = document.querySelector('.wrapper');
 
 /* BUBBLES */
 let animationFrameId;
@@ -4105,15 +4106,28 @@ function setNormalPrice(skinContainer, price) {
       cageContainer.style.marginRight = "15vw";
       hitboxSlotWorld.style.marginRight = "15vw";
       wrapper.style.marginRight = "15vw";
+      warpperHitbox.style.marginRight = "15vw";
     }
   }
 
   function removeModifiersMenuActive(e) {
-    if ((logoutButton.contains(e.target) ||
-        
-        wrapper.contains(e.target))) {
-      return; // Detener la ejecución si el evento ocurre en esos elementos
-    }//TODO
+    if (modifiersContainer.contains(e.relatedTarget)) {
+      // El evento está dentro de modifiersContainer o de sus hijos
+      return;
+  }
+
+  // Otras condiciones opcionales para otros elementos
+  if (
+      logoutButton.contains(e.relatedTarget) ||
+      wrapper.contains(e.relatedTarget) ||
+      warpperHitbox.contains(e.relatedTarget) ||
+      flechaHitbloxPlusModifiers.contains(e.relatedTarget) ||
+      grocery.contains(e.relatedTarget) ||
+      store.contains(e.relatedTarget)
+  ) {
+      return;
+  }
+
 
     flechaaModifiers.classList.remove("active");
     modifiersContainer.classList.remove("active");
@@ -4130,11 +4144,13 @@ function setNormalPrice(skinContainer, price) {
       cageContainer.style.marginRight = "0vw";
       hitboxSlotWorld.style.marginRight = "0vw";
       wrapper.style.marginRight = "0vw";
+      warpperHitbox.style.marginRight = "-30vw";
     }
   }
 
+
+
   flechaaModifiers.addEventListener("mouseenter", addModifiersMenuActive);
-  flechaaModifiers.addEventListener("mouseleave", removeModifiersMenuActive);
   modifiersContainer.addEventListener("mouseenter", addModifiersMenuActive);
   flechaHitbloxPlusModifiers.addEventListener(
     "mouseenter",
@@ -4142,11 +4158,14 @@ function setNormalPrice(skinContainer, price) {
   );
   flechaHitbloxPlusModifiers.addEventListener(
     "mouseleave",
-    removeModifiersMenuActive(e)
+    removeModifiersMenuActive
   );
-  menuLabelModifiers.addEventListener("mouseenter", addModifiersMenuActive);
-  menuLabelModifiers.addEventListener("mouseleave", removeModifiersMenuActive);
+  warpperHitbox.addEventListener(
+    "mouseleave",
+    removeModifiersMenuActive
+  );
 
+    
   /* FILTRO UNDERWATER */
 
   const turbulence = document.getElementById("turbulence");
