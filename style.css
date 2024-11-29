@@ -4574,19 +4574,93 @@ canvas {
   bottom: 0;
   z-index: 200;
   -webkit-user-drag: none;
+}
+
+#store{
   z-index: 20;
 }
 
-.tendero{
-  position: absolute;
-  width: 15.5vh;
-  height: auto;
-  bottom: 0;
-  left: 14vh;
-  z-index: 200;
-  -webkit-user-drag: none;
+
+.storeShadow{
+  opacity: 40%;
 }
 
-.tenderoBody{
+#storeShadow{
+  z-index: 20;
+}
+
+#singShadow{
+  z-index: 21;
+}
+
+#tenderoHeadShadow{
+  z-index: 23;
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+}
+
+.tenderoHeadShadowMask1{
+  mask: url("img/hamster/tendero/head/head1.png");
+}
+
+.tenderoHeadShadowMask2{
+  mask: url("img/hamster/tendero/head/head2.png");
+}
+
+.tenderoHeadShadowMask3{
+  mask: url("img/hamster/tendero/head/head3.png");
+}
+
+.tenderoHeadShadowMask4{
+  mask: url("img/hamster/tendero/head/head4.png");
+}
+
+.tenderoHeadShadowMask5{
+  mask: url("img/hamster/tendero/head/head5.png");
+}
+
+.tenderoHeadShadowMask6{
+  mask: url("img/hamster/tendero/head/head6.png");
+}
+
+.tenderoHeadShadowMask7{
+  mask: url("img/hamster/tendero/head/head7.png");
+}
+
+#tenderoBodyShadow{
+  z-index: 23;
+  mask: url("img/hamster/tendero/body.png");
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+}
+
+
+
+#tenderoBody{
   z-index: 19;
+}
+
+#tenderoHead{
+  z-index: 20;
+  filter: saturate(75%);
+}
+
+#tenderoHeadHitbox{
+  position: absolute;
+  width: 1vh;
+  height: 100vh;
+  bottom: 0;
+  right: 13vh;
+  z-index: -1;
+  /*background-color: purple;*/ 
+}
+
+#tenderoCesta{
+  z-index: 22;
+}
+
+#grocerySing{
+  z-index: 20;
 }

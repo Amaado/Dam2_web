@@ -4099,6 +4099,8 @@ function setNormalPrice(skinContainer, price) {
     menuLabelModifiers.classList.add("active");
     flechaHitbloxPlusModifiers2.classList.add("active");
     flechaHitbloxPlusModifiers3.classList.add("active");
+    activateMouseListenerTendero();
+    startCestaFrameAnimation();
 
     if (modifiersContainer.classList.contains("active")) {
       logoutButton.style.right = "16vw";
@@ -4137,6 +4139,8 @@ function setNormalPrice(skinContainer, price) {
     menuLabelModifiers.classList.remove("active");
     flechaHitbloxPlusModifiers2.classList.remove("active");
     flechaHitbloxPlusModifiers3.classList.remove("active");
+    deactivateMouseListenerTendero();
+    stopRandomCycle();
 
     if (!modifiersContainer.classList.contains("active")) {
       logoutButton.style.right = "30px";
@@ -6704,6 +6708,181 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
+
+
+/* TENDERO HEAD ANIMATIONS */
+
+const tenderoHead = document.getElementById('tenderoHead');
+const tenderoHeadHitbox = document.getElementById('tenderoHeadHitbox');
+const tenderoHeadShadow = document.getElementById('tenderoHeadShadow');
+
+function mouseMoveListenerTenderoHead(event) {
+    const mouseX = event.clientX; // Posición del cursor en el eje X
+    const tenderoRect = tenderoHeadHitbox.getBoundingClientRect(); // Posición y tamaño del hitbox
+    
+    // Calculamos la distancia relativa al centro del hitbox
+    const tenderoCenterX = tenderoRect.left + tenderoRect.width / 2; // Centro del hitbox en el eje X
+    const distanceX = mouseX - tenderoCenterX; // Distancia relativa (negativa si está a la izquierda)
+
+    function updateMaskClass(element, newClass) {
+      const regex = /^tenderoHeadShadowMask/; // Busca clases que empiecen por tenderoHeadShadowMask
+      const currentClasses = element.className.split(" ");
+      const filteredClasses = currentClasses.filter(cls => !regex.test(cls)); // Elimina clases coincidentes
+      filteredClasses.push(newClass); // Añade la nueva clase
+      element.className = filteredClasses.join(" "); // Asigna las clases actualizadas
+  }
+  
+  if (distanceX > -10 && distanceX < 10) { // Muy cerca (entre -10 y 10)
+      tenderoHead.src = "img/hamster/tendero/head/head4.png";
+      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask4");
+  } else if (distanceX >= 10 && distanceX < 50) { // A la derecha (10 a 50)
+      tenderoHead.src = "img/hamster/tendero/head/head5.png";
+      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask5");
+  } else if (distanceX > -50 && distanceX <= -10) { // A la izquierda (-50 a -10)
+      tenderoHead.src = "img/hamster/tendero/head/head3.png";
+      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask3");
+  } else if (distanceX >= 50 && distanceX < 100) { // Más a la derecha (50 a 100)
+      tenderoHead.src = "img/hamster/tendero/head/head6.png";
+      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask6");
+  } else if (distanceX > -100 && distanceX <= -50) { // Más a la izquierda (-100 a -50)
+      tenderoHead.src = "img/hamster/tendero/head/head2.png";
+      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask2");
+  } else if (distanceX >= 100) { // Muy a la derecha (100+)
+      tenderoHead.src = "img/hamster/tendero/head/head7.png";
+      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask7");
+  } else if (distanceX <= -100) { // Muy a la izquierda (-100 o menos)
+      tenderoHead.src = "img/hamster/tendero/head/head1.png";
+      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask1");
+  }
+}
+
+function activateMouseListenerTendero() {
+    document.addEventListener("mousemove", mouseMoveListenerTenderoHead);
+}
+
+function deactivateMouseListenerTendero() {
+    document.removeEventListener("mousemove", mouseMoveListenerTenderoHead);
+}
+
+
+
+
+
+/* TENDERO CESTA ANIMATIONS */
+const tenderoCesta = document.getElementById('tenderoCesta');
+
+let tenderoCestaAnimationActive = false; // Control de la animación visual
+let randomCycleActive = false; // Control del ciclo lógico
+let tenderoCestaRandomTimeout; // Referencia al timeout del ciclo
+let tenderoCestaFrameTimeout; // Referencia al timeout de los frames
+let currentFrameIndex = 0; // Índice del frame actual
+
+// Patrones de animación disponibles
+const cycles = [
+    [ // Ciclo 1: 1 -> 2 -> 3 -> 2 -> 1
+        "img/hamster/tendero/cesta/cesta1.png",
+        "img/hamster/tendero/cesta/cesta2.png",
+        "img/hamster/tendero/cesta/cesta3.png",
+        "img/hamster/tendero/cesta/cesta2.png",
+        "img/hamster/tendero/cesta/cesta1.png"
+    ],
+    [ // Ciclo 2: 1 -> 2 -> 1
+        "img/hamster/tendero/cesta/cesta1.png",
+        "img/hamster/tendero/cesta/cesta2.png",
+        "img/hamster/tendero/cesta/cesta1.png"
+    ]
+];
+
+let currentCycle = cycles[0]; // Patrón inicial
+
+// Velocidad constante de cambio de frames (en milisegundos)
+let frameSpeed = 300;
+
+// Tiempo aleatorio entre ciclos (mínimo y máximo en milisegundos)
+const minCycleDelay = 2000;
+const maxCycleDelay = 7000;
+
+function generateRandomDelay() {
+    return Math.random() * (maxCycleDelay - minCycleDelay) + minCycleDelay;
+}
+
+// Selecciona un ciclo al azar
+function selectRandomCycle() {
+    const randomIndex = Math.floor(Math.random() * cycles.length);
+    currentCycle = cycles[randomIndex];
+    console.log("Ciclo seleccionado:", currentCycle);
+}
+
+function playFrameAnimation(callback) {
+    if (currentFrameIndex < currentCycle.length) {
+        if (tenderoCestaAnimationActive && currentCycle[currentFrameIndex]) {
+            tenderoCesta.src = currentCycle[currentFrameIndex]; // Cambia al frame actual si no está vacío
+        } else if (!currentCycle[currentFrameIndex]) {
+            tenderoCesta.src = ""; // Frame vacío
+        }
+
+        if(currentFrameIndex == 2){
+          frameSpeed=600;
+        }else{
+          frameSpeed=300;
+        }
+        console.log(`Frame actual: ${currentCycle[currentFrameIndex]}, frameSpeed: ${frameSpeed}`);
+        currentFrameIndex++; // Avanza al siguiente frame
+
+        tenderoCestaFrameTimeout = setTimeout(() => {
+            playFrameAnimation(callback); // Llama al siguiente frame
+        }, frameSpeed); // Usa el frameSpeed actualizado
+    } else {
+        currentFrameIndex = 0; // Reinicia el índice de frames
+        if (typeof callback === "function") callback(); // Llama al callback al completar el ciclo
+    }
+}
+
+function startCestaFrameAnimation() {
+    if (!tenderoCestaAnimationActive) {
+        tenderoCestaAnimationActive = true;
+        console.log("Animación activada.");
+        playFrameAnimation(() => {
+            console.log("Ciclo de animación completado.");
+        });
+    }
+}
+
+function startRandomCycle() {
+  if (!randomCycleActive) {
+      randomCycleActive = true;
+
+      function initiateCycle() {
+          selectRandomCycle(); // Selecciona un nuevo patrón al inicio de cada ciclo
+          if (tenderoCestaAnimationActive) {
+              playFrameAnimation(() => {
+                  console.log("Ciclo completo.");
+              });
+          }
+
+          // Programa el próximo ciclo aleatorio
+          tenderoCestaRandomTimeout = setTimeout(initiateCycle, generateRandomDelay());
+      }
+
+      // Espera un retraso inicial antes de iniciar el primer ciclo
+      const initialDelay = generateRandomDelay();
+      console.log(`Primer ciclo retrasado por: ${initialDelay} ms`);
+      tenderoCestaRandomTimeout = setTimeout(initiateCycle, initialDelay);
+  }
+}
+
+function stopRandomCycle() {
+    if (randomCycleActive) {
+        randomCycleActive = false;
+        clearTimeout(tenderoCestaFrameTimeout); // Detiene la animación actual
+        currentFrameIndex = 0; // Reinicia el índice del frame
+        tenderoCestaAnimationActive = false; // Desactiva la animación visual
+        console.log("Ciclos detenidos.");
+    }
+}
+
+startRandomCycle();
 
 
 });
