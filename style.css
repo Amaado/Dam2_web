@@ -2774,6 +2774,18 @@ div.img img {
   pointer-events: none;
 }
 
+#notebookContainerLogo {
+  position: absolute;
+  display: block;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 335px;
+  height: 100vh;
+  right: 50vw;
+  pointer-events: none;
+}
+
 #notebook {
   position: absolute !important;
   flex-direction: row;
@@ -4663,4 +4675,27 @@ canvas {
 
 #grocerySing{
   z-index: 20;
+}
+
+
+
+/* CONTEX MENU */
+.custom-context-menu {
+  position: absolute;
+  background-color: #1c2128;
+  border: 1px solid #bfd4e9;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: block;
+  list-style: none;
+  padding: 5px 0;
+  margin: 0;
+}
+.custom-context-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.custom-context-menu li:hover {
+  background-color: #bfd4e96b;
 }
