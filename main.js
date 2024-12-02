@@ -102,7 +102,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const store = document.querySelector('.wrapper');
   const flechaHitbloxPlusModifiers2 = document.getElementById("flechaHitbloxPlusModifiers2");
   const flechaHitbloxPlusModifiers3 = document.getElementById("flechaHitbloxPlusModifiers3");
-
+  const gorceryContextMenu = document.getElementById('gorceryContextMenu');
+  const gorceryHiboxAreaContextMenu = document.getElementById('grocery');
+  const modifiersSettingsContextMenu = document.getElementById('modifiersSettingsContextMenu');
+  const modifiersSettingsHiboxAreaContextMenu = document.getElementById('modifiersSettings');
 
 /* BUBBLES */
 let animationFrameId;
@@ -681,6 +684,7 @@ function updateBubbles() {
       controls.style.color = "#71604E";
       menuLabelSkins.style.color = "#313842";
       menuLabelModifiers.style.color = "#313842";
+      modifiersSettingsHiboxAreaContextMenu.className = "day";
 
     } else {
       // Dark theme
@@ -733,6 +737,7 @@ function updateBubbles() {
       controls.style.color = "#bfd4e9";
       menuLabelSkins.style.color = "#bfd4e9";
       menuLabelModifiers.style.color = "#bfd4e9";
+      modifiersSettingsHiboxAreaContextMenu.className = "night";
     }
 
     ajustesColorLoginYregister(checkbox);
@@ -4141,6 +4146,9 @@ function setNormalPrice(skinContainer, price) {
     flechaHitbloxPlusModifiers3.classList.remove("active");
     deactivateMouseListenerTendero();
     stopRandomCycle();
+    gorceryContextMenu.style.display = 'none';
+    modifiersSettingsContextMenu.style.display = 'none';
+
 
     if (!modifiersContainer.classList.contains("active")) {
       logoutButton.style.right = "30px";
@@ -6201,8 +6209,103 @@ let originalX = 0;
 let originalY = 0;
 let originalParent = null;
 
-let checkboxTooltipsNamesShown = true;
-let checkboxTooltipsStatesShown = true;
+// Variables globales para controlar la visibilidad de las tooltips
+let checkboxTooltipsNamesShown = false;
+let checkboxTooltipsStatesShown = false;
+
+// Función para cargar los valores desde localStorage
+function loadTooltipSettings() {
+  // Cargar los valores del localStorage o usar los valores predeterminados (false)
+  const savedNamesShown = localStorage.getItem('checkboxTooltipsNamesShown');
+  const savedStatesShown = localStorage.getItem('checkboxTooltipsStatesShown');
+
+  // Si no hay valores guardados en el localStorage, se usan los valores predeterminados (false)
+  checkboxTooltipsNamesShown = savedNamesShown !== null ? JSON.parse(savedNamesShown) : false;
+  checkboxTooltipsStatesShown = savedStatesShown !== null ? JSON.parse(savedStatesShown) : false;
+
+  // Actualizar la visibilidad de los tooltips en base a los valores cargados
+  updateTooltipVisibility();
+  updateContextMenu(); // Actualizar el menú contextual al cargar
+}
+
+// Función para guardar los valores en localStorage
+function saveTooltipSettings() {
+  // Guardar los valores actuales de las variables en el localStorage
+  localStorage.setItem('checkboxTooltipsNamesShown', JSON.stringify(checkboxTooltipsNamesShown));
+  localStorage.setItem('checkboxTooltipsStatesShown', JSON.stringify(checkboxTooltipsStatesShown));
+}
+
+function activarShowTags(){
+  checkboxTooltipsNamesShown = true;
+  saveTooltipSettings(); // Guardar el estado en el localStorage
+  updateTooltipVisibility(); // Actualizar la visibilidad de los tooltips
+}
+
+function desactivarShowTags(){
+  checkboxTooltipsNamesShown = false;
+  saveTooltipSettings(); // Guardar el estado en el localStorage
+  updateTooltipVisibility(); // Actualizar la visibilidad de los tooltips
+}
+
+function activarShowStatsInTags(){
+  checkboxTooltipsStatesShown = true;
+  saveTooltipSettings(); // Guardar el estado en el localStorage
+  updateTooltipVisibility(); // Actualizar la visibilidad de los tooltips
+}
+
+function desactivarShowStatsInTags(){
+  checkboxTooltipsStatesShown = false;
+  saveTooltipSettings(); // Guardar el estado en el localStorage
+  updateTooltipVisibility(); // Actualizar la visibilidad de los tooltips
+}
+
+// Esta función actualiza la visibilidad de los tooltips basados en el estado actual de las variables
+function updateTooltipVisibility(){
+  let hamsterTooltipContainers = document.querySelectorAll(".hamsterTooltipContainer");
+  let sliderHamsterContainers = document.querySelectorAll(".sliderHamsterContainer");
+
+  // Actualizar la visibilidad de las tooltips de los nombres
+  hamsterTooltipContainers.forEach((tooltip) => {
+    if (checkboxTooltipsNamesShown) {
+      tooltip.style.opacity = "1"; // Mostrar el tooltip de nombre
+    } else {
+      tooltip.style.opacity = "0"; // Ocultar el tooltip de nombre
+    }
+  });
+
+  // Actualizar la visibilidad de las tooltips de los estados
+  sliderHamsterContainers.forEach((container) => {
+    if (checkboxTooltipsStatesShown) {
+      container.style.opacity = "1"; // Mostrar el tooltip de estado
+    } else {
+      container.style.opacity = "0"; // Ocultar el tooltip de estado
+    }
+  });
+}
+
+// Función para actualizar el menú contextual
+function updateContextMenu() {
+  const contextMenuItems = document.querySelectorAll('.contextMenu li');
+  
+  contextMenuItems.forEach((item) => {
+    if (item.textContent.includes("Show tags")) {
+      if (checkboxTooltipsNamesShown) {
+        item.textContent = "✔ Show tags"; // Marcamos la opción como activada
+      } else {
+        item.textContent = "Show tags"; // Marcamos la opción como desactivada
+      }
+    }
+    if (item.textContent.includes("Show stats in tags")) {
+      if (checkboxTooltipsStatesShown) {
+        item.textContent = "✔ Show stats in tags"; // Marcamos la opción como activada
+      } else {
+        item.textContent = "Show stats in tags"; // Marcamos la opción como desactivada
+      }
+    }
+  });
+}
+
+
 
 
 function initHamster() { 
@@ -6325,6 +6428,7 @@ window.addEventListener("load", function () {
     }
   });
 
+  loadTooltipSettings();
 });
 
 function showTooltipHamster(hamsterElement){
@@ -6778,7 +6882,6 @@ let tenderoCestaRandomTimeout; // Referencia al timeout del ciclo
 let tenderoCestaFrameTimeout; // Referencia al timeout de los frames
 let currentFrameIndex = 0; // Índice del frame actual
 
-// Patrones de animación disponibles
 const cycles = [
     [ // Ciclo 1: 1 -> 2 -> 3 -> 2 -> 1
         "img/hamster/tendero/cesta/cesta1.png",
@@ -6794,12 +6897,10 @@ const cycles = [
     ]
 ];
 
-let currentCycle = cycles[0]; // Patrón inicial
+let currentCycle = cycles[0]; 
 
-// Velocidad constante de cambio de frames (en milisegundos)
 let frameSpeed = 300;
 
-// Tiempo aleatorio entre ciclos (mínimo y máximo en milisegundos)
 const minCycleDelay = 2000;
 const maxCycleDelay = 7000;
 
@@ -6807,19 +6908,18 @@ function generateRandomDelay() {
     return Math.random() * (maxCycleDelay - minCycleDelay) + minCycleDelay;
 }
 
-// Selecciona un ciclo al azar
 function selectRandomCycle() {
     const randomIndex = Math.floor(Math.random() * cycles.length);
     currentCycle = cycles[randomIndex];
-    console.log("Ciclo seleccionado:", currentCycle);
+    //onsole.log("Ciclo seleccionado:", currentCycle);
 }
 
 function playFrameAnimation(callback) {
     if (currentFrameIndex < currentCycle.length) {
         if (tenderoCestaAnimationActive && currentCycle[currentFrameIndex]) {
-            tenderoCesta.src = currentCycle[currentFrameIndex]; // Cambia al frame actual si no está vacío
+            tenderoCesta.src = currentCycle[currentFrameIndex];
         } else if (!currentCycle[currentFrameIndex]) {
-            tenderoCesta.src = ""; // Frame vacío
+            tenderoCesta.src = "";
         }
 
         if(currentFrameIndex == 2){
@@ -6827,24 +6927,24 @@ function playFrameAnimation(callback) {
         }else{
           frameSpeed=300;
         }
-        console.log(`Frame actual: ${currentCycle[currentFrameIndex]}, frameSpeed: ${frameSpeed}`);
-        currentFrameIndex++; // Avanza al siguiente frame
+        //console.log(`Frame actual: ${currentCycle[currentFrameIndex]}, frameSpeed: ${frameSpeed}`);
+        currentFrameIndex++; 
 
         tenderoCestaFrameTimeout = setTimeout(() => {
-            playFrameAnimation(callback); // Llama al siguiente frame
-        }, frameSpeed); // Usa el frameSpeed actualizado
+            playFrameAnimation(callback);
+        }, frameSpeed);
     } else {
-        currentFrameIndex = 0; // Reinicia el índice de frames
-        if (typeof callback === "function") callback(); // Llama al callback al completar el ciclo
+        currentFrameIndex = 0; 
+        if (typeof callback === "function") callback();
     }
 }
 
 function startCestaFrameAnimation() {
     if (!tenderoCestaAnimationActive) {
         tenderoCestaAnimationActive = true;
-        console.log("Animación activada.");
+        //console.log("Animación activada.");
         playFrameAnimation(() => {
-            console.log("Ciclo de animación completado.");
+            //console.log("Ciclo de animación completado.");
         });
     }
 }
@@ -6854,20 +6954,18 @@ function startRandomCycle() {
       randomCycleActive = true;
 
       function initiateCycle() {
-          selectRandomCycle(); // Selecciona un nuevo patrón al inicio de cada ciclo
+          selectRandomCycle(); 
           if (tenderoCestaAnimationActive) {
               playFrameAnimation(() => {
-                  console.log("Ciclo completo.");
+                  //console.log("Ciclo completo.");
               });
           }
 
-          // Programa el próximo ciclo aleatorio
           tenderoCestaRandomTimeout = setTimeout(initiateCycle, generateRandomDelay());
       }
 
-      // Espera un retraso inicial antes de iniciar el primer ciclo
       const initialDelay = generateRandomDelay();
-      console.log(`Primer ciclo retrasado por: ${initialDelay} ms`);
+      //console.log(`Primer ciclo retrasado por: ${initialDelay} ms`);
       tenderoCestaRandomTimeout = setTimeout(initiateCycle, initialDelay);
   }
 }
@@ -6875,14 +6973,104 @@ function startRandomCycle() {
 function stopRandomCycle() {
     if (randomCycleActive) {
         randomCycleActive = false;
-        clearTimeout(tenderoCestaFrameTimeout); // Detiene la animación actual
-        currentFrameIndex = 0; // Reinicia el índice del frame
-        tenderoCestaAnimationActive = false; // Desactiva la animación visual
-        console.log("Ciclos detenidos.");
+        clearTimeout(tenderoCestaFrameTimeout);
+        currentFrameIndex = 0;
+        tenderoCestaAnimationActive = false; 
+        //console.log("Ciclos detenidos.");
     }
 }
 
 startRandomCycle();
+
+
+
+
+
+
+// Evitar el menú contextual predeterminado en toda la página
+document.addEventListener('contextmenu', (event) => {
+  event.preventDefault();
+});
+
+
+
+/* MENÚ CONTEXTUAL GROCERY */
+const showContextMenuGorcery = (event) => {
+  event.preventDefault(); // Evita el menú contextual predeterminado
+
+  modifiersSettingsContextMenu.style.display = 'none';
+  gorceryContextMenu.style.top = `${event.clientY}px`;
+  gorceryContextMenu.style.left = `${event.clientX}px`;
+  gorceryContextMenu.style.display = 'block';
+};
+
+const showContextMenuModifiersSettings = (event) => {
+event.preventDefault(); // Evita el menú contextual predeterminado
+gorceryContextMenu.style.display = 'none';
+modifiersSettingsContextMenu.style.display = 'block';
+};
+
+// Mostrar el menú para "grocery" con clic derecho
+gorceryHiboxAreaContextMenu.addEventListener('contextmenu', (event) => {
+showContextMenuGorcery(event);
+});
+
+// Mostrar el menú para "modifiersSettings" con clic izquierdo
+modifiersSettingsHiboxAreaContextMenu.addEventListener('click', (event) => {
+console.log("modifiersSettingsHiboxAreaContextMenu.addEventListener('click'"); 
+showContextMenuModifiersSettings(event);
+});
+
+// Ocultar los menús cuando se hace clic en cualquier lugar de la página
+document.addEventListener('click', (event) => {
+  // Verificar si el clic ocurrió dentro de modifiersSettingsHiboxAreaContextMenu
+  if (modifiersSettingsHiboxAreaContextMenu.contains(event.target)) {
+    gorceryContextMenu.style.display = 'none';
+    return;
+  }
+
+  // Si el clic no es dentro de modifiersSettings, ocultamos los menús
+  gorceryContextMenu.style.display = 'none';
+  modifiersSettingsContextMenu.style.display = 'none';
+});
+
+// Manejar clics en las opciones de los menús
+gorceryContextMenu.addEventListener('click', (event) => {
+  if (event.target.tagName === 'LI') {
+      if(event.target.textContent){
+
+      }
+      gorceryContextMenu.style.display = 'none';
+  }
+});
+
+modifiersSettingsContextMenu.addEventListener('click', (event) => {
+    if (event.target.tagName === 'LI') {
+      if(event.target.textContent.includes("stats")){
+        // Opción 2
+        if(event.target.textContent.includes("✔ ")){
+          event.target.textContent = "Show stats in tags";
+          desactivarShowStatsInTags();
+        } else {
+          event.target.textContent = "✔ Show stats in tags";
+          activarShowStatsInTags();
+        }
+      } else {
+        // Opción 1
+        if(event.target.textContent.includes("✔ ")){
+          event.target.textContent = "Show tags";
+          desactivarShowTags();
+        } else {
+          event.target.textContent = "✔ Show tags";
+          activarShowTags();
+        }
+      }
+      modifiersSettingsContextMenu.style.display = 'none'; // Ocultar el menú contextual
+    }
+});
+
+
+
 
 
 });

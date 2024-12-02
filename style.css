@@ -3647,11 +3647,24 @@ div.img img {
 }
 
 
+#notebookContainerLogo {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 335px;
+  height: 100vh;
+  left: 50vw;
+  pointer-events: none;
+}
+
 #notebookLogoVacio{
+  position: absolute;
   width: 22px;
   height: 20px;
   margin-top: 873px;
-  margin-left: 535px;
+  margin-left: -135px;
   transform:  translateY(10px);
 }
 
@@ -3660,7 +3673,7 @@ div.img img {
   width: 22px;
   height: 20px;
   margin-top: 873px;
-  margin-left: 535px;
+  margin-left: -135px;
   transition: opacity 0.2s ease;
   transform:  translateY(10px);
 }
@@ -4680,22 +4693,56 @@ canvas {
 
 
 /* CONTEX MENU */
-.custom-context-menu {
+
+.contextMenu {
   position: absolute;
   background-color: #1c2128;
   border: 1px solid #bfd4e9;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  display: block;
+  display: none;
   list-style: none;
   padding: 5px 0;
   margin: 0;
+  right: 3vh;
 }
-.custom-context-menu li {
+.contextMenu li {
   padding: 8px 12px;
-  cursor: pointer;
 }
-.custom-context-menu li:hover {
+.contextMenu li:hover {
   background-color: #bfd4e96b;
+}
+
+#modifiersSettingsCont{
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: auto;
+  pointer-events: all;
+  top: -5px;
+  justify-content:  right;
+}
+
+#modifiersSettings{
+  position: relative;
+  width: 25px;
+  height: auto;
+  pointer-events: all;
+  right: 3vh;
+}
+
+#modifiersSettings.day{
+  filter: brightness(0) saturate(100%) invert(18%) sepia(16%) saturate(607%) hue-rotate(176deg) brightness(96%) contrast(90%);
+}
+
+#modifiersSettings.night{
+  filter: brightness(0) saturate(100%) invert(91%) sepia(12%) saturate(5479%) hue-rotate(183deg) brightness(113%) contrast(83%);
+}
+
+#modifiersSettingsContextMenu{
+  position: absolute;
+  top:200px;
+  left: 50px;
+  display: flex;
 }
