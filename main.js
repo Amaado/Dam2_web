@@ -7073,4 +7073,60 @@ modifiersSettingsContextMenu.addEventListener('click', (event) => {
 
 
 
+function initTenderoRotate() {
+  tenderoHead.style.display = "none";
+  tenderoCesta.style.display = "none";
+  
+  const images = [
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight1.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight2.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight3.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight4.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight5.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight6.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight1.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight2.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight3.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight4.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight5.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight6.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight7.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight8.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight9.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight10.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight11.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight12.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight13.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight14.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight15.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight16.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight17.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight18.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight19.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight20.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight21.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight22.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight23.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight24.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight25.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight26.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight27.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight28.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight29.png',
+    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight30.png'
+  ];
+  
+  let tenderoIndex = 0;
+
+  setInterval(() => {
+    tenderoBody.src = images[tenderoIndex];
+    tenderoIndex = (tenderoIndex + 1) % images.length; // Resetea al 0 cuando llegue al final
+  }, 100);
+}
+
+initTenderoRotate();
+
+
+
+
 });
