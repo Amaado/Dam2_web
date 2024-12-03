@@ -4602,7 +4602,7 @@ canvas {
 }
 
 #tender{
-  filter: drop-shadow(10px 15px 0 rgba(0, 0, 0, 0.548));
+  filter: drop-shadow(10px 15px 0 #121418b6);
 }
 
 #tenderoBody{
@@ -4632,7 +4632,8 @@ canvas {
 }
 
 #grocerySing{
-  z-index: 18;
+  z-index: -1;
+  filter: drop-shadow(10px 15px 0 #121418);
 }
 
 
