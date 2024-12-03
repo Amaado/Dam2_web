@@ -6829,35 +6829,21 @@ function mouseMoveListenerTenderoHead(event) {
     const tenderoCenterX = tenderoRect.left + tenderoRect.width / 2; // Centro del hitbox en el eje X
     const distanceX = mouseX - tenderoCenterX; // Distancia relativa (negativa si está a la izquierda)
 
-    function updateMaskClass(element, newClass) {
-      const regex = /^tenderoHeadShadowMask/; // Busca clases que empiecen por tenderoHeadShadowMask
-      const currentClasses = element.className.split(" ");
-      const filteredClasses = currentClasses.filter(cls => !regex.test(cls)); // Elimina clases coincidentes
-      filteredClasses.push(newClass); // Añade la nueva clase
-      element.className = filteredClasses.join(" "); // Asigna las clases actualizadas
-  }
   
   if (distanceX > -10 && distanceX < 10) { // Muy cerca (entre -10 y 10)
       tenderoHead.src = "img/hamster/tendero/head/head4.png";
-      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask4");
   } else if (distanceX >= 10 && distanceX < 50) { // A la derecha (10 a 50)
       tenderoHead.src = "img/hamster/tendero/head/head5.png";
-      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask5");
   } else if (distanceX > -50 && distanceX <= -10) { // A la izquierda (-50 a -10)
       tenderoHead.src = "img/hamster/tendero/head/head3.png";
-      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask3");
   } else if (distanceX >= 50 && distanceX < 100) { // Más a la derecha (50 a 100)
       tenderoHead.src = "img/hamster/tendero/head/head6.png";
-      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask6");
   } else if (distanceX > -100 && distanceX <= -50) { // Más a la izquierda (-100 a -50)
       tenderoHead.src = "img/hamster/tendero/head/head2.png";
-      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask2");
   } else if (distanceX >= 100) { // Muy a la derecha (100+)
       tenderoHead.src = "img/hamster/tendero/head/head7.png";
-      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask7");
   } else if (distanceX <= -100) { // Muy a la izquierda (-100 o menos)
       tenderoHead.src = "img/hamster/tendero/head/head1.png";
-      updateMaskClass(tenderoHeadShadow, "tenderoHeadShadowMask1");
   }
 }
 
@@ -7037,10 +7023,13 @@ document.addEventListener('click', (event) => {
 // Manejar clics en las opciones de los menús
 gorceryContextMenu.addEventListener('click', (event) => {
   if (event.target.tagName === 'LI') {
-      if(event.target.textContent){
+      gorceryContextMenu.style.display = 'none';
+      if(event.target.textContent.includes("Move")){
+        moveAndInitTendero();
+      }else{
 
       }
-      gorceryContextMenu.style.display = 'none';
+      
   }
 });
 
@@ -7071,19 +7060,11 @@ modifiersSettingsContextMenu.addEventListener('click', (event) => {
 
 
 
-
-
-function initTenderoRotate() {
-  tenderoHead.style.display = "none";
+let tenderoMoving = false;
+function moveAndInitTendero() {
   tenderoCesta.style.display = "none";
   
-  const images = [
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight1.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight2.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight3.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight4.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight5.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight6.png',
+  const imagesTenderoCaminandoRight = [
     'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight1.png',
     'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight2.png',
     'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight3.png',
@@ -7115,16 +7096,176 @@ function initTenderoRotate() {
     'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight29.png',
     'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight30.png'
   ];
+
+  const imagesTenderoGirandoRight = [
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight1.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight2.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight3.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight4.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight5.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight6.png'
+  ];
+
+  const imagesTenderoGirandoRightBackwords = [
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight6.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight5.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight4.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight3.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight2.png',
+    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight1.png'
+  ];
+
+  const imagesTenderoCaminandoLeft = [
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft1.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft2.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft3.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft4.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft5.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft6.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft7.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft8.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft9.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft10.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft11.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft12.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft13.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft14.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft15.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft16.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft17.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft18.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft19.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft20.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft21.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft22.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft23.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft24.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft25.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft26.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft27.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft28.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft29.png',
+    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft30.png'
+  ];
+
+  const imagesTenderoGirandoLeft = [
+    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft1.png',
+    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft2.png',
+    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft3.png',
+    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft4.png',
+    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft5.png',
+    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft6.png'
+  ];
+
+  const imagesTenderoGirandoLeftBackwords = [
+    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft6.png',
+    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft5.png',
+    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft4.png',
+    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft3.png',
+    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft2.png',
+    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft1.png'
+  ];
   
-  let tenderoIndex = 0;
 
-  setInterval(() => {
-    tenderoBody.src = images[tenderoIndex];
-    tenderoIndex = (tenderoIndex + 1) % images.length; // Resetea al 0 cuando llegue al final
-  }, 100);
+  // Función para mover el tendero a una posición aleatoria
+  function moveTendero() {
+    if (tenderoMoving) return; // No mover si ya está en movimiento
+    tenderoMoving = true;
+
+    const currentPos = parseInt(tenderoBody.style.marginLeft) || 0; // Obtener la posición actual del tendero
+    const targetPos = Math.floor(Math.random() * 251) - 150; // Posición aleatoria entre -150 y 100
+
+    let moveDirection = 'right'; // Dirección de movimiento predeterminada
+    if (targetPos < currentPos) {
+      moveDirection = 'left'; // Si la posición de destino es menor, se mueve hacia la izquierda
+    }
+
+    let imagesCaminando, imagesGirando, imagesGirandoBackwords, imagesCaminandoMask, imagesGirandoMask, imagesGirandoBackwordsMask;
+
+    // Asignación de imágenes según la dirección de movimiento
+    if (moveDirection === 'right') {
+      imagesCaminando = imagesTenderoCaminandoRight;
+      imagesGirando = imagesTenderoGirandoRight;
+      imagesGirandoBackwords = imagesTenderoGirandoRightBackwords;
+    } else {
+      imagesCaminando = imagesTenderoCaminandoLeft;
+      imagesGirando = imagesTenderoGirandoLeft;
+      imagesGirandoBackwords = imagesTenderoGirandoLeftBackwords;
+    }
+
+    let stepCount = 0;
+
+    // Primero mostrar la animación de giro
+    function rotateHeadInterval() {
+      let headStepCount = 0;
+      let headDirection = moveDirection === 'right' ? 11 : -3;
+
+      let rotateInterval = setInterval(() => {
+        tenderoHead.src = `img/hamster/tendero/head/head${headDirection}.png`;
+        headStepCount++;
+        if (headStepCount === 3) {
+          clearInterval(rotateInterval);
+          moveCaminando(); // Empezar la animación de caminar
+        }
+
+        // Ajustar el número en la ruta de la imagen para girar
+        headDirection = moveDirection === 'right' ? headDirection + 1 : headDirection - 1;
+      }, 100);
+    }
+
+    
+    // Primero mostrar la animación de giro
+    let rotateInterval = setInterval(() => {
+      tenderoHead.style.display = "none";
+      tenderoBody.style.display = "block";
+      tenderoBody.src = imagesGirando[stepCount];
+
+      stepCount++;
+      if (stepCount === imagesGirando.length) {
+        clearInterval(rotateInterval);
+        stepCount = 0;
+        moveCaminando(); // Empezar la animación de caminar
+      }
+    }, 100);
+
+    // Función para mover al tendero mientras camina
+    function moveCaminando() {
+      let moveInterval = setInterval(() => {
+        // Ajustar la posición con el movimiento
+        tenderoBody.src = imagesCaminando[stepCount];
+        tenderoBody.style.marginLeft = currentPos + (targetPos - currentPos) * (stepCount / imagesCaminando.length) + "px";
+        tenderoCesta.style.marginLeft = currentPos + (targetPos - currentPos) * (stepCount / imagesCaminando.length) + "px";
+        tenderoHead.style.marginLeft = currentPos + (targetPos - currentPos) * (stepCount / imagesCaminando.length) + "px";
+
+        stepCount++;
+        if (stepCount === imagesCaminando.length) {
+          clearInterval(moveInterval);
+          stepCount = 0;
+          finishMovement(); // Terminar el movimiento y la animación
+        }
+      }, 100);
+    }
+
+    // Finalizar el movimiento con la animación de vuelta
+    function finishMovement() {
+      let reverseStepCount = 0;
+      let reverseInterval = setInterval(() => {
+        tenderoBody.src = imagesGirandoBackwords[reverseStepCount];
+        reverseStepCount++;
+        if (reverseStepCount === imagesGirandoBackwords.length) {
+          clearInterval(reverseInterval);
+          tenderoMoving = false; // Permitir que se mueva nuevamente
+          tenderoHead.style.display = "block";
+        }
+      }, 100);
+    }
+
+
+    
+  }
+
+  moveTendero();
 }
-
-initTenderoRotate();
 
 
 
