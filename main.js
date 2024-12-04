@@ -6819,7 +6819,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 const tenderoHead = document.getElementById('tenderoHead');
 const tenderoHeadHitbox = document.getElementById('tenderoHeadHitbox');
-const tenderoHeadShadow = document.getElementById('tenderoHeadShadow');
 
 function mouseMoveListenerTenderoHead(event) {
     const mouseX = event.clientX; // Posición del cursor en el eje X
@@ -6828,6 +6827,7 @@ function mouseMoveListenerTenderoHead(event) {
     // Calculamos la distancia relativa al centro del hitbox
     const tenderoCenterX = tenderoRect.left + tenderoRect.width / 2; // Centro del hitbox en el eje X
     const distanceX = mouseX - tenderoCenterX; // Distancia relativa (negativa si está a la izquierda)
+    //console.log("Distancia relativa a hitbox: "+distanceX);
 
   
   if (distanceX > -10 && distanceX < 10) { // Muy cerca (entre -10 y 10)
@@ -7172,11 +7172,12 @@ function moveAndInitTendero() {
     if (tenderoMoving) return; // No mover si ya está en movimiento
     tenderoMoving = true;
 
-    const currentPos = parseInt(tenderoBody.style.marginLeft) || 0; // Obtener la posición actual del tendero
-    const targetPos = Math.floor(Math.random() * 251) - 150; // Posición aleatoria entre -150 y 100
+    // Obtener la posición actual del tendero en vh
+    const currentPosVh = parseInt(tenderoBody.style.marginLeft) || 0; // Posición en vh
+    const targetPosVh = Math.floor(Math.random() * 22) - 12; // Posición aleatoria entre -12vh y 10vh
 
     let moveDirection = 'right'; // Dirección de movimiento predeterminada
-    if (targetPos < currentPos) {
+    if (targetPosVh < currentPosVh) {
       moveDirection = 'left'; // Si la posición de destino es menor, se mueve hacia la izquierda
     }
 
@@ -7233,9 +7234,14 @@ function moveAndInitTendero() {
       let moveInterval = setInterval(() => {
         // Ajustar la posición con el movimiento
         tenderoBody.src = imagesCaminando[stepCount];
-        tenderoBody.style.marginLeft = currentPos + (targetPos - currentPos) * (stepCount / imagesCaminando.length) + "px";
-        tenderoCesta.style.marginLeft = currentPos + (targetPos - currentPos) * (stepCount / imagesCaminando.length) + "px";
-        tenderoHead.style.marginLeft = currentPos + (targetPos - currentPos) * (stepCount / imagesCaminando.length) + "px";
+
+        // Calcular el nuevo valor de margin-left en vh
+        const newMarginVh = currentPosVh + (targetPosVh - currentPosVh) * (stepCount / imagesCaminando.length);
+        tenderoBody.style.marginLeft = newMarginVh + "vh";
+        tenderoCesta.style.marginLeft = newMarginVh + "vh";
+        tenderoHead.style.marginLeft = newMarginVh + "vh";
+        /*let currentRightTenderoHeadHitbox = parseInt(tenderoHeadHitbox.style.right) || 0;
+        tenderoHeadHitbox.style.right = (currentRightTenderoHeadHitbox - newMarginVh) + "vh !important";*/
 
         stepCount++;
         if (stepCount === imagesCaminando.length) {
