@@ -4633,7 +4633,7 @@ canvas {
 
 #grocerySing{
   z-index: -1;
-  filter: drop-shadow(1vh 1.5vh 0 #121418);
+  filter: drop-shadow(1vh 1.5vh 0 hsla(220, 14%, 8%, 0.731));
 }
 
 
@@ -4646,7 +4646,7 @@ canvas {
   bottom: 0;
   right: 13vh;
   z-index: 1;
-  background-color: purple;/**/ 
+  /*background-color: purple;*/ 
 }
 
 

@@ -7240,8 +7240,7 @@ function moveAndInitTendero() {
         tenderoBody.style.marginLeft = newMarginVh + "vh";
         tenderoCesta.style.marginLeft = newMarginVh + "vh";
         tenderoHead.style.marginLeft = newMarginVh + "vh";
-        /*let currentRightTenderoHeadHitbox = parseInt(tenderoHeadHitbox.style.right) || 0;
-        tenderoHeadHitbox.style.right = (currentRightTenderoHeadHitbox - newMarginVh) + "vh !important";*/
+        tenderoHeadHitbox.style.right = (13 - newMarginVh) + "vh";
 
         stepCount++;
         if (stepCount === imagesCaminando.length) {
