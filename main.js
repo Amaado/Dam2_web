@@ -6665,13 +6665,40 @@ function stopDragHamster(e) {
     ) {
       droppedInHitbox = true;
 
+      // Calcular la posición del hámster relativa al hitbox
+      const offsetX = e.clientX - hitboxRect.left;
+      const offsetY = e.clientY - hitboxRect.top;
+
+
       // Si es el contenedor especial `hitboxSlotWeel`
       if (hitbox.id === 'hitboxSlotWeel') {
         handleWheelContainer();
+        hitboxSlotWeelLogic(currentHamster);
         resetDragVariables();
         modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
         return;
       }
+
+      if (hitbox.id === 'hitboxSlotWorld') {
+        hitboxSlotWorldLogic(currentHamster, offsetX, offsetY, hitbox);
+        cloneHamsterToContainer(hitbox);
+        resetDragVariables();
+        return;
+      }
+
+      if (hitbox.id === 'hitboxSlotUpLeft') {
+        hitboxSlotUpLeftLogic(currentHamster, offsetX, offsetY, hitbox);
+      }
+
+      if (hitbox.id === 'hitboxSlotUpRight') {
+        hitboxSlotUpRightLogic(currentHamster, offsetX, offsetY, hitbox);
+      }
+
+      if (hitbox.id === 'hitboxSlotDown') {
+        hitboxSlotDownLogic(currentHamster, offsetX, offsetY, hitbox);
+      }
+
+
 
       // Para otros hitboxes, verificar si ya están ocupados
       const hamstersInHitbox = Array.from(hitbox.querySelectorAll('.hamster')).filter(h => h !== currentHamster);
@@ -6703,6 +6730,47 @@ function stopDragHamster(e) {
   resetDragVariables();
 }
 
+function hitboxSlotWeelLogic(currentHamster){
+  currentHamster.style.bottom = "0px";
+  currentHamster.style.right = "0px";
+}
+
+function hitboxSlotWorldLogic(currentHamster, offsetX, offsetY, hitbox){
+  currentHamster.style.bottom = "0px";
+  posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox);
+}
+
+function hitboxSlotUpLeftLogic(currentHamster, offsetX, offsetY, hitbox){
+  currentHamster.style.bottom = "13px";
+  posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox);
+}
+
+function hitboxSlotUpRightLogic(currentHamster, offsetX, offsetY, hitbox){
+  currentHamster.style.bottom = "13px";
+  posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox);
+}
+
+function hitboxSlotDownLogic(currentHamster, offsetX, offsetY, hitbox){
+  currentHamster.style.bottom = "30px";
+  posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox);
+}
+
+function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
+  // Obtener las dimensiones del hitbox
+  const hitboxWidth = hitbox.offsetWidth;
+  const hitboxHeight = hitbox.offsetHeight;
+
+  // Calcular las posiciones en porcentaje desde el borde derecho e inferior
+  const rightPercentage = ((hitboxWidth - offsetX) / hitboxWidth) * 100;
+  const bottomPercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
+
+  console.log(bottomPercentage);
+
+  currentHamster.style.right = `${rightPercentage}%`;
+  currentHamster.style.bottom = `${bottomPercentage}%`;
+}
+
+
 // Función específica para manejar el contenedor especial `wheel`
 function handleWheelContainer() {
   const wheel = document.querySelector('.wheel');
@@ -6728,6 +6796,7 @@ function handleWheelContainer() {
   clonedHamster.style.position = '';
   clonedHamster.style.left = '';
   clonedHamster.style.top = '';
+  clonedHamster.style.bottom = '';
   clonedHamster.style.transform = '';
   clonedHamster.style.zIndex = '';
 
@@ -6750,10 +6819,11 @@ function cloneHamsterToContainer(container) {
 
   // Ajustar el hámster para el contenedor
   clonedHamster.style.position = 'absolute';
+  clonedHamster.style.zIndex = '';
   clonedHamster.style.left = '';
   clonedHamster.style.top = '';
   clonedHamster.style.transform = '';
-  clonedHamster.style.zIndex = '';
+
 
   // Remover el hámster original
   currentHamster.remove();

@@ -537,123 +537,8 @@ nav a:hover {
   font-family: "register";
   white-space: nowrap;
   overflow: hidden;
-  left: 45px;
   color: #bfd4e9;
 }
-
-
-.formTittle::before {
-  content: '';
-  font-family: inherit;
-  font-size: inherit;
-  white-space: nowrap;
-}
-
-.formTittle.animate.login::before {
-  animation: formTextLogin 2s steps(5, end) forwards;
-}
-
-.formTittle.animate.register::before {
-  animation: formTextRegister 2s steps(8, end) forwards;
-}
-
-.formTittle.animate::after {
-  content: '';
-  font-family: inherit;
-  font-size: inherit;
-  position: absolute;
-  right: 20px;
-  animation: chars 1.9s steps(8, end) forwards;
-  color: #cce1f7;
-  filter: drop-shadow(0 0 3px #bfd4e9);
-}
-
-.formTittle.login.animate::after {
-  bottom: -6px;
-}
-
-.formTittle.register.animate::after {
-  bottom: -4px;
-}
-
-
-@keyframes formTextLogin {
-  0% { content: 'ㅤ'; }
-  20% { content: 'Lㅤ'; }
-  40% { content: 'Loㅤ'; }
-  60% { content: 'Logㅤ'; }
-  80% { content: 'Logiㅤ'; }
-  100% { content: 'Loginㅤ'; }
-}
-
-/* Animación para "Register" */
-@keyframes formTextRegister {
-  0% { content: 'ㅤ'; }
-  12.5% { content: 'Rㅤ'; }
-  25% { content: 'Reㅤ'; }
-  37.5% { content: 'Regㅤ'; }
-  50% { content: 'Regiㅤ'; }
-  62.5% { content: 'Regisㅤ'; }
-  75% { content: 'Registㅤ'; }
-  87.5% { content: 'Registeㅤ'; }
-  100% { content: 'Registerㅤ'; }
-}
-
-
-/* Rotación de caracteres */
-@keyframes chars {
-  0% { content: 'a'; }
-  2% { content: 'M'; }
-  4% { content: 'b'; }
-  6% { content: 'N'; }
-  8% { content: 'c'; }
-  10% { content: 'O'; }
-  12% { content: 'd'; }
-  14% { content: 'P'; }
-  16% { content: 'e'; }
-  18% { content: 'Q'; }
-  20% { content: 'f'; }
-  22% { content: 'R'; }
-  24% { content: 'g'; }
-  26% { content: 'S'; }
-  28% { content: 'h'; }
-  30% { content: 'T'; }
-  32% { content: 'i'; }
-  34% { content: 'U'; }
-  36% { content: 'j'; }
-  38% { content: 'V'; }
-  40% { content: 'k'; }
-  42% { content: 'Z'; }
-  44% { content: 'l'; }
-  46% { content: 'X'; }
-  48% { content: 'm'; }
-  50% { content: 'Y'; }
-  52% { content: 'n'; }
-  54% { content: 'Z'; }
-  56% { content: 'o'; }
-  58% { content: 'A'; }
-  60% { content: 'p'; }
-  62% { content: 'B'; }
-  64% { content: 'q'; }
-  66% { content: 'C'; }
-  68% { content: 'r'; }
-  70% { content: 'D'; }
-  72% { content: 's'; }
-  74% { content: 'E'; }
-  76% { content: 't'; }
-  78% { content: 'F'; }
-  80% { content: 'u'; }
-  82% { content: 'G'; }
-  84% { content: 'v'; }
-  86% { content: 'H'; }
-  88% { content: 'Z'; }
-  90% { content: 'I'; }
-  92% { content: 'x'; }
-  94% { content: 'J'; }
-  96% { content: 'y'; }
-  98% { content: 'K'; }
-}
-
 
 .formContainer {
   position: relative;
@@ -4193,8 +4078,8 @@ canvas {
 
 #hitboxSlotWorld{
   top: 0px;
-  right: 430px;
-  width: 80dvw;
+  left: 10px;
+  width: calc(100vw - 430px);
   height: 100%;
   transition: margin-right 0.5s ease;
 }
@@ -4213,7 +4098,7 @@ canvas {
   height: 150px;
 }
 
-#hitboxSlotDow{
+#hitboxSlotDown{
   bottom: 9px;
   right: 316px;
   width: 150px;
@@ -4240,7 +4125,7 @@ canvas {
   background-color: hsla(357, 95%, 62%, 0.26);
 }
 
-#hitboxSlotDow{
+#hitboxSlotDown{
   background-color: rgba(0, 0, 255, 0.26);
 }
 
@@ -4704,4 +4589,8 @@ canvas {
   top:200px;
   left: 50px;
   display: none;
+}
+
+#gorceryContextMenu{
+  width: 10vh;
 }
