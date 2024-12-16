@@ -106,6 +106,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const gorceryHiboxAreaContextMenu = document.getElementById('grocery');
   const modifiersSettingsContextMenu = document.getElementById('modifiersSettingsContextMenu');
   const modifiersSettingsHiboxAreaContextMenu = document.getElementById('modifiersSettings');
+  const cestaHibox = document.getElementById('cestaHibox');
+
 
 /* BUBBLES */
 let animationFrameId;
@@ -4105,7 +4107,6 @@ function setNormalPrice(skinContainer, price) {
     flechaHitbloxPlusModifiers2.classList.add("active");
     flechaHitbloxPlusModifiers3.classList.add("active");
     activateMouseListenerTendero();
-    startCestaFrameAnimation();
 
     if (modifiersContainer.classList.contains("active")) {
       logoutButton.style.right = "16vw";
@@ -4117,6 +4118,7 @@ function setNormalPrice(skinContainer, price) {
       cageContainer.style.marginRight = "15vw";
       hitboxSlotWorld.style.marginRight = "15vw";
       wrapper.style.marginRight = "15vw";
+      cestaHibox.style.display = "block";
     }
   }
 
@@ -4145,7 +4147,6 @@ function setNormalPrice(skinContainer, price) {
     flechaHitbloxPlusModifiers2.classList.remove("active");
     flechaHitbloxPlusModifiers3.classList.remove("active");
     deactivateMouseListenerTendero();
-    stopRandomCycle();
     gorceryContextMenu.style.display = 'none';
     modifiersSettingsContextMenu.style.display = 'none';
 
@@ -4160,6 +4161,7 @@ function setNormalPrice(skinContainer, price) {
       cageContainer.style.marginRight = "0vw";
       hitboxSlotWorld.style.marginRight = "0vw";
       wrapper.style.marginRight = "0vw";
+      cestaHibox.style.display = "none";
     }
   }
 
@@ -6673,38 +6675,26 @@ function stopDragHamster(e) {
       // Si es el contenedor especial `hitboxSlotWeel`
       if (hitbox.id === 'hitboxSlotWeel') {
         handleWheelContainer();
-        hitboxSlotWeelLogic(currentHamster);
         resetDragVariables();
         modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
         return;
       }
 
       if (hitbox.id === 'hitboxSlotWorld') {
-        hitboxSlotWorldLogic(currentHamster, offsetX, offsetY, hitbox);
-        cloneHamsterToContainer(hitbox);
+        cloneHamsterToContainer(hitbox, offsetX, offsetY);
         resetDragVariables();
         return;
       }
 
-      if (hitbox.id === 'hitboxSlotUpLeft') {
-        hitboxSlotUpLeftLogic(currentHamster, offsetX, offsetY, hitbox);
-      }
-
-      if (hitbox.id === 'hitboxSlotUpRight') {
-        hitboxSlotUpRightLogic(currentHamster, offsetX, offsetY, hitbox);
-      }
-
-      if (hitbox.id === 'hitboxSlotDown') {
-        hitboxSlotDownLogic(currentHamster, offsetX, offsetY, hitbox);
-      }
-
-
+      //posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox);
 
       // Para otros hitboxes, verificar si ya están ocupados
+      console.log("Para otros hitboxes, verificar si ya están ocupados");
       const hamstersInHitbox = Array.from(hitbox.querySelectorAll('.hamster')).filter(h => h !== currentHamster);
       if (hamstersInHitbox.length > 0) {
         // Si está ocupado, devolver al contenedor original
-        cloneHamsterToContainer(originalParent);
+        console.log("Si está ocupado, devolver al contenedor original");
+        cloneHamsterToContainer(originalParent, offsetX, offsetY);
         resetDragVariables();
         if (originalParent.closest('.wrapper')) {
           modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
@@ -6713,7 +6703,9 @@ function stopDragHamster(e) {
       }
 
       // Clonar el hámster y moverlo al hitbox
-      cloneHamsterToContainer(hitbox);
+      cloneHamsterToContainer(hitbox, offsetX, offsetY);
+      console.log("Clonar el hámster y moverlo al hitbox");
+
       resetDragVariables();
       return;
     }
@@ -6721,7 +6713,9 @@ function stopDragHamster(e) {
 
   if (!droppedInHitbox) {
     // Si no se suelta en ningún hitbox, devolver al contenedor original
-    cloneHamsterToContainer(originalParent);
+    console.log(" Si no se suelta en ningún hitbox, devolver al contenedor original ");
+
+    cloneHamsterToContainer(originalParent, offsetX, offsetY);
     if (originalParent.closest('.wrapper')) {
       modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
     }
@@ -6730,45 +6724,6 @@ function stopDragHamster(e) {
   resetDragVariables();
 }
 
-function hitboxSlotWeelLogic(currentHamster){
-  currentHamster.style.bottom = "0px";
-  currentHamster.style.right = "0px";
-}
-
-function hitboxSlotWorldLogic(currentHamster, offsetX, offsetY, hitbox){
-  currentHamster.style.bottom = "0px";
-  posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox);
-}
-
-function hitboxSlotUpLeftLogic(currentHamster, offsetX, offsetY, hitbox){
-  currentHamster.style.bottom = "13px";
-  posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox);
-}
-
-function hitboxSlotUpRightLogic(currentHamster, offsetX, offsetY, hitbox){
-  currentHamster.style.bottom = "13px";
-  posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox);
-}
-
-function hitboxSlotDownLogic(currentHamster, offsetX, offsetY, hitbox){
-  currentHamster.style.bottom = "30px";
-  posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox);
-}
-
-function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
-  // Obtener las dimensiones del hitbox
-  const hitboxWidth = hitbox.offsetWidth;
-  const hitboxHeight = hitbox.offsetHeight;
-
-  // Calcular las posiciones en porcentaje desde el borde derecho e inferior
-  const rightPercentage = ((hitboxWidth - offsetX) / hitboxWidth) * 100;
-  const bottomPercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
-
-  console.log(bottomPercentage);
-
-  currentHamster.style.right = `${rightPercentage}%`;
-  currentHamster.style.bottom = `${bottomPercentage}%`;
-}
 
 
 // Función específica para manejar el contenedor especial `wheel`
@@ -6779,7 +6734,29 @@ function handleWheelContainer() {
   const existingWheelHamster = wheel.querySelector('.hamster');
   if (existingWheelHamster) {
     // Si ya está ocupado, devolver al contenedor original
-    cloneHamsterToContainer(originalParent);
+    if (!container) return;
+
+    const clonedHamster = currentHamster.cloneNode(true);
+
+    // Añadir eventos al hámster clonado
+    addHamsterEventListeners(clonedHamster);
+
+    // Ajustar el hámster para el contenedor
+    clonedHamster.style.position = 'absolute';
+    clonedHamster.style.zIndex = '';
+    clonedHamster.style.left = '';
+    clonedHamster.style.top = '';
+    clonedHamster.style.transform = '';
+
+
+    // Remover el hámster original
+    currentHamster.remove();
+
+    // Agregar el hámster al contenedor
+    container.appendChild(clonedHamster);
+
+    // Configurar imágenes para el hámster clonado
+    setHamster(clonedHamster);
     return;
   }
 
@@ -6808,22 +6785,17 @@ function handleWheelContainer() {
   setHamster(clonedHamster);
 }
 
+
 // Función para clonar el hámster al contenedor especificado
-function cloneHamsterToContainer(container) {
+function cloneHamsterToContainer(container, offsetX, offsetY) {
   if (!container) return;
+
+  isInWheel = false;
 
   const clonedHamster = currentHamster.cloneNode(true);
 
   // Añadir eventos al hámster clonado
   addHamsterEventListeners(clonedHamster);
-
-  // Ajustar el hámster para el contenedor
-  clonedHamster.style.position = 'absolute';
-  clonedHamster.style.zIndex = '';
-  clonedHamster.style.left = '';
-  clonedHamster.style.top = '';
-  clonedHamster.style.transform = '';
-
 
   // Remover el hámster original
   currentHamster.remove();
@@ -6831,8 +6803,51 @@ function cloneHamsterToContainer(container) {
   // Agregar el hámster al contenedor
   container.appendChild(clonedHamster);
 
-  // Configurar imágenes para el hámster clonado
-  setHamster(clonedHamster);
+  // Actualizar el `currentHamster` al clon
+  currentHamster = clonedHamster;
+
+  posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, container);
+}
+
+function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
+  console.log("posicionarHamsterAlDrop");
+  // Obtener las dimensiones del hitbox
+  const hitboxWidth = hitbox.offsetWidth;
+  const hitboxHeight = hitbox.offsetHeight;
+
+  // Calcular las posiciones en porcentaje desde el borde derecho e inferior
+  const rightPercentage = ((hitboxWidth - offsetX) / hitboxWidth) * 100;
+  const bottomPercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
+
+    // Ajustar el hámster para el contenedor
+    currentHamster.style.position = 'absolute';
+    currentHamster.style.zIndex = '';
+    currentHamster.style.left = '';
+    currentHamster.style.top = '';
+    currentHamster.style.transition = 'none'; // Sin transición al principio
+
+    currentHamster.style.right = `${rightPercentage}%`;
+    currentHamster.style.bottom = `${bottomPercentage}%`;
+
+
+    // Configurar la transición después de agregar el clon
+    requestAnimationFrame(() => {
+      currentHamster.style.transition = 'bottom 1s ease-in-out'; // Activar transición
+      currentHamster.style.bottom = '0px';
+      if (hitbox.id === 'hitboxSlotWorld') {
+        currentHamster.style.bottom = '0px';
+      }
+      if (hitbox.id === 'hitboxSlotUpLeft') {
+        currentHamster.style.bottom = '13px';
+      }
+      if (hitbox.id === 'hitboxSlotUpRight') {
+        currentHamster.style.bottom = '13px';
+      }
+      if (hitbox.id === 'hitboxSlotDown') {
+        currentHamster.style.bottom = '30px';
+      }
+    });
+  
 }
 
 // Función para resetear las variables de arrastre
@@ -6931,114 +6946,52 @@ function deactivateMouseListenerTendero() {
 
 /* TENDERO CESTA ANIMATIONS */
 const tenderoCesta = document.getElementById('tenderoCesta');
-
-let tenderoCestaAnimationActive = false; // Control de la animación visual
-let randomCycleActive = false; // Control del ciclo lógico
-let tenderoCestaRandomTimeout; // Referencia al timeout del ciclo
-let tenderoCestaFrameTimeout; // Referencia al timeout de los frames
-let currentFrameIndex = 0; // Índice del frame actual
-
 const cycles = [
-    [ // Ciclo 1: 1 -> 2 -> 3 -> 2 -> 1
-        "img/hamster/tendero/cesta/cesta1.png",
-        "img/hamster/tendero/cesta/cesta2.png",
-        "img/hamster/tendero/cesta/cesta3.png",
-        "img/hamster/tendero/cesta/cesta2.png",
-        "img/hamster/tendero/cesta/cesta1.png"
-    ],
-    [ // Ciclo 2: 1 -> 2 -> 1
-        "img/hamster/tendero/cesta/cesta1.png",
-        "img/hamster/tendero/cesta/cesta2.png",
-        "img/hamster/tendero/cesta/cesta1.png"
-    ]
+    "img/hamster/tendero/cesta/cesta1.png",
+    "img/hamster/tendero/cesta/cesta2.png",
+    "img/hamster/tendero/cesta/cesta3.png",
+    "img/hamster/tendero/cesta/cesta2.png",
+    "img/hamster/tendero/cesta/cesta1.png"
 ];
 
-let currentCycle = cycles[0]; 
-
+let currentFrameIndex = 0;
 let frameSpeed = 300;
 
-const minCycleDelay = 2000;
-const maxCycleDelay = 7000;
-
-function generateRandomDelay() {
-    return Math.random() * (maxCycleDelay - minCycleDelay) + minCycleDelay;
+function changeImage() {
+    tenderoCesta.src = cycles[currentFrameIndex];
+    currentFrameIndex = (currentFrameIndex + 1) % cycles.length; // Reinicia el índice al final del array
+    setTimeout(changeImage, frameSpeed);
 }
 
-function selectRandomCycle() {
-    const randomIndex = Math.floor(Math.random() * cycles.length);
-    currentCycle = cycles[randomIndex];
-    //onsole.log("Ciclo seleccionado:", currentCycle);
-}
+// Iniciar el cambio continuo de imágenes
+changeImage();
 
-function playFrameAnimation(callback) {
-    if (currentFrameIndex < currentCycle.length) {
-        if (tenderoCestaAnimationActive && currentCycle[currentFrameIndex]) {
-            tenderoCesta.src = currentCycle[currentFrameIndex];
-        } else if (!currentCycle[currentFrameIndex]) {
-            tenderoCesta.src = "";
-        }
+cestaHibox.addEventListener("mouseenter", habilitarCesta);
+cestaHibox.addEventListener("mouseleave", deshabilitarCesta);
 
-        if(currentFrameIndex == 2){
-          frameSpeed=600;
-        }else{
-          frameSpeed=300;
-        }
-        //console.log(`Frame actual: ${currentCycle[currentFrameIndex]}, frameSpeed: ${frameSpeed}`);
-        currentFrameIndex++; 
-
-        tenderoCestaFrameTimeout = setTimeout(() => {
-            playFrameAnimation(callback);
-        }, frameSpeed);
-    } else {
-        currentFrameIndex = 0; 
-        if (typeof callback === "function") callback();
+// Función para mostrar la cesta y cambiar la imagen del tendero
+function habilitarCesta() {
+  if (tenderoCesta && tenderoBody) {
+    if(tenderoMoving){
+      return;
     }
-}
-
-function startCestaFrameAnimation() {
-    if (!tenderoCestaAnimationActive) {
-        tenderoCestaAnimationActive = true;
-        //console.log("Animación activada.");
-        playFrameAnimation(() => {
-            //console.log("Ciclo de animación completado.");
-        });
-    }
-}
-
-function startRandomCycle() {
-  if (!randomCycleActive) {
-      randomCycleActive = true;
-
-      function initiateCycle() {
-          selectRandomCycle(); 
-          if (tenderoCestaAnimationActive) {
-              playFrameAnimation(() => {
-                  //console.log("Ciclo completo.");
-              });
-          }
-
-          tenderoCestaRandomTimeout = setTimeout(initiateCycle, generateRandomDelay());
-      }
-
-      const initialDelay = generateRandomDelay();
-      //console.log(`Primer ciclo retrasado por: ${initialDelay} ms`);
-      tenderoCestaRandomTimeout = setTimeout(initiateCycle, initialDelay);
+    tenderoCesta.style.display = "block"; // Muestra la cesta
+    tenderoBody.src = "img/hamster/tendero/body.png"; // Cambia la imagen del tendero
+    console.log("habilitarCesta");
   }
 }
 
-function stopRandomCycle() {
-    if (randomCycleActive) {
-        randomCycleActive = false;
-        clearTimeout(tenderoCestaFrameTimeout);
-        currentFrameIndex = 0;
-        tenderoCestaAnimationActive = false; 
-        //console.log("Ciclos detenidos.");
+// Función para ocultar la cesta y cambiar la imagen del tendero
+function deshabilitarCesta() {
+  if (tenderoCesta && tenderoBody) {
+    if(tenderoMoving){
+      return;
     }
+    tenderoCesta.style.display = "none"; // Oculta la cesta
+    tenderoBody.src = "img/hamster/tendero/girando/right/fin/tenderoGirandoRight1_noHead.png"; // Cambia la imagen del tendero
+    console.log("deshabilitarCesta");
+  }
 }
-
-startRandomCycle();
-
-
 
 
 

@@ -3877,6 +3877,8 @@ canvas {
   padding: 8px;
   margin-bottom: 6px;
   z-index: 99;
+  transition: transform 1s ease-in-out; /* Transición para `transform` */
+  will-change: transform;
 }
 
 .hamster:before {
@@ -4112,7 +4114,7 @@ canvas {
   height: 210px;
 }
 
-/*
+/**/
 #hitboxSlotWorld{
   background-color: rgba(0, 128, 0, 0.044);
 }
@@ -4132,7 +4134,7 @@ canvas {
 #hitboxSlotWeel{
   background-color: rgba(255, 192, 203, 0.26);
 }
-*/
+
 
 .hamsterTooltipContainer{
   position: relative;
@@ -4347,126 +4349,6 @@ canvas {
 
 
 
-/* HAMSTER EATING*/
-/* Solo aplicar estilos al hamster con clase eatingAnim */
-.hamster.eatingAnim.pix, 
-.hamster.eatingAnim.pix:after {
-  --m: 2;
-  position: absolute;
-  width: calc(var(--w) * var(--m));
-  height: calc(var(--h) * var(--m));
-  background-size: 100%;
-  background-repeat: no-repeat;
-  image-rendering: pixelated;
-  background: #14141400;
-}
-
-.hamster.eatingAnim.puff {
-  --w: 15px;
-  --h: 14px;
-  background-image: var(--puff);
-}
-
-.hamster.eatingAnim:before,
-.hamster.eatingAnim:after {
-  position: absolute;
-  content: '';
-}
-
-.hamster.eatingAnim .bum.puff {
-  background-image: var(--puff-before);
-  pointer-events: all;
-}
-
-.hamster.eatingAnim .ear {
-  background-image: var(--ear);
-  --w: 5px;
-  --h: 5px;
-  top: -4px;
-  left: 6px;
-}
-
-.hamster.eatingAnim {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px;
-  margin-bottom: 6px;
-  z-index: 99;
-}
-
-.hamster.eatingAnim:before {
-  background: #141414;
-  width: 3px;
-  height: 4px;
-  left: 5px;
-}
-
-.hamster.eatingAnim.grabAnim:before {
-  outline: 3px solid white;
-}
-
-.hamster.eatingAnim:after {
-  background: #141414;
-  width: 6px;
-  height: 2px;
-  bottom: 7px;
-  left: -3px;
-}
-
-.hamster.eatingAnim.grabAnim:after {
-  width: 5px;
-  border-top: 3px solid #141414;
-}
-
-.hamster.eatingAnim .ear,
-.hamster.eatingAnim:before,
-.hamster.eatingAnim:after {
-  animation: up-down infinite var(--hamster-speed);
-}
-
-.hamster.eatingAnim .head, 
-.hamster.eatingAnim .bum {
-  z-index: -1;
-  top: 0px;
-  animation: squidge var(--hamster-speed) infinite;
-}
-
-.hamster.eatingAnim div:after {
-  background-image: var(--ear-after2);
-  --w: 4px;
-  --h: 6px;
-  bottom: -4px;
-  animation: run var(--hamster-speed) infinite;
-}
-
-.hamster.eatingAnim div:nth-of-type(1):after {
-  background-image: var(--ear-after);
-}
-
-.hamster.eatingAnim .head {
-  left: -5px;
-  --angle: 10deg;
-}
-
-.hamster.eatingAnim .bum {
-  right: -5px;
-  --angle: -10deg;
-  /* filter: invert(1); */
-}
-
-.hamster.eatingAnim .head:after {
-  left: 8px;
-  --run-x: -2px;
-  --angle: 6deg;
-}
-
-.hamster.eatingAnim .bum:after {
-  right: 6px;
-  --run-x: 2px;
-  --angle: -6deg;
-}
 
 #grocery{
   position: absolute;
@@ -4486,6 +4368,18 @@ canvas {
   image-rendering: pixelated; 
 }
 
+#cestaHibox{
+  position: absolute;
+  width: 28vh;
+  height: 8vh;
+  bottom: 5vh;
+  right: 2vh;
+  /*background-color: rgba(0, 128, 0, 0.568);*/
+  z-index: 1200;
+  display: none;
+  pointer-events: all;
+}
+
 #tender{
   filter: drop-shadow(1vh 1.5vh 0 #121418b6);
 }
@@ -4500,7 +4394,7 @@ canvas {
 
 #tenderoCesta{
   z-index: 21;
-
+  display: none;
 }
 
 #tenderoHead{
