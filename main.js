@@ -6674,7 +6674,7 @@ function stopDragHamster(e) {
 
       // Si es el contenedor especial `hitboxSlotWeel`
       if (hitbox.id === 'hitboxSlotWeel') {
-        handleWheelContainer();
+        handleWheelContainer(originalParent);
         resetDragVariables();
         modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
         return;
@@ -6686,7 +6686,6 @@ function stopDragHamster(e) {
         return;
       }
 
-      //posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox);
 
       // Para otros hitboxes, verificar si ya están ocupados
       console.log("Para otros hitboxes, verificar si ya están ocupados");
@@ -6694,10 +6693,13 @@ function stopDragHamster(e) {
       if (hamstersInHitbox.length > 0) {
         // Si está ocupado, devolver al contenedor original
         console.log("Si está ocupado, devolver al contenedor original");
-        cloneHamsterToContainer(originalParent, offsetX, offsetY);
-        resetDragVariables();
         if (originalParent.closest('.wrapper')) {
+          handleWheelContainer(originalParent);
           modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
+          resetDragVariables();
+        }else{
+          cloneHamsterToContainer(originalParent, offsetX, offsetY);
+          resetDragVariables();
         }
         return;
       }
@@ -6715,9 +6717,11 @@ function stopDragHamster(e) {
     // Si no se suelta en ningún hitbox, devolver al contenedor original
     console.log(" Si no se suelta en ningún hitbox, devolver al contenedor original ");
 
-    cloneHamsterToContainer(originalParent, offsetX, offsetY);
     if (originalParent.closest('.wrapper')) {
+      handleWheelContainer(originalParent);
       modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
+    }else{
+      cloneHamsterToContainer(originalParent, offsetX, offsetY);
     }
   }
 
@@ -6726,41 +6730,41 @@ function stopDragHamster(e) {
 
 
 
-// Función específica para manejar el contenedor especial `wheel`
-function handleWheelContainer() {
+function handleWheelContainer(originalContainer) {
   const wheel = document.querySelector('.wheel');
 
   // Verificar si ya hay un hámster en la rueda
   const existingWheelHamster = wheel.querySelector('.hamster');
   if (existingWheelHamster) {
-    // Si ya está ocupado, devolver al contenedor original
-    if (!container) return;
+    console.log("La rueda ya está ocupada, devolviendo al contenedor original.");
 
+    // Clonar el hámster y devolverlo al contenedor original
     const clonedHamster = currentHamster.cloneNode(true);
 
     // Añadir eventos al hámster clonado
     addHamsterEventListeners(clonedHamster);
 
-    // Ajustar el hámster para el contenedor
+    // Ajustar estilos del clon
     clonedHamster.style.position = 'absolute';
     clonedHamster.style.zIndex = '';
     clonedHamster.style.left = '';
+    clonedHamster.style.right = '';
     clonedHamster.style.top = '';
+    clonedHamster.style.bottom = '';
     clonedHamster.style.transform = '';
-
 
     // Remover el hámster original
     currentHamster.remove();
 
-    // Agregar el hámster al contenedor
-    container.appendChild(clonedHamster);
+    // Agregar el clon al contenedor original
+    originalContainer.appendChild(clonedHamster);
 
     // Configurar imágenes para el hámster clonado
     setHamster(clonedHamster);
-    return;
+    return; // Salir de la función
   }
 
-  // Clonar el hámster y agregarlo a la rueda
+  // Si la rueda está libre, agregar el hámster
   const clonedHamster = currentHamster.cloneNode(true);
 
   // Añadir eventos al hámster clonado
@@ -6783,6 +6787,7 @@ function handleWheelContainer() {
 
   // Configurar imágenes
   setHamster(clonedHamster);
+  clonedHamster.style.removeProperty("right");
 }
 
 
@@ -6826,7 +6831,13 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
     currentHamster.style.top = '';
     currentHamster.style.transition = 'none'; // Sin transición al principio
 
+    if(hitbox.id == "hitboxSlotWheel"){
+      console.log("hitboxSlotWheel");
+    }else{
+      console.log("no hitboxSlotWheel");
+    }
     currentHamster.style.right = `${rightPercentage}%`;
+
     currentHamster.style.bottom = `${bottomPercentage}%`;
 
 

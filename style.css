@@ -4371,8 +4371,8 @@ canvas {
 #cestaHibox{
   position: absolute;
   width: 28vh;
-  height: 8vh;
-  bottom: 5vh;
+  height: 11.5vh;
+  bottom: 1vh;
   right: 2vh;
   /*background-color: rgba(0, 128, 0, 0.568);*/
   z-index: 1200;
