@@ -6433,31 +6433,59 @@ window.addEventListener("load", function () {
   loadTooltipSettings();
 });
 
+let tooltipHamsterFlag = false;
+
 function showTooltipHamster(hamsterElement){
   let tooltip = hamsterElement.querySelector(".hamsterTooltipContainer");
+  let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
+
+  if(tooltipHamsterFlag){
+    return;
+  }
+
   if (!checkboxTooltipsNamesShown) {
     tooltip.style.opacity = "1";
   }
   
-  let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
   if(checkboxTooltipsStatesShown){
     tooltipStates.style.opacity = "1";
   }
 }
 
+
 function hideTooltipHamster(hamsterElement){
   let tooltip = hamsterElement.querySelector(".hamsterTooltipContainer");
+  let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
+
   if (!checkboxTooltipsNamesShown) {
     tooltip.style.opacity = "0";
   }
 
-  let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
   if(checkboxTooltipsStatesShown){
     if(!checkboxTooltipsNamesShown){
       tooltipStates.style.opacity = "0";
     }
   }
 }
+
+function showTooltipHamsterForce(hamsterElement){
+  let tooltip = hamsterElement.querySelector(".hamsterTooltipContainer");
+  let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
+
+  tooltip.style.visibility = "visible";
+  tooltipStates.style.visibility = "visible";
+  tooltipHamsterFlag = false;
+}
+
+function hideTooltipHamsterForce(hamsterElement){
+  let tooltip = hamsterElement.querySelector(".hamsterTooltipContainer");
+  let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
+
+  tooltip.style.visibility = "hidden";
+  tooltipStates.style.visibility = "hidden";
+  tooltipHamsterFlag = true;
+}
+
 
 function setHamster(hamsterElement){
   let type = getHamsterType(hamsterElement);
@@ -6574,6 +6602,7 @@ function startDragHamster(e, hamsterElement) {
   hamsterElement.classList.add("grabAnim");
   setHamster(hamsterElement);
   hideTooltipHamster(hamsterElement);
+  hideTooltipHamsterForce(hamsterElement);
 
 
 
@@ -6651,6 +6680,7 @@ function stopDragHamster(e) {
   document.removeEventListener('mouseup', stopDragHamster, hideTooltipHamster);
 
   currentHamster.classList.remove("grabAnim");
+  showTooltipHamsterForce(currentHamster);
 
   // Verificar si el hámster está sobre un hitbox
   const hamsterRect = currentHamster.getBoundingClientRect();
@@ -6681,54 +6711,63 @@ function stopDragHamster(e) {
       }
 
       if (hitbox.id === 'hitboxSlotWorld') {
+        currentHamster.setAttribute("pos", "");
+        showTooltipHamsterForce(currentHamster);
+
         cloneHamsterToContainer(hitbox, offsetX, offsetY);
         resetDragVariables();
+        setPositionHamster(hitbox);
         return;
       }
 
 
       // Para otros hitboxes, verificar si ya están ocupados
-      console.log("Para otros hitboxes, verificar si ya están ocupados");
       const hamstersInHitbox = Array.from(hitbox.querySelectorAll('.hamster')).filter(h => h !== currentHamster);
       if (hamstersInHitbox.length > 0) {
         // Si está ocupado, devolver al contenedor original
-        console.log("Si está ocupado, devolver al contenedor original");
         if (originalParent.closest('.wrapper')) {
           handleWheelContainer(originalParent);
           modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
           resetDragVariables();
         }else{
+          currentHamster.style.transition = "";
           cloneHamsterToContainer(originalParent, offsetX, offsetY);
           resetDragVariables();
+          setPositionHamster(originalParent);
         }
         return;
       }
 
       // Clonar el hámster y moverlo al hitbox
-      cloneHamsterToContainer(hitbox, offsetX, offsetY);
-      console.log("Clonar el hámster y moverlo al hitbox");
+      currentHamster.setAttribute("pos", "");
+      showTooltipHamsterForce(currentHamster);
 
+      cloneHamsterToContainer(hitbox, offsetX, offsetY);
       resetDragVariables();
+      setPositionHamster(hitbox);
       return;
     }
   });
 
   if (!droppedInHitbox) {
     // Si no se suelta en ningún hitbox, devolver al contenedor original
-    console.log(" Si no se suelta en ningún hitbox, devolver al contenedor original ");
 
     if (originalParent.closest('.wrapper')) {
       handleWheelContainer(originalParent);
       modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
     }else{
       cloneHamsterToContainer(originalParent, offsetX, offsetY);
+      setPositionHamster(originalParent);
     }
   }
 
   resetDragVariables();
 }
 
-
+function setPositionHamster(hitbox){
+  console.log("Start moving...");
+  console.log(hitbox);
+}
 
 function handleWheelContainer(originalContainer) {
   const wheel = document.querySelector('.wheel');
@@ -6736,8 +6775,6 @@ function handleWheelContainer(originalContainer) {
   // Verificar si ya hay un hámster en la rueda
   const existingWheelHamster = wheel.querySelector('.hamster');
   if (existingWheelHamster) {
-    console.log("La rueda ya está ocupada, devolviendo al contenedor original.");
-
     // Clonar el hámster y devolverlo al contenedor original
     const clonedHamster = currentHamster.cloneNode(true);
 
@@ -6753,6 +6790,21 @@ function handleWheelContainer(originalContainer) {
     clonedHamster.style.bottom = '';
     clonedHamster.style.transform = '';
 
+    let pos = clonedHamster.getAttribute("pos");
+    clonedHamster.style.right = `${pos}%`;
+    if (originalContainer.id === 'hitboxSlotWorld') {
+      clonedHamster.style.bottom = '0px';
+    }
+    if (originalContainer.id === 'hitboxSlotUpLeft') {
+      clonedHamster.style.bottom = '13px';
+    }
+    if (originalContainer.id === 'hitboxSlotUpRight') {
+      clonedHamster.style.bottom = '13px';
+    }
+    if (originalContainer.id === 'hitboxSlotDown') {
+      clonedHamster.style.bottom = '30px';
+    }
+
     // Remover el hámster original
     currentHamster.remove();
 
@@ -6761,6 +6813,7 @@ function handleWheelContainer(originalContainer) {
 
     // Configurar imágenes para el hámster clonado
     setHamster(clonedHamster);
+    setPositionHamster(originalContainer);
     return; // Salir de la función
   }
 
@@ -6788,6 +6841,7 @@ function handleWheelContainer(originalContainer) {
   // Configurar imágenes
   setHamster(clonedHamster);
   clonedHamster.style.removeProperty("right");
+  showTooltipHamsterForce(clonedHamster);
 }
 
 
@@ -6815,7 +6869,6 @@ function cloneHamsterToContainer(container, offsetX, offsetY) {
 }
 
 function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
-  console.log("posicionarHamsterAlDrop");
   // Obtener las dimensiones del hitbox
   const hitboxWidth = hitbox.offsetWidth;
   const hitboxHeight = hitbox.offsetHeight;
@@ -6831,14 +6884,54 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
     currentHamster.style.top = '';
     currentHamster.style.transition = 'none'; // Sin transición al principio
 
-    if(hitbox.id == "hitboxSlotWheel"){
-      console.log("hitboxSlotWheel");
-    }else{
-      console.log("no hitboxSlotWheel");
-    }
-    currentHamster.style.right = `${rightPercentage}%`;
+    let setTimeoutMs = 1000;
+    if(currentHamster.getAttribute("pos")){
+      let pos = currentHamster.getAttribute("pos");
+      currentHamster.style.right = `${pos}%`;
 
-    currentHamster.style.bottom = `${bottomPercentage}%`;
+      if (hitbox.id === 'hitboxSlotWorld') {
+        currentHamster.style.bottom = '0px';
+      }
+      if (hitbox.id === 'hitboxSlotUpLeft') {
+        currentHamster.style.bottom = '13px';
+      }
+      if (hitbox.id === 'hitboxSlotUpRight') {
+        currentHamster.style.bottom = '13px';
+      }
+      if (hitbox.id === 'hitboxSlotDown') {
+        currentHamster.style.bottom = '30px';
+      }
+    }else{
+      currentHamster.style.right = `${rightPercentage-2}%`;
+      currentHamster.setAttribute("pos", rightPercentage);
+      //console.log(currentHamster.classList);
+      //console.log(currentHamster.getAttribute("pos"));
+      currentHamster.style.bottom = `${bottomPercentage-2}%`;
+
+      if (hitbox.id === 'hitboxSlotWorld') {
+        let hitboxHeight = hitbox.offsetHeight; // Altura total del contenedor (hitbox)
+        let releasePercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
+
+        if (releasePercentage > 35) {
+          currentHamster.classList.add("fallingAnim");
+          currentHamster.classList.add("active");
+
+          setTimeoutMs = 2000;
+        } else if (releasePercentage < 15) { 
+          currentHamster.classList.add("fallingCloseAnim");
+        } else {
+          currentHamster.classList.add("fallingLess30Anim");
+        }
+
+      }else if(hitbox.id === 'hitboxSlotUpLeft' || hitbox.id === 'hitboxSlotUpRight'
+      || hitbox.id === 'hitboxSlotDown'){
+        currentHamster.classList.add("fallingCloseAnim");
+      }
+
+      hideTooltipHamsterForce(currentHamster);
+      hideTooltipHamster(currentHamster);
+    }
+
 
 
     // Configurar la transición después de agregar el clon
@@ -6858,7 +6951,39 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
         currentHamster.style.bottom = '30px';
       }
     });
-  
+
+    if (hitbox.id === 'hitboxSlotWorld') {
+      let hitboxHeight = hitbox.offsetHeight; // Altura total del contenedor (hitbox)
+      let releasePercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
+      if (releasePercentage > 35) {
+        setTimeout(() => {
+          currentHamster.classList.remove("active");
+        }, 1000);
+      }
+    }
+
+    setTimeout(() => {
+      if (hitbox.id === 'hitboxSlotWorld') {
+        let hitboxHeight = hitbox.offsetHeight; // Altura total del contenedor (hitbox)
+        let releasePercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
+        
+        console.log("releasePercentage: "+releasePercentage);
+        if (releasePercentage > 35) {
+          currentHamster.classList.remove("fallingAnim");
+        } else if (releasePercentage < 15) { 
+          currentHamster.classList.remove("fallingCloseAnim");
+        } else {
+          currentHamster.classList.remove("fallingLess30Anim");
+        }
+        
+      }else if(hitbox.id === 'hitboxSlotUpLeft' || hitbox.id === 'hitboxSlotUpRight'
+      || hitbox.id === 'hitboxSlotDown'){
+        currentHamster.classList.remove("fallingCloseAnim");
+      }
+
+      showTooltipHamsterForce(currentHamster);
+    }, setTimeoutMs);/**/
+    
 }
 
 // Función para resetear las variables de arrastre
