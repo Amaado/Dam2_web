@@ -6599,7 +6599,12 @@ function startDragHamster(e, hamsterElement) {
   originalX = rect.left + window.scrollX;
   originalY = rect.top + window.scrollY;
 
-  hamsterElement.classList.add("grabAnim");
+  if(hamsterElement.getAttribute("y")){
+    hamsterElement.classList.add("grabAnimY");
+  }else{
+    hamsterElement.classList.add("grabAnim");
+  }
+
   setHamster(hamsterElement);
   hideTooltipHamster(hamsterElement);
   hideTooltipHamsterForce(hamsterElement);
@@ -6679,7 +6684,11 @@ function stopDragHamster(e) {
   document.removeEventListener('mousemove', onDragHamster);
   document.removeEventListener('mouseup', stopDragHamster, hideTooltipHamster);
 
-  currentHamster.classList.remove("grabAnim");
+  if(currentHamster.getAttribute("y")){
+    currentHamster.classList.remove("grabAnimY");
+  }else{
+    currentHamster.classList.remove("grabAnim");
+  }
   showTooltipHamsterForce(currentHamster);
 
   // Verificar si el hámster está sobre un hitbox
@@ -6870,12 +6879,12 @@ function cloneHamsterToContainer(container, offsetX, offsetY) {
 
 function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
   // Obtener las dimensiones del hitbox
-  const hitboxWidth = hitbox.offsetWidth;
-  const hitboxHeight = hitbox.offsetHeight;
+  const hitboxWidth2 = hitbox.offsetWidth;
+  const hitboxHeight2 = hitbox.offsetHeight;
 
   // Calcular las posiciones en porcentaje desde el borde derecho e inferior
-  const rightPercentage = ((hitboxWidth - offsetX) / hitboxWidth) * 100;
-  const bottomPercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
+  const rightPercentage = ((hitboxWidth2 - offsetX) / hitboxWidth2) * 100;
+  const bottomPercentage = ((hitboxHeight2 - offsetY) / hitboxHeight2) * 100;
 
     // Ajustar el hámster para el contenedor
     currentHamster.style.position = 'absolute';
@@ -6883,6 +6892,9 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
     currentHamster.style.left = '';
     currentHamster.style.top = '';
     currentHamster.style.transition = 'none'; // Sin transición al principio
+
+    let hitboxHeight = hitbox.offsetHeight;
+    let releasePercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
 
     let setTimeoutMs = 1000;
     if(currentHamster.getAttribute("pos")){
@@ -6902,30 +6914,40 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
         currentHamster.style.bottom = '30px';
       }
     }else{
-      currentHamster.style.right = `${rightPercentage-2}%`;
+      currentHamster.style.right = `${rightPercentage}%`;
       currentHamster.setAttribute("pos", rightPercentage);
       //console.log(currentHamster.classList);
       //console.log(currentHamster.getAttribute("pos"));
-      currentHamster.style.bottom = `${bottomPercentage-2}%`;
+      currentHamster.style.bottom = `${bottomPercentage}%`;
 
       if (hitbox.id === 'hitboxSlotWorld') {
-        let hitboxHeight = hitbox.offsetHeight; // Altura total del contenedor (hitbox)
-        let releasePercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
-
         if (releasePercentage > 35) {
-          currentHamster.classList.add("fallingAnim");
+          if(currentHamster.getAttribute("y")){
+            currentHamster.classList.add("fallingAnimY");
+          }else{
+            currentHamster.classList.add("fallingAnim");
+          }
           currentHamster.classList.add("active");
 
           setTimeoutMs = 2000;
         } else if (releasePercentage < 15) { 
           currentHamster.classList.add("fallingCloseAnim");
+
         } else {
-          currentHamster.classList.add("fallingLess30Anim");
+          if(currentHamster.getAttribute("y")){
+            currentHamster.classList.add("fallingLess30AnimY");
+          }else{
+            currentHamster.classList.add("fallingLess30Anim");
+          }
         }
 
       }else if(hitbox.id === 'hitboxSlotUpLeft' || hitbox.id === 'hitboxSlotUpRight'
       || hitbox.id === 'hitboxSlotDown'){
-        currentHamster.classList.add("fallingCloseAnim");
+        if(currentHamster.getAttribute("y")){
+          currentHamster.classList.add("fallingCloseAnimY");
+        }else{
+          currentHamster.classList.add("fallingCloseAnim");
+        }
       }
 
       hideTooltipHamsterForce(currentHamster);
@@ -6953,31 +6975,48 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
     });
 
     if (hitbox.id === 'hitboxSlotWorld') {
-      let hitboxHeight = hitbox.offsetHeight; // Altura total del contenedor (hitbox)
-      let releasePercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
       if (releasePercentage > 35) {
+        const bumpImg = document.createElement('img');
+        bumpImg.src = 'img/hamster/drop/bump.gif' + "?t=" + new Date().getTime();
+        bumpImg.classList.add("bumpImg");
+        bumpImg.style.right = `${rightPercentage}%`;
+        bumpImg.style.bottom = "-25px";
+
         setTimeout(() => {
           currentHamster.classList.remove("active");
-        }, 1000);
+          hitbox.appendChild(bumpImg);
+        }, 800);
+
+        setTimeout(() => {
+          hitbox.removeChild(bumpImg);
+        }, 1900);
       }
     }
 
+
     setTimeout(() => {
       if (hitbox.id === 'hitboxSlotWorld') {
-        let hitboxHeight = hitbox.offsetHeight; // Altura total del contenedor (hitbox)
-        let releasePercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
-        
-        console.log("releasePercentage: "+releasePercentage);
         if (releasePercentage > 35) {
-          currentHamster.classList.remove("fallingAnim");
+          if(currentHamster.getAttribute("y")){
+            currentHamster.classList.remove("fallingAnimY");
+          }else{
+            currentHamster.classList.remove("fallingAnim");
+          }
+
         } else if (releasePercentage < 15) { 
           currentHamster.classList.remove("fallingCloseAnim");
+
         } else {
-          currentHamster.classList.remove("fallingLess30Anim");
+          if(currentHamster.getAttribute("y")){
+            currentHamster.classList.remove("fallingLess30AnimY");
+          }else{
+            currentHamster.classList.remove("fallingLess30Anim");
+          }
         }
         
       }else if(hitbox.id === 'hitboxSlotUpLeft' || hitbox.id === 'hitboxSlotUpRight'
       || hitbox.id === 'hitboxSlotDown'){
+
         currentHamster.classList.remove("fallingCloseAnim");
       }
 
@@ -7218,114 +7257,151 @@ modifiersSettingsContextMenu.addEventListener('click', (event) => {
 });
 
 
+function preloadImages(imagePaths, callback) {
+  let loadedImages = 0;
+  const totalImages = imagePaths.length;
+
+  imagePaths.forEach((path) => {
+    const img = new Image();
+    img.src = path;
+
+    img.onload = () => {
+      loadedImages++;
+      if (loadedImages === totalImages) {
+        callback(); // Llama al callback una vez que todas las imágenes están cargadas
+      }
+    };
+
+    img.onerror = () => {
+      console.error(`Error al cargar la imagen: ${path}`);
+      loadedImages++;
+      if (loadedImages === totalImages) {
+        callback();
+      }
+    };
+  });
+}
+
+const imagesTenderoCaminandoRight = [
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight1.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight2.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight3.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight4.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight5.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight6.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight7.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight8.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight9.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight10.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight11.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight12.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight13.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight14.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight15.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight16.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight17.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight18.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight19.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight20.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight21.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight22.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight23.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight24.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight25.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight26.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight27.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight28.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight29.png',
+  'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight30.png'
+];
+
+const imagesTenderoGirandoRight = [
+  'img/hamster/tendero/girando/right/fin/tenderoGirandoRight1.png',
+  'img/hamster/tendero/girando/right/fin/tenderoGirandoRight2.png',
+  'img/hamster/tendero/girando/right/fin/tenderoGirandoRight3.png',
+  'img/hamster/tendero/girando/right/fin/tenderoGirandoRight4.png',
+  'img/hamster/tendero/girando/right/fin/tenderoGirandoRight5.png',
+  'img/hamster/tendero/girando/right/fin/tenderoGirandoRight6.png'
+];
+
+const imagesTenderoGirandoRightBackwords = [
+  'img/hamster/tendero/girando/right/fin/tenderoGirandoRight6.png',
+  'img/hamster/tendero/girando/right/fin/tenderoGirandoRight5.png',
+  'img/hamster/tendero/girando/right/fin/tenderoGirandoRight4.png',
+  'img/hamster/tendero/girando/right/fin/tenderoGirandoRight3.png',
+  'img/hamster/tendero/girando/right/fin/tenderoGirandoRight2.png',
+  'img/hamster/tendero/girando/right/fin/tenderoGirandoRight1.png'
+];
+
+const imagesTenderoCaminandoLeft = [
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft1.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft2.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft3.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft4.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft5.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft6.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft7.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft8.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft9.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft10.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft11.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft12.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft13.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft14.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft15.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft16.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft17.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft18.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft19.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft20.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft21.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft22.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft23.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft24.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft25.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft26.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft27.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft28.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft29.png',
+  'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft30.png'
+];
+
+const imagesTenderoGirandoLeft = [
+  'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft1.png',
+  'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft2.png',
+  'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft3.png',
+  'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft4.png',
+  'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft5.png',
+  'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft6.png'
+];
+
+const imagesTenderoGirandoLeftBackwords = [
+  'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft6.png',
+  'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft5.png',
+  'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft4.png',
+  'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft3.png',
+  'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft2.png',
+  'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft1.png'
+];
+
+// Precargar todas las imágenes
+const allImages = [
+  ...imagesTenderoCaminandoRight,
+  ...imagesTenderoGirandoRight,
+  ...imagesTenderoGirandoRightBackwords,
+  ...imagesTenderoCaminandoLeft,
+  ...imagesTenderoGirandoLeft,
+  ...imagesTenderoGirandoLeftBackwords
+];
+
+preloadImages(allImages, () => {
+  console.log("moveAndInitTendero: Todas las imagenes cargadas");
+});
 
 let tenderoMoving = false;
 function moveAndInitTendero() {
   tenderoCesta.style.display = "none";
   
-  const imagesTenderoCaminandoRight = [
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight1.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight2.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight3.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight4.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight5.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight6.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight7.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight8.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight9.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight10.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight11.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight12.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight13.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight14.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight15.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight16.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight17.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight18.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight19.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight20.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight21.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight22.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight23.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight24.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight25.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight26.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight27.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight28.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight29.png',
-    'img/hamster/tendero/corriendo/right/fin/tenderoCaminandoRight30.png'
-  ];
-
-  const imagesTenderoGirandoRight = [
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight1.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight2.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight3.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight4.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight5.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight6.png'
-  ];
-
-  const imagesTenderoGirandoRightBackwords = [
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight6.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight5.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight4.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight3.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight2.png',
-    'img/hamster/tendero/girando/right/fin/tenderoGirandoRight1.png'
-  ];
-
-  const imagesTenderoCaminandoLeft = [
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft1.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft2.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft3.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft4.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft5.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft6.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft7.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft8.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft9.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft10.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft11.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft12.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft13.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft14.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft15.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft16.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft17.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft18.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft19.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft20.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft21.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft22.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft23.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft24.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft25.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft26.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft27.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft28.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft29.png',
-    'img/hamster/tendero/corriendo/left/fin/tenderoCaminandoLeft30.png'
-  ];
-
-  const imagesTenderoGirandoLeft = [
-    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft1.png',
-    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft2.png',
-    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft3.png',
-    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft4.png',
-    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft5.png',
-    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft6.png'
-  ];
-
-  const imagesTenderoGirandoLeftBackwords = [
-    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft6.png',
-    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft5.png',
-    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft4.png',
-    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft3.png',
-    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft2.png',
-    'img/hamster/tendero/girando/left/fin/tenderoGirandoLeft1.png'
-  ];
-  
-
   // Función para mover el tendero a una posición aleatoria
   function moveTendero() {
     if (tenderoMoving) return; // No mover si ya está en movimiento
