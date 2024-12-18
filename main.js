@@ -6580,6 +6580,8 @@ function setStrokeHamster(hamsterElement) {
   hamsterIntervals.set(hamsterElement, newIntervalId);
 }
 
+let explosionTimeoutId;
+let isResetToContainer = false;
 // Funciones para manejar el arrastre
 function startDragHamster(e, hamsterElement) {
   if (isDragging) return; // Prevenir arrastre si ya está en proceso
@@ -6591,8 +6593,12 @@ function startDragHamster(e, hamsterElement) {
   if (hamsterElement.closest('.wrapper')) {
     modifyHamsterSpeed(hamster, setHamsterSpeed, 0.0, true);
   }
-  
 
+  if (explosionTimeoutId) {
+    clearTimeout(explosionTimeoutId); // Cancelar la creación de la imagen de explosión
+    explosionTimeoutId = null; // Limpiar el identificador
+    //console.log("Hamster rescatado en el aire, imagen de explosión cancelada.");
+  }
 
   // Obtener la posición actual del hámster
   const rect = hamsterElement.getBoundingClientRect();
@@ -6614,6 +6620,8 @@ function startDragHamster(e, hamsterElement) {
 
   // Guardar el padre original
   originalParent = hamsterElement.parentNode;
+
+
 
   // Si el hámster está dentro de .wrapper (la rueda)
   if (hamsterElement.closest('.wrapper')) {
@@ -6716,6 +6724,7 @@ function stopDragHamster(e) {
         handleWheelContainer(originalParent);
         resetDragVariables();
         modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
+        setPositionHamster(originalParent, currentHamster);
         return;
       }
 
@@ -6725,7 +6734,6 @@ function stopDragHamster(e) {
 
         cloneHamsterToContainer(hitbox, offsetX, offsetY);
         resetDragVariables();
-        setPositionHamster(hitbox);
         return;
       }
 
@@ -6738,22 +6746,24 @@ function stopDragHamster(e) {
           handleWheelContainer(originalParent);
           modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
           resetDragVariables();
+          setPositionHamster(originalParent, currentHamster);
         }else{
           currentHamster.style.transition = "";
+          isResetToContainer = true;
           cloneHamsterToContainer(originalParent, offsetX, offsetY);
           resetDragVariables();
-          setPositionHamster(originalParent);
+          setPositionHamster(originalParent, currentHamster);
         }
         return;
       }
 
       // Clonar el hámster y moverlo al hitbox
       currentHamster.setAttribute("pos", "");
+      isResetToContainer = false;
       showTooltipHamsterForce(currentHamster);
 
       cloneHamsterToContainer(hitbox, offsetX, offsetY);
       resetDragVariables();
-      setPositionHamster(hitbox);
       return;
     }
   });
@@ -6764,19 +6774,153 @@ function stopDragHamster(e) {
     if (originalParent.closest('.wrapper')) {
       handleWheelContainer(originalParent);
       modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
+      setPositionHamster(originalParent, currentHamster);
     }else{
+      isResetToContainer = true;
       cloneHamsterToContainer(originalParent, offsetX, offsetY);
-      setPositionHamster(originalParent);
     }
   }
 
   resetDragVariables();
 }
 
-function setPositionHamster(hitbox){
+
+
+
+function setPositionHamster(hitbox, currentHamster) {
   console.log("Start moving...");
   console.log(hitbox);
+
+  // Obtener el valor inicial de la posición del hamster
+  let pos = parseFloat(currentHamster.getAttribute("pos")) || 50; // Posición inicial centrada
+  let isMovingUp = Math.random() < 0.5; // Dirección inicial aleatoria
+
+  // Obtener elementos relacionados
+  const hamsterTooltipContainer = currentHamster.querySelector(".hamsterTooltipContainer");
+
+  let speedFactor;
+  let restFactor;
+
+  if (hitbox.id == "hitboxSlotWorld") {
+    speedFactor = parseFloat(1) || 1; // Factor de velocidad
+    restFactor = parseFloat(1) || 1; // Factor de tiempo de detención
+  } else {
+    speedFactor = parseFloat(5) || 1; // Factor de velocidad
+    restFactor = parseFloat(6) || 1; // Factor de tiempo de detención
+  }
+
+  // Función para caminar el hamster
+  function walk(distance, direction) {
+    const step = 0.2 * speedFactor; // Tamaño del paso ajustado por velocidad
+    let targetPos = pos + direction * distance; // Posición objetivo inicial
+
+    // Asegurar que el hamster llegue al borde si es necesario
+    if (targetPos > 100) {
+      targetPos = 100;
+      direction = -1; // Cambiar dirección después de llegar al borde derecho
+    } else if (targetPos < 0) {
+      targetPos = 0;
+      direction = 1; // Cambiar dirección después de llegar al borde izquierdo
+    }
+
+    const totalDistance = Math.abs(targetPos - pos);
+    const totalSteps = Math.ceil(totalDistance / step); // Número total de pasos
+    let currentStep = 0;
+
+    const walkInterval = setInterval(() => {
+      // Pausa aleatoria durante el movimiento
+      if (Math.random() < 0.02) { // 5% de probabilidad de pausa
+        console.log("Hamster hace una pausa momentánea.");
+        clearInterval(walkInterval);
+        setTimeout(() => {
+          console.log("Hamster reanuda el movimiento.");
+          walk(targetPos - pos, direction); // Continúa desde donde pausó
+        }, Math.random() * 3000 + 500); // Pausa de entre 0.5s y 2s
+        return;
+      }
+
+      // Simular interacción con otros hamsters
+      if (Math.random() < 0.05) { // 5% de probabilidad de interacción
+        console.log("Hamster interactuó con otro hamster y cambió de dirección.");
+        direction = -direction; // Cambiar dirección al cruzarse
+        clearInterval(walkInterval);
+        walk(distance, direction); // Reiniciar movimiento en la nueva dirección
+        return;
+      }
+
+      if (currentStep >= totalSteps) {
+        clearInterval(walkInterval);
+        console.log("Hamster terminó de caminar.");
+
+        // Detenerse entre 1 y 5 segundos ajustado por el factor de detención
+        const restTime = (Math.random() * 9000 + 1000) * restFactor;
+        setTimeout(() => {
+          // 50% de probabilidad de girar
+          if (Math.random() < 0.5) {
+            console.log("Hamster se giró.");
+            direction = -direction; // Cambiar dirección
+          } else {
+            console.log("Hamster no se giró.");
+          }
+
+          console.log("Hamster reanuda su ciclo.");
+          startCycle(); // Reiniciar el ciclo
+        }, restTime);
+        return;
+      }
+
+      // Actualizar posición
+      pos += direction * step;
+      pos = Math.max(0, Math.min(100, pos)); // Limitar la posición entre 0% y 100%
+      currentHamster.style.right = `${pos}%`;
+      currentHamster.setAttribute("pos", pos);
+
+      // Actualizar clases y atributos en cada paso
+      if (direction < 0) {
+        currentHamster.setAttribute("y", "true");
+        currentHamster.classList.add("y");
+        hamsterTooltipContainer.classList.add("y");
+      } else {
+        currentHamster.setAttribute("y", "");
+        currentHamster.classList.remove("y");
+        hamsterTooltipContainer.classList.remove("y");
+      }
+
+      currentStep++;
+    }, 50); // Actualización cada 50ms
+  }
+
+  // Función para iniciar un ciclo de movimiento
+  function startCycle() {
+    // Generar una distancia aleatoria entre 70 y 10
+    const distance = Math.random() * (70 - 10) + 10;
+
+    // Determinar dirección: 1 para derecha, -1 para izquierda
+    let direction = Math.random() < 0.5 ? -1 : 1;
+
+    // Ajustar dirección si el hamster está cerca de un borde
+    if (pos + direction * distance > 100) {
+      direction = -1;
+    } else if (pos + direction * distance < 0) {
+      direction = 1;
+    }
+
+    console.log(`Hamster comenzará a caminar ${distance.toFixed(2)} en dirección ${direction > 0 ? "derecha" : "izquierda"}`);
+
+    // Iniciar el movimiento
+    walk(distance, direction);
+  }
+
+  // Iniciar el primer ciclo
+  startCycle();
 }
+
+
+
+
+
+
+
 
 function handleWheelContainer(originalContainer) {
   const wheel = document.querySelector('.wheel');
@@ -6822,7 +6966,6 @@ function handleWheelContainer(originalContainer) {
 
     // Configurar imágenes para el hámster clonado
     setHamster(clonedHamster);
-    setPositionHamster(originalContainer);
     return; // Salir de la función
   }
 
@@ -6892,6 +7035,8 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
     currentHamster.style.left = '';
     currentHamster.style.top = '';
     currentHamster.style.transition = 'none'; // Sin transición al principio
+    currentHamster.classList.remove("grabAnim");
+    currentHamster.classList.remove("grabAnimY");
 
     let hitboxHeight = hitbox.offsetHeight;
     let releasePercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
@@ -6943,11 +7088,7 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
 
       }else if(hitbox.id === 'hitboxSlotUpLeft' || hitbox.id === 'hitboxSlotUpRight'
       || hitbox.id === 'hitboxSlotDown'){
-        if(currentHamster.getAttribute("y")){
-          currentHamster.classList.add("fallingCloseAnimY");
-        }else{
-          currentHamster.classList.add("fallingCloseAnim");
-        }
+        currentHamster.classList.add("fallingCloseAnim");
       }
 
       hideTooltipHamsterForce(currentHamster);
@@ -6982,10 +7123,14 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
         bumpImg.style.right = `${rightPercentage}%`;
         bumpImg.style.bottom = "-25px";
 
-        setTimeout(() => {
-          currentHamster.classList.remove("active");
-          hitbox.appendChild(bumpImg);
-        }, 800);
+        if(!isResetToContainer){
+          explosionTimeoutId = setTimeout(() => {
+            currentHamster.classList.remove("active");
+            hitbox.appendChild(bumpImg);
+            //console.log("Imagen de explosión creada.");
+            explosionTimeoutId = null; // Limpiar el identificador después de que se ejecute
+          }, 800);
+        }
 
         setTimeout(() => {
           hitbox.removeChild(bumpImg);
@@ -7016,13 +7161,13 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
         
       }else if(hitbox.id === 'hitboxSlotUpLeft' || hitbox.id === 'hitboxSlotUpRight'
       || hitbox.id === 'hitboxSlotDown'){
-
         currentHamster.classList.remove("fallingCloseAnim");
       }
 
       showTooltipHamsterForce(currentHamster);
+      setPositionHamster(hitbox, currentHamster);
     }, setTimeoutMs);/**/
-    
+
 }
 
 // Función para resetear las variables de arrastre

@@ -4118,15 +4118,15 @@ canvas {
 
 #hitboxSlotDown{
   bottom: 9px;
-  right: 316px;
-  width: 115px;
+  right: 300px;
+  width: 135px;
   height: 210px;
 }
 
 #hitboxSlotWeel{
   bottom: 9px;
-  right: 140px;
-  width: 174px;
+  right: 143px;
+  width: 154px;
   height: 210px;
 }
 
