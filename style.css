@@ -3871,7 +3871,7 @@ canvas {
 
 .hamster {
   position: absolute;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: space-between;
   padding: 8px;
@@ -4080,6 +4080,7 @@ canvas {
   width: auto;
   height: auto;
   transition: margin-right 0.5s ease;
+  pointer-events: none;
 }
 
 #cage{
@@ -4130,6 +4131,79 @@ canvas {
   height: 210px;
 }
 
+
+#hitboxSlotBuyBiggie{
+  position: absolute;
+  width: 4.7vh;
+  height: 5.3vh;
+  bottom: 12.5vh;
+  right: 27vh;
+  z-index: -2;
+  display: block;
+  pointer-events: all;
+}
+
+#hitboxSlotBuyCoco{
+  position: absolute;
+  width: 4.7vh;
+  height: 5.3vh;
+  bottom: 12.5vh;
+  right: 19.5vh;
+  z-index: -2;
+  display: block;
+  pointer-events: all;
+}
+
+#hitboxSlotBuyDior{
+  position: absolute;
+  width: 4.7vh;
+  height: 5.3vh;
+  bottom: 17.5vh;
+  right: 25.1vh;
+  z-index: -2;
+  display: block;
+  pointer-events: all;
+}
+
+#hitboxSlotBuyBiggieClick{
+  position: absolute;
+  width: 4.7vh;
+  height: 5.3vh;
+  bottom: 12.5vh;
+  right: 27vh;
+  z-index: 100;
+  display: block;
+  pointer-events: all;
+}
+
+#hitboxSlotBuyCocoClick{
+  position: absolute;
+  width: 4.7vh;
+  height: 5.3vh;
+  bottom: 12.5vh;
+  right: 19.5vh;
+  z-index: 100;
+  display: block;
+  pointer-events: all;
+}
+
+#hitboxSlotBuyDiorClick{
+  position: absolute;
+  width: 4.7vh;
+  height: 5.3vh;
+  bottom: 17.5vh;
+  right: 25.1vh;
+  z-index: 100;
+  display: block;
+  pointer-events: all;
+}
+
+
+
+
+
+
+
 /*
 #hitboxSlotWorld{
   background-color: rgba(0, 128, 0, 0.044);
@@ -4150,7 +4224,28 @@ canvas {
 #hitboxSlotWeel{
   background-color: rgba(255, 192, 203, 0.26);
 }
+
+#cestaHibox{
+  background-color: rgba(211, 207, 0, 0.26);
+}
+
+#tenderoHeadHitbox{
+  background-color: hsla(357, 100%, 81%, 0.548);
+}
+
+#hitboxSlotBuyBiggie{
+  background-color: rgba(0, 251, 255, 0.26);
+}
+
+#hitboxSlotBuyCoco{
+  background-color: rgba(255, 210, 28, 0.439);
+}
+
+#hitboxSlotBuyDior{
+  background-color: rgba(0, 255, 17, 0.391);
+}
 */
+
 
 .hamsterTooltipContainer{
   position: relative;
@@ -4589,6 +4684,115 @@ canvas {
 
 
 
+#dialogContainer{
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 22vh;
+  height: 17vh;
+  bottom: 17vh;
+  right: 17vh;
+  -webkit-user-drag: none;
+  image-rendering: pixelated;
+  background-image: url(img/hamster/viñeta.png);
+  background-size: contain;
+  z-index: 1300;
+  font-family: "kemco";
+  font-size: 1.5vh;
+  line-height: 2vh;
+  color: black;
+}
+
+@keyframes dialogShow {
+  0% {
+    transform: rotateZ(-20deg) scale(0.7,0.7) translate(2vh, 5vh);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateZ(0deg) scale(1,1) translate(0vh, 0vh);
+    opacity: 1;
+  }
+}
+
+@keyframes dialogHide {
+  0% {
+    transform: rotateZ(0deg) scale(1,1) translate(0vh, 0vh);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateZ(-20deg) scale(0.7,0.7) translate(2vh, 5vh);
+    opacity: 0;
+  }
+}
+
+#dialogFlex{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  padding: 1.5vh;
+}
+
+#buttonsContainer{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 5%;
+}
+
+#buttonV{
+  position: absolute;
+  display: flex;
+  width: 15%;
+  height: 3.5vh;
+  left: 1.4vh;
+  bottom: 3.5vh;
+  background-color: rgba(0, 128, 0, 0.637);
+  pointer-events: all;  
+}
+
+#buttonX{
+  position: absolute;
+  display: flex;
+  width: 15%;
+  height: 3.5vh;
+  left: 5.4vh;
+  bottom: 3.5vh;
+  background-color: rgba(255, 0, 0, 0.546);
+  pointer-events: all;
+}
+
+.iconDialog{
+  position: absolute;
+  width: 3vh;
+  height: 3vh;
+  bottom: 6.5vh;
+}
+
+#iconDialogElement{
+  left: 3vh;
+}
+
+.icon10{
+  right: 4.8vh;
+}
+.icon500{
+  right: 3.7vh;
+}
+
+#buttonsImg{
+  position: absolute;
+  width: 22vh;
+  height: 17vh;
+  top: 1vh;
+  -webkit-user-drag: none;
+  image-rendering: pixelated;
+  background-image: url(img/hamster/viñetaButtons.png);
+  background-size: contain;
+}
+
 
 
 #grocery{
@@ -4611,11 +4815,10 @@ canvas {
 
 #cestaHibox{
   position: absolute;
-  width: 28vh;
-  height: 11.5vh;
-  bottom: 1vh;
-  right: 2vh;
-  /*background-color: rgba(0, 128, 0, 0.568);*/
+  width: 30vh;
+  height: 8vh;
+  bottom: 4.5vh;
+  right: 5vh;
   z-index: 1200;
   display: none;
   pointer-events: all;
@@ -4656,6 +4859,10 @@ canvas {
   filter: drop-shadow(1vh 1.5vh 0 hsla(220, 14%, 8%, 0.731));
 }
 
+#groceryJales{
+  z-index: -1;
+}
+
 
 
 
@@ -4664,7 +4871,8 @@ canvas {
   width: 1vh;
   height: 100vh;
   bottom: 0;
-  right: 13vh;
+  right: 10vh;
+  margin-right: 4vh;
   z-index: 1;
   /*background-color: purple;*/ 
 }

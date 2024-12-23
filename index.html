@@ -142,8 +142,7 @@
 
     <div id="helloMessage">ㅤ</div>
 
-    <div id="cestaHibox"></div>
-    <div id="tenderoHeadHitbox"></div>
+
     <div id="modifiersContainer">
       <div style="left: -45px;" class="titulo">BOOSTERS</div>
       <div class="hr"></div>
@@ -167,6 +166,26 @@
           <img id="tenderoCesta" class="store" src="img/hamster/tendero/cesta/cesta1.png"/>
         </div>
         <img id="grocerySing" class="store" src="img/hamster/storeSing.png"/>
+        <div id="tenderoHeadHitbox"></div>
+        <div id="dialogContainer">
+          <div id="dialogFlex"></div>
+          <img id="iconDialogElement" class="iconDialog" src="img/hamster/icons/iconTomato.png"/>
+          <img id="iconDialogCoin" class="iconDialog icon500" src="img/hamster/icons/iconCoin.png"/>
+          <div id="buttonsImg"></div>
+          <div id="buttonsContainer">
+            <div id="buttonV" class=""></div>
+            <div id="buttonX" class=""></div>
+          </div>
+        </div>
+        <div id="cestaHibox"></div>
+
+        <div id="hitboxSlotBuyDior" class="hitbox"></div>
+        <div id="hitboxSlotBuyCoco" class="hitbox"></div>
+        <div id="hitboxSlotBuyBiggie" class="hitbox"></div>
+        <div id="hitboxSlotBuyDiorClick"></div>
+        <div id="hitboxSlotBuyCocoClick"></div>
+        <div id="hitboxSlotBuyBiggieClick"></div>
+        <img id="groceryJales" class="store" src="img/hamster/jale.png"/>
       </div>
     </div>
     <ul id="gorceryContextMenu" class="contextMenu">
@@ -666,16 +685,9 @@
     
     <div id="cageContainer">
       <img id="cage" src="img/hamster/cage.png"/>
-
-      <div id="hitboxSlotUpLeft" class="hitbox">
-
-      </div>
-      <div id="hitboxSlotUpRight" class="hitbox">
-
-      </div>
-      <div id="hitboxSlotDown" class="hitbox">
-
-      </div>
+      <div id="hitboxSlotUpLeft" class="hitbox"></div>
+      <div id="hitboxSlotUpRight" class="hitbox"></div>
+      <div id="hitboxSlotDown" class="hitbox"></div>
       <div id="hitboxSlotWeel" class="hitbox"></div>
     </div>
     <div id="hitboxSlotWorld" class="hitbox"></div>
@@ -684,31 +696,33 @@
       <div class="wheel-frame pix">
         <div class="wheel">
           <div class="wheel-support pix"></div>
-          <div energy="1000" hunger="1000" drink="1000" pos="" y="" class="hamster puff pix dior">
-            <div class="ear pix"></div>
-            <div class="head puff pix"></div>
-            <div class="bum puff pix"></div>
-            <div class="hamsterTooltipContainer">
-              <div class="hamsterTooltip hamsterTooltipDior">Dior</div>
-              <div class="sliderHamsterContainer">
-                <div class="sliderHamsterIcons">
-                  <img src="img/hamster/icons/iconThunder.svg"/>
-                  <img src="img/hamster/icons/iconTomato.svg"/>
-                  <img src="img/hamster/icons/iconWater.svg"/>
-                </div>
-                <div class="sliderHamsterSliders">
-                  <input class="sliderHamster sliderEnergy" type="range" min="0" max="1000" value="1000" disabled/>
-                  <input class="sliderHamster sliderHunger" type="range" min="0" max="1000" value="400" disabled/>
-                  <input class="sliderHamster sliderWater" type="range" min="0" max="1000" value="00" disabled/>
-                </div>
-              </div>
-            </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div energy="1000" hunger="1000" drink="1000" slot="" pos="" y="" class="hamster puff pix dior">
+      <div class="ear pix"></div>
+      <div class="head puff pix"></div>
+      <div class="bum puff pix"></div>
+      <div class="hamsterTooltipContainer">
+        <div class="hamsterTooltip hamsterTooltipDior">Dior</div>
+        <div class="sliderHamsterContainer">
+          <div class="sliderHamsterIcons">
+            <img src="img/hamster/icons/iconThunder.svg"/>
+            <img src="img/hamster/icons/iconTomato.svg"/>
+            <img src="img/hamster/icons/iconWater.svg"/>
+          </div>
+          <div class="sliderHamsterSliders">
+            <input class="sliderHamster sliderEnergy" type="range" min="0" max="1000" value="1000" disabled/>
+            <input class="sliderHamster sliderHunger" type="range" min="0" max="1000" value="400" disabled/>
+            <input class="sliderHamster sliderWater" type="range" min="0" max="1000" value="00" disabled/>
           </div>
         </div>
       </div>
     </div>
 
-    <div energy="1000" hunger="1000" drink="1000" pos="" y="" class="hamster puff pix coco ">
+    <div energy="1000" hunger="1000" drink="1000" slot="" pos="" y="" class="hamster puff pix coco ">
       <div class="ear pix"></div>
       <div class="head puff pix"></div>
       <div class="bum puff pix"></div>
@@ -729,7 +743,7 @@
       </div>
     </div>
 
-    <div energy="1000" hunger="1000" drink="1000" pos="" y="" class="hamster puff pix biggie">
+    <div energy="1000" hunger="1000" drink="1000" slot="" pos="" y="" class="hamster puff pix biggie">
       <div class="ear pix"></div>
       <div class="head puff pix"></div>
       <div class="bum puff pix"></div>

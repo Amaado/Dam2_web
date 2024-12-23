@@ -106,7 +106,21 @@ document.addEventListener("DOMContentLoaded", function () {
   const gorceryHiboxAreaContextMenu = document.getElementById('grocery');
   const modifiersSettingsContextMenu = document.getElementById('modifiersSettingsContextMenu');
   const modifiersSettingsHiboxAreaContextMenu = document.getElementById('modifiersSettings');
+  
   const cestaHibox = document.getElementById('cestaHibox');
+  const hitboxSlotBuyBiggie = document.getElementById('hitboxSlotBuyBiggie');
+  const hitboxSlotBuyCoco = document.getElementById('hitboxSlotBuyCoco');
+  const hitboxSlotBuyDior = document.getElementById('hitboxSlotBuyDior');
+  const hitboxSlotBuyBiggieClick = document.getElementById('hitboxSlotBuyBiggieClick');
+  const hitboxSlotBuyCocoClick = document.getElementById('hitboxSlotBuyCocoClick');
+  const hitboxSlotBuyDiorClick = document.getElementById('hitboxSlotBuyDiorClick');
+
+  const dialogContainer = document.getElementById('dialogContainer');
+  const dialogFlex = document.getElementById('dialogFlex');
+  const iconDialogElement = document.getElementById('iconDialogElement');
+  const iconDialogCoin = document.getElementById('iconDialogCoin');
+  const buttonV = document.getElementById('buttonV');
+  const buttonX = document.getElementById('buttonX');
 
 
 /* BUBBLES */
@@ -1644,6 +1658,8 @@ function updateBubbles() {
       actualizarEstadoElementosSesion();
       loadCursorSelection(idLogeado);
 
+      cargarHamstersDesdeBDF();
+
       cargarNotas(idLogeado);
 
       horarioImg.style.setProperty(
@@ -1924,6 +1940,7 @@ function updateBubbles() {
         cargarNotas(idLogeado);
         cargarDibujosEnTodasLasPaginas();
         actualizarEstadoElementosSesion();
+        cargarHamstersDesdeBDF();
       } catch (error) {
         console.error("Error durante el inicio de sesión automático:", error);
       }
@@ -2670,7 +2687,13 @@ function updateBubbles() {
   });
 
   function settingsUpdate() {
+
     if (settingsEstado) {
+      if (modifiersContainer.classList.contains("active")) {
+        settingsContainer.style.marginRight = "15vw";
+      }else{
+        settingsContainer.style.marginRight = "0vw";
+      }
       settingsContainer.classList.add("active");
       settingsContainer.classList.remove("notActive");
 
@@ -2681,6 +2704,11 @@ function updateBubbles() {
       settingsImg.classList.add("active");
       settingsImgLight.classList.add("active");
     } else {
+      if (modifiersContainer.classList.contains("active")) {
+        settingsContainer.style.marginRight = "-15vw";
+      }else{
+        settingsContainer.style.marginRight = "0vw";
+      }
       settingsContainer.classList.remove("active");
       settingsContainer.classList.add("notActive");
 
@@ -4149,6 +4177,7 @@ function setNormalPrice(skinContainer, price) {
     deactivateMouseListenerTendero();
     gorceryContextMenu.style.display = 'none';
     modifiersSettingsContextMenu.style.display = 'none';
+    hideDialog();
 
 
     if (!modifiersContainer.classList.contains("active")) {
@@ -6310,7 +6339,7 @@ function updateContextMenu() {
 
 
 
-function initHamster() { 
+function initHamster() {
   const wheel = document.querySelector('.wheel');
   const defaultHamsterEnergy = 1000;
 
@@ -6410,7 +6439,7 @@ function initHamster() {
 
 let { hamster, setHamsterSpeed, modifyHamsterSpeed } = initHamster();
 
-window.addEventListener("load", function () {
+window.addEventListener("load", async function () {
   let hamsterTooltipContainers = document.querySelectorAll(".hamsterTooltipContainer");
   let sliderHamsterContainers = document.querySelectorAll(".sliderHamsterContainer");
 
@@ -6721,18 +6750,20 @@ function stopDragHamster(e) {
 
       // Si es el contenedor especial `hitboxSlotWeel`
       if (hitbox.id === 'hitboxSlotWeel') {
-        handleWheelContainer(originalParent);
-        resetDragVariables();
+        isResetToContainer = false;
+        handleWheelContainer(originalParent, hitbox);
+        actualizarSlotHamster(currentHamster, hitbox);
         modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
-        setPositionHamster(originalParent, currentHamster);
+        resetDragVariables();
         return;
       }
 
       if (hitbox.id === 'hitboxSlotWorld') {
         currentHamster.setAttribute("pos", "");
         showTooltipHamsterForce(currentHamster);
-
+        isResetToContainer = false;
         cloneHamsterToContainer(hitbox, offsetX, offsetY);
+        actualizarSlotHamster(currentHamster, hitbox);
         resetDragVariables();
         return;
       }
@@ -6742,18 +6773,18 @@ function stopDragHamster(e) {
       const hamstersInHitbox = Array.from(hitbox.querySelectorAll('.hamster')).filter(h => h !== currentHamster);
       if (hamstersInHitbox.length > 0) {
         // Si está ocupado, devolver al contenedor original
-        if (originalParent.closest('.wrapper')) {
-          handleWheelContainer(originalParent);
+        if (originalParent.closest('.wheel')) {
+          isResetToContainer = true;
+          handleWheelContainer(originalParent, hitbox);
           modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
           resetDragVariables();
-          setPositionHamster(originalParent, currentHamster);
         }else{
           currentHamster.style.transition = "";
           isResetToContainer = true;
           cloneHamsterToContainer(originalParent, offsetX, offsetY);
           resetDragVariables();
-          setPositionHamster(originalParent, currentHamster);
         }
+        //console.log("Return if wheel ocupate");
         return;
       }
 
@@ -6761,8 +6792,8 @@ function stopDragHamster(e) {
       currentHamster.setAttribute("pos", "");
       isResetToContainer = false;
       showTooltipHamsterForce(currentHamster);
-
       cloneHamsterToContainer(hitbox, offsetX, offsetY);
+      actualizarSlotHamster(currentHamster, hitbox);
       resetDragVariables();
       return;
     }
@@ -6770,14 +6801,15 @@ function stopDragHamster(e) {
 
   if (!droppedInHitbox) {
     // Si no se suelta en ningún hitbox, devolver al contenedor original
-
-    if (originalParent.closest('.wrapper')) {
-      handleWheelContainer(originalParent);
+    if (originalParent.closest('.wheel')) {
+      isResetToContainer = true;
+      handleWheelContainer(originalParent, originalParent);
       modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
-      setPositionHamster(originalParent, currentHamster);
+      resetDragVariables();
     }else{
       isResetToContainer = true;
       cloneHamsterToContainer(originalParent, offsetX, offsetY);
+      resetDragVariables();
     }
   }
 
@@ -6787,16 +6819,31 @@ function stopDragHamster(e) {
 
 
 
-function setPositionHamster(hitbox, currentHamster) {
-  console.log("Start moving...");
-  console.log(hitbox);
+function setPositionHamster(currentHamster, hitbox, originalContainer) {
+  //console.log("Start moving...");
+  //console.log("hitbox");
+  //console.log(hitbox);
+  //console.log("originalContainer");
+  //console.log(originalContainer);
+  
+  const hamsterTooltipContainer = currentHamster.querySelector(".hamsterTooltipContainer");
 
-  // Obtener el valor inicial de la posición del hamster
+  if(hitbox.id == "hitboxSlotWeel" || originalContainer.classList == "wheel"){
+      currentHamster.setAttribute("y", "");
+      currentHamster.classList.remove("y");
+      hamsterTooltipContainer.classList.remove("y");
+      currentHamster.classList.remove("grabAnim");
+      currentHamster.classList.remove("grabAnimY");
+      currentHamster.classList.remove("fallingCloseAnim");
+      currentHamster.classList.remove("fallingLess30Anim");
+      currentHamster.classList.remove("fallingLess30AnimY");
+      currentHamster.classList.remove("fallingAnim");
+      currentHamster.classList.remove("fallingAnimY");
+    return;
+  }
+
   let pos = parseFloat(currentHamster.getAttribute("pos")) || 50; // Posición inicial centrada
   let isMovingUp = Math.random() < 0.5; // Dirección inicial aleatoria
-
-  // Obtener elementos relacionados
-  const hamsterTooltipContainer = currentHamster.querySelector(".hamsterTooltipContainer");
 
   let speedFactor;
   let restFactor;
@@ -6830,10 +6877,10 @@ function setPositionHamster(hitbox, currentHamster) {
     const walkInterval = setInterval(() => {
       // Pausa aleatoria durante el movimiento
       if (Math.random() < 0.02) { // 5% de probabilidad de pausa
-        console.log("Hamster hace una pausa momentánea.");
+        //console.log("Hamster hace una pausa momentánea.");
         clearInterval(walkInterval);
         setTimeout(() => {
-          console.log("Hamster reanuda el movimiento.");
+          //console.log("Hamster reanuda el movimiento.");
           walk(targetPos - pos, direction); // Continúa desde donde pausó
         }, Math.random() * 3000 + 500); // Pausa de entre 0.5s y 2s
         return;
@@ -6841,7 +6888,7 @@ function setPositionHamster(hitbox, currentHamster) {
 
       // Simular interacción con otros hamsters
       if (Math.random() < 0.05) { // 5% de probabilidad de interacción
-        console.log("Hamster interactuó con otro hamster y cambió de dirección.");
+        //console.log("Hamster interactuó con otro hamster y cambió de dirección.");
         direction = -direction; // Cambiar dirección al cruzarse
         clearInterval(walkInterval);
         walk(distance, direction); // Reiniciar movimiento en la nueva dirección
@@ -6850,20 +6897,20 @@ function setPositionHamster(hitbox, currentHamster) {
 
       if (currentStep >= totalSteps) {
         clearInterval(walkInterval);
-        console.log("Hamster terminó de caminar.");
+        //console.log("Hamster terminó de caminar.");
 
         // Detenerse entre 1 y 5 segundos ajustado por el factor de detención
         const restTime = (Math.random() * 9000 + 1000) * restFactor;
         setTimeout(() => {
           // 50% de probabilidad de girar
           if (Math.random() < 0.5) {
-            console.log("Hamster se giró.");
+            //console.log("Hamster se giró.");
             direction = -direction; // Cambiar dirección
           } else {
-            console.log("Hamster no se giró.");
+            //console.log("Hamster no se giró.");
           }
 
-          console.log("Hamster reanuda su ciclo.");
+          //console.log("Hamster reanuda su ciclo.");
           startCycle(); // Reiniciar el ciclo
         }, restTime);
         return;
@@ -6905,7 +6952,7 @@ function setPositionHamster(hitbox, currentHamster) {
       direction = 1;
     }
 
-    console.log(`Hamster comenzará a caminar ${distance.toFixed(2)} en dirección ${direction > 0 ? "derecha" : "izquierda"}`);
+    //console.log(`Hamster comenzará a caminar ${distance.toFixed(2)} en dirección ${direction > 0 ? "derecha" : "izquierda"}`);
 
     // Iniciar el movimiento
     walk(distance, direction);
@@ -6922,7 +6969,7 @@ function setPositionHamster(hitbox, currentHamster) {
 
 
 
-function handleWheelContainer(originalContainer) {
+async function handleWheelContainer(originalContainer, hitbox) {
   const wheel = document.querySelector('.wheel');
 
   // Verificar si ya hay un hámster en la rueda
@@ -6964,6 +7011,7 @@ function handleWheelContainer(originalContainer) {
     // Agregar el clon al contenedor original
     originalContainer.appendChild(clonedHamster);
 
+    currentHamster.setAttribute("slot", originalContainer.id);
     // Configurar imágenes para el hámster clonado
     setHamster(clonedHamster);
     return; // Salir de la función
@@ -6990,15 +7038,18 @@ function handleWheelContainer(originalContainer) {
   const wheelSupport = wheel.querySelector('.wheel-support');
   wheel.insertBefore(clonedHamster, wheelSupport.nextSibling);
 
+  clonedHamster.setAttribute("slot", hitbox.id);
+
   // Configurar imágenes
   setHamster(clonedHamster);
   clonedHamster.style.removeProperty("right");
   showTooltipHamsterForce(clonedHamster);
+  setPositionHamster(clonedHamster, hitbox, originalContainer);
 }
 
 
 // Función para clonar el hámster al contenedor especificado
-function cloneHamsterToContainer(container, offsetX, offsetY) {
+async function cloneHamsterToContainer(container, offsetX, offsetY) {
   if (!container) return;
 
   isInWheel = false;
@@ -7017,6 +7068,8 @@ function cloneHamsterToContainer(container, offsetX, offsetY) {
   // Actualizar el `currentHamster` al clon
   currentHamster = clonedHamster;
 
+  currentHamster.setAttribute("slot", container.id);
+
   posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, container);
 }
 
@@ -7034,9 +7087,17 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
     currentHamster.style.zIndex = '';
     currentHamster.style.left = '';
     currentHamster.style.top = '';
+    currentHamster.style.zIndex = '';
     currentHamster.style.transition = 'none'; // Sin transición al principio
     currentHamster.classList.remove("grabAnim");
     currentHamster.classList.remove("grabAnimY");
+
+    if (hitbox.id === 'hitboxSlotBuyDior' ||
+       hitbox.id === 'hitboxSlotBuyCoco' ||
+       hitbox.id === 'hitboxSlotBuyBiggie'
+    ) {
+      currentHamster.style.zIndex = '-100';
+    }
 
     let hitboxHeight = hitbox.offsetHeight;
     let releasePercentage = ((hitboxHeight - offsetY) / hitboxHeight) * 100;
@@ -7057,6 +7118,13 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
       }
       if (hitbox.id === 'hitboxSlotDown') {
         currentHamster.style.bottom = '30px';
+      }
+      
+      if (hitbox.id === 'hitboxSlotBuyDior' ||
+        hitbox.id === 'hitboxSlotBuyCoco' ||
+        hitbox.id === 'hitboxSlotBuyBiggie'
+      ) {
+        currentHamster.style.bottom = '10px';
       }
     }else{
       currentHamster.style.right = `${rightPercentage}%`;
@@ -7113,6 +7181,12 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
       if (hitbox.id === 'hitboxSlotDown') {
         currentHamster.style.bottom = '30px';
       }
+      if (hitbox.id === 'hitboxSlotBuyDior' ||
+        hitbox.id === 'hitboxSlotBuyCoco' ||
+        hitbox.id === 'hitboxSlotBuyBiggie'
+      ) {
+        currentHamster.style.bottom = '10px';
+      }
     });
 
     if (hitbox.id === 'hitboxSlotWorld') {
@@ -7165,9 +7239,20 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
       }
 
       showTooltipHamsterForce(currentHamster);
-      setPositionHamster(hitbox, currentHamster);
+      setPositionHamster(currentHamster, hitbox, hitbox);
+      resetHmasterClassList(currentHamster);
     }, setTimeoutMs);/**/
 
+}
+
+function resetHmasterClassList(currentHamster) {
+  currentHamster.classList.remove("grabAnim");
+  currentHamster.classList.remove("grabAnimY");
+  currentHamster.classList.remove("fallingCloseAnim");
+  currentHamster.classList.remove("fallingLess30Anim");
+  currentHamster.classList.remove("fallingLess30AnimY");
+  currentHamster.classList.remove("fallingAnim");
+  currentHamster.classList.remove("fallingAnimY");
 }
 
 // Función para resetear las variables de arrastre
@@ -7287,29 +7372,42 @@ function changeImage() {
 changeImage();
 
 cestaHibox.addEventListener("mouseenter", habilitarCesta);
+cestaHibox.addEventListener("mousemove", habilitarCesta);
 cestaHibox.addEventListener("mouseleave", deshabilitarCesta);
 
 // Función para mostrar la cesta y cambiar la imagen del tendero
 function habilitarCesta() {
+  if(isDialogActive){
+    if(dialogFlex.textContent.includes("5")){
+      return;
+    }
+  }
+
   if (tenderoCesta && tenderoBody) {
     if(tenderoMoving){
       return;
     }
     tenderoCesta.style.display = "block"; // Muestra la cesta
     tenderoBody.src = "img/hamster/tendero/body.png"; // Cambia la imagen del tendero
-    console.log("habilitarCesta");
+    //console.log("habilitarCesta");
   }
 }
 
 // Función para ocultar la cesta y cambiar la imagen del tendero
 function deshabilitarCesta() {
+  if(isDialogActive){
+    if(!dialogFlex.textContent.includes("5")){
+      return;
+    }
+  }
+
   if (tenderoCesta && tenderoBody) {
     if(tenderoMoving){
       return;
     }
     tenderoCesta.style.display = "none"; // Oculta la cesta
     tenderoBody.src = "img/hamster/tendero/girando/right/fin/tenderoGirandoRight1_noHead.png"; // Cambia la imagen del tendero
-    console.log("deshabilitarCesta");
+    //console.log("deshabilitarCesta");
   }
 }
 
@@ -7346,7 +7444,7 @@ showContextMenuGorcery(event);
 
 // Mostrar el menú para "modifiersSettings" con clic izquierdo
 modifiersSettingsHiboxAreaContextMenu.addEventListener('click', (event) => {
-console.log("modifiersSettingsHiboxAreaContextMenu.addEventListener('click'"); 
+//console.log("modifiersSettingsHiboxAreaContextMenu.addEventListener('click'"); 
 showContextMenuModifiersSettings(event);
 });
 
@@ -7540,7 +7638,7 @@ const allImages = [
 ];
 
 preloadImages(allImages, () => {
-  console.log("moveAndInitTendero: Todas las imagenes cargadas");
+  //console.log("moveAndInitTendero: Todas las imagenes cargadas");
 });
 
 let tenderoMoving = false;
@@ -7619,6 +7717,7 @@ function moveAndInitTendero() {
         const newMarginVh = currentPosVh + (targetPosVh - currentPosVh) * (stepCount / imagesCaminando.length);
         tenderoBody.style.marginLeft = newMarginVh + "vh";
         tenderoCesta.style.marginLeft = newMarginVh + "vh";
+        dialogContainer.style.right = (17 - newMarginVh) + "vh"
         tenderoHead.style.marginLeft = newMarginVh + "vh";
         tenderoHeadHitbox.style.right = (13 - newMarginVh) + "vh";
 
@@ -7655,4 +7754,298 @@ function moveAndInitTendero() {
 
 
 
+let isDialogActive = false; // Indica si el diálogo está activo
+let isClickBlocked = false; // Evita el spam de clics
+
+modifiersContainer.addEventListener("click", function (event) {
+  const target = event.target;
+
+  // Si los clics están bloqueados, simplemente ignora la acción
+  if (isClickBlocked || isDialogActive) return;
+
+  // Verificar en qué elemento se hizo clic
+  if (target === cestaHibox || 
+      target === hitboxSlotBuyBiggieClick || 
+      target === hitboxSlotBuyCocoClick || 
+      target === hitboxSlotBuyDiorClick) {
+    blockClicks(); // Bloquea clics mientras se muestra
+    showDialog(target);
+    setTimeout(() => {
+      unblockClicks(); // Desbloquea clics después de la animación
+    }, 600);
+  }
 });
+
+buttonV.addEventListener("click", function () {
+  hideDialog();
+  setTimeout(() => {
+    unblockClicks(); // Desbloquea clics después de la animación
+  }, 600);
+});
+
+buttonX.addEventListener("click", function () {
+  hideDialog();
+  setTimeout(() => {
+    unblockClicks(); // Desbloquea clics después de la animación
+  }, 600);
+});
+
+function showDialog(hitbox) {
+  isDialogActive = true; // Marcar el diálogo como activo
+  dialogContainer.style.display = "flex";
+  dialogContainer.style.animation = "dialogShow 0.6s forwards";
+
+  if (hitbox.id === "hitboxSlotBuyBiggieClick") {
+    dialogFlex.textContent = "Quieres comprar 1ㅤㅤㅤpor 500ㅤㅤ?";
+    iconDialogElement.src = "img/hamster/icons/iconBiggie.png";
+    iconDialogCoin.className = "iconDialog icon500";
+
+  } else if (hitbox.id === "hitboxSlotBuyDiorClick") {
+    dialogFlex.textContent = "Quieres comprar 1ㅤㅤㅤpor 500ㅤㅤ?";
+    iconDialogElement.src = "img/hamster/icons/iconDior.png";
+    iconDialogCoin.className = "iconDialog icon500";
+
+  } else if (hitbox.id === "hitboxSlotBuyCocoClick") {
+    dialogFlex.textContent = "Quieres comprar 1ㅤㅤㅤpor 500ㅤㅤ?";
+    iconDialogElement.src = "img/hamster/icons/iconCocco.png";
+    iconDialogCoin.className = "iconDialog icon500";
+
+  } else if (hitbox.id === "cestaHibox") {
+    dialogFlex.textContent = "Quieres comprar 1ㅤㅤㅤpor 10ㅤㅤ?";
+    iconDialogElement.src = "img/hamster/icons/iconTomato.png";
+    iconDialogCoin.className = "iconDialog icon10";
+  }
+}
+
+function hideDialog() {
+  dialogContainer.style.animation = "dialogHide 0.6s forwards";
+  setTimeout(() => {
+    dialogContainer.style.display = "none";
+    isDialogActive = false; // Marcar el diálogo como inactivo
+    deshabilitarCesta();
+  }, 600);
+}
+
+function blockClicks() {
+  isClickBlocked = true; // Bloquea los clics
+}
+
+function unblockClicks() {
+  isClickBlocked = false; // Desbloquea los clics
+}
+
+
+
+async function actualizarSlotHamster(hamster, contenedor) {
+  if (!hamster || !contenedor) {
+    console.error("El hámster o el contenedor no son válidos.");
+    return;
+  }
+
+  // Identificar el tipo de hámster según su clase
+  const hamsterClasses = [...hamster.classList];
+  let campoSlot;
+
+  if (hamsterClasses.includes("biggie")) {
+    campoSlot = "slotHamsterBiggie";
+  } else if (hamsterClasses.includes("coco")) {
+    campoSlot = "slotHamsterCoco";
+  } else if (hamsterClasses.includes("dior")) {
+    campoSlot = "slotHamsterDior";
+  } else {
+    console.error("No se pudo determinar el tipo de hámster.");
+    return;
+  }
+
+  // ID del contenedor (hitbox)
+  const idHitbox = contenedor.id;
+
+  if (!idHitbox) {
+    console.error("El contenedor no tiene un ID válido.");
+    return;
+  }
+
+  // Construir el objeto para la actualización
+  const datosActualizacion = {};
+  datosActualizacion[campoSlot] = idHitbox; // Campo dinámico basado en el hámster
+
+  // URL correcta para el endpoint
+  const url = `${supabaseUrl}?id=eq.${idLogeado}`; // Cambiar `idUsuario` por el ID real del usuario
+
+  try {
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify(datosActualizacion),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error(
+        `Error al actualizar el slot del hámster (${campoSlot}):`,
+        response.statusText,
+        errorData
+      );
+      throw new Error(`Error en la actualización: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log(`Slot del hámster (${campoSlot}) actualizado correctamente:`, data);
+    return data;
+  } catch (error) {
+    console.error("Error al actualizar el slot del hámster:", error);
+  }
+}
+
+async function cargarHamstersDesdeBD() {
+  try {
+    // URL para obtener los datos del usuario
+    const url = `${supabaseUrl}?id=eq.${idLogeado}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      console.error("Error al obtener los datos del usuario:", response.statusText);
+      return;
+    }
+
+    const data = await response.json();
+    if (data.length === 0) {
+      console.warn("No se encontraron datos del usuario en la base de datos.");
+      return;
+    }
+
+    const usuario = data[0]; // Obtener el primer registro del usuario
+    const slotsHamsters = {
+      biggie: usuario.slotHamsterBiggie,
+      coco: usuario.slotHamsterCoco,
+      dior: usuario.slotHamsterDior,
+    };
+
+    // Verificar si algún campo es null o undefined y actualizar en la base de datos
+    const valoresPredeterminados = {
+      biggie: "hitboxSlotBuyBiggie",
+      coco: "hitboxSlotBuyCoco",
+      dior: "hitboxSlotBuyDior",
+    };
+
+    let necesitaActualizar = false;
+    const actualizaciones = {};
+
+    Object.entries(slotsHamsters).forEach(([hamster, slotId]) => {
+      if (!slotId) {
+        console.warn(`El slot de ${hamster} es nulo o no está definido. Se asignará un valor predeterminado.`);
+        actualizaciones[`slotHamster${hamster.charAt(0).toUpperCase() + hamster.slice(1)}`] =
+          valoresPredeterminados[hamster];
+        necesitaActualizar = true;
+      }
+    });
+
+    // Actualizar la base de datos si es necesario
+    if (necesitaActualizar) {
+      const updateUrl = `${supabaseUrl}?id=eq.${idLogeado}`;
+      const updateResponse = await fetch(updateUrl, {
+        method: "PATCH",
+        headers: {
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
+          "Content-Type": "application/json",
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify(actualizaciones),
+      });
+
+      if (!updateResponse.ok) {
+        console.error("Error al actualizar los slots predeterminados:", updateResponse.statusText);
+        return;
+      }
+
+      console.log("Slots predeterminados actualizados en la base de datos:", await updateResponse.json());
+
+      // Actualizar los slots en memoria después de la actualización
+      Object.assign(slotsHamsters, valoresPredeterminados);
+    }
+
+    // Clonar y posicionar los hámsters según sus slots
+    Object.entries(slotsHamsters).forEach(([hamster, slotId]) => {
+      const hamsterElemento = document.querySelector(`.hamster.${hamster}`);
+      currentHamster = hamsterElemento;
+
+      const contenedor = document.getElementById(slotId);
+      console.log("Hamster:", hamsterElemento);
+      console.log("Contenedor:", contenedor);
+
+      if (!hamsterElemento || !contenedor) {
+        console.error(`No se encontró el hámster (${hamster}) o el contenedor (${slotId}).`);
+        return;
+      }
+
+      const offsetX = Math.floor(Math.random() * 801); // Entre 0 y 800 (incluidos)
+      const offsetY = Math.floor(Math.random() * 501); // Entre 0 y 500 (incluidos)
+
+      switch (contenedor.id) {
+        case "hitboxSlotWeel":
+          isResetToContainer = false;
+          handleWheelContainer(contenedor, contenedor);
+          modifyHamsterSpeed(currentHamster, setHamsterSpeed, 1.5, false);
+          currentHamster.style.display = 'flex';
+          resetDragVariables();
+          break;
+
+        case "hitboxSlotWorld":
+          currentHamster.setAttribute("pos", "");
+          showTooltipHamsterForce(currentHamster);
+          isResetToContainer = false;
+          cloneHamsterToContainer(contenedor, offsetX, offsetY);
+          modifyHamsterSpeed(currentHamster, setHamsterSpeed, 0.0, true);
+          currentHamster.style.display = 'flex';
+          resetDragVariables();
+          break;
+
+        default:
+          currentHamster.setAttribute("pos", "");
+          isResetToContainer = false;
+          showTooltipHamsterForce(currentHamster);
+          cloneHamsterToContainer(contenedor, offsetX, offsetY);
+          modifyHamsterSpeed(currentHamster, setHamsterSpeed, 0.0, true);
+          currentHamster.style.display = 'flex';
+          resetDragVariables();
+          break;
+      }
+
+      console.log(`Hámster ${hamster} posicionado en el slot ${slotId}.`);
+    });
+  } catch (error) {
+    console.error("Error al cargar los hámsters desde la base de datos:", error);
+  }
+}
+
+
+
+async function cargarHamstersDesdeBDF(){
+  try {
+    if (idLogeado) {
+      console.log("Cargando hámsters desde la base de datos...");
+      await cargarHamstersDesdeBD();
+      console.log("Hámsters cargados correctamente.");
+    } else {
+      console.error("El usuario no está logueado. No se pueden cargar los hámsters.");
+    }
+  } catch (error) {
+    console.error("Error al cargar los hámsters:", error);
+  }
+}
+
+});
+
