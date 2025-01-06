@@ -1667,6 +1667,42 @@ div.img img {
   left: 10vw;
 }
 
+
+.tomatoContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  width: 90px;
+  height: 50px;
+  top: 106px;
+  left: 67px;
+  transition: margin-left 0.5s ease;
+  font-size: 26px;
+  color: #C45C50;
+  /*color: #e412123a;*/
+  font-weight: bold;
+  font-size: 32px;
+  gap: 10px;
+  font-family: "kemco";
+}
+
+#tomatoImg {
+  width: 30px;
+  height: 30px;
+  z-index: 1;
+  margin-top: -22px;
+}
+
+#tomatoLabel {
+  width: 100%;
+  height: 100%;
+  margin-top: 5.5px;
+  margin-left: 13px;
+  z-index: 50;
+}
+
 .coinsContainer {
   position: absolute;
   display: flex;
@@ -3814,7 +3850,7 @@ canvas {
   width: 175px;
   height: 175px;
   --hamster-speed: 0.25s;
-  --wheel-speed: 0.5s;
+  --wheel-speed: 0.0s;
   --wheel-angle: 0deg;
   bottom: 32px;
   right: 93px;
@@ -4139,7 +4175,7 @@ canvas {
   bottom: 12.5vh;
   right: 27vh;
   z-index: -2;
-  display: block;
+  display: none;
   pointer-events: all;
 }
 
@@ -4150,7 +4186,7 @@ canvas {
   bottom: 12.5vh;
   right: 19.5vh;
   z-index: -2;
-  display: block;
+  display: none;
   pointer-events: all;
 }
 
@@ -4161,7 +4197,7 @@ canvas {
   bottom: 17.5vh;
   right: 25.1vh;
   z-index: -2;
-  display: block;
+  display: none;
   pointer-events: all;
 }
 
@@ -4172,7 +4208,7 @@ canvas {
   bottom: 12.5vh;
   right: 27vh;
   z-index: 100;
-  display: block;
+  display: none;
   pointer-events: all;
 }
 
@@ -4183,7 +4219,7 @@ canvas {
   bottom: 12.5vh;
   right: 19.5vh;
   z-index: 100;
-  display: block;
+  display: none;
   pointer-events: all;
 }
 
@@ -4194,7 +4230,7 @@ canvas {
   bottom: 17.5vh;
   right: 25.1vh;
   z-index: 100;
-  display: block;
+  display: none;
   pointer-events: all;
 }
 
@@ -4859,8 +4895,9 @@ canvas {
   filter: drop-shadow(1vh 1.5vh 0 hsla(220, 14%, 8%, 0.731));
 }
 
-#groceryJales{
+.groceryJales{
   z-index: -1;
+  display: none;
 }
 
 

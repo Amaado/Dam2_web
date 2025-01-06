@@ -106,7 +106,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const gorceryHiboxAreaContextMenu = document.getElementById('grocery');
   const modifiersSettingsContextMenu = document.getElementById('modifiersSettingsContextMenu');
   const modifiersSettingsHiboxAreaContextMenu = document.getElementById('modifiersSettings');
-  
+  const tomatoLabel = document.getElementById('tomatoLabel');
+  const tomatoContainer = document.querySelector('.tomatoContainer');
+
+
   const cestaHibox = document.getElementById('cestaHibox');
   const hitboxSlotBuyBiggie = document.getElementById('hitboxSlotBuyBiggie');
   const hitboxSlotBuyCoco = document.getElementById('hitboxSlotBuyCoco');
@@ -114,6 +117,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const hitboxSlotBuyBiggieClick = document.getElementById('hitboxSlotBuyBiggieClick');
   const hitboxSlotBuyCocoClick = document.getElementById('hitboxSlotBuyCocoClick');
   const hitboxSlotBuyDiorClick = document.getElementById('hitboxSlotBuyDiorClick');
+  const groceryJaleDior = document.getElementById('groceryJaleDior');
+  const groceryJaleCoco = document.getElementById('groceryJaleCoco');
+  const groceryJaleBiggie = document.getElementById('groceryJaleBiggie');
+  const groceryJaleChains = document.getElementById('groceryJaleChains');
+
 
   const dialogContainer = document.getElementById('dialogContainer');
   const dialogFlex = document.getElementById('dialogFlex');
@@ -122,6 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const buttonV = document.getElementById('buttonV');
   const buttonX = document.getElementById('buttonX');
 
+  
 
 /* BUBBLES */
 let animationFrameId;
@@ -1651,6 +1660,7 @@ function updateBubbles() {
       // Actualizar información en la interfaz
       await actualizarHelloMessage(idLogeado);
       await actualizarMonedas(idLogeado);
+      await actualizarTomatos(idLogeado);
       await cargarSkins(idLogeado);
       applyTheme();
       ajustesColorLoginYregister(checkbox);
@@ -1935,6 +1945,7 @@ function updateBubbles() {
         // Actualizar información del usuario
         await actualizarHelloMessage(idLogeado);
         await actualizarMonedas(idLogeado);
+        await actualizarTomatos(idLogeado);
         await cargarSkins(idLogeado);
         await loadCursorSelection(idLogeado);
         cargarNotas(idLogeado);
@@ -2321,6 +2332,141 @@ function updateBubbles() {
       }
     }, 2000);
   }
+
+  /* ACTUALIZAR TOMATOS */
+  async function actualizarTomatosUsuario(idLogin, tomatosNuevos) {
+    if (
+      isNaN(tomatosNuevos) ||
+      tomatosNuevos === null ||
+      tomatosNuevos === undefined
+    ) {
+      console.error("El valor de tomatosNuevos no es válido:", tomatosNuevos);
+      return;
+    }
+
+    const url = `${supabaseUrl}?id=eq.${idLogin}`;
+    const actualizarTomatos = { tomatos: parseInt(tomatosNuevos) };
+
+    try {
+      const response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
+          "Content-Type": "application/json",
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify(actualizarTomatos),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error(
+          "Error al actualizar los tomatos:",
+          response.statusText,
+          errorData
+        );
+        throw new Error(
+          "Error en la actualización de tomatos: " + response.statusText
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error al actualizar los tomatos:", error);
+    }
+  }
+
+async function obtenerTomatosDeUsuario(id) {
+    const url = `${supabaseUrl}?id=eq.${id}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (data.length > 0) {
+      const tomatos = data[0].tomatos;
+      if (tomatos === null) {
+        console.warn("Tomatos obtenidos: null. Inicializando tomatos a 0.");
+        await actualizarTomatosUsuario(id, 0);
+        return 0;
+      }
+      return tomatos; // Devuelve el valor de tomatos
+    } else {
+      console.warn("Usuario no encontrado. Inicializando tomatos a 0.");
+      await actualizarTomatosUsuario(id, 0);
+      return 0;
+    }
+  }
+
+let zIndexValueTomatos = 60; // Variable global para controlar el z-index para tomatos
+let imageCounterTomatos = 0; // Contador para generar identificadores únicos para tomatos
+let localTomatosCounter = 0; // Contador local para manejar la última cifra en las animaciones de tomatos
+
+async function actualizarTomatos(idLogeado) {
+  try {
+    console.log("ID logeado:", idLogeado);
+    const tomatosLogeado = await obtenerTomatosDeUsuario(idLogeado);
+    tomatoLabel.textContent = tomatosLogeado;
+    localTomatosCounter = tomatosLogeado;
+    console.log("Tomatos obtenidos:", tomatosLogeado);
+  } catch (error) {
+    console.error("Error durante ACTUALIZAR TOMATOS:", error);
+  }
+}
+
+
+// Obtener idLogeado de localStorage al inicio
+const idLogeadoTomatosLoc = parseInt(localStorage.getItem("idLogeado"));
+if (!isNaN(idLogeadoTomatosLoc)) {
+  actualizarLocalTomatosCounter(idLogeadoTomatosLoc);
+} else {
+  console.error(
+    "Usuario no logeado al intentar actualizar el contador local de tomatos."
+  );
+}
+
+async function actualizarLocalTomatosCounter(idLogeado) {
+  try {
+    const tomatosLogeado = await obtenerTomatosDeUsuario(idLogeado);
+    localTomatosCounter = tomatosLogeado;
+  } catch (error) {
+    console.error("Error durante ACTUALIZAR TOMATOS:", error);
+  }
+}
+
+async function incrementTomatos(idLogeado, tomatesAnhadir) {
+  // Incrementar contador local inmediatamente para manejar animaciones y evitar sobrecarga de clics
+  localTomatosCounter = localTomatosCounter + tomatesAnhadir;
+
+  // Esperar 3 segundos antes de actualizar la base de datos
+  setTimeout(async function () {
+    try {
+      // Actualizar los tomatos del usuario en la base de datos
+      const nuevosTomatos = localTomatosCounter;
+      await actualizarTomatosUsuario(idLogeado, nuevosTomatos);
+
+      // Actualizar la interfaz de usuario (etiqueta de tomatos)
+      tomatoLabel.textContent = nuevosTomatos;
+    } catch (error) {
+      console.error(
+        "Error durante la actualización de tomatos en la base de datos:",
+        error
+      );
+    }
+  }, 2000);
+}
+
+
+
 
   let activeAnimations = 0;
   const maxAnimations = 15;
@@ -6400,7 +6546,7 @@ function initHamster() {
 
   const modifyHamsterSpeed = (hamster, setHamsterSpeed, targetValue, goto0) => {
     const step = 0.10; // Incremento o decremento progresivo
-  
+    
     if (goto0) {
       // Cambiar inmediatamente a 0 si goto0 es true
       hamster.speedFactor = 0;
@@ -6752,7 +6898,11 @@ function stopDragHamster(e) {
       if (hitbox.id === 'hitboxSlotWeel') {
         isResetToContainer = false;
         handleWheelContainer(originalParent, hitbox);
-        actualizarSlotHamster(currentHamster, hitbox);
+        const wheel = document.querySelector('.wheel');
+        const existingWheelHamster = wheel.querySelector('.hamster');
+        if (!existingWheelHamster) {
+          actualizarSlotHamster(currentHamster, hitbox);
+        }
         modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
         resetDragVariables();
         return;
@@ -7776,17 +7926,68 @@ modifiersContainer.addEventListener("click", function (event) {
   }
 });
 
-buttonV.addEventListener("click", function () {
+
+async function descontarMonedas(price){
+
+}
+
+buttonV.addEventListener("click", async function () {
   hideDialog();
   setTimeout(() => {
-    unblockClicks(); // Desbloquea clics después de la animación
+    unblockClicks();
   }, 600);
+
+  if (iconDialogElement.src.includes("iconBiggie")) {
+    hitboxSlotBuyBiggieClick.style.display = "none";
+    hitboxSlotBuyBiggie.style.display = "none";
+    groceryJaleBiggie.style.display = "none";
+    if(hitboxSlotBuyCoco.style.display === "none" && hitboxSlotBuyDior.style.display === "block"){
+      groceryJaleChains.style.display = "block";
+    }
+    currentHamster = document.querySelector(".biggie");
+    intentarClonarHamster3Hitbox(currentHamster);
+    resetDragVariables();
+        // Restar el precio y actualizar en la base de datos
+        monedasLogeado -= 500;
+        // Actualizar el contador de monedas en la interfaz
+        document.querySelector(".coinLabel").textContent = monedasLogeado;
+        await actualizarMonedasUsuario(idLogeado, monedasLogeado);
+        await actualizarLocalCoinsCounter(idLogeado);
+
+  } else if (iconDialogElement.src.includes("iconDior")) {
+    hitboxSlotBuyDiorClick.style.display = "none";
+    hitboxSlotBuyDior.style.display = "none";
+    groceryJaleDior.style.display = "none";
+    groceryJaleChains.style.display = "none";
+    currentHamster = document.querySelector(".dior");
+    intentarClonarHamster3Hitbox(currentHamster);
+    resetDragVariables();
+    await descontarMonedas(500);
+
+  } else if (iconDialogElement.src.includes("iconCocco")) {
+    hitboxSlotBuyCocoClick.style.display = "none";
+    hitboxSlotBuyCoco.style.display = "none";
+    groceryJaleCoco.style.display = "none";
+    if(hitboxSlotBuyBiggie.style.display === "none" && hitboxSlotBuyDior.style.display === "block"){
+      groceryJaleChains.style.display = "block";
+    }
+    currentHamster = document.querySelector(".coco");
+    intentarClonarHamster3Hitbox(currentHamster);
+    resetDragVariables();
+    await descontarMonedas(500);
+
+  }else if (iconDialogElement.src.includes("iconTomato")) {
+
+    await incrementTomatos(idLogeado, 10);
+
+  }
+
 });
 
 buttonX.addEventListener("click", function () {
   hideDialog();
   setTimeout(() => {
-    unblockClicks(); // Desbloquea clics después de la animación
+    unblockClicks();
   }, 600);
 });
 
@@ -7977,17 +8178,37 @@ async function cargarHamstersDesdeBD() {
       Object.assign(slotsHamsters, valoresPredeterminados);
     }
 
+    
+    const slotIds = []; // Array para almacenar todos los slotId
+
+    Object.entries(slotsHamsters).forEach(([hamster, slotId]) => {
+      if (slotId) {
+        slotIds.push(slotId); // Agregar el slotId al array
+      }
+    });
+
+    if (
+      slotIds.includes("hitboxSlotBuyDior") &&
+      !slotIds.includes("hitboxSlotBuyCoco") &&
+      !slotIds.includes("hitboxSlotBuyBiggie")
+    ) {
+      groceryJaleChains.style.display = "block";
+    } else {
+      console.log("No se cumplen las condiciones.");
+    }
+
+    
     // Clonar y posicionar los hámsters según sus slots
     Object.entries(slotsHamsters).forEach(([hamster, slotId]) => {
       const hamsterElemento = document.querySelector(`.hamster.${hamster}`);
       currentHamster = hamsterElemento;
 
       const contenedor = document.getElementById(slotId);
-      console.log("Hamster:", hamsterElemento);
-      console.log("Contenedor:", contenedor);
+      //console.log("Hamster:", hamsterElemento);
+      //console.log("Contenedor:", contenedor);
 
       if (!hamsterElemento || !contenedor) {
-        console.error(`No se encontró el hámster (${hamster}) o el contenedor (${slotId}).`);
+        console.log(`No se encontró el hámster (${hamster}) o el contenedor (${slotId}).`);
         return;
       }
 
@@ -7996,11 +8217,13 @@ async function cargarHamstersDesdeBD() {
 
       switch (contenedor.id) {
         case "hitboxSlotWeel":
+          currentHamster.setAttribute("pos", "");
           isResetToContainer = false;
+          currentHamster.style.display = 'flex';
           handleWheelContainer(contenedor, contenedor);
           modifyHamsterSpeed(currentHamster, setHamsterSpeed, 1.5, false);
-          currentHamster.style.display = 'flex';
           resetDragVariables();
+          
           break;
 
         case "hitboxSlotWorld":
@@ -8008,9 +8231,52 @@ async function cargarHamstersDesdeBD() {
           showTooltipHamsterForce(currentHamster);
           isResetToContainer = false;
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
-          modifyHamsterSpeed(currentHamster, setHamsterSpeed, 0.0, true);
+          wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
           resetDragVariables();
+
+          break;
+
+        case "hitboxSlotBuyBiggie":
+          currentHamster.setAttribute("pos", "");
+          isResetToContainer = false;
+          showTooltipHamsterForce(currentHamster);
+          cloneHamsterToContainer(contenedor, offsetX, offsetY);
+          wrapper.style.setProperty('--wheel-speed', '0');
+          currentHamster.style.display = 'flex';
+          resetDragVariables();
+
+          hitboxSlotBuyBiggieClick.style.display = "block";
+          hitboxSlotBuyBiggie.style.display = "block";
+          groceryJaleBiggie.style.display = "block";
+          break;
+
+        case "hitboxSlotBuyDior":
+          currentHamster.setAttribute("pos", "");
+          isResetToContainer = false;
+          showTooltipHamsterForce(currentHamster);
+          cloneHamsterToContainer(contenedor, offsetX, offsetY);
+          wrapper.style.setProperty('--wheel-speed', '0');
+          currentHamster.style.display = 'flex';
+          resetDragVariables();
+
+          hitboxSlotBuyDiorClick.style.display = "block";
+          hitboxSlotBuyDior.style.display = "block";
+          groceryJaleDior.style.display = "block";
+          break;
+
+        case "hitboxSlotBuyCoco":
+          currentHamster.setAttribute("pos", "");
+          isResetToContainer = false;
+          showTooltipHamsterForce(currentHamster);
+          cloneHamsterToContainer(contenedor, offsetX, offsetY);
+          wrapper.style.setProperty('--wheel-speed', '0');
+          currentHamster.style.display = 'flex';
+          resetDragVariables();
+
+          hitboxSlotBuyCocoClick.style.display = "block";
+          hitboxSlotBuyCoco.style.display = "block";
+          groceryJaleCoco.style.display = "block";
           break;
 
         default:
@@ -8018,9 +8284,10 @@ async function cargarHamstersDesdeBD() {
           isResetToContainer = false;
           showTooltipHamsterForce(currentHamster);
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
-          modifyHamsterSpeed(currentHamster, setHamsterSpeed, 0.0, true);
+          wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
           resetDragVariables();
+          
           break;
       }
 
@@ -8040,12 +8307,56 @@ async function cargarHamstersDesdeBDF(){
       await cargarHamstersDesdeBD();
       console.log("Hámsters cargados correctamente.");
     } else {
-      console.error("El usuario no está logueado. No se pueden cargar los hámsters.");
+      console.log("El usuario no está logueado. No se pueden cargar los hámsters.");
     }
   } catch (error) {
-    console.error("Error al cargar los hámsters:", error);
+    console.log("Error al cargar los hámsters:", error);
   }
 }
+
+
+
+  function intentarClonarHamster3Hitbox(hamster) {
+    if (!hamster) {
+      console.log("El hámster no es válido.");
+      return;
+    }
+  
+    // Lista de contenedores en orden de prioridad
+    const contenedorIds = ["hitboxSlotDown", "hitboxSlotUpRight", "hitboxSlotUpLeft"];
+    let clonado = false;
+  
+    contenedorIds.some((contenedorId) => {
+      const contenedor = document.getElementById(contenedorId);
+  
+      if (!contenedor) {
+        console.log(`El contenedor con ID ${contenedorId} no existe.`);
+        return false; // Continuar con el siguiente contenedor
+      }
+  
+      // Comprobar si el contenedor ya tiene un hámster
+      const hamsterEnContenedor = contenedor.querySelector(".hamster");
+  
+      if (!hamsterEnContenedor) {
+        currentHamster.setAttribute("pos", "");
+        isResetToContainer = false;
+        showTooltipHamsterForce(currentHamster);
+        cloneHamsterToContainer(contenedor, offsetX, offsetY);
+        wrapper.style.setProperty('--wheel-speed', '0');
+        currentHamster.style.display = 'flex';
+        actualizarSlotHamster(currentHamster, contenedor);
+        resetDragVariables();
+      }
+  
+      console.log(`El contenedor ${contenedorId} ya está ocupado.`);
+      return false; // Continuar con el siguiente contenedor
+    });
+  
+    if (!clonado) {
+      console.log("No se pudo clonar el hámster. Todos los contenedores están ocupados.");
+    }
+  }
+  
 
 });
 

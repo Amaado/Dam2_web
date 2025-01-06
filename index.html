@@ -139,6 +139,11 @@
       <img class="coinsContainerCoin" src="img/coin.png" draggable="false" />
       <div class="coinLabel"></div>
     </div>
+    <div class="tomatoContainer">
+      <div id="tomatoContainerAnimationContainer"></div>
+      <img id="tomatoImg" src="img/hamster/icons/iconTomato.svg" draggable="false" />
+      <div id="tomatoLabel"></div>
+    </div>
 
     <div id="helloMessage">ㅤ</div>
 
@@ -153,10 +158,12 @@
         <li>Show tags</li>
         <li>Show stats in tags</li>
       </ul>
+      <!--
       <div class="betaLabelContainer">
         <div class="betaLabelInfo">i</div>
         <div class="betaLabel">ㅤ Esta función está en BETA. Vuelve más tarde para poder disfrutar de ella.</div>
       </div>
+      -->
       <div id="grocery">
         <img id="store" class="store" src="img/hamster/store.png"/>
         <img id="storeShadow" class="store storeShadow" src="img/hamster/storeShadow.png"/>
@@ -185,7 +192,11 @@
         <div id="hitboxSlotBuyDiorClick"></div>
         <div id="hitboxSlotBuyCocoClick"></div>
         <div id="hitboxSlotBuyBiggieClick"></div>
-        <img id="groceryJales" class="store" src="img/hamster/jale.png"/>
+        <img id="groceryJaleDior" class="store groceryJales" src="img/hamster/jaleDior.png"/>
+        <img id="groceryJaleCoco" class="store groceryJales" src="img/hamster/jaleCoco.png"/>
+        <img id="groceryJaleBiggie" class="store groceryJales" src="img/hamster/jaleBiggie.png"/>
+        <img id="groceryJaleChains" class="store groceryJales" src="img/hamster/jaleChains.png"/>
+
       </div>
     </div>
     <ul id="gorceryContextMenu" class="contextMenu">
@@ -770,7 +781,7 @@
 
     <div id="notebookContainerLogo">
       <img id="notebookLogoVacio" src="img/libsIconVacio_night.png"/>
-      <img id="notebookLogoLleno" src="img/libsIconLLeno_night.png"/>
+      <img id="notebookLogoLleno" src="img/libsIconLleno_night.png"/>
     </div>
 
     <div id="notebookContainer">
