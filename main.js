@@ -105,7 +105,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const gorceryContextMenu = document.getElementById('gorceryContextMenu');
   const gorceryHiboxAreaContextMenu = document.getElementById('grocery');
   const modifiersSettingsContextMenu = document.getElementById('modifiersSettingsContextMenu');
+  const modifiersSettingsCont = document.getElementById('modifiersSettingsCont');
   const modifiersSettingsHiboxAreaContextMenu = document.getElementById('modifiersSettings');
+  const modifiersEmailCont = document.getElementById('modifiersEmailCont');
+  const modifiersEmail = document.getElementById('modifiersEmail');
+  const modifiersInformationCont = document.getElementById('modifiersInformationCont');
+  const modifiersInformation = document.getElementById('modifiersInformation');
+  const contextMenus = document.querySelectorAll('.contextMenu');
+  
   const tomatoLabel = document.getElementById('tomatoLabel');
   const tomatoContainer = document.querySelector('.tomatoContainer');
 
@@ -129,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const iconDialogCoin = document.getElementById('iconDialogCoin');
   const buttonV = document.getElementById('buttonV');
   const buttonX = document.getElementById('buttonX');
-
+  const buttonsImg = document.getElementById('buttonsImg');
   
 
 /* BUBBLES */
@@ -709,7 +716,17 @@ function updateBubbles() {
       controls.style.color = "#71604E";
       menuLabelSkins.style.color = "#313842";
       menuLabelModifiers.style.color = "#313842";
+      modifiersSettingsCont.className = "day";
       modifiersSettingsHiboxAreaContextMenu.className = "day";
+      modifiersEmailCont.className = "day";
+      modifiersEmail.className = "day";
+      modifiersInformationCont.className = "day";
+      modifiersInformation.className = "day";
+      contextMenus.forEach((contextMenu) => {
+        if (!contextMenu.classList.contains("day")) {
+          contextMenu.classList.add("day");
+        }
+      });
 
     } else {
       // Dark theme
@@ -762,7 +779,18 @@ function updateBubbles() {
       controls.style.color = "#bfd4e9";
       menuLabelSkins.style.color = "#bfd4e9";
       menuLabelModifiers.style.color = "#bfd4e9";
+      modifiersSettingsCont.className = "night";
       modifiersSettingsHiboxAreaContextMenu.className = "night";
+      modifiersEmailCont.className = "night";
+      modifiersEmail.className = "night";
+      modifiersInformationCont.className = "night";
+      modifiersInformation.className = "night";
+      contextMenus.forEach((contextMenu) => {
+        if (!contextMenu.classList.contains("night")) {
+          contextMenu.classList.add("night");
+        }
+      });
+
     }
 
     ajustesColorLoginYregister(checkbox);
@@ -3318,6 +3346,7 @@ function setNormalPrice(skinContainer, price) {
     // Actualizar el contador de monedas en la interfaz
     document.querySelector(".coinLabel").textContent = monedasLogeado;
     await actualizarMonedasUsuario(idLogeado, monedasLogeado);
+    await descontarMonedasSoloAnim(price);
 
     setTimeout(async () => {
       // Ocultar y deshabilitar eventos de puntero
@@ -3543,6 +3572,10 @@ function setNormalPrice(skinContainer, price) {
       notebookLogoVacio.style.display = "block";
       notebook.style.display = "none";
       stage.style.display = "none";
+
+      cageContainer.style.display = "block";
+      tomatoContainer.style.display = "flex";
+      wrapper.style.display = "block";
       
     } else {
       // El usuario no ha iniciado sesión
@@ -3628,6 +3661,11 @@ function setNormalPrice(skinContainer, price) {
       notebookLogoVacio.style.display = "none";
       notebook.style.display = "none";
       stage.style.display = "none";
+
+      cageContainer.style.display = "none";
+      tomatoContainer.style.display = "none";
+      wrapper.style.display = "none";
+
     }
   }
 
@@ -7934,6 +7972,40 @@ modifiersContainer.addEventListener("click", function (event) {
 });
 
 
+let descontarMonedasSoloAnimFlag = false;
+async function descontarMonedasSoloAnim(price){
+  if(descontarMonedasSoloAnimFlag){
+    return;
+  }
+  descontarMonedasSoloAnimFlag = true;
+
+  try {
+    let coinRestar = document.createElement("div");
+    coinsContainer.appendChild(coinRestar);
+    coinRestar.classList.add("coinRestar");
+    coinRestar.style.display = "block";
+    coinRestar.textContent = "-"+price;
+
+    let longitud = coinLabel.textContent.toString().length;
+    console.log("longitud: "+longitud);
+    let marginLeftCoinRestar = 50 + longitud * 30;
+    coinRestar.style.marginLeft = `${marginLeftCoinRestar}px`;
+
+
+    setTimeout(() => {
+      coinRestar.style.display = "none";
+      descontarMonedasSoloAnimFlag = false;
+    }, 2000);
+
+
+  } catch (error) {
+    console.error(
+      "Error durante la actualización de monedas en descontarMonedasSoloAnim",
+      error
+    );
+  }
+}
+
 async function descontarMonedas(price){
   try {
     localCoinsCounter = localCoinsCounter - price;
@@ -7972,15 +8044,14 @@ async function descontarMonedas(price){
 }
 
 function tomatoAnimStart() {
-  const initialMarginLeft = -147;
+  const initialMarginLeft = -120;
   const longitud = tomatoLabel.textContent.toString().length;
-  const marginLeftTomatoAnim = initialMarginLeft + longitud * 20;
+  const marginLeftTomatoAnim = initialMarginLeft + longitud * 18;
 
   const existingTomatoAnims = tomatoContainer.querySelectorAll(".tomatoAnim");
   existingTomatoAnims.forEach((element) => element.remove());
 
   let tomatoAnim = document.createElement("img");
-  tomatoAnim.style.marginLeft = '-147px';
   tomatoAnim.classList.add("tomatoAnim");
   tomatoAnim.src =
     "img/hamster/icons/tomatoAnim.gif" + "?t=" + new Date().getTime();
@@ -8005,47 +8076,82 @@ buttonV.addEventListener("click", async function () {
   setTimeout(() => {
     unblockClicks();
   }, 600);
-
+  let monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
+  let messages = ["¡Trabaja y gana monedas!", "¡No te llegan las monedas!", "¡La calderilla no llega!"];
+  let textDefaultMessage = messages[Math.floor(Math.random() * messages.length)];
+  
   if (iconDialogElement.src.includes("iconBiggie")) {
+    if (monedasLogeado < 500) {
+      setTimeout(() => {
+        showDialogDefault(textDefaultMessage);
+      }, 700);
+      return;
+    }
+
     hitboxSlotBuyBiggieClick.style.display = "none";
     hitboxSlotBuyBiggie.style.display = "none";
     groceryJaleBiggie.style.display = "none";
     if(hitboxSlotBuyCoco.style.display === "none" && hitboxSlotBuyDior.style.display === "block"){
       groceryJaleChains.style.display = "block";
+    }else{
+      groceryJaleChains.style.display = "none";
     }
     currentHamster = document.querySelector(".biggie");
+    await descontarMonedas(500);
     intentarClonarHamster3Hitbox(currentHamster);
-    resetDragVariables();
+    resetDragVariables();/*
         // Restar el precio y actualizar en la base de datos
         monedasLogeado -= 500;
         // Actualizar el contador de monedas en la interfaz
         document.querySelector(".coinLabel").textContent = monedasLogeado;
         await actualizarMonedasUsuario(idLogeado, monedasLogeado);
-        await actualizarLocalCoinsCounter(idLogeado);
+        await actualizarLocalCoinsCounter(idLogeado);*/
 
   } else if (iconDialogElement.src.includes("iconDior")) {
+    if (monedasLogeado < 500) {
+      setTimeout(() => {
+        showDialogDefault(textDefaultMessage);
+      }, 700);
+      return;
+    }
+
     hitboxSlotBuyDiorClick.style.display = "none";
     hitboxSlotBuyDior.style.display = "none";
     groceryJaleDior.style.display = "none";
     groceryJaleChains.style.display = "none";
     currentHamster = document.querySelector(".dior");
+    await descontarMonedas(500);
     intentarClonarHamster3Hitbox(currentHamster);
     resetDragVariables();
-    await descontarMonedas(500);
 
   } else if (iconDialogElement.src.includes("iconCocco")) {
+    if (monedasLogeado < 500) {
+      setTimeout(() => {
+        showDialogDefault(textDefaultMessage);
+      }, 700);
+      return;
+    }
+
     hitboxSlotBuyCocoClick.style.display = "none";
     hitboxSlotBuyCoco.style.display = "none";
     groceryJaleCoco.style.display = "none";
     if(hitboxSlotBuyBiggie.style.display === "none" && hitboxSlotBuyDior.style.display === "block"){
       groceryJaleChains.style.display = "block";
+    }else{
+      groceryJaleChains.style.display = "none";
     }
     currentHamster = document.querySelector(".coco");
+    await descontarMonedas(500);
     intentarClonarHamster3Hitbox(currentHamster);
     resetDragVariables();
-    await descontarMonedas(500);
 
   }else if (iconDialogElement.src.includes("iconTomato")) {
+    if (monedasLogeado < 10) {
+      setTimeout(() => {
+        showDialogDefault(textDefaultMessage);
+      }, 700);
+      return;
+    }
 
     await descontarMonedas(10);
     await incrementTomatos(idLogeado, 1);
@@ -8062,10 +8168,36 @@ buttonX.addEventListener("click", function () {
   }, 600);
 });
 
+
+function showDialogDefault(texto) {
+  console.log("showDialogDefault");
+  isDialogActive = true; // Marcar el diálogo como activo
+  dialogContainer.style.display = "flex";
+  dialogContainer.style.animation = "dialogShow 0.6s forwards";
+
+  dialogFlex.textContent = texto;
+  iconDialogElement.style.display = "none";
+  iconDialogCoin.style.display = "none";
+  buttonV.style.display = "none";
+  buttonX.style.display = "none";
+  buttonsImg.style.display = "none";
+
+  setTimeout(() => {
+    hideDialog();
+  }, 2000);
+}
+
 function showDialog(hitbox) {
   isDialogActive = true; // Marcar el diálogo como activo
   dialogContainer.style.display = "flex";
   dialogContainer.style.animation = "dialogShow 0.6s forwards";
+
+  iconDialogElement.style.display = "block";
+  iconDialogCoin.style.display = "block";
+  buttonV.style.display = "flex";
+  buttonX.style.display = "flex";
+  buttonsImg.style.display = "block";
+
 
   if (hitbox.id === "hitboxSlotBuyBiggieClick") {
     dialogFlex.textContent = "Quieres comprar 1ㅤㅤㅤpor 500ㅤㅤ?";
@@ -8266,6 +8398,7 @@ async function cargarHamstersDesdeBD() {
       groceryJaleChains.style.display = "block";
     } else {
       console.log("No se cumplen las condiciones.");
+      groceryJaleChains.style.display = "none";
     }
 
     
