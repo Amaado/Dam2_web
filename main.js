@@ -2462,7 +2462,7 @@ async function incrementTomatos(idLogeado, tomatesAnhadir) {
         error
       );
     }
-  }, 2000);
+  }, 790);
 }
 
 
@@ -4247,6 +4247,7 @@ function setNormalPrice(skinContainer, price) {
 
     if (skinsContainer.classList.contains("active")) {
       coinsContainer.style.marginLeft = "15vw";
+      tomatoContainer.style.marginLeft = "15vw";
     }
   }
 
@@ -4258,6 +4259,7 @@ function setNormalPrice(skinContainer, price) {
 
     if (!skinsContainer.classList.contains("active")) {
       coinsContainer.style.marginLeft = "0vw";
+      tomatoContainer.style.marginLeft = "0vw";
     }
   }
 
@@ -7023,12 +7025,14 @@ function setPositionHamster(currentHamster, hitbox, originalContainer) {
     const totalDistance = Math.abs(targetPos - pos);
     const totalSteps = Math.ceil(totalDistance / step); // Número total de pasos
     let currentStep = 0;
+    currentHamster.classList.add("walkAnim");
 
     const walkInterval = setInterval(() => {
       // Pausa aleatoria durante el movimiento
       if (Math.random() < 0.02) { // 5% de probabilidad de pausa
         //console.log("Hamster hace una pausa momentánea.");
         clearInterval(walkInterval);
+        currentHamster.classList.remove("walkAnim");
         setTimeout(() => {
           //console.log("Hamster reanuda el movimiento.");
           walk(targetPos - pos, direction); // Continúa desde donde pausó
@@ -7041,12 +7045,14 @@ function setPositionHamster(currentHamster, hitbox, originalContainer) {
         //console.log("Hamster interactuó con otro hamster y cambió de dirección.");
         direction = -direction; // Cambiar dirección al cruzarse
         clearInterval(walkInterval);
+        currentHamster.classList.remove("walkAnim");
         walk(distance, direction); // Reiniciar movimiento en la nueva dirección
         return;
       }
 
       if (currentStep >= totalSteps) {
         clearInterval(walkInterval);
+        currentHamster.classList.remove("walkAnim");
         //console.log("Hamster terminó de caminar.");
 
         // Detenerse entre 1 y 5 segundos ajustado por el factor de detención
@@ -7403,6 +7409,7 @@ function resetHmasterClassList(currentHamster) {
   currentHamster.classList.remove("fallingLess30AnimY");
   currentHamster.classList.remove("fallingAnim");
   currentHamster.classList.remove("fallingAnimY");
+  currentHamster.classList.remove("walkAnim");
 }
 
 // Función para resetear las variables de arrastre
@@ -7928,8 +7935,70 @@ modifiersContainer.addEventListener("click", function (event) {
 
 
 async function descontarMonedas(price){
+  try {
+    localCoinsCounter = localCoinsCounter - price;
 
+    // Actualizar las monedas del usuario en la base de datos
+    let nuevasMonedas = localCoinsCounter;
+    await actualizarMonedasUsuario(idLogeado, nuevasMonedas);
+
+    // Actualizar la interfaz de usuario (etiqueta de monedas)
+    coinLabel.textContent = nuevasMonedas;
+
+
+    let coinRestar = document.createElement("div");
+    coinsContainer.appendChild(coinRestar);
+    coinRestar.classList.add("coinRestar");
+    coinRestar.style.display = "block";
+    coinRestar.textContent = "-"+price;
+
+    let longitud = coinLabel.textContent.toString().length;
+    console.log("longitud: "+longitud);
+    let marginLeftCoinRestar = 50 + longitud * 30;
+    coinRestar.style.marginLeft = `${marginLeftCoinRestar}px`;
+
+
+    setTimeout(() => {
+      coinRestar.style.display = "none";
+    }, 2000);
+
+
+  } catch (error) {
+    console.error(
+      "Error durante la actualización de monedas en la base de datos:",
+      error
+    );
+  }
 }
+
+function tomatoAnimStart() {
+  const initialMarginLeft = -147;
+  const longitud = tomatoLabel.textContent.toString().length;
+  const marginLeftTomatoAnim = initialMarginLeft + longitud * 20;
+
+  const existingTomatoAnims = tomatoContainer.querySelectorAll(".tomatoAnim");
+  existingTomatoAnims.forEach((element) => element.remove());
+
+  let tomatoAnim = document.createElement("img");
+  tomatoAnim.style.marginLeft = '-147px';
+  tomatoAnim.classList.add("tomatoAnim");
+  tomatoAnim.src =
+    "img/hamster/icons/tomatoAnim.gif" + "?t=" + new Date().getTime();
+  
+  tomatoContainer.appendChild(tomatoAnim);
+
+  //TODO: con distintas cifras en el contador de tomates, la animación se rompe
+
+  setTimeout(() => {
+    tomatoAnim.style.marginLeft = `${marginLeftTomatoAnim}px`;
+  }, 100);
+
+  setTimeout(() => {
+    tomatoAnim.style.opacity = "0";
+  }, 2000);
+}
+
+
 
 buttonV.addEventListener("click", async function () {
   hideDialog();
@@ -7978,7 +8047,9 @@ buttonV.addEventListener("click", async function () {
 
   }else if (iconDialogElement.src.includes("iconTomato")) {
 
-    await incrementTomatos(idLogeado, 10);
+    await descontarMonedas(10);
+    await incrementTomatos(idLogeado, 1);
+    tomatoAnimStart();
 
   }
 
