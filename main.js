@@ -2303,7 +2303,7 @@ function updateBubbles() {
 
   async function actualizarMonedas(idLogeado) {
     try {
-      console.log("ID logeado:", idLogeado);
+      //console.log("ID logeado:", idLogeado);
       const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
       coinLabel.textContent = monedasLogeado;
       localCoinsCounter = monedasLogeado;
@@ -3736,7 +3736,23 @@ function setNormalPrice(skinContainer, price) {
         e.target.closest("#rtxContainer") ||
         e.target.closest("#volumenImg") ||
         e.target.closest("#volumeSlider") ||
-        e.target.closest("#settingsImgContainer")
+        e.target.closest("#settingsImgContainer") ||
+        e.target.closest(".hamster") ||
+        e.target.closest("#hitboxSlotBuyDiorClick") ||
+        e.target.closest("#hitboxSlotBuyCocoClick") ||
+        e.target.closest("#hitboxSlotBuyBiggieClick") ||
+        e.target.closest("#cestaHibox") ||
+        e.target.closest("#buttonV") ||
+        e.target.closest("#buttonX") ||
+        e.target.closest("li") ||
+        e.target.closest("#modifiersInformationCont") ||
+        e.target.closest("#modifiersEmailCont") ||
+        e.target.closest("#modifiersSettingsCont") ||
+        e.target.closest(".paletteColor") ||
+        e.target.closest("#writeButton") ||
+        e.target.closest("#paintButton") ||
+        e.target.closest(".sliderPaint") ||
+        e.target.closest("#page-number")
       ) {
         cursorPurpleish.style.opacity = "100%";
         isCursorOverSpecialElement = true;
@@ -3758,7 +3774,23 @@ function setNormalPrice(skinContainer, price) {
         e.target.closest("#rtxContainer") ||
         e.target.closest("#volumenImg") ||
         e.target.closest("#volumeSlider") ||
-        e.target.closest("#settingsImgContainer")
+        e.target.closest("#settingsImgContainer") ||
+        e.target.closest(".hamster") ||
+        e.target.closest("#hitboxSlotBuyDiorClick") ||
+        e.target.closest("#hitboxSlotBuyCocoClick") ||
+        e.target.closest("#hitboxSlotBuyBiggieClick") ||
+        e.target.closest("#cestaHibox") ||
+        e.target.closest("#buttonV") ||
+        e.target.closest("#buttonX") ||
+        e.target.closest("li") ||
+        e.target.closest("#modifiersInformationCont") ||
+        e.target.closest("#modifiersEmailCont") ||
+        e.target.closest("#modifiersSettingsCont") ||
+        e.target.closest(".paletteColor") ||
+        e.target.closest("#writeButton") ||
+        e.target.closest("#paintButton") ||
+        e.target.closest(".sliderPaint") ||
+        e.target.closest("#page-number")
       ) {
         cursorPurpleish.style.opacity = "1%";
         isCursorOverSpecialElement = false;
@@ -8397,7 +8429,7 @@ async function cargarHamstersDesdeBD() {
     ) {
       groceryJaleChains.style.display = "block";
     } else {
-      console.log("No se cumplen las condiciones.");
+      //console.log("No se cumplen las condiciones.");
       groceryJaleChains.style.display = "none";
     }
 
@@ -8561,6 +8593,364 @@ async function cargarHamstersDesdeBDF(){
     }
   }
   
+
+
+  
+
+
+
+
+
+
+  /* HAMSTER STATS */
+
+/******************************************************
+ * 1) OBTENER ESTADÍSTICAS (Lee el JSON de hamstersStats)
+ ******************************************************/
+async function getHamsterStatsFromDB(idLogeado) {
+  try {
+    // Usa la misma estructura que saveCursorSelection:
+    // -> supabaseUrl ya debe incluir la ruta base de tu tabla (por ejemplo ".../rest/v1/usuario")
+    const url = `${supabaseUrl}?id=eq.${idLogeado}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      console.error("Error al obtener hamstersStats:", response.statusText);
+      return null;
+    }
+
+    const data = await response.json();
+
+    // Si no hay registro o viene vacío
+    if (data.length === 0) {
+      console.warn("No se encontró el registro del usuario. Creando por defecto...");
+      const defaultStats = getDefaultHamsterStats();
+      await setHamsterStatsInDB(idLogeado, defaultStats);
+      return defaultStats;
+    }
+
+    // Tomamos la columna hamstersStats (TEXT) del primer registro:
+    let statsText = data[0].hamstersStats;
+
+    // Si el campo está nulo, undefined o cadena vacía:
+    if (!statsText) {
+      console.warn("El campo hamstersStats está nulo/vacío. Creando por defecto...");
+      const defaultStats = getDefaultHamsterStats();
+      await setHamsterStatsInDB(idLogeado, defaultStats);
+      return defaultStats;
+    }
+
+    // Intentar parsear a objeto
+    let statsObj;
+    try {
+      statsObj = JSON.parse(statsText);
+    } catch (err) {
+      console.error("Error al parsear JSON. Se usará objeto por defecto:", err);
+      const defaultStats = getDefaultHamsterStats();
+      await setHamsterStatsInDB(idLogeado, defaultStats);
+      return defaultStats;
+    }
+
+    // Validar estructura
+    if (!statsObj.hamsters || !Array.isArray(statsObj.hamsters)) {
+      console.warn("Estructura inválida en hamstersStats. Creando por defecto...");
+      const defaultStats = getDefaultHamsterStats();
+      await setHamsterStatsInDB(idLogeado, defaultStats);
+      return defaultStats;
+    }
+
+    // Si todo está OK, devolver el objeto
+    return statsObj;
+  } catch (error) {
+    console.error("Error en getHamsterStatsFromDB:", error);
+    return null;
+  }
+}
+
+/******************************************************
+ * 2) GUARDAR ESTADÍSTICAS (Escribe el JSON en hamstersStats)
+ ******************************************************/
+async function setHamsterStatsInDB(idLogeado, newStatsObj) {
+  try {
+    // Usa la misma estructura que saveCursorSelection:
+    const url = `${supabaseUrl}?id=eq.${idLogeado}`;
+
+    // Convertir el objeto JS a texto JSON
+    const body = {
+      hamstersStats: JSON.stringify(newStatsObj),
+    };
+
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error("Error al guardar hamstersStats:", response.statusText, errorData);
+      throw new Error("Error en la actualización de hamstersStats: " + response.statusText);
+    }
+
+    const data = await response.json();
+    //console.log("hamstersStats actualizado correctamente:", data);
+    return data;
+  } catch (error) {
+    console.error("Error en setHamsterStatsInDB:", error);
+    return null;
+  }
+}
+
+/******************************************************
+ * 3) OBJETO POR DEFECTO (hamsters al 1000)
+ ******************************************************/
+function getDefaultHamsterStats() {
+  return {
+    hamsters: [
+      { id: "dior",   energy: 1000, hunger: 1000, thirst: 1000 },
+      { id: "coco",   energy: 1000, hunger: 1000, thirst: 1000 },
+      { id: "biggie", energy: 1000, hunger: 1000, thirst: 1000 },
+    ],
+  };
+}
+
+
+/******************************************************
+ * Timers / Lógicas de decremento y recuperación
+ ******************************************************/
+
+/**
+ * Decrementa energía en `amount` (ej: 16.7 por segundo)
+ * y actualiza el atributo y slider en el DOM.
+ */
+function decrementEnergy(hamsterId, amount) {
+  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  if (!hamsterEl) return;
+
+  // Leer valor actual (string -> number)
+  let currentEnergy = Number(hamsterEl.getAttribute("energy")) || 0;
+  currentEnergy -= amount;
+  if (currentEnergy < 0) currentEnergy = 0;
+
+  // Actualizar DOM
+  hamsterEl.setAttribute("energy", currentEnergy);
+  const slider = hamsterEl.querySelector(".sliderEnergy");
+  if (slider) slider.value = currentEnergy;
+}
+
+/**
+ * Decrementa hambre en `amount` (ej: 0.83 por segundo)
+ * y actualiza en el DOM.
+ */
+function decrementHunger(hamsterId, amount) {
+  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  if (!hamsterEl) return;
+
+  let currentHunger = Number(hamsterEl.getAttribute("hunger")) || 0;
+  currentHunger -= amount;
+  if (currentHunger < 0) currentHunger = 0;
+
+  hamsterEl.setAttribute("hunger", currentHunger);
+  const slider = hamsterEl.querySelector(".sliderHunger");
+  if (slider) slider.value = currentHunger;
+}
+
+/**
+ * Decrementa sed en `amount` (ej: 0.56 por segundo)
+ * y actualiza en el DOM.
+ */
+function decrementThirst(hamsterId, amount) {
+  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  if (!hamsterEl) return;
+
+  let currentThirst = Number(hamsterEl.getAttribute("thirst")) || 0;
+  currentThirst -= amount;
+  if (currentThirst < 0) currentThirst = 0;
+
+  hamsterEl.setAttribute("thirst", currentThirst);
+  const slider = hamsterEl.querySelector(".sliderWater");
+  if (slider) slider.value = currentThirst;
+}
+
+
+function fillFullStats(hamsterId){
+  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  if (!hamsterEl) return;
+
+  let currentThirst = Number(1000);
+
+  hamsterEl.setAttribute("thirst", currentThirst);
+  const slider = hamsterEl.querySelector(".sliderWater");
+  if (slider) slider.value = currentThirst;
+}
+
+
+
+function startPeriodicStatsUpdate(userId) {
+  // Se ejecutará cada 20 segundos
+  setInterval(async () => {
+    // 1) Tomar todos los hamsters del DOM
+    const hamsterEls = document.querySelectorAll(".hamster");
+    const statsObj = { hamsters: [] };
+
+    hamsterEls.forEach((el) => {
+      // Identifica el hamsterId por la clase dior, coco, biggie, etc.
+      // Asumiendo solo uno de estos estará presente en su classList
+      let hamsterId = "";
+      if (el.classList.contains("dior")) {
+        hamsterId = "dior";
+      } else if (el.classList.contains("coco")) {
+        hamsterId = "coco";
+      } else if (el.classList.contains("biggie")) {
+        hamsterId = "biggie";
+      }
+
+      // Lee los atributos:
+          const energy = Number.isNaN(Number(el.getAttribute("energy")))
+      ? (console.warn("Fallo al guardar: energy"), 0)
+      : Number(el.getAttribute("energy"));
+
+    const hunger = Number.isNaN(Number(el.getAttribute("hunger")))
+      ? (console.warn("Fallo al guardar: hunger"), 0)
+      : Number(el.getAttribute("hunger"));
+
+    const thirst = Number.isNaN(Number(el.getAttribute("thirst")))
+      ? (console.warn("Fallo al guardar: thirst"), 0)
+      : Number(el.getAttribute("thirst"));
+
+
+      // Añade al array
+      statsObj.hamsters.push({
+        id: hamsterId,
+        energy,
+        hunger,
+        thirst,
+      });
+    });
+
+    // 2) Enviar con UNA sola petición
+    await setHamsterStatsInDB(userId, statsObj);
+    //console.log("Actualización global de stats en BD:", statsObj);
+    console.log('%c Actualización global de stats en BD: %o', 'background: blue; color: white; padding: 4px;', statsObj);
+  }, 20000);
+}
+
+
+
+
+/******************************************************
+ * Uso típico al cargar página, según si un hamster se compró o no
+ ******************************************************/
+window.addEventListener("load", async () => {
+  const userId = idLogeado; // Ajusta a tu variable real
+
+  // 1) Cargar stats desde la BD
+  let userHamstersStats = await getHamsterStatsFromDB(userId);
+
+  // Si la función devolvió null, forzamos valores por defecto y guardamos
+  if (!userHamstersStats) {
+    userHamstersStats = getDefaultHamsterStats();
+    await setHamsterStatsInDB(userId, userHamstersStats);
+  }
+
+  console.log("Hamster Stats al iniciar:", userHamstersStats);
+
+  // 2) Esperar 2s (o lo que necesites) y luego recorrer los hamsters del DOM
+  setTimeout(() => {
+    const hamsterElements = document.querySelectorAll(".hamster");
+
+    hamsterElements.forEach((hamsterEl) => {
+      // 2.1) Identificar cuál hamster es (dior, coco, biggie)
+      let hamsterId = "";
+      if (hamsterEl.classList.contains("dior")) {
+        hamsterId = "dior";
+      } else if (hamsterEl.classList.contains("coco")) {
+        hamsterId = "coco";
+      } else if (hamsterEl.classList.contains("biggie")) {
+        hamsterId = "biggie";
+      }
+
+      // 2.2) Encontrar sus estadísticas en userHamstersStats
+      const hamsterData = userHamstersStats.hamsters.find(h => h.id === hamsterId);
+      if (hamsterData) {
+        // 2.3) Cargar los valores en el DOM (atributos + sliders)
+        hamsterEl.setAttribute("energy", hamsterData.energy);
+        hamsterEl.setAttribute("hunger", hamsterData.hunger);
+        hamsterEl.setAttribute("thirst", hamsterData.thirst);
+
+        const sliderEnergy = hamsterEl.querySelector(".sliderEnergy");
+        if (sliderEnergy) sliderEnergy.value = hamsterData.energy;
+
+        const sliderHunger = hamsterEl.querySelector(".sliderHunger");
+        if (sliderHunger) sliderHunger.value = hamsterData.hunger;
+
+        const sliderThirst = hamsterEl.querySelector(".sliderWater");
+        if (sliderThirst) sliderThirst.value = hamsterData.thirst;
+      }
+
+      // 2.4) Si el hamster está en la tienda (ej: id incluye "hitboxSlotBuy"), lo llenamos a tope
+      if (hamsterEl.parentElement.id.includes("hitboxSlotBuy")) {
+        fillFullStats(hamsterId);
+      } else {
+        // 2.5) Si está fuera de la tienda, iniciamos decrementos y la actualización periódica
+        function startDecreasingStats(hamsterId) {
+          setInterval(() => {
+            // Energy: 16.67 por segundo -> 1 minuto (60s)
+            decrementEnergy(hamsterId, 16.67);
+
+            // Hunger: 1.67 por segundo -> 10 min
+            decrementHunger(hamsterId, 1.67);
+
+            // Thirst: ~1.11 por segundo -> 15 min
+            decrementThirst(hamsterId, 1.11);
+          }, 1000);
+
+          // Actualización global cada 20s (una sola petición)
+          startPeriodicStatsUpdate(userId);
+        }
+
+        startDecreasingStats(hamsterId);
+      }
+    });
+  }, 2000);
+});
+
+
+  //TODO !: hacer que el hamster reste enetrgía entra en la rueda y sume cuando sale de la rueda 
+  //TODO !: hacer que se empicen a restar Stats cuando compras un hamster
+  //TODO !: sumar monedas con el giro de la rueda
+  //TODO !: ocultar y guardar caja -> congelarla temporalmente
+
+  //TODO: arreglar css de los sliders cuando llegan a 0...
+  //TODO: crear sliceTomatosContainer
+  //TODO: posibilidad de mover los containers de tomates/sliceTomates a dentro de Modifiers (opción en modifiersSettings)
+  //TODO: fondos en las skinsCc cuando estén activas
+
+  //TODOmini: infoButtonModifiersContainer: tutorial
+  //TODOmini: hover en coinsContainer && tomatosContainer && sliceTomatosContainer
+  
+  //TOCREATE: cerrar grocery por las noches (+posibilidad de tocar al timbre)
+  //TOCREATE: email compañía del agua. Pagar tasas
+  //TOCREATE: perder al hamster y llamar al inspector (posible secuestro en furgoneta negra)
+  //TOCREATE: hamster con enfermedades y posible muerte + reunir bolas del dragón y llamar a Shenlog para revivir hamster
+  //TOCREATE: Tendero descansando en la ventana
+  
+  //TOCREATE_note: Funcionalidad audio
+
+
 
 });
 
