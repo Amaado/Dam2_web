@@ -137,6 +137,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const buttonV = document.getElementById('buttonV');
   const buttonX = document.getElementById('buttonX');
   const buttonsImg = document.getElementById('buttonsImg');
+  const coinsContainerHitbox = document.querySelector('.coinsContainerHitbox');
+  const coinsHoverTooltip = document.querySelector('.coinsHoverTooltip');
+
   
 
 /* BUBBLES */
@@ -2306,11 +2309,20 @@ function updateBubbles() {
       //console.log("ID logeado:", idLogeado);
       const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
       coinLabel.textContent = monedasLogeado;
+
+      atualizarCoinsContainerHitboxWidth(monedasLogeado);
+
       localCoinsCounter = monedasLogeado;
       console.log("Monedas obtenidas:", monedasLogeado);
     } catch (error) {
       console.error("Error durante ACTUALIZAR MONEDAS:", error);
     }
+  }
+
+  function atualizarCoinsContainerHitboxWidth(monedas){
+    const monedasLength = String(Math.abs(monedas)).length;
+    let pixelesAsumar = monedasLength*30 + 30 + 65;
+    coinsContainerHitbox.style.width = pixelesAsumar+"px";
   }
 
   /* CLICK PARA FARMEAR MONEDAS */
@@ -2352,6 +2364,8 @@ function updateBubbles() {
 
         // Actualizar la interfaz de usuario (etiqueta de monedas)
         coinLabel.textContent = nuevasMonedas;
+
+        atualizarCoinsContainerHitboxWidth(nuevasMonedas);
       } catch (error) {
         console.error(
           "Error durante la actualización de monedas en la base de datos:",
@@ -3347,6 +3361,8 @@ function setNormalPrice(skinContainer, price) {
     document.querySelector(".coinLabel").textContent = monedasLogeado;
     await actualizarMonedasUsuario(idLogeado, monedasLogeado);
     await descontarMonedasSoloAnim(price);
+
+    //        atualizarCoinsContainerHitboxWidth(nuevasMonedas);
 
     setTimeout(async () => {
       // Ocultar y deshabilitar eventos de puntero
@@ -8928,7 +8944,7 @@ window.addEventListener("load", async () => {
   }, 2000);
 });
 
-
+  //TODO !: Animacion descontar en coinsContainer + -500 in cursor
   //TODO !: hacer que el hamster reste enetrgía entra en la rueda y sume cuando sale de la rueda 
   //TODO !: hacer que se empicen a restar Stats cuando compras un hamster
   //TODO !: sumar monedas con el giro de la rueda
@@ -8942,11 +8958,15 @@ window.addEventListener("load", async () => {
   //TODOmini: infoButtonModifiersContainer: tutorial
   //TODOmini: hover en coinsContainer && tomatosContainer && sliceTomatosContainer
   
+  //TOCREATE: skins animadas en la portada
+  //TOCREATE: rareza animada en la portada
+  //TOCREATE: manera para ordenar skins
   //TOCREATE: cerrar grocery por las noches (+posibilidad de tocar al timbre)
   //TOCREATE: email compañía del agua. Pagar tasas
   //TOCREATE: perder al hamster y llamar al inspector (posible secuestro en furgoneta negra)
   //TOCREATE: hamster con enfermedades y posible muerte + reunir bolas del dragón y llamar a Shenlog para revivir hamster
   //TOCREATE: Tendero descansando en la ventana
+  //TOCREATE: ruleta diaria
   
   //TOCREATE_note: Funcionalidad audio
 

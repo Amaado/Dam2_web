@@ -1740,6 +1740,21 @@ div.img img {
   font-family: "kemco";
 }
 
+.coinsContainerHitbox{
+  position: absolute;
+  background-color: blue;
+  width: 65px;
+  height: 55px;
+  top: -2px;
+  left: -7px;
+}
+.coinsContainerHitbox:hover{
+  background-color: #000000;
+}
+.coinsHoverTooltip{
+  position: absolute;
+}
+
 .coinsContainerCoin {
   width: 40px;
   height: 40px;
