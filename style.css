@@ -1700,7 +1700,7 @@ div.img img {
   height: 115px;
   z-index: 1;
   margin-top: -2px;
-  margin-left: -147;
+  margin-left: -120px;
   filter: brightness(1.33) saturate(1.5);
   opacity: 1;
   transition: margin-left 1s ease, opacity 0.5s ease;
@@ -1805,7 +1805,7 @@ div.img img {
   transform: rotateZ(-30deg);
   margin-left: 50px;
   margin-top: 40px;
-  animation: coinRestar 2s infinite;
+  animation: coinRestar 2s forwards;
 }
 
 @keyframes coinRestar {
@@ -4161,6 +4161,7 @@ canvas {
   height: auto;
   transition: margin-right 0.5s ease;
   pointer-events: none;
+  display: none;
 }
 
 #cage{
@@ -4340,8 +4341,9 @@ canvas {
 
 .hamsterTooltip{
   position: absolute;
-  height: 24px;
   background-color: #07080a9c;
+  color: #bfd4e9;
+  height: 24px;
   text-align: center;
   bottom: 30px;
   padding: 2px;
@@ -4843,7 +4845,6 @@ canvas {
   height: 3.5vh;
   left: 1.4vh;
   bottom: 3.5vh;
-  background-color: rgba(0, 128, 0, 0.637);
   pointer-events: all;  
 }
 
@@ -4854,7 +4855,6 @@ canvas {
   height: 3.5vh;
   left: 5.4vh;
   bottom: 3.5vh;
-  background-color: rgba(255, 0, 0, 0.546);
   pointer-events: all;
 }
 
@@ -4978,8 +4978,6 @@ canvas {
 
 .contextMenu {
   position: absolute;
-  background-color: #1c2128;
-  border: 1px solid #bfd4e9;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
@@ -4989,35 +4987,141 @@ canvas {
   margin: 0;
   right: 3vh;
 }
+.contextMenu.day{
+  background-color: #dddcb0dc;
+  border: 1px solid #313842;
+}
+.contextMenu.night{
+  background-color: #1c2128;
+  border: 1px solid #bfd4e9;
+}
+
 .contextMenu li {
   padding: 8px 12px;
 }
+
 .contextMenu li:hover {
+  background-color: #71604e4f;
+}
+.contextMenu.night li:hover {
   background-color: #bfd4e96b;
 }
 
-#modifiersSettingsCont{
+
+
+#modifiersBar{
+  display: flex;
+  flex-direction: row;
+  gap: 3vh;
+  width: 90%;
+}
+
+
+#modifiersInformationCont{
   position: relative;
-  width: 100%;
-  height: auto;
+  min-width: 30px;
+  height: 30px;
   pointer-events: all;
-  top: -5px;
+  top: -10px;
+  left: 2vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+#modifiersInformationCont.day:hover{
+  background-color: #71604e4f;
+}
+#modifiersInformationCont.night:hover{
+  background-color: #bfd4e949;
+}
+
+#modifiersInformation{
+  position: relative;
+  width: 25px;
+  height: 25px;
+  pointer-events: all;
+}
+#modifiersInformation.day{
+  filter: brightness(0) saturate(100%) invert(18%) sepia(16%) saturate(607%) hue-rotate(176deg) brightness(96%) contrast(90%);
+}
+#modifiersInformation.night{
+  filter: brightness(0) saturate(100%) invert(91%) sepia(12%) saturate(5479%) hue-rotate(183deg) brightness(113%) contrast(83%);
+}
+
+
+#blank{
+ width: 200%;
+ /*background-color: red;*/
+}
+
+
+#modifiersEmailCont{
+  position: relative;
+  min-width: 30px;
+  height: 30px;
+  pointer-events: all;
+  top: -10px;
   justify-content:  right;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+#modifiersEmailCont.day:hover{
+  background-color: #71604e4f;
+}
+#modifiersEmailCont.night:hover{
+  background-color: #bfd4e949;
+}
+
+
+#modifiersEmail{
+  position: relative;
+  width: 30px;
+  top: -5px;
+  left: 0.5px;
+  height: auto;
+  pointer-events: all;
+}
+#modifiersEmail.day{
+  filter: brightness(0) saturate(100%) invert(18%) sepia(16%) saturate(607%) hue-rotate(176deg) brightness(96%) contrast(90%);
+}
+#modifiersEmail.night{
+  filter: brightness(0) saturate(100%) invert(91%) sepia(12%) saturate(5479%) hue-rotate(183deg) brightness(113%) contrast(83%);
+}
+
+
+
+#modifiersSettingsCont{
+  position: relative;
+  min-width: 30px;
+  height: 30px;
+  pointer-events: all;
+  top: -10px;
+  right: 2vh;
+  justify-content:  right;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+#modifiersSettingsCont.day:hover{
+  background-color: #71604e4f;
+}
+#modifiersSettingsCont.night:hover{
+  background-color: #bfd4e949;
 }
 
 #modifiersSettings{
   position: relative;
   width: 25px;
-  height: auto;
+  height: 25px;
   pointer-events: all;
-  right: 3vh;
 }
-
 #modifiersSettings.day{
   filter: brightness(0) saturate(100%) invert(18%) sepia(16%) saturate(607%) hue-rotate(176deg) brightness(96%) contrast(90%);
 }
-
 #modifiersSettings.night{
   filter: brightness(0) saturate(100%) invert(91%) sepia(12%) saturate(5479%) hue-rotate(183deg) brightness(113%) contrast(83%);
 }
@@ -5027,6 +5131,12 @@ canvas {
   top:200px;
   left: 50px;
   display: none;
+}
+#modifiersSettingsContextMenu.day{
+
+}
+#modifiersSettingsContextMenu.night{
+
 }
 
 #gorceryContextMenu{
