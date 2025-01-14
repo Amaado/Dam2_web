@@ -476,6 +476,12 @@ function updateBubbles() {
         }else{
           cursorPurpleish.src = cursorPurpleishSrc;
         }
+
+        if(cursorPurpleishSrc.includes("cccc_ghostRider")){
+          cursorPurpleish.style.filter = "hue-rotate(-50deg)";
+        }else{
+          cursorPurpleish.style.filter = "";
+        }
       }
     }
 
@@ -699,6 +705,13 @@ function updateBubbles() {
         }else{
           cursorPurpleish.src = insertPurpleishBeforeExtension(dayCursorSrc);
         }
+
+        if (dayCursorSrc.includes("cccc_ghostRider")) {
+          cursorPurpleish.style.filter = "hue-rotate(-50deg)";
+        }else{
+          cursorPurpleish.style.filter = "";
+        }
+
       }
       if (flechaaSkins) {
         flechaaSkins.src = "img/flechaDay.png";
@@ -762,6 +775,13 @@ function updateBubbles() {
         }else{
           cursorPurpleish.src = insertPurpleishBeforeExtension(nightCursorSrc);
         }
+
+        if (nightCursorSrc.includes("cccc_ghostRider")) {
+          cursorPurpleish.style.filter = "hue-rotate(-50deg)";
+        }else{
+          cursorPurpleish.style.filter = "";
+        }
+
       }
       if (flechaaSkins) {
         flechaaSkins.src = "img/flechaNight.png";
