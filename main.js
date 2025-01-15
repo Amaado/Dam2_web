@@ -1472,6 +1472,7 @@ function updateBubbles() {
     }
   }
 
+  let monedasUpdateInterval;
   // 5. Actualizar las monedas (coins) de un usuario por id
   async function actualizarMonedasUsuario(idLogin, monedasNuevas) {
     if (
@@ -1482,10 +1483,10 @@ function updateBubbles() {
       console.error("El valor de monedasNuevas no es válido:", monedasNuevas);
       return;
     }
-
+  
     const url = `${supabaseUrl}?id=eq.${idLogin}`;
     const actualizarMonedas = { coins: parseInt(monedasNuevas) };
-
+  
     try {
       const response = await fetch(url, {
         method: "PATCH",
@@ -1497,7 +1498,7 @@ function updateBubbles() {
         },
         body: JSON.stringify(actualizarMonedas),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.text();
         console.error(
@@ -1509,14 +1510,16 @@ function updateBubbles() {
           "Error en la actualización de monedas: " + response.statusText
         );
       }
-
+  
       const data = await response.json();
-      //console.log('Monedas actualizadas correctamente:', data);
+
+  
       return data;
     } catch (error) {
       console.error("Error al actualizar las monedas:", error);
     }
   }
+  
 
   // 7. Obtener un usuario por id
   async function obtenerUsuarioPorId(id) {
@@ -3295,24 +3298,26 @@ async function incrementTomatos(idLogeado, tomatesAnhadir) {
 
       try {
         // Agregar event listeners solo a skins bloqueadas
-        candado.addEventListener("click", () =>
+        candado.addEventListener("click", (event) =>
           searchUnlockingStatus(
             candado,
             skinContainerLock,
             skinContainerNotVisible,
             price,
             index,
-            idLogeado
+            idLogeado,
+            event
           )
         );
-        skinContainerNotVisible.addEventListener("click", () =>
+        skinContainerNotVisible.addEventListener("click", (event) =>
           searchUnlockingStatus(
             candado,
             skinContainerLock,
             skinContainerNotVisible,
             price,
             index,
-            idLogeado
+            idLogeado,
+            event
           )
         );
 
@@ -3338,7 +3343,8 @@ function setNormalPrice(skinContainer, price) {
     skinContainerNotVisible,
     price,
     skinIndex,
-    idLogeado
+    idLogeado,
+    event
   ) {
     if (isUnlocking) return;
 
@@ -3353,7 +3359,8 @@ function setNormalPrice(skinContainer, price) {
         price,
         monedasLogeado,
         idLogeado,
-        skinIndex
+        skinIndex,
+        event
       );
       actualizarLocalCoinsCounter(idLogeado);
     } else {
@@ -3368,19 +3375,50 @@ function setNormalPrice(skinContainer, price) {
     price,
     monedasLogeado,
     idLogeado,
-    skinIndex
+    skinIndex,
+    event
   ) {
     candado.src = "img/lock.gif";
     candado.style.pointerEvents = "none";
     skinContainerLock.style.pointerEvents = "none";
 
-    // Restar el precio y actualizar en la base de datos
+
+    // Limpia el intervalo existente, si lo hay
+    if (monedasUpdateInterval) {
+      clearInterval(monedasUpdateInterval);
+    }
+
+    let monedasViejas = parseInt(monedasLogeado, 10);
     monedasLogeado -= price;
+    let monedasNuevas = parseInt(monedasLogeado, 10); // Asegúrate de que `data` contiene las monedas nuevas como un número
+
+    // Calcular la cantidad de pasos y la duración de cada paso
+    const pasos = Math.abs(monedasViejas - monedasNuevas);
+    const intervaloDuracion = pasos > 0 ? 2000 / pasos : 0; // Duración en ms por paso (2 segundos en total)
+
+    // Intervalo para animar la actualización de monedas
+    monedasUpdateInterval = setInterval(() => {
+      if (monedasViejas === monedasNuevas) {
+        clearInterval(monedasUpdateInterval); // Detener el intervalo si los valores coinciden
+        return;
+      }
+
+      if (monedasViejas < monedasNuevas) {
+        monedasViejas++; // Incrementa hacia el valor deseado
+      } else if (monedasViejas > monedasNuevas) {
+        monedasViejas--; // Decrementa hacia el valor deseado
+      }
+
+      // Actualiza el contenido de coinLabel
+      coinLabel.textContent = monedasViejas;
+    }, intervaloDuracion); // Ajusta la velocidad de la animación aquí
+
+
 
     // Actualizar el contador de monedas en la interfaz
-    document.querySelector(".coinLabel").textContent = monedasLogeado;
+    //document.querySelector(".coinLabel").textContent = monedasLogeado;
     await actualizarMonedasUsuario(idLogeado, monedasLogeado);
-    await descontarMonedasSoloAnim(price);
+    await descontarMonedasSoloAnim(price, event);
 
     //        atualizarCoinsContainerHitboxWidth(nuevasMonedas);
 
@@ -8040,74 +8078,123 @@ modifiersContainer.addEventListener("click", function (event) {
 });
 
 
+
+
+// Función que posiciona el elemento en el cursor
+function positionCoinsDiscoundAnimAtCursor(element, event) {
+  const mouseX = event.clientX;
+  const mouseY = event.clientY;
+  element.style.left = `${mouseX-220}px`;
+  element.style.top = `${mouseY}px`;
+
+  document.addEventListener('mousemove', (event2) => {
+      // Obtener las coordenadas del cursor
+      const mouseX = event2.clientX;
+      const mouseY = event2.clientY;
+
+      // Ajustar la posición del elemento
+      element.style.left = `${mouseX-220}px`;
+      element.style.top = `${mouseY}px`;
+  });
+}
+
+
+/* Existe la llamada duplicada a este método, por ello la flag */
 let descontarMonedasSoloAnimFlag = false;
-async function descontarMonedasSoloAnim(price){
-  if(descontarMonedasSoloAnimFlag){
-    return;
+async function descontarMonedasSoloAnim(price, event) {
+  if (descontarMonedasSoloAnimFlag) {
+      return;
   }
   descontarMonedasSoloAnimFlag = true;
 
   try {
-    let coinRestar = document.createElement("div");
-    coinsContainer.appendChild(coinRestar);
-    coinRestar.classList.add("coinRestar");
-    coinRestar.style.display = "block";
-    coinRestar.textContent = "-"+price;
+      let coinRestar = document.createElement("div");
+      document.body.appendChild(coinRestar);
+      coinRestar.classList.add("coinRestar");
+      coinRestar.style.display = "block";
+      coinRestar.textContent = "-" + price;
 
-    let longitud = coinLabel.textContent.toString().length;
-    console.log("longitud: "+longitud);
-    let marginLeftCoinRestar = 50 + longitud * 30;
-    coinRestar.style.marginLeft = `${marginLeftCoinRestar}px`;
+      let longitud = coinLabel.textContent.toString().length;
+      let marginLeftCoinRestar = 50 + longitud * 30;
+      coinRestar.style.marginLeft = `${marginLeftCoinRestar}px`;
 
+      // Posicionar el elemento en el cursor
+      positionCoinsDiscoundAnimAtCursor(coinRestar, event);
 
-    setTimeout(() => {
-      coinRestar.style.display = "none";
-      descontarMonedasSoloAnimFlag = false;
-    }, 2000);
-
-
+      setTimeout(() => {
+          descontarMonedasSoloAnimFlag = false;
+      }, 500);
+      setTimeout(() => {
+          coinRestar.style.display = "none";
+          coinRestar.remove();
+      }, 2000);
   } catch (error) {
-    console.error(
-      "Error durante la actualización de monedas en descontarMonedasSoloAnim",
-      error
-    );
+      console.error(
+          "Error durante la actualización de monedas en descontarMonedasSoloAnim",
+          error
+      );
   }
 }
 
-async function descontarMonedas(price){
+async function descontarMonedas(price, event) {
   try {
+          // Limpia el intervalo existente, si lo hay
+    if (monedasUpdateInterval) {
+      clearInterval(monedasUpdateInterval);
+    }
+
+    let monedasViejas = parseInt(localCoinsCounter, 10);
     localCoinsCounter = localCoinsCounter - price;
+    let monedasNuevas = parseInt(localCoinsCounter, 10); // Asegúrate de que `data` contiene las monedas nuevas como un número
 
-    // Actualizar las monedas del usuario en la base de datos
-    let nuevasMonedas = localCoinsCounter;
-    await actualizarMonedasUsuario(idLogeado, nuevasMonedas);
+    // Calcular la cantidad de pasos y la duración de cada paso
+    const pasos = Math.abs(monedasViejas - monedasNuevas);
+    const intervaloDuracion = pasos > 0 ? 1000 / pasos : 0; // Duración en ms por paso (2 segundos en total)
 
-    // Actualizar la interfaz de usuario (etiqueta de monedas)
-    coinLabel.textContent = nuevasMonedas;
+    // Intervalo para animar la actualización de monedas
+    monedasUpdateInterval = setInterval(() => {
+      if (monedasViejas === monedasNuevas) {
+        clearInterval(monedasUpdateInterval); // Detener el intervalo si los valores coinciden
+        return;
+      }
 
+      if (monedasViejas < monedasNuevas) {
+        monedasViejas++; // Incrementa hacia el valor deseado
+      } else if (monedasViejas > monedasNuevas) {
+        monedasViejas--; // Decrementa hacia el valor deseado
+      }
 
-    let coinRestar = document.createElement("div");
-    coinsContainer.appendChild(coinRestar);
-    coinRestar.classList.add("coinRestar");
-    coinRestar.style.display = "block";
-    coinRestar.textContent = "-"+price;
-
-    let longitud = coinLabel.textContent.toString().length;
-    console.log("longitud: "+longitud);
-    let marginLeftCoinRestar = 50 + longitud * 30;
-    coinRestar.style.marginLeft = `${marginLeftCoinRestar}px`;
-
-
-    setTimeout(() => {
-      coinRestar.style.display = "none";
-    }, 2000);
+      // Actualiza el contenido de coinLabel
+      coinLabel.textContent = monedasViejas;
+    }, intervaloDuracion); // Ajusta la velocidad de la animación aquí
 
 
+
+      await actualizarMonedasUsuario(idLogeado, monedasNuevas);
+
+
+      let coinRestar = document.createElement("div");
+      document.body.appendChild(coinRestar);
+      coinRestar.classList.add("coinRestar");
+      coinRestar.style.display = "block";
+      coinRestar.textContent = "-" + price;
+
+      let longitud = coinLabel.textContent.toString().length;
+      let marginLeftCoinRestar = 50 + longitud * 30;
+      coinRestar.style.marginLeft = `${marginLeftCoinRestar}px`;
+
+      // Posicionar el elemento en el cursor
+      positionCoinsDiscoundAnimAtCursor(coinRestar, event);
+
+      setTimeout(() => {
+          coinRestar.style.display = "none";
+          coinRestar.remove();
+      }, 2000);
   } catch (error) {
-    console.error(
-      "Error durante la actualización de monedas en la base de datos:",
-      error
-    );
+      console.error(
+          "Error durante la actualización de monedas en la base de datos:",
+          error
+      );
   }
 }
 
@@ -8139,7 +8226,7 @@ function tomatoAnimStart() {
 
 
 
-buttonV.addEventListener("click", async function () {
+buttonV.addEventListener("click", async function (event) {
   hideDialog();
   setTimeout(() => {
     unblockClicks();
@@ -8165,7 +8252,7 @@ buttonV.addEventListener("click", async function () {
       groceryJaleChains.style.display = "none";
     }
     currentHamster = document.querySelector(".biggie");
-    await descontarMonedas(500);
+    await descontarMonedas(500, event);
     intentarClonarHamster3Hitbox(currentHamster);
     resetDragVariables();/*
         // Restar el precio y actualizar en la base de datos
@@ -8188,7 +8275,7 @@ buttonV.addEventListener("click", async function () {
     groceryJaleDior.style.display = "none";
     groceryJaleChains.style.display = "none";
     currentHamster = document.querySelector(".dior");
-    await descontarMonedas(500);
+    await descontarMonedas(500, event);
     intentarClonarHamster3Hitbox(currentHamster);
     resetDragVariables();
 
@@ -8209,7 +8296,7 @@ buttonV.addEventListener("click", async function () {
       groceryJaleChains.style.display = "none";
     }
     currentHamster = document.querySelector(".coco");
-    await descontarMonedas(500);
+    await descontarMonedas(500, event);
     intentarClonarHamster3Hitbox(currentHamster);
     resetDragVariables();
 
@@ -8221,7 +8308,7 @@ buttonV.addEventListener("click", async function () {
       return;
     }
 
-    await descontarMonedas(10);
+    await descontarMonedas(10, event);
     await incrementTomatos(idLogeado, 1);
     tomatoAnimStart();
 
