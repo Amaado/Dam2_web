@@ -10,6 +10,9 @@
   --ear: url('img/hamster/biggie/earBiggie.png');
   --ear-after: url('img/hamster/biggie/earAfterBiggie.png');
   --ear-after2: url('img/hamster/biggie/earAfterBiggie2.png');
+  --dy: 1;
+	--dx: 1;
+	--dz: 0;
 }
 
 ::selection {
@@ -1886,7 +1889,17 @@ div.img img {
   border: 2px solid #bfd4e9;
   border-radius: 25px;
   overflow: visible;
+
+  transform: perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy)) scale(1);
+  transition: transform 150ms linear;
 }
+
+
+.skinContainer.active {
+  transform: perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy)) scale(1.2);
+}
+
+
 
 @media screen and (max-width: 1600px) {
   .skinContainer {

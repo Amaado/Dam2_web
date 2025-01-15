@@ -476,9 +476,9 @@ function updateBubbles() {
         }else{
           cursorPurpleish.src = cursorPurpleishSrc;
         }
-
+        
         if(cursorPurpleishSrc.includes("cccc_ghostRider")){
-          cursorPurpleish.style.filter = "hue-rotate(-50deg)";
+          cursorPurpleish.style.filter = "hue-rotate(-25deg) saturate(1.8)";
         }else{
           cursorPurpleish.style.filter = "";
         }
@@ -705,9 +705,9 @@ function updateBubbles() {
         }else{
           cursorPurpleish.src = insertPurpleishBeforeExtension(dayCursorSrc);
         }
-
+        
         if (dayCursorSrc.includes("cccc_ghostRider")) {
-          cursorPurpleish.style.filter = "hue-rotate(-50deg)";
+          cursorPurpleish.style.filter = "hue-rotate(-25deg) saturate(1.8)";
         }else{
           cursorPurpleish.style.filter = "";
         }
@@ -775,9 +775,9 @@ function updateBubbles() {
         }else{
           cursorPurpleish.src = insertPurpleishBeforeExtension(nightCursorSrc);
         }
-
+        
         if (nightCursorSrc.includes("cccc_ghostRider")) {
-          cursorPurpleish.style.filter = "hue-rotate(-50deg)";
+          cursorPurpleish.style.filter = "hue-rotate(-25deg) saturate(1.8)";
         }else{
           cursorPurpleish.style.filter = "";
         }
@@ -9050,6 +9050,85 @@ window.addEventListener("load", async () => {
     });
   }, 2000);
 });
+
+
+
+
+/* SKINS HOVER */
+
+const setProp = (el, prop, value) => el.style.setProperty(prop, value);
+
+const onMouseUpdate = (e, el, container) => {
+    const elRect = el.getBoundingClientRect();
+
+    // Coordenadas relativas al contenedor
+    const XRel = e.clientX - elRect.left;
+    const YRel = e.clientY - elRect.top;
+    const width = elRect.width;
+
+    const YAngle = -(0.5 - (XRel / width)) * 40;
+    const XAngle = (0.5 - (YRel / width)) * 40;
+
+    setProp(el, '--dy', `${YAngle}deg`);
+    setProp(el, '--dx', `${XAngle}deg`);
+};
+
+const resetProps = (el) => {
+    el.style.setProperty('--dy', '0');
+    el.style.setProperty('--dx', '0');
+};
+
+const container = document.getElementById("skinsContainer");
+const elements = container.querySelectorAll('.skinContainer');
+
+const adjustHitboxes = (activeEl) => {
+    elements.forEach(el => {
+        if (el !== activeEl) {
+            el.style.height = "50%"; // Reduce la hitbox al 50%
+            el.style.pointerEvents = "none"; // Desactiva eventos para evitar colisiones
+        }
+    });
+};
+
+const resetHitboxes = () => {
+    elements.forEach(el => {
+        el.style.height = ""; // Restablece la altura original
+        el.style.pointerEvents = ""; // Reactiva los eventos
+    });
+};
+
+elements.forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+        el.classList.add('active');
+        el.style.zIndex = "180";
+        adjustHitboxes(el); // Ajusta las hitboxes de los demás elementos
+        onMouseUpdate(e, el, container);
+    }, false);
+
+    el.addEventListener('mouseenter', (e) => {
+        el.classList.add('active');
+        el.style.zIndex = "180";
+        adjustHitboxes(el); // Ajusta las hitboxes al entrar
+        onMouseUpdate(e, el, container);
+    }, false);
+
+    el.addEventListener('mouseleave', () => {
+        el.classList.remove('active');
+        el.style.zIndex = "0";
+        resetHitboxes(); // Restablece las hitboxes al salir
+        resetProps(el);
+    }, false);
+});
+
+
+
+
+
+
+
+
+
+
 
   //TODO !: Animacion descontar en coinsContainer + -500 in cursor
   //TODO !: hacer que el hamster reste enetrgía entra en la rueda y sume cuando sale de la rueda 
