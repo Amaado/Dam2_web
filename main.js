@@ -139,6 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const buttonsImg = document.getElementById('buttonsImg');
   const coinsContainerHitbox = document.querySelector('.coinsContainerHitbox');
   const coinsHoverTooltip = document.querySelector('.coinsHoverTooltip');
+  const coinsContainerAnimationContainer = document.getElementById("coinsContainerAnimationContainer");
 
   
 
@@ -2703,9 +2704,6 @@ async function incrementTomatos(idLogeado, tomatesAnhadir) {
   }
 
   function animationCoin(ultimaCifra, longitud) {
-    const coinsContainerAnimationContainer = document.getElementById(
-      "coinsContainerAnimationContainer"
-    );
     if (coinsContainerAnimationContainer) {
       // Eliminar imgNumberAnim e imgBackgroundAnim si existen antes de crear una nueva animación
       const existingImgNumberAnim =
@@ -3412,7 +3410,7 @@ function setNormalPrice(skinContainer, price) {
       // Actualiza el contenido de coinLabel
       coinLabel.textContent = monedasViejas;
     }, intervaloDuracion); // Ajusta la velocidad de la animación aquí
-
+    coinsContainerAnimationContainer.innerHTML = "";
 
 
     // Actualizar el contador de monedas en la interfaz
@@ -8167,7 +8165,7 @@ async function descontarMonedas(price, event) {
       // Actualiza el contenido de coinLabel
       coinLabel.textContent = monedasViejas;
     }, intervaloDuracion); // Ajusta la velocidad de la animación aquí
-
+    coinsContainerAnimationContainer.innerHTML = "";
 
 
       await actualizarMonedasUsuario(idLogeado, monedasNuevas);
@@ -9130,7 +9128,6 @@ elements.forEach(el => {
 
 
 
-  //TODO !: Animacion descontar en coinsContainer + -500 in cursor
   //TODO !: hacer que el hamster reste enetrgía entra en la rueda y sume cuando sale de la rueda 
   //TODO !: hacer que se empicen a restar Stats cuando compras un hamster
   //TODO !: sumar monedas con el giro de la rueda
