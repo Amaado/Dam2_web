@@ -8,24 +8,24 @@ let gameActive = true;
 function preload() {
     // Carga de imágenes
     this.load.image('goldCC', 'assets/goldCC.png');
+    this.load.image('goldCC_left', 'assets/goldCCIzq.png');
+    this.load.image('goldCC_right', 'assets/goldCCDer.png');
     this.load.image('tomato', 'assets/tomatoFull.png'); // Imagen para los objetos buenos
     this.load.image('tomato_left', 'assets/tomatoIzq.png'); // Mitad izquierda
     this.load.image('tomato_right', 'assets/tomatoDer.png'); // Mitad derecha
     this.load.image('tomatoGold', 'assets/tomatoGold.png');
+    this.load.image('tomatoGold_left', 'assets/tomatoGoldIzq.png');
+    this.load.image('tomatoGold_right', 'assets/tomatoGoldDer.png');
     this.load.image('bomb', 'assets/bomb.png'); // Imagen para los objetos malos
     this.load.image('bombCammo', 'assets/bombCammo.png');
     this.load.image('bombCammoGold', 'assets/bombCammoGold.png');
     this.load.image('peace', 'assets/peace.png'); // Opcional
+    this.load.image('peaceGold', 'assets/peaceGold.png'); // Opcional
 }
 
-var good_objects,
-    bad_objects,
-    slashes,
-    line,
-    scoreLabel,
-    score = 0,
-    points = [];
-
+var good_objects = [];
+var bad_objects = [];
+var slashes, line, scoreLabel, score = 0, points = [];
 var fireRate = 1000;
 var nextFire = 0;
 
@@ -34,9 +34,18 @@ function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.gravity.y = 300;
 
-    // Crear los grupos con las imágenes cargadas
-    good_objects = createGroup(4, 'tomato'); // Usa la imagen de pan tostado para los buenos
-    bad_objects = createGroup(4, 'bomb'); // Usa la imagen de pan quemado para los malos
+    // Crear grupos para cada tipo de objeto
+    good_objects = [
+        createGroup(4, 'goldCC'),
+        createGroup(4, 'tomato'),
+        createGroup(4, 'tomatoGold')
+    ];
+
+    bad_objects = [
+        createGroup(4, 'bomb'),
+        createGroup(4, 'bombCammo'),
+        createGroup(4, 'bombCammoGold')
+    ];
 
     // Configuración de efectos visuales
     slashes = game.add.graphics(0, 0);
@@ -52,6 +61,12 @@ function create() {
     emitter.gravity = 300;
     emitter.setYSpeed(-400, 400);
 
+    emitterGold = game.add.emitter(0, 0, 300);
+    emitterGold.makeParticles('peaceGold');
+    emitterGold.setScale(0.8, 0.3, 0.8, 0.3);
+    emitterGold.gravity = 300;
+    emitterGold.setYSpeed(-400, 400);
+
     throwObject();
 }
 
@@ -66,52 +81,35 @@ function createGroup(numItems, spriteKey) {
 }
 
 function throwObject() {
-    if (gameActive && game.time.now > nextFire && good_objects.countDead() > 0 && bad_objects.countDead() > 0) {
+    if (gameActive && game.time.now > nextFire) {
         nextFire = game.time.now + fireRate;
-        console.log("Firerate: "+fireRate);
-        throwGoodObject();
+
+        // Selecciona un objeto aleatorio de cada categoría para lanzar
         if (Math.random() > 0.5) {
-            throwBadObject();
+            throwRandomObject(good_objects);
+        } else {
+            throwRandomObject(bad_objects);
         }
     }
 }
 
-function throwGoodObject() {
-    var obj = good_objects.getFirstDead();
+function throwRandomObject(groups) {
+    // Selecciona un grupo aleatorio de los grupos proporcionados
+    var group = groups[Math.floor(Math.random() * groups.length)];
+    var obj = group.getFirstDead();
 
-    // Posición inicial aleatoria en la base (parte inferior)
-    obj.reset(game.world.centerX + Math.random() * 100 - Math.random() * 100, h);
-    obj.anchor.setTo(0.5, 0.5);
-    obj.scale.setTo(0.5); // Ajusta el tamaño del objeto
+    if (obj) {
+        obj.reset(game.world.centerX + Math.random() * 100 - Math.random() * 100, h);
+        obj.anchor.setTo(0.5, 0.5);
+        obj.scale.setTo(0.5);
 
-    // Genera un ángulo con tendencia hacia -90°
-    var angle = Phaser.Math.degToRad(weightedAngle(-90, 50, -160, -20)); // Centro: -90°, Desviación: 50°
+        // Genera un ángulo con tendencia hacia -90°
+        var angle = Phaser.Math.degToRad(weightedAngle(-90, 50, -160, -20));
+        var randomSpeed = 500 + Math.random() * 250;
 
-    // Asigna una velocidad aleatoria entre 500 y 750 en esa dirección
-    var randomSpeed = 500 + Math.random() * 250; // Genera un número entre 500 y 750
-    game.physics.arcade.velocityFromRotation(angle, randomSpeed, obj.body.velocity);
-
-    // Ajusta la rotación del objeto para que coincida con su trayectoria
-    obj.rotation = angle;
-}
-
-function throwBadObject() {
-    var obj = bad_objects.getFirstDead();
-
-    // Posición inicial aleatoria en la base (parte inferior)
-    obj.reset(game.world.centerX + Math.random() * 100 - Math.random() * 100, h);
-    obj.anchor.setTo(0.5, 0.5);
-    obj.scale.setTo(0.5); // Ajusta el tamaño del objeto
-
-    // Genera un ángulo con tendencia hacia -90°
-    var angle = Phaser.Math.degToRad(weightedAngle(-90, 50, -160, -20)); // Centro: -90°, Desviación: 50°
-
-    // Asigna una velocidad aleatoria entre 500 y 750 en esa dirección
-    var randomSpeed = 500 + Math.random() * 250; // Genera un número entre 500 y 750
-    game.physics.arcade.velocityFromRotation(angle, randomSpeed, obj.body.velocity);
-
-    // Ajusta la rotación del objeto para que coincida con su trayectoria
-    obj.rotation = angle;
+        game.physics.arcade.velocityFromRotation(angle, randomSpeed, obj.body.velocity);
+        obj.rotation = angle;
+    }
 }
 
 /**
@@ -136,13 +134,17 @@ function update() {
     throwObject();
 
     // Ajustar rotación dinámica de los objetos buenos
-    good_objects.forEachAlive(obj => {
-        obj.rotation = Math.atan2(obj.body.velocity.y, obj.body.velocity.x);
+    good_objects.forEach(group => {
+        group.forEachAlive(obj => {
+            obj.rotation = Math.atan2(obj.body.velocity.y, obj.body.velocity.x);
+        });
     });
 
     // Ajustar rotación dinámica de los objetos malos
-    bad_objects.forEachAlive(obj => {
-        obj.rotation = Math.atan2(obj.body.velocity.y, obj.body.velocity.x);
+    bad_objects.forEach(group => {
+        group.forEachAlive(obj => {
+            obj.rotation = Math.atan2(obj.body.velocity.y, obj.body.velocity.x);
+        });
     });
 
     points.push({
@@ -168,12 +170,19 @@ function update() {
         line = new Phaser.Line(points[i].x, points[i].y, points[i - 1].x, points[i - 1].y);
         game.debug.geom(line);
 
-        good_objects.forEachExists(checkIntersects);
-        bad_objects.forEachExists(checkIntersects);
+        // Iterar sobre todos los grupos de buenos y malos para verificar intersecciones
+        good_objects.forEach(group => {
+            group.forEachExists(checkIntersects);
+        });
+        bad_objects.forEach(group => {
+            group.forEachExists(checkIntersects);
+        });
     }
 }
 
+
 var contactPoint = new Phaser.Point(0, 0);
+
 
 function checkIntersects(fruit, callback) {
     var l1 = new Phaser.Line(fruit.body.right - fruit.width, fruit.body.bottom - fruit.height, fruit.body.right, fruit.body.bottom);
@@ -183,16 +192,12 @@ function checkIntersects(fruit, callback) {
     if (Phaser.Line.intersects(line, l1, true) || Phaser.Line.intersects(line, l2, true)) {
         contactPoint.x = game.input.x;
         contactPoint.y = game.input.y;
-        var distance = Phaser.Point.distance(contactPoint, new Phaser.Point(fruit.x, fruit.y));
-        if (distance > 110) {
-            return;
-        }
 
-        if (fruit.parent == good_objects) {
-            killFruit(fruit);
-        } else {
-            resetScore();
+        if (fruit.key === 'bomb' || fruit.key === 'bombCammo') {
+            resetScore(); // Finaliza el juego si es un objeto malo
             stopGame();
+        } else {
+            killFruit(fruit); // Maneja el corte de un objeto bueno
         }
     }
 }
@@ -227,8 +232,14 @@ function spawnParticles(fruit) {
     emitter.start(true, 2000, null, 4);
 }
 
+function spawnParticlesGold(fruit) {
+    emitterGold.x = fruit.x;
+    emitterGold.y = fruit.y;
+    emitterGold.start(true, 2000, null, 4);
+}
+
 function killFruit(fruit) {
-    if (fruit.parent === good_objects) {
+    if (fruit.key === 'goldCC') {
         // Coordenadas del corte
         const cutAngle = Math.atan2(contactPoint.y - fruit.y, contactPoint.x - fruit.x);
 
@@ -259,7 +270,7 @@ function killFruit(fruit) {
         game.add.tween(rightHalf).to({ rotation: rightHalf.rotation + Math.PI / 4 }, 500, Phaser.Easing.Linear.None, true);
 
         // Desaparecen después de un tiempo
-        game.time.events.add(4000, () => {
+        game.time.events.add(1000, () => {
             leftHalf.destroy();
             rightHalf.destroy();
         });
