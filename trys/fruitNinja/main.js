@@ -7,10 +7,14 @@ let gameActive = true;
 
 function preload() {
     // Carga de imágenes
+    this.load.image('goldCC', 'assets/goldCC.png');
     this.load.image('tomato', 'assets/tomatoFull.png'); // Imagen para los objetos buenos
     this.load.image('tomato_left', 'assets/tomatoIzq.png'); // Mitad izquierda
     this.load.image('tomato_right', 'assets/tomatoDer.png'); // Mitad derecha
+    this.load.image('tomatoGold', 'assets/tomatoGold.png');
     this.load.image('bomb', 'assets/bomb.png'); // Imagen para los objetos malos
+    this.load.image('bombCammo', 'assets/bombCammo.png');
+    this.load.image('bombCammoGold', 'assets/bombCammoGold.png');
     this.load.image('peace', 'assets/peace.png'); // Opcional
 }
 
