@@ -115,6 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
   
   const tomatoLabel = document.getElementById('tomatoLabel');
   const tomatoContainer = document.querySelector('.tomatoContainer');
+  const tomatoSliceLabel = document.getElementById('tomatoSliceLabel');
+  const tomatoSliceContainer = document.querySelector('.tomatoSliceContainer');
 
 
   const cestaHibox = document.getElementById('cestaHibox');
@@ -140,8 +142,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const coinsContainerHitbox = document.querySelector('.coinsContainerHitbox');
   const coinsHoverTooltip = document.querySelector('.coinsHoverTooltip');
   const coinsContainerAnimationContainer = document.getElementById("coinsContainerAnimationContainer");
+  const tomatoContainerHitbox = document.querySelector('.tomatoContainerHitbox');
+  const tomatoHoverTooltipUsage = document.querySelector('.tomatoHoverTooltipUsage');
+  const tomatoHoverTooltip = document.querySelector('.tomatoHoverTooltip');
+  const tomatoSliceContainerHitbox = document.querySelector('.tomatoSliceContainerHitbox');
+  const tomatoSliceHoverTooltip = document.querySelector('.tomatoSliceHoverTooltip');
 
-  
 
 /* BUBBLES */
 let animationFrameId;
@@ -2334,7 +2340,7 @@ function updateBubbles() {
       const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
       coinLabel.textContent = monedasLogeado;
 
-      atualizarCoinsContainerHitboxWidth(monedasLogeado);
+      await atualizarCoinsContainerHitboxWidth(monedasLogeado);
 
       localCoinsCounter = monedasLogeado;
       console.log("Monedas obtenidas:", monedasLogeado);
@@ -2343,11 +2349,73 @@ function updateBubbles() {
     }
   }
 
-  function atualizarCoinsContainerHitboxWidth(monedas){
+  async function atualizarCoinsContainerHitboxWidth(monedas){
     const monedasLength = String(Math.abs(monedas)).length;
-    let pixelesAsumar = monedasLength*30 + 30 + 65;
-    coinsContainerHitbox.style.width = pixelesAsumar+"px";
+    let pixelesAsumar1 = monedasLength*30 + 30 + 65;
+    let pixelesAsumar2 = monedasLength*30 + 60 + 60;
+    coinsContainerHitbox.style.width = pixelesAsumar1+"px";
+    coinsHoverTooltip.style.left = pixelesAsumar2+"px";
   }
+
+  async function atualizarTomatoContainerHitboxWidth(tomatos){
+    const tomatosLength = String(Math.abs(tomatos)).length;
+    let pixelesAsumar1 = tomatosLength*30 + 65;
+    let pixelesAsumar2 = tomatosLength*30 + 30 + 60;
+    tomatoContainerHitbox.style.width = pixelesAsumar1+"px";
+    tomatoHoverTooltip.style.left = pixelesAsumar2+"px";
+    tomatoHoverTooltipUsage.style.left = pixelesAsumar2+"px";
+  }
+
+  async function atualizarTomatoSliceContainerHitboxWidth(tomatosSlice){
+    const tomatosSliceLength = String(Math.abs(tomatosSlice)).length;
+    let pixelesAsumar1 = tomatosSliceLength*30 + 30 + 65;
+    let pixelesAsumar2 = tomatosSliceLength*30 + 60 + 60;
+    tomatoSliceContainerHitbox.style.width = pixelesAsumar1+"px";
+    tomatoSliceHoverTooltip.style.left = pixelesAsumar2+"px";
+  }
+
+  let timeoutId; // Variable para rastrear el timeout
+  function coinsContainerHitboxEnter(container, tomatoHoverTooltipUsage) {
+      // Si hay un timeout pendiente, se cancela
+      if (timeoutId) {
+          clearTimeout(timeoutId);
+          timeoutId = null; // Limpia la referencia al timeout
+      }
+      container.style.display = "flex";
+      container.style.opacity = "1";
+
+      if(tomatoHoverTooltipUsage){
+        tomatoHoverTooltipUsage.style.display = "flex";
+        tomatoHoverTooltipUsage.style.opacity = "1";
+      }
+  }
+  
+  function coinsContainerHitboxLeave(container, tomatoHoverTooltipUsage) {
+      container.style.opacity = "0";
+      if(tomatoHoverTooltipUsage){
+        tomatoHoverTooltipUsage.style.opacity = "0";
+      }
+
+      timeoutId = setTimeout(() => {
+          container.style.display = "none";
+          if(tomatoHoverTooltipUsage){
+            tomatoHoverTooltipUsage.style.display = "none";
+          }
+
+          timeoutId = null; // Limpia la referencia al timeout
+      }, 400); // Tiempo en milisegundos
+  }
+  
+  coinsContainerHitbox.addEventListener("mouseenter", () => coinsContainerHitboxEnter(coinsHoverTooltip));
+  coinsContainerHitbox.addEventListener("mouseleave", () => coinsContainerHitboxLeave(coinsHoverTooltip));
+  
+  tomatoContainerHitbox.addEventListener("mouseenter", () => coinsContainerHitboxEnter(tomatoHoverTooltip, tomatoHoverTooltipUsage));
+  tomatoContainerHitbox.addEventListener("mouseleave", () => coinsContainerHitboxLeave(tomatoHoverTooltip, tomatoHoverTooltipUsage));
+
+  tomatoSliceContainerHitbox.addEventListener("mouseenter", () => coinsContainerHitboxEnter(tomatoSliceHoverTooltip));
+  tomatoSliceContainerHitbox.addEventListener("mouseleave", () => coinsContainerHitboxLeave(tomatoSliceHoverTooltip));
+
+
 
   /* CLICK PARA FARMEAR MONEDAS */
 
@@ -2389,7 +2457,7 @@ function updateBubbles() {
         // Actualizar la interfaz de usuario (etiqueta de monedas)
         coinLabel.textContent = nuevasMonedas;
 
-        atualizarCoinsContainerHitboxWidth(nuevasMonedas);
+        await atualizarCoinsContainerHitboxWidth(nuevasMonedas);
       } catch (error) {
         console.error(
           "Error durante la actualización de monedas en la base de datos:",
@@ -2481,6 +2549,7 @@ async function actualizarTomatos(idLogeado) {
   try {
     console.log("ID logeado:", idLogeado);
     const tomatosLogeado = await obtenerTomatosDeUsuario(idLogeado);
+    await atualizarTomatoContainerHitboxWidth(tomatosLogeado);
     tomatoLabel.textContent = tomatosLogeado;
     localTomatosCounter = tomatosLogeado;
     console.log("Tomatos obtenidos:", tomatosLogeado);
@@ -2519,6 +2588,7 @@ async function incrementTomatos(idLogeado, tomatesAnhadir) {
       // Actualizar los tomatos del usuario en la base de datos
       const nuevosTomatos = localTomatosCounter;
       await actualizarTomatosUsuario(idLogeado, nuevosTomatos);
+      await atualizarTomatoContainerHitboxWidth(nuevosTomatos);
 
       // Actualizar la interfaz de usuario (etiqueta de tomatos)
       tomatoLabel.textContent = nuevosTomatos;
@@ -3418,7 +3488,7 @@ function setNormalPrice(skinContainer, price) {
     await actualizarMonedasUsuario(idLogeado, monedasLogeado);
     await descontarMonedasSoloAnim(price, event);
 
-    //        atualizarCoinsContainerHitboxWidth(nuevasMonedas);
+    await atualizarCoinsContainerHitboxWidth(monedasLogeado);
 
     setTimeout(async () => {
       // Ocultar y deshabilitar eventos de puntero
@@ -3647,6 +3717,7 @@ function setNormalPrice(skinContainer, price) {
 
       cageContainer.style.display = "block";
       tomatoContainer.style.display = "flex";
+      tomatoSliceContainer.style.display = "flex";
       wrapper.style.display = "block";
       
     } else {
@@ -3736,6 +3807,7 @@ function setNormalPrice(skinContainer, price) {
 
       cageContainer.style.display = "none";
       tomatoContainer.style.display = "none";
+      tomatoSliceContainer.style.display = "none";
       wrapper.style.display = "none";
 
     }
@@ -4390,6 +4462,7 @@ function setNormalPrice(skinContainer, price) {
     if (skinsContainer.classList.contains("active")) {
       coinsContainer.style.marginLeft = "15vw";
       tomatoContainer.style.marginLeft = "15vw";
+      tomatoSliceContainer.style.marginLeft = "15vw";
     }
   }
 
@@ -4402,6 +4475,7 @@ function setNormalPrice(skinContainer, price) {
     if (!skinsContainer.classList.contains("active")) {
       coinsContainer.style.marginLeft = "0vw";
       tomatoContainer.style.marginLeft = "0vw";
+      tomatoSliceContainer.style.marginLeft = "0vw";
     }
   }
 
@@ -9064,8 +9138,9 @@ const onMouseUpdate = (e, el, container) => {
     const YRel = e.clientY - elRect.top;
     const width = elRect.width;
 
-    const YAngle = -(0.5 - (XRel / width)) * 40;
-    const XAngle = (0.5 - (YRel / width)) * 40;
+    const scaleFactor = 12; // Cantidad de perspectiva
+    const YAngle = -(0.5 - (XRel / width)) * scaleFactor;
+    const XAngle = (0.5 - (YRel / width)) * scaleFactor;
 
     setProp(el, '--dy', `${YAngle}deg`);
     setProp(el, '--dx', `${XAngle}deg`);
@@ -9082,7 +9157,7 @@ const elements = container.querySelectorAll('.skinContainer');
 const adjustHitboxes = (activeEl) => {
     elements.forEach(el => {
         if (el !== activeEl) {
-            el.style.height = "50%"; // Reduce la hitbox al 50%
+            el.style.height = "80%"; // Reduce la hitbox
             el.style.pointerEvents = "none"; // Desactiva eventos para evitar colisiones
         }
     });

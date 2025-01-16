@@ -1736,7 +1736,7 @@ div.img img {
   left: 67px;
   transition: margin-left 0.5s ease;
   font-size: 26px;
-  color: #C45C50;
+  color: #ad463f;
   /*color: #e412123a;*/
   font-weight: bold;
   font-size: 32px;
@@ -1814,6 +1814,151 @@ div.img img {
 }
 .coinsHoverTooltip{
   position: absolute;
+  top: 5px;
+  left: 60px;
+  width: auto;
+  height: 40px;
+  display: none;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.527));
+  gap: 15px;
+  transition: opacity 0.4s ease;
+  opacity: 0;
+  z-index: 1000;
+}
+
+
+.tomatoContainerHitbox{
+  position: absolute;
+  width: 65px;
+  height: 45px;
+  top: -7px;
+  left: -3px;
+  border-radius: 7px;
+  z-index: 100;
+}
+.tomatoContainerHitbox:hover{
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.712) inset;
+}
+.tomatoHoverTooltipUsage{
+  position: absolute;
+  top: -6px;
+  left: 60px;
+  width: auto;
+  height: 40px;
+  display: none;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.527));
+  gap: 15px;
+  transition: opacity 0.4s ease;
+  opacity: 0;
+  z-index: 1000;
+}
+.tomatoHoverTooltip{
+  position: absolute;
+  top: 40px;
+  left: 60px;
+  width: auto;
+  height: 40px;
+  display: none;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.527));
+  gap: 15px;
+  transition: opacity 0.4s ease;
+  opacity: 0;
+  z-index: 1000;
+}
+
+
+
+.tomatoSliceContainerHitbox{
+  position: absolute;
+  width: 65px;
+  height: 45px;
+  top: -7px;
+  left: -3px;
+  border-radius: 7px;
+  z-index: 100;
+}
+.tomatoSliceContainerHitbox:hover{
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.712) inset;
+}
+.tomatoSliceHoverTooltip{
+  position: absolute;
+  top: 0px;
+  left: 60px;
+  width: auto;
+  height: 40px;
+  display: none;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.527));
+  gap: 15px;
+  transition: opacity 0.4s ease;
+  opacity: 0;
+  z-index: 1000;
+}
+
+
+
+.usageLogo{
+  width: 30px;
+  height: auto;
+  margin-left: -3px;
+}
+
+.infoLogo{
+  width: 30px;
+  height: auto;
+}
+
+.infoLogo.coinsContainerHitboxLogo{
+  filter: brightness(0) saturate(100%) invert(100%) sepia(57%) saturate(2232%) hue-rotate(337deg) brightness(93%) contrast(87%);
+}
+.infoLogo.tomatoContainerHitboxLogo,
+.usageLogo.tomatoContainerHitboxLogo{
+  filter: brightness(0) saturate(100%) invert(37%) sepia(52%) saturate(525%) hue-rotate(318deg) brightness(108%) contrast(102%);
+}
+.infoLogo.tomatoSliceContainerHitboxLogo{
+  filter: brightness(0) saturate(100%) invert(35%) sepia(14%) saturate(2863%) hue-rotate(316deg) brightness(94%) contrast(89%);
+}
+
+.infoTextUsage{
+  font-family: verti;
+  font-size: 18px;
+  width: 550px;
+  margin-top: 7px;
+  text-align: justify;
+  letter-spacing: 3px;
+  line-height: 1.2;
+}
+
+.infoText{
+  font-family: verti;
+  font-size: 18px;
+  width: 550px;
+  margin-top: 55px;
+  text-align: justify;
+  letter-spacing: 3px;
+  line-height: 1.2;
+}
+
+.infoText.coinsContainerHitboxInfo{
+  color: #e2cd55;
+}
+.infoText.tomatoContainerHitboxInfo,
+.infoTextUsage.tomatoContainerHitboxInfo{
+  color: #C45C50;
+}
+.infoText.tomatoSliceContainerHitboxInfo{
+  color: #ad463f;
 }
 
 .coinsContainerCoin {
@@ -1953,7 +2098,7 @@ div.img img {
 
 
 .skinContainer.active {
-  transform: perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy)) scale(1.2);
+  transform: perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy)) scale(1.13);
 }
 
 
