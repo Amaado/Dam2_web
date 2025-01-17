@@ -3,24 +3,35 @@ var w = window.innerWidth,
 
 var game; // Declarar la instancia del juego
 var gameStarted = false; // Bandera para verificar si el juego está en progreso
-let gameActive = true;
+let gameActive = false;
+const startMatch = document.getElementById("startMatch");
+const startButton = document.getElementById("startButton");
 
 function preload() {
     // Carga de imágenes
     this.load.image('goldCC', 'assets/goldCC.png');
     this.load.image('goldCC_left', 'assets/goldCCIzq.png');
     this.load.image('goldCC_right', 'assets/goldCCDer.png');
-    this.load.image('tomato', 'assets/tomatoFull.png'); // Imagen para los objetos buenos
-    this.load.image('tomato_left', 'assets/tomatoIzq.png'); // Mitad izquierda
-    this.load.image('tomato_right', 'assets/tomatoDer.png'); // Mitad derecha
+    this.load.image('tomato', 'assets/tomatoFull.png');
+    this.load.image('tomato_left', 'assets/tomatoIzq.png');
+    this.load.image('tomato_right', 'assets/tomatoDer.png');
     this.load.image('tomatoGold', 'assets/tomatoGold.png');
     this.load.image('tomatoGold_left', 'assets/tomatoGoldIzq.png');
     this.load.image('tomatoGold_right', 'assets/tomatoGoldDer.png');
-    this.load.image('bomb', 'assets/bomb.png'); // Imagen para los objetos malos
+    this.load.image('bomb', 'assets/bomb.png');
+    this.load.image('bomb_left', 'assets/bombIzq.png');
+    this.load.image('bomb_right', 'assets/bombDer.png');
     this.load.image('bombCammo', 'assets/bombCammo.png');
+    this.load.image('bombCammo_left', 'assets/bombCammoIzq.png');
+    this.load.image('bombCammo_right', 'assets/bombCammoDer.png');
     this.load.image('bombCammoGold', 'assets/bombCammoGold.png');
-    this.load.image('peace', 'assets/peace.png'); // Opcional
-    this.load.image('peaceGold', 'assets/peaceGold.png'); // Opcional
+    this.load.image('bombCammoGold_left', 'assets/bombCammoGoldIzq.png');
+    this.load.image('bombCammoGold_right', 'assets/bombCammoGoldDer.png');
+    this.load.image('peace', 'assets/peace.png');
+    this.load.image('peaceGold', 'assets/peaceGold.png');
+    this.load.spritesheet('explosion', 'assets/explosion_spritesheet.png', 576, 576, 10);
+    this.load.spritesheet('spark', 'assets/spark_spritesheet.png', 480, 480, 20);
+    this.load.spritesheet('halo', 'assets/halo_spritesheet.png', 337, 337, 34);
 }
 
 var good_objects = [];
@@ -33,6 +44,7 @@ function create() {
     // Iniciar el sistema de física
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.gravity.y = 300;
+    game.stage.backgroundColor = "#1c2128";
 
     // Crear grupos para cada tipo de objeto
     good_objects = [
@@ -54,21 +66,44 @@ function create() {
     scoreLabel = game.add.text(10, 10, 'Tip: get the green ones!');
     scoreLabel.fill = 'white';
 
-    // Configuración del emisor de partículas
+    // Configuración inicial del emisor
     emitter = game.add.emitter(0, 0, 300);
     emitter.makeParticles('peace');
-    emitter.setScale(0.8, 0.3, 0.8, 0.3);
+    emitter.setScale(0.8, 0.5, 0.8, 0.5);
     emitter.gravity = 300;
     emitter.setYSpeed(-400, 400);
+    emitter.alpha = 1; // Asegúrate de que sea completamente visible al inicio
 
     emitterGold = game.add.emitter(0, 0, 300);
     emitterGold.makeParticles('peaceGold');
-    emitterGold.setScale(0.8, 0.3, 0.8, 0.3);
+    emitterGold.setScale(0.8, 0.5, 0.8, 0.5);
     emitterGold.gravity = 300;
     emitterGold.setYSpeed(-400, 400);
+    emitterGold.alpha = 1; // Asegúrate de que sea completamente visible al inicio
 
     throwObject();
 }
+
+
+// Función para hacer desaparecer un emisor
+function fadeOutEmitter(emitter) {
+    // Mantener las partículas visibles por 1 segundo
+    game.time.events.add(1000, () => {
+        // Iterar sobre todas las partículas activas del emisor
+        emitter.forEachAlive(particle => {
+            // Desaparecer progresivamente durante 1 segundo
+            game.add.tween(particle).to(
+                { alpha: 0 }, // Cambiar la opacidad a 0
+                1000,         // Duración de la animación
+                Phaser.Easing.Linear.None, // Interpolación lineal
+                true          // Iniciar inmediatamente
+            ).onComplete.add(() => {
+                particle.kill(); // Detener la partícula una vez desaparecida
+            });
+        });
+    });
+}
+
 
 function createGroup(numItems, spriteKey) {
     var group = game.add.group();
@@ -99,18 +134,78 @@ function throwRandomObject(groups) {
     var obj = group.getFirstDead();
 
     if (obj) {
-        obj.reset(game.world.centerX + Math.random() * 100 - Math.random() * 100, h);
-        obj.anchor.setTo(0.5, 0.5);
-        obj.scale.setTo(0.5);
+        if (obj.key === 'bomb' || obj.key === 'bombCammo' || obj.key === 'bombCammoGold') {
+            const spark = game.add.sprite(0, 0, 'spark');
+            spark.anchor.setTo(0.5, 0.5);
+            spark.scale.setTo(0.4); // Ajusta según el tamaño del GIF respecto al objeto
+            spark.animations.add('spin');
+            spark.animations.play('spin', 10, true); // Reproduce la animación en bucle a 10 FPS
+            spark.x = -120; // Position X - marginLeft
+            spark.y = -80; // Position Y - marginTop
+            obj.addChild(spark); // Asigna el GIF como hijo de la bomba
 
-        // Genera un ángulo con tendencia hacia -90°
-        var angle = Phaser.Math.degToRad(weightedAngle(-90, 50, -160, -20));
-        var randomSpeed = 500 + Math.random() * 250;
+        }else if (obj.key === 'goldCC') {
+            // Crear el halo detrás del goldCC
+            const halo = game.add.sprite(obj.x, obj.y, 'halo');
+            halo.anchor.setTo(0.5, 0.5);
+            halo.scale.setTo(1.2, 1); // Ajusta según el tamaño del GIF respecto al objeto
+            halo.animations.add('spin');
+            halo.animations.play('spin', 10, true); // Reproduce la animación en bucle a 10 FPS
+        
+            // Configurar la posición inicial del goldCC
+            obj.reset(game.world.centerX + Math.random() * 100 - Math.random() * 100, h);
+            obj.anchor.setTo(0.5, 0.5);
+            obj.scale.setTo(0.5);
+        
+            // Sincronizar la posición y rotación del halo con el goldCC
+            obj.update = function () {
+                halo.x = obj.x;
+                halo.y = obj.y;
+                halo.rotation = obj.rotation; // Asegurar que siga la rotación del objeto
+            };
 
-        game.physics.arcade.velocityFromRotation(angle, randomSpeed, obj.body.velocity);
-        obj.rotation = angle;
+            // Establecer las profundidades de renderizado (z-index)
+            halo.z = -100; // Halo en el fondo
+            obj.z = 150;  // goldCC al frente
+            game.world.sort('z', Phaser.Group.SORT_ASCENDING);
+        
+            // Generar un ángulo con tendencia hacia -90°
+            var angle = Phaser.Math.degToRad(weightedAngle(-90, 50, -160, -20));
+            var randomSpeed = 500 + Math.random() * 250;
+        
+            // Establecer una rotación inicial aleatoria
+            obj.initialRotation = Phaser.Math.degToRad(Math.random() * 360 - 180); // Aleatorio entre -180° y 180°
+        
+            // Aplicar velocidad en la dirección del ángulo
+            game.physics.arcade.velocityFromRotation(angle, randomSpeed, obj.body.velocity);
+        
+            
+
+        }
+
+        // Lógica general para otros objetos (excepto goldCC)
+        if (obj.key !== 'goldCC') {
+            obj.reset(game.world.centerX + Math.random() * 100 - Math.random() * 100, h);
+            obj.anchor.setTo(0.5, 0.5);
+            obj.scale.setTo(0.5);
+
+            // Genera un ángulo con tendencia hacia -90°
+            var angle = Phaser.Math.degToRad(weightedAngle(-90, 50, -160, -20));
+            var randomSpeed = 500 + Math.random() * 250;
+
+            // Establecer una rotación inicial aleatoria
+            obj.initialRotation = Phaser.Math.degToRad(Math.random() * 360 - 180); // Aleatorio entre -180° y 180°
+
+            // Aplicar velocidad en la dirección del ángulo
+            game.physics.arcade.velocityFromRotation(angle, randomSpeed, obj.body.velocity);
+        }
     }
 }
+
+
+
+
+
 
 /**
  * Genera un número con tendencia hacia un valor central dentro de un rango.
@@ -133,34 +228,31 @@ function weightedAngle(mean, deviation, min, max) {
 function update() {
     throwObject();
 
-    // Ajustar rotación dinámica de los objetos buenos
-    good_objects.forEach(group => {
-        group.forEachAlive(obj => {
-            obj.rotation = Math.atan2(obj.body.velocity.y, obj.body.velocity.x);
-        });
-    });
+    good_objects.forEach(group => group.forEachAlive(obj => adjustRotation(obj)));
+    bad_objects.forEach(group => group.forEachAlive(obj => adjustRotation(obj)));
 
-    // Ajustar rotación dinámica de los objetos malos
-    bad_objects.forEach(group => {
-        group.forEachAlive(obj => {
-            obj.rotation = Math.atan2(obj.body.velocity.y, obj.body.velocity.x);
-        });
-    });
+    function adjustRotation(obj) {
+        // Rotación según la trayectoria
+        const trajectoryRotation = Math.atan2(obj.body.velocity.y, obj.body.velocity.x);
 
-    points.push({
-        x: game.input.x,
-        y: game.input.y
-    });
+        // Oscilación basada en el tiempo
+        const oscillation = 0.1 * Math.sin(game.time.now / 200); // Variación de +/- 0.1 radianes
+
+        // Combinación de rotación inicial, trayectoria y oscilación
+        obj.rotation = obj.initialRotation + trajectoryRotation + oscillation;
+    }
+
+    // Resto del código para manejar los trazos e intersecciones
+    points.push({ x: game.input.x, y: game.input.y });
     points = points.splice(points.length - 10, points.length);
 
-    if (points.length < 1 || points[0].x == 0) {
-        return;
-    }
+    if (points.length < 1 || points[0].x == 0) return;
 
     slashes.clear();
     slashes.beginFill(0xFFFFFF);
     slashes.alpha = 0.5;
     slashes.moveTo(points[0].x, points[0].y);
+
     for (var i = 1; i < points.length; i++) {
         slashes.lineTo(points[i].x, points[i].y);
     }
@@ -170,21 +262,17 @@ function update() {
         line = new Phaser.Line(points[i].x, points[i].y, points[i - 1].x, points[i - 1].y);
         game.debug.geom(line);
 
-        // Iterar sobre todos los grupos de buenos y malos para verificar intersecciones
-        good_objects.forEach(group => {
-            group.forEachExists(checkIntersects);
-        });
-        bad_objects.forEach(group => {
-            group.forEachExists(checkIntersects);
-        });
+        good_objects.forEach(group => group.forEachExists(checkIntersects));
+        bad_objects.forEach(group => group.forEachExists(checkIntersects));
     }
 }
 
 
+
 var contactPoint = new Phaser.Point(0, 0);
+let gamePaused
 
-
-function checkIntersects(fruit, callback) {
+function checkIntersects(fruit) {
     var l1 = new Phaser.Line(fruit.body.right - fruit.width, fruit.body.bottom - fruit.height, fruit.body.right, fruit.body.bottom);
     var l2 = new Phaser.Line(fruit.body.right - fruit.width, fruit.body.bottom, fruit.body.right, fruit.body.bottom - fruit.height);
     l2.angle = 90;
@@ -193,96 +281,168 @@ function checkIntersects(fruit, callback) {
         contactPoint.x = game.input.x;
         contactPoint.y = game.input.y;
 
-        if (fruit.key === 'bomb' || fruit.key === 'bombCammo') {
-            resetScore(); // Finaliza el juego si es un objeto malo
-            stopGame();
-        } else {
-            killFruit(fruit); // Maneja el corte de un objeto bueno
+        if (belongsToGroup(fruit, bad_objects)) {
+                gamePaused = true;
+                killFruit(fruit);
+
+            setTimeout(() => {
+                //game.pause = false
+                gamePaused = false;
+                resetScore();
+                stopGame();
+            }, 2000);
+
+        } else if (belongsToGroup(fruit, good_objects)) {
+            if(!gamePaused){
+                killFruit(fruit); // Maneja el corte de un objeto bueno
+            }
         }
     }
 }
+
 
 function stopGame() {
     gameActive = false; // Detener el lanzamiento de frutas
 }
 
 function resetScore() {
-    var highscore = Math.max(score, localStorage.getItem("highscore"));
+    // Reinicia la puntuación y la visibilidad del contenedor del botón
+    var highscore = Math.max(score, localStorage.getItem("highscore") || 0);
     localStorage.setItem("highscore", highscore);
 
-    good_objects.forEachExists(despawnFruit);
-    bad_objects.forEachExists(despawnFruit);
+    good_objects.forEach(group => group.callAll('kill')); // Mata todos los objetos buenos
+    bad_objects.forEach(group => group.callAll('kill')); // Mata todos los objetos malos
 
     score = 0;
-    scoreLabel.text = 'Game Over!\nHigh Score: ' + highscore;
+    scoreLabel.text = 'Tip: get the green ones!'; // Reinicia el texto
 
-    document.getElementById('startButton').style.display = 'block'; // Muestra el botón nuevamente
+    gameActive = false; // Marca que el juego ha terminado
+    startMatch.style.display = 'flex'; // Muestra el contenedor del botón nuevamente
 }
 
 function render() {
 }
-
-function despawnFruit(fruit) {
+/*
+function despawnFruit(fruit){
     fruit.kill();
-}
+}*/
 
 function spawnParticles(fruit) {
-    emitter.x = fruit.x;
-    emitter.y = fruit.y;
-    emitter.start(true, 2000, null, 4);
+    const emitterToUse = fruit.key.includes('Gold') ? emitterGold : emitter;
+    emitterToUse.x = fruit.x;
+    emitterToUse.y = fruit.y;
+    emitterToUse.start(true, 2000, null, 4); // Genera partículas para la fruta
+
+    fadeOutEmitter(emitterToUse); // Aplica el fade-out a las partículas generadas
 }
 
-function spawnParticlesGold(fruit) {
-    emitterGold.x = fruit.x;
-    emitterGold.y = fruit.y;
-    emitterGold.start(true, 2000, null, 4);
+
+function belongsToGroup(fruit, groupsArray) {
+    return groupsArray.some(group => group.children.includes(fruit));
 }
 
 function killFruit(fruit) {
-    if (fruit.key === 'goldCC') {
-        // Coordenadas del corte
-        const cutAngle = Math.atan2(contactPoint.y - fruit.y, contactPoint.x - fruit.x);
+    // Crear las dos mitades
+    let leftHalf, rightHalf, explosion;
 
-        // Crear las dos mitades
-        const leftHalf = game.add.sprite(fruit.x, fruit.y, 'tomato_left');
-        const rightHalf = game.add.sprite(fruit.x, fruit.y, 'tomato_right');
+    if(fruit.key === 'goldCC'){
+        leftHalf = game.add.sprite(fruit.x, fruit.y, 'goldCC_left');
+        rightHalf = game.add.sprite(fruit.x, fruit.y, 'goldCC_right');
+    }else if (fruit.key === 'tomato'){
+        leftHalf = game.add.sprite(fruit.x, fruit.y, 'tomato_left');
+        rightHalf = game.add.sprite(fruit.x, fruit.y, 'tomato_right');
+    }else if (fruit.key === 'tomatoGold'){
+        leftHalf = game.add.sprite(fruit.x, fruit.y, 'tomatoGold_left');
+        rightHalf = game.add.sprite(fruit.x, fruit.y, 'tomatoGold_right');
+    }else if (fruit.key === 'bomb'){
+        leftHalf = game.add.sprite(fruit.x, fruit.y, 'bomb_left');
+        rightHalf = game.add.sprite(fruit.x, fruit.y, 'bomb_right');
+    }else if (fruit.key === 'bombCammo'){
+        leftHalf = game.add.sprite(fruit.x, fruit.y, 'bombCammo_left');
+        rightHalf = game.add.sprite(fruit.x, fruit.y, 'bombCammo_right');
+    }else if (fruit.key === 'bombCammoGold'){
+        leftHalf = game.add.sprite(fruit.x, fruit.y, 'bombCammoGold_left');
+        rightHalf = game.add.sprite(fruit.x, fruit.y, 'bombCammoGold_right');
+    }
 
-        leftHalf.anchor.setTo(0.5, 0.5);
-        rightHalf.anchor.setTo(0.5, 0.5);
 
-        leftHalf.scale.setTo(0.5);
-        rightHalf.scale.setTo(0.5);
+    if (fruit.key === 'tomato' || fruit.key === 'tomatoGold') {
+        spawnParticles(fruit);
+    }
 
-        // Ajustar la rotación inicial
-        leftHalf.rotation = cutAngle - Math.PI / 8; // Ajuste leve para que parezca más natural
-        rightHalf.rotation = cutAngle + Math.PI / 8;
+    // Coordenadas del corte
+    const cutAngle = Math.atan2(contactPoint.y - fruit.y, contactPoint.x - fruit.x);
 
-        // Aplicar física a las mitades
-        game.physics.enable([leftHalf, rightHalf], Phaser.Physics.ARCADE);
-        leftHalf.body.velocity.x = fruit.body.velocity.x - 150 * Math.cos(cutAngle);
-        leftHalf.body.velocity.y = fruit.body.velocity.y - 150 * Math.sin(cutAngle);
+    leftHalf.anchor.setTo(0.5, 0.5);
+    rightHalf.anchor.setTo(0.5, 0.5);
 
-        rightHalf.body.velocity.x = fruit.body.velocity.x + 150 * Math.cos(cutAngle);
-        rightHalf.body.velocity.y = fruit.body.velocity.y + 150 * Math.sin(cutAngle);
+    leftHalf.scale.setTo(0.5);
+    rightHalf.scale.setTo(0.5);
 
-        // Girar suavemente las mitades mientras se mueven
-        game.add.tween(leftHalf).to({ rotation: leftHalf.rotation - Math.PI / 4 }, 500, Phaser.Easing.Linear.None, true);
-        game.add.tween(rightHalf).to({ rotation: rightHalf.rotation + Math.PI / 4 }, 500, Phaser.Easing.Linear.None, true);
+    // Ajustar la rotación inicial
+    leftHalf.rotation = cutAngle - Math.PI / 8; // Ajuste leve para que parezca más natural
+    rightHalf.rotation = cutAngle + Math.PI / 8;
 
-        // Desaparecen después de un tiempo
-        game.time.events.add(1000, () => {
-            leftHalf.destroy();
-            rightHalf.destroy();
+    // Aplicar física a las mitades
+    game.physics.enable([leftHalf, rightHalf], Phaser.Physics.ARCADE);
+    leftHalf.body.velocity.x = fruit.body.velocity.x - 150 * Math.cos(cutAngle);
+    leftHalf.body.velocity.y = fruit.body.velocity.y - 150 * Math.sin(cutAngle);
+
+    rightHalf.body.velocity.x = fruit.body.velocity.x + 150 * Math.cos(cutAngle);
+    rightHalf.body.velocity.y = fruit.body.velocity.y + 150 * Math.sin(cutAngle);
+
+    // Girar suavemente las mitades mientras se mueven
+    game.add.tween(leftHalf).to({ rotation: leftHalf.rotation - Math.PI / 4 }, 500, Phaser.Easing.Linear.None, true);
+    game.add.tween(rightHalf).to({ rotation: rightHalf.rotation + Math.PI / 4 }, 500, Phaser.Easing.Linear.None, true);
+
+    // Desaparecen después de un tiempo
+    if(belongsToGroup(fruit, good_objects)){
+        game.time.events.add(1000, () => { // Espera 1 segundo antes de comenzar el desvanecimiento
+            const fadeOutTweenLeft = game.add.tween(leftHalf).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true); // Duración de 1 segundo
+            const fadeOutTweenRight = game.add.tween(rightHalf).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true); // Duración de 1 segundo
+    
+            fadeOutTweenLeft.onComplete.add(() => {
+                leftHalf.destroy(); // Elimina el elemento después de que desaparezca
+            });
+    
+            fadeOutTweenRight.onComplete.add(() => {
+                rightHalf.destroy(); // Elimina el elemento después de que desaparezca
+            });
         });
 
-        // Eliminar el objeto original
-        fruit.kill();
+    }else{
+        const fadeOutTweenLeft = game.add.tween(leftHalf).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true); // Duración de 1 segundo
+        const fadeOutTweenRight = game.add.tween(rightHalf).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true); // Duración de 1 segundo
 
-        // Generar partículas
-        spawnParticles(fruit);
-    } else {
-        fruit.kill();
+        fadeOutTweenLeft.onComplete.add(() => {
+            leftHalf.destroy(); // Elimina el elemento después de que desaparezca
+        });
+
+        fadeOutTweenRight.onComplete.add(() => {
+            rightHalf.destroy(); // Elimina el elemento después de que desaparezca
+        });
+
+        const explosion = game.add.sprite(fruit.x, fruit.y, 'explosion'); // Crea el sprite
+        explosion.anchor.setTo(0.5, 0.5); // Centra el sprite
+        explosion.scale.setTo(0.5); // Ajusta el tamaño
+    
+        // Añade la animación desde el spritesheet
+        const anim = explosion.animations.add('boom', null, 30, false); // No necesitas `Phaser.Animation.generateFrameNames`
+        explosion.animations.play('boom'); // Reproduce la animación
+    
+        // Elimina la explosión después de reproducir la animación
+        anim.onComplete.add(() => {
+            explosion.destroy();
+        });      
+        
     }
+
+
+    
+
+    // Eliminar el objeto original
+    fruit.kill();
+
 
     // Actualizar puntuación
     points = [];
@@ -290,18 +450,20 @@ function killFruit(fruit) {
     scoreLabel.text = 'Score: ' + score;
 }
 
-// Inicialización controlada del juego
 document.addEventListener("DOMContentLoaded", function () {
-    const startButton = document.getElementById("startButton");
-
     startButton.addEventListener("click", function () {
-        if (!gameStarted) {
-            startButton.style.display = "none";
-            gameStarted = true;
-            game = new Phaser.Game(w, h, Phaser.AUTO, 'game',
-                { preload: preload, create: create, update: update, render: render });
-        }else{
-            window.location.href = window.location.href;
+        if (!gameActive) {
+            // Comienza el juego por primera vez
+            startMatch.style.display = 'none'; // Oculta el contenedor del botón
+            gameActive = true;
+            document.getElementById("game").innerHTML = '';
+            game = new Phaser.Game(w, h, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
+        } else {
+            // Reinicia el juego si se terminó anteriormente
+            startMatch.style.display = 'none'; // Oculta nuevamente
+            gameActive = true;
+            resetScore(); // Reinicia los parámetros del juego sin recargar
         }
     });
 });
+
