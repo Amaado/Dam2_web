@@ -32,6 +32,7 @@ function preload() {
     this.load.spritesheet('explosion', 'assets/explosion_spritesheet.png', 576, 576, 10);
     this.load.spritesheet('spark', 'assets/spark_spritesheet.png', 480, 480, 20);
     this.load.spritesheet('halo', 'assets/halo_spritesheet.png', 337, 337, 34);
+    this.load.spritesheet('coin', 'assets/coin_spritesheet.png', 310, 310, 50);
 }
 
 var good_objects = [];
@@ -80,6 +81,42 @@ function create() {
     emitterGold.gravity = 300;
     emitterGold.setYSpeed(-400, 400);
     emitterGold.alpha = 1; // Asegúrate de que sea completamente visible al inicio
+
+    // Configuración del emitter
+    emitterCoin = game.add.emitter(0, 0, 300); // Crea el emitter
+    emitterCoin.makeParticles('coin'); // Usa el spritesheet como partículas
+    emitterCoin.setScale(0.15, 0.1, 0.15, 0.1); // Escala de las partículas
+    emitterCoin.gravity = 300; // Gravedad aplicada a las partículas
+    emitterCoin.setYSpeed(-400, 400); // Velocidad vertical de las partículas
+    emitterCoin.alpha = 1; // Opacidad inicial
+
+
+    // Configurar partículas para animación personalizada
+    emitterCoin.forEach(function (particle) {
+        const totalFrames = 50; // Número total de frames del spritesheet
+
+        // Generar un frame inicial aleatorio
+        const startFrame = Math.floor(Math.random() * totalFrames);
+
+        // Decidir aleatoriamente si la animación será normal o inversa
+        const reverse = Math.random() < 0.5;
+
+        // Configurar los frames de la animación
+        let frames;
+        if (reverse) {
+            frames = Array.from({ length: totalFrames }, (_, i) => totalFrames - 1 - i); // Frames en orden inverso
+        } else {
+            frames = Array.from({ length: totalFrames }, (_, i) => i); // Frames en orden normal
+        }
+
+        // Agregar animación al sprite
+        particle.animations.add('spin', frames); // Configurar los frames generados
+        particle.animations.play('spin', 15, true, startFrame); // Reproducir la animación en bucle desde un frame aleatorio
+
+        particle.rotation = Phaser.Math.degToRad(Math.random() * 360); // Rotación aleatoria en radianes
+        particle.angle += Math.random() * 20 - 10; // Añadir un cambio de rotación aleatorio mientras está vivo
+    });
+
 
     throwObject();
 }
@@ -145,29 +182,58 @@ function throwRandomObject(groups) {
             obj.addChild(spark); // Asigna el GIF como hijo de la bomba
 
         }else if (obj.key === 'goldCC') {
-            // Crear el halo detrás del goldCC
-            const halo = game.add.sprite(obj.x, obj.y, 'halo');
+            // Crear el halo en el mundo del juego
+            const halo = game.add.sprite(0, 0, 'halo'); // Crear el halo como sprite independiente
             halo.anchor.setTo(0.5, 0.5);
-            halo.scale.setTo(1.2, 1); // Ajusta según el tamaño del GIF respecto al objeto
+            halo.scale.setTo(1); // Ajustar el tamaño del halo
             halo.animations.add('spin');
-            halo.animations.play('spin', 10, true); // Reproduce la animación en bucle a 10 FPS
-        
+            halo.animations.play('spin', 10, true); // Reproducir la animación en bucle a 10 FPS
+            obj.halo = halo;
+
             // Configurar la posición inicial del goldCC
             obj.reset(game.world.centerX + Math.random() * 100 - Math.random() * 100, h);
             obj.anchor.setTo(0.5, 0.5);
             obj.scale.setTo(0.5);
         
-            // Sincronizar la posición y rotación del halo con el goldCC
+            // Asegurar que el halo siga a goldCC
             obj.update = function () {
                 halo.x = obj.x;
                 halo.y = obj.y;
-                halo.rotation = obj.rotation; // Asegurar que siga la rotación del objeto
+        
+                // Verificar si el halo está fuera de los límites de la pantalla
+                if (
+                    halo.x < 0 ||
+                    halo.x > game.world.width ||
+                    halo.y < 0 ||
+                    halo.y > game.world.height
+                ) {
+                    setTimeout(() => {
+                        halo.destroy(); // Destruir el halo si sale de la pantalla    
+                    }, 100);
+                }
+        
+                // Sincronizar alpha del halo para efecto de parpadeo
+                if (!halo._alphaDirection) {
+                    halo._alphaDirection = 1; // Inicializar la dirección del parpadeo
+                }
+                const alphaSpeed = 0.01; // Velocidad del cambio de alpha
+                halo.alpha += alphaSpeed * halo._alphaDirection;
+        
+                // Cambiar la dirección del alpha si alcanza los límites
+                if (halo.alpha >= 0.4) {
+                    halo._alphaDirection = -1;
+                } else if (halo.alpha <= 0.2) {
+                    halo._alphaDirection = 1;
+                }
             };
+            
+            halo.offsetX = 0; // Desplazamiento horizontal
+            halo.offsetY = 0; // Desplazamiento vertical
 
-            // Establecer las profundidades de renderizado (z-index)
-            halo.z = -100; // Halo en el fondo
-            obj.z = 150;  // goldCC al frente
-            game.world.sort('z', Phaser.Group.SORT_ASCENDING);
+            // Asegurar que el halo se renderice detrás de goldCC
+            halo.z = -1; // Halo detrás
+            obj.z = 1;   // GoldCC al frente
+            game.world.sort('z', Phaser.Group.SORT_ASCENDING); // Ordenar elementos por z-index
         
             // Generar un ángulo con tendencia hacia -90°
             var angle = Phaser.Math.degToRad(weightedAngle(-90, 50, -160, -20));
@@ -178,10 +244,11 @@ function throwRandomObject(groups) {
         
             // Aplicar velocidad en la dirección del ángulo
             game.physics.arcade.velocityFromRotation(angle, randomSpeed, obj.body.velocity);
-        
-            
-
         }
+        
+        
+        
+        
 
         // Lógica general para otros objetos (excepto goldCC)
         if (obj.key !== 'goldCC') {
@@ -328,11 +395,14 @@ function despawnFruit(fruit){
 }*/
 
 function spawnParticles(fruit) {
-    const emitterToUse = fruit.key.includes('Gold') ? emitterGold : emitter;
+    let emitterToUse = fruit.key.includes('Gold') ? emitterGold : emitter;
+    if(fruit.key === 'goldCC'){
+        emitterToUse = emitterCoin;
+    }
     emitterToUse.x = fruit.x;
     emitterToUse.y = fruit.y;
     emitterToUse.start(true, 2000, null, 4); // Genera partículas para la fruta
-
+    
     fadeOutEmitter(emitterToUse); // Aplica el fade-out a las partículas generadas
 }
 
@@ -366,7 +436,7 @@ function killFruit(fruit) {
     }
 
 
-    if (fruit.key === 'tomato' || fruit.key === 'tomatoGold') {
+    if (fruit.key === 'tomato' || fruit.key === 'tomatoGold' || fruit.key === 'goldCC') {
         spawnParticles(fruit);
     }
 
@@ -409,6 +479,67 @@ function killFruit(fruit) {
                 rightHalf.destroy(); // Elimina el elemento después de que desaparezca
             });
         });
+
+        if (fruit.key === 'goldCC') {
+            if (fruit.halo) {
+                fruit.halo.destroy();
+                delete fruit.halo; // Eliminar la referencia para liberar memoria
+            }
+        
+            const resplandor = game.add.sprite(fruit.x, fruit.y, 'halo'); // Crea el sprite
+            resplandor.anchor.setTo(0.5, 0.5); // Centra el sprite
+            resplandor.scale.setTo(1); // Tamaño inicial
+            resplandor.alpha = 1; // Completamente visible al inicio
+            resplandor.z = -200; // Coloca detrás de otros elementos
+            resplandor.offsetX = 0; // Desplazamiento horizontal
+            resplandor.offsetY = 0; 
+        
+            // Agregar y reproducir la animación
+            resplandor.animations.add('spin'); // Crear la animación con todos los frames del spritesheet
+            resplandor.animations.play('spin', 15, true); // Reproducir a 15 FPS en bucle
+        
+            game.world.sort('z', Phaser.Group.SORT_ASCENDING);
+        
+            // Guardar la velocidad actual de fruit
+            const fruitVelocity = {
+                x: fruit.body.velocity.x,
+                y: fruit.body.velocity.y
+            };
+        
+            // Animación de escala (agrandamiento)
+            const scaleTween = game.add.tween(resplandor.scale).to(
+                { x: 2, y: 2 }, // Tamaño final
+                600, // Duración de 600ms
+                Phaser.Easing.Quadratic.Out, // Efecto de suavizado
+                true // Inicia automáticamente
+            );
+        
+            // Animación de opacidad (desaparecer)
+            const fadeTween = game.add.tween(resplandor).to(
+                { alpha: 0 }, // Transición a opacidad 0
+                600, // Duración de 600ms
+                Phaser.Easing.Linear.None, // Transición lineal
+                true // Inicia automáticamente
+            );
+        
+            // Actualizar la posición del resplandor según la velocidad original de fruit
+            resplandor.update = function () {
+                resplandor.x += fruitVelocity.x * game.time.physicsElapsed;
+                resplandor.y += fruitVelocity.y * game.time.physicsElapsed;
+            };
+        
+            // Destruir el sprite después de completar ambas animaciones
+            fadeTween.onComplete.add(() => {
+                resplandor.destroy(true); // Destruye completamente el sprite
+            });
+        }
+        
+        
+        
+        
+        
+        
+        
 
     }else{
         const fadeOutTweenLeft = game.add.tween(leftHalf).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true); // Duración de 1 segundo
