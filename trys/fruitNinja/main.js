@@ -4,7 +4,7 @@ var w = window.innerWidth,
 var game; // Declarar la instancia del juego
 var gameStarted = false; // Bandera para verificar si el juego está en progreso
 let gameActive = false;
-const startMatch = document.getElementById("startMatch");
+const startMatchContainer = document.getElementById("startMatchContainer");
 const startButton = document.getElementById("startButton");
 
 function preload() {
@@ -152,24 +152,104 @@ function createGroup(numItems, spriteKey) {
     return group;
 }
 
+
+
+var probabilities = {
+    tomato: 50,          // Probabilidad inicial del tomate (base buena)
+    bomb: 30,            // Probabilidad inicial de la bomba (base mala)
+    bombCammo: 20,       // Mitad de la probabilidad de bomb
+    tomatoGold: 10,      // Probabilidad inicial del tomate dorado
+    bombGold: 7,         // Probabilidad inicial de la bomba dorada
+    goldCC: 4            // Probabilidad inicial de goldCC
+};
+
+var dynamicStates = {
+    bombCammoBoost: false,   // Aumenta si sale un tomate
+    bombGoldBoost: false,    // Aumenta si sale un tomatoGold
+    bombGoldChance: probabilities.bombGold, // Probabilidad dinámica para bombGold
+    fireRate: 1000,           // Frecuencia inicial de aparición
+    burstMode: false,         // Indica si se está en "modo agrupación"
+    burstCount: 0             // Número de objetos restantes en la agrupación
+};
+
 function throwObject() {
     if (gameActive && game.time.now > nextFire) {
-        nextFire = game.time.now + fireRate;
-
-        // Selecciona un objeto aleatorio de cada categoría para lanzar
-        if (Math.random() > 0.5) {
-            throwRandomObject(good_objects);
+        if (dynamicStates.burstMode) {
+            // En modo agrupación, lanzar rápidamente objetos consecutivos
+            dynamicStates.burstCount--;
+            if (dynamicStates.burstCount <= 0) {
+                dynamicStates.burstMode = false; // Salir de modo agrupación
+            }
         } else {
-            throwRandomObject(bad_objects);
+            // Establecer el próximo fireRate aleatoriamente entre 0 y 2 segundos
+            dynamicStates.fireRate = Math.random() * 2000;
+
+            // Ocasionalmente activar "modo agrupación"
+            if (Math.random() < 0.2) { // 20% de probabilidad de iniciar agrupación
+                dynamicStates.burstMode = true;
+                dynamicStates.burstCount = Math.floor(Math.random() * 4) + 2; // Entre 2 y 5 objetos
+            }
         }
+
+        nextFire = game.time.now + dynamicStates.fireRate;
+
+        // Generar un número aleatorio entre 0 y 100
+        let random = Math.random() * 100;
+        let cumulative = 0;
+
+        // Verificar qué objeto se genera basado en las probabilidades
+        let selectedObject;
+        if (random < (cumulative += probabilities.tomato)) {
+            selectedObject = spawnObject(good_objects, 'tomato');
+            dynamicStates.bombCammoBoost = true; // Aumentar probabilidad de bombCammo
+        } else if (random < (cumulative += probabilities.bomb)) {
+            selectedObject = spawnObject(bad_objects, 'bomb');
+        } else if (random < (cumulative += probabilities.bombCammo)) {
+            selectedObject = spawnObject(bad_objects, 'bombCammo');
+        } else if (random < (cumulative += probabilities.tomatoGold)) {
+            selectedObject = spawnObject(good_objects, 'tomatoGold');
+            dynamicStates.bombGoldBoost = true; // Aumentar probabilidad de bombGold
+        } else if (random < (cumulative += dynamicStates.bombGoldChance)) {
+            selectedObject = spawnObject(bad_objects, 'bombCammoGold');
+        } else if (random < (cumulative += probabilities.goldCC)) {
+            selectedObject = spawnObject(good_objects, 'goldCC');
+        }
+
+        if (selectedObject) {
+            throwRandomObject(selectedObject); // Enviar el objeto seleccionado
+        }
+
+        // Ajustar dinámicamente el fireRate para hacerlo más rápido o lento
+        adjustFireRate();
     }
 }
 
-function throwRandomObject(groups) {
-    // Selecciona un grupo aleatorio de los grupos proporcionados
-    var group = groups[Math.floor(Math.random() * groups.length)];
-    var obj = group.getFirstDead();
+function spawnObject(groups, key) {
+    let group = groups.find(g => g.children[0].key === key);
+    let obj = group.getFirstDead();
+    
+    // Aplicar ajustes dinámicos a probabilidades si es necesario
+    if (key === 'tomato') {
+        probabilities.bombCammo += 5; // Incrementar probabilidad de bombCammo
+    } else if (key === 'tomatoGold') {
+        dynamicStates.bombGoldChance = 50; // Incrementar probabilidad de bombGold
+    } else if (key === 'bombCammoGold') {
+        // Reducir probabilidad de bombGold hasta el valor base
+        dynamicStates.bombGoldChance = Math.max(dynamicStates.bombGoldChance - 10, probabilities.bombGold);
+    }
 
+    if (obj) {
+        return obj; // Devuelve el objeto seleccionado
+    }
+    return null; // Si no hay objetos disponibles
+}
+
+function adjustFireRate() {
+    // Reducir ligeramente el fireRate con el tiempo para aumentar dificultad
+    dynamicStates.fireRate = Math.max(400, dynamicStates.fireRate - 10);
+}
+
+function throwRandomObject(obj) {
     if (obj) {
         if (obj.key === 'bomb' || obj.key === 'bombCammo' || obj.key === 'bombCammoGold') {
             const spark = game.add.sprite(0, 0, 'spark');
@@ -384,7 +464,7 @@ function resetScore() {
     scoreLabel.text = 'Tip: get the green ones!'; // Reinicia el texto
 
     gameActive = false; // Marca que el juego ha terminado
-    startMatch.style.display = 'flex'; // Muestra el contenedor del botón nuevamente
+    startMatchContainer.style.display = 'flex'; // Muestra el contenedor del botón nuevamente
 }
 
 function render() {
@@ -585,16 +665,28 @@ document.addEventListener("DOMContentLoaded", function () {
     startButton.addEventListener("click", function () {
         if (!gameActive) {
             // Comienza el juego por primera vez
-            startMatch.style.display = 'none'; // Oculta el contenedor del botón
+            startMatchContainer.style.display = 'none'; // Oculta el contenedor del botón
             gameActive = true;
             document.getElementById("game").innerHTML = '';
             game = new Phaser.Game(w, h, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
         } else {
             // Reinicia el juego si se terminó anteriormente
-            startMatch.style.display = 'none'; // Oculta nuevamente
+            startMatchContainer.style.display = 'none'; // Oculta nuevamente
             gameActive = true;
             resetScore(); // Reinicia los parámetros del juego sin recargar
         }
+    });
+
+
+    const slider = document.getElementById('sliderTomatoes');
+    const output = document.getElementById('sliderValue');
+
+    // Actualizar el contenido del span con el valor inicial del control deslizante
+    output.textContent = slider.value;
+
+    // Añadir un evento 'input' para actualizar el span cuando el usuario mueva el control deslizante
+    slider.addEventListener('input', function() {
+        output.textContent = this.value;
     });
 });
 
