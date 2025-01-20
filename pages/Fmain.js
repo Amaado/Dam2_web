@@ -9,30 +9,30 @@ const startButton = document.getElementById("startButton");
 
 function preload() {
     // Carga de imágenes
-    this.load.image('goldCC', 'assets/goldCC.png');
-    this.load.image('goldCC_left', 'assets/goldCCIzq.png');
-    this.load.image('goldCC_right', 'assets/goldCCDer.png');
-    this.load.image('tomato', 'assets/tomatoFull.png');
-    this.load.image('tomato_left', 'assets/tomatoIzq.png');
-    this.load.image('tomato_right', 'assets/tomatoDer.png');
-    this.load.image('tomatoGold', 'assets/tomatoGold.png');
-    this.load.image('tomatoGold_left', 'assets/tomatoGoldIzq.png');
-    this.load.image('tomatoGold_right', 'assets/tomatoGoldDer.png');
-    this.load.image('bomb', 'assets/bomb.png');
-    this.load.image('bomb_left', 'assets/bombIzq.png');
-    this.load.image('bomb_right', 'assets/bombDer.png');
-    this.load.image('bombCammo', 'assets/bombCammo.png');
-    this.load.image('bombCammo_left', 'assets/bombCammoIzq.png');
-    this.load.image('bombCammo_right', 'assets/bombCammoDer.png');
-    this.load.image('bombCammoGold', 'assets/bombCammoGold.png');
-    this.load.image('bombCammoGold_left', 'assets/bombCammoGoldIzq.png');
-    this.load.image('bombCammoGold_right', 'assets/bombCammoGoldDer.png');
-    this.load.image('peace', 'assets/peace.png');
-    this.load.image('peaceGold', 'assets/peaceGold.png');
-    this.load.spritesheet('explosion', 'assets/explosion_spritesheet.png', 576, 576, 10);
-    this.load.spritesheet('spark', 'assets/spark_spritesheet.png', 480, 480, 20);
-    this.load.spritesheet('halo', 'assets/halo_spritesheet.png', 337, 337, 34);
-    this.load.spritesheet('coin', 'assets/coin_spritesheet.png', 310, 310, 50);
+    this.load.image('goldCC', '../img/fruitNinja//goldCC.png');
+    this.load.image('goldCC_left', '../img/fruitNinja//goldCCIzq.png');
+    this.load.image('goldCC_right', '../img/fruitNinja//goldCCDer.png');
+    this.load.image('tomato', '../img/fruitNinja//tomatoFull.png');
+    this.load.image('tomato_left', '../img/fruitNinja//tomatoIzq.png');
+    this.load.image('tomato_right', '../img/fruitNinja//tomatoDer.png');
+    this.load.image('tomatoGold', '../img/fruitNinja//tomatoGold.png');
+    this.load.image('tomatoGold_left', '../img/fruitNinja//tomatoGoldIzq.png');
+    this.load.image('tomatoGold_right', '../img/fruitNinja//tomatoGoldDer.png');
+    this.load.image('bomb', '../img/fruitNinja//bomb.png');
+    this.load.image('bomb_left', '../img/fruitNinja//bombIzq.png');
+    this.load.image('bomb_right', '../img/fruitNinja//bombDer.png');
+    this.load.image('bombCammo', '../img/fruitNinja//bombCammo.png');
+    this.load.image('bombCammo_left', '../img/fruitNinja//bombCammoIzq.png');
+    this.load.image('bombCammo_right', '../img/fruitNinja//bombCammoDer.png');
+    this.load.image('bombCammoGold', '../img/fruitNinja//bombCammoGold.png');
+    this.load.image('bombCammoGold_left', '../img/fruitNinja//bombCammoGoldIzq.png');
+    this.load.image('bombCammoGold_right', '../img/fruitNinja//bombCammoGoldDer.png');
+    this.load.image('peace', '../img/fruitNinja//peace.png');
+    this.load.image('peaceGold', '../img/fruitNinja//peaceGold.png');
+    this.load.spritesheet('explosion', '../img/fruitNinja//explosion_spritesheet.png', 576, 576, 10);
+    this.load.spritesheet('spark', '../img/fruitNinja//spark_spritesheet.png', 480, 480, 20);
+    this.load.spritesheet('halo', '../img/fruitNinja//halo_spritesheet.png', 337, 337, 34);
+    this.load.spritesheet('coin', '../img/fruitNinja//coin_spritesheet.png', 310, 310, 50);
 }
 
 var good_objects = [];
@@ -154,37 +154,37 @@ function createGroup(numItems, spriteKey) {
 
 
 
+// Configuración de probabilidades iniciales
 var probabilities = {
     tomato: 50,          // Probabilidad inicial del tomate (base buena)
     bomb: 30,            // Probabilidad inicial de la bomba (base mala)
-    bombCammo: 20,       // Mitad de la probabilidad de bomb
-    tomatoGold: 10,      // Probabilidad inicial del tomate dorado
-    bombGold: 7,         // Probabilidad inicial de la bomba dorada
-    goldCC: 4            // Probabilidad inicial de goldCC
+    bombCammo: 20,       // Probabilidad inicial de bombCammo
+    tomatoGold: 7,      // Probabilidad inicial del tomate dorado
+    bombGold: 3,        // Probabilidad inicial de bombGold
+    goldCC: 2           // Probabilidad inicial de goldCC
 };
 
 var dynamicStates = {
-    bombCammoBoost: false,   // Aumenta si sale un tomate
+    bombCammoBoost: false,   // Aumenta si sale un tomato
     bombGoldBoost: false,    // Aumenta si sale un tomatoGold
-    bombGoldChance: probabilities.bombGold, // Probabilidad dinámica para bombGold
-    fireRate: 1000,           // Frecuencia inicial de aparición
-    burstMode: false,         // Indica si se está en "modo agrupación"
-    burstCount: 0             // Número de objetos restantes en la agrupación
+    bombCammoChance: probabilities.bombCammo, // Probabilidad dinámica para bombCammo
+    bombGoldChance: probabilities.bombGold,   // Probabilidad dinámica para bombGold
+    fireRate: 1000,          // Frecuencia inicial de aparición
+    burstMode: false,        // Indica si se está en "modo agrupación"
+    burstCount: 0            // Número de objetos restantes en la agrupación
 };
 
+// Función para lanzar objetos
 function throwObject() {
     if (gameActive && game.time.now > nextFire) {
         if (dynamicStates.burstMode) {
-            // En modo agrupación, lanzar rápidamente objetos consecutivos
             dynamicStates.burstCount--;
             if (dynamicStates.burstCount <= 0) {
                 dynamicStates.burstMode = false; // Salir de modo agrupación
             }
         } else {
-            // Establecer el próximo fireRate aleatoriamente entre 0 y 2 segundos
             dynamicStates.fireRate = Math.random() * 2000;
 
-            // Ocasionalmente activar "modo agrupación"
             if (Math.random() < 0.2) { // 20% de probabilidad de iniciar agrupación
                 dynamicStates.burstMode = true;
                 dynamicStates.burstCount = Math.floor(Math.random() * 4) + 2; // Entre 2 y 5 objetos
@@ -193,61 +193,74 @@ function throwObject() {
 
         nextFire = game.time.now + dynamicStates.fireRate;
 
-        // Generar un número aleatorio entre 0 y 100
-        let random = Math.random() * 100;
-        let cumulative = 0;
+        let totalProbability = probabilities.tomato + probabilities.bomb + dynamicStates.bombCammoChance +
+                               probabilities.tomatoGold + dynamicStates.bombGoldChance + probabilities.goldCC;
 
-        // Verificar qué objeto se genera basado en las probabilidades
+        let random = Math.random() * totalProbability;
+        let cumulative = 0;
         let selectedObject;
+
         if (random < (cumulative += probabilities.tomato)) {
             selectedObject = spawnObject(good_objects, 'tomato');
-            dynamicStates.bombCammoBoost = true; // Aumentar probabilidad de bombCammo
+            dynamicStates.bombCammoBoost = true; // Activar boost para bombCammo
         } else if (random < (cumulative += probabilities.bomb)) {
             selectedObject = spawnObject(bad_objects, 'bomb');
-        } else if (random < (cumulative += probabilities.bombCammo)) {
+        } else if (random < (cumulative += dynamicStates.bombCammoChance)) {
             selectedObject = spawnObject(bad_objects, 'bombCammo');
         } else if (random < (cumulative += probabilities.tomatoGold)) {
             selectedObject = spawnObject(good_objects, 'tomatoGold');
-            dynamicStates.bombGoldBoost = true; // Aumentar probabilidad de bombGold
+            dynamicStates.bombGoldBoost = true; // Activar boost para bombGold
         } else if (random < (cumulative += dynamicStates.bombGoldChance)) {
             selectedObject = spawnObject(bad_objects, 'bombCammoGold');
         } else if (random < (cumulative += probabilities.goldCC)) {
             selectedObject = spawnObject(good_objects, 'goldCC');
         }
 
+        console.log(`----------------------------------`);
+        console.log(`----------------------------------`);
+        console.log(`Objeto lanzado: ${selectedObject.key}`);
+        console.log('Probabilidades actuales:');
+        console.log(`Tomato: ${(probabilities.tomato / totalProbability * 100).toFixed(2)}%`);
+        console.log(`Bomb: ${(probabilities.bomb / totalProbability * 100).toFixed(2)}%`);
+        console.log(`BombCammo: ${(dynamicStates.bombCammoChance / totalProbability * 100).toFixed(2)}%`);
+        console.log(`TomatoGold: ${(probabilities.tomatoGold / totalProbability * 100).toFixed(2)}%`);
+        console.log(`BombGold: ${(dynamicStates.bombGoldChance / totalProbability * 100).toFixed(2)}%`);
+        console.log(`GoldCC: ${(probabilities.goldCC / totalProbability * 100).toFixed(2)}%`);
+
         if (selectedObject) {
-            throwRandomObject(selectedObject); // Enviar el objeto seleccionado
+            throwRandomObject(selectedObject);
         }
 
-        // Ajustar dinámicamente el fireRate para hacerlo más rápido o lento
         adjustFireRate();
     }
 }
 
+// Función para manejar la aparición de objetos
 function spawnObject(groups, key) {
     let group = groups.find(g => g.children[0].key === key);
     let obj = group.getFirstDead();
-    
-    // Aplicar ajustes dinámicos a probabilidades si es necesario
+
     if (key === 'tomato') {
-        probabilities.bombCammo += 5; // Incrementar probabilidad de bombCammo
+        dynamicStates.bombCammoChance = 50; // Aumentar probabilidad de bombCammo
     } else if (key === 'tomatoGold') {
-        dynamicStates.bombGoldChance = 50; // Incrementar probabilidad de bombGold
+        dynamicStates.bombGoldChance = 50; // Aumentar probabilidad de bombGold
+    } else if (key === 'bombCammo') {
+        dynamicStates.bombCammoChance = probabilities.bombCammo; // Reducir probabilidad de bombCammo
     } else if (key === 'bombCammoGold') {
-        // Reducir probabilidad de bombGold hasta el valor base
-        dynamicStates.bombGoldChance = Math.max(dynamicStates.bombGoldChance - 10, probabilities.bombGold);
+        dynamicStates.bombGoldChance = probabilities.bombGold; // Reducir probabilidad de bombGold
     }
 
     if (obj) {
-        return obj; // Devuelve el objeto seleccionado
+        return obj;
     }
-    return null; // Si no hay objetos disponibles
+    return null;
 }
 
+// Ajustar velocidad de aparición
 function adjustFireRate() {
-    // Reducir ligeramente el fireRate con el tiempo para aumentar dificultad
     dynamicStates.fireRate = Math.max(400, dynamicStates.fireRate - 10);
 }
+
 
 function throwRandomObject(obj) {
     if (obj) {
@@ -678,15 +691,157 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
+    /* SLIDER VALUE ADJUST */
     const slider = document.getElementById('sliderTomatoes');
-    const output = document.getElementById('sliderValue');
+    const sliderValueSelect = document.getElementById('sliderValueSelect');
 
     // Actualizar el contenido del span con el valor inicial del control deslizante
-    output.textContent = slider.value;
+    sliderValueSelect.textContent = slider.value;
 
     // Añadir un evento 'input' para actualizar el span cuando el usuario mueva el control deslizante
     slider.addEventListener('input', function() {
-        output.textContent = this.value;
+        sliderValueSelect.textContent = this.value;
     });
+
+    slider.addEventListener('input', updateWidths);
+
+
+
+    /* SLIDER CONTAINER WIDTH ADJUST */
+    const sliderValueDB = document.getElementById('sliderValueDB');
+    const sliderContainer = document.querySelector('.sliderContainer');
+
+    // Calcular los anchos y asignarlos a las variables CSS
+    function updateWidths() {
+        const selectWidth = sliderValueSelect.offsetWidth;
+        const dbWidth = sliderValueDB.offsetWidth;
+
+        // Actualizar las variables CSS
+        document.documentElement.style.setProperty('--sliderValueSelect-width', `${selectWidth}px`);
+        document.documentElement.style.setProperty('--sliderValueDB-width', `${dbWidth}px`);
+    }
+    updateWidths();
+    window.addEventListener('resize', updateWidths);
+
+
+
+
+
+    /* CONTAINERS PERSPECTIVE */
+
+    const setProp = (el, prop, value) => el.style.setProperty(prop, value);
+
+    const onMouseUpdate = (e, el, container) => {
+        const elRect = el.getBoundingClientRect();
+
+        // Coordenadas relativas al contenedor
+        const XRel = e.clientX - elRect.left;
+        const YRel = e.clientY - elRect.top;
+        const width = elRect.width;
+
+        const scaleFactor = 12; // Cantidad de perspectiva
+        const YAngle = -(0.5 - (XRel / width)) * scaleFactor;
+        const XAngle = (0.5 - (YRel / width)) * scaleFactor;
+
+        setProp(el, '--dy', `${YAngle}deg`);
+        setProp(el, '--dx', `${XAngle}deg`);
+    };
+
+    const resetProps = (el) => {
+        el.style.setProperty('--dy', '0');
+        el.style.setProperty('--dx', '0');
+    };
+
+    let container = document.getElementById("startMatchContainer");
+    const elements = container.querySelectorAll('.perspCont');
+
+    const adjustHitboxes = (activeEl) => {
+        elements.forEach(el => {
+            if (el !== activeEl) {
+                el.style.pointerEvents = "none"; // Desactiva eventos para evitar colisiones
+            }
+        });
+    };
+
+    const resetHitboxes = () => {
+        elements.forEach(el => {
+            el.style.height = ""; // Restablece la altura original
+            el.style.pointerEvents = ""; // Reactiva los eventos
+        });
+    };
+
+    elements.forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+            el.classList.add('active');
+            el.style.zIndex = "180";
+            adjustHitboxes(el); // Ajusta las hitboxes de los demás elementos
+            onMouseUpdate(e, el, container);
+        }, false);
+
+        el.addEventListener('mouseenter', (e) => {
+            el.classList.add('active');
+            el.style.zIndex = "180";
+            adjustHitboxes(el); // Ajusta las hitboxes al entrar
+            onMouseUpdate(e, el, container);
+        }, false);
+
+        el.addEventListener('mouseleave', () => {
+            el.classList.remove('active');
+            el.style.zIndex = "0";
+            resetHitboxes(); // Restablece las hitboxes al salir
+            resetProps(el);
+        }, false);
+    });
+
+    
+    
+
+
+    /* STATS WIDTH ADJUST */
+    let arrowState = false;
+    const statsContainer = document.querySelector('.statsContainer');
+    const blank = document.querySelector('.blank');
+
+    function handleStatsWidth(isFromListener = false) {
+        const selectWidthStats = getComputedStyle(document.documentElement).getPropertyValue('--sliderValueSelect-width');
+        const dbWidthStats = getComputedStyle(document.documentElement).getPropertyValue('--sliderValueDB-width');
+
+        const selectWidthValueStats = parseFloat(selectWidthStats) || 0;
+        const dbWidthValueStats = parseFloat(dbWidthStats) || 0;
+        const finalWidthStats = 280 + selectWidthValueStats + dbWidthValueStats;
+
+
+        const statsTitle = document.querySelector('.statsTitle');
+        const flecha = document.querySelector('.flecha');
+
+        const statsTitleWidth = statsTitle ? statsTitle.offsetWidth : 0;
+        const flechaWidth = flecha ? flecha.offsetWidth : 0;
+        const finalWidthAuto = statsTitleWidth + flechaWidth + 44;
+
+
+        const blankWidth = finalWidthStats-finalWidthAuto;
+
+        if (isFromListener) {
+            arrowState = !arrowState;
+        }
+
+        if(arrowState){
+            //Expandido
+            statsContainer.style.width = `${finalWidthStats}px`;
+            statsContainer.style.height = "200px";
+            flecha.classList.add("rotated");
+            blank.style.width = `${blankWidth}px`;
+        }else{
+            //Contraído
+            statsContainer.style.width = `${finalWidthAuto}px`;
+            statsContainer.style.height = "15px";
+            flecha.classList.remove("rotated");
+            blank.style.width = "1px";
+        }
+    }
+
+    handleStatsWidth(false);
+    statsContainer.addEventListener("click", () => handleStatsWidth(true));
+    slider.addEventListener("input", () => handleStatsWidth());
 });
 

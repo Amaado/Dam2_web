@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tomato Cut</title>
+    <link rel="stylesheet" href="Fstyle.css" />
+</head>
+<body>
+    <div id="game"></div>
+    <div id="startMatchContainer">
+        <div class="sliderContainer perspCont">
+            <label style="margin-top: -2px;" for="sliderTomatoes">Bet:</label>
+            <div class="sliderRangeContainer">
+                <input type="range" id="sliderTomatoes" min="1" max="100" value="20">
+                <div class="sliderValueContainer">
+                    <span id="sliderValueSelect"></span>
+                    <span class="bar">/</span>
+                    <span id="sliderValueDB">100</span>
+                </div>
+             </div>
+        </div>
+
+        <div class="statsContainer">
+            <div class="statsTittleContainer">
+                <div class="statsTittle">Stats</div>
+                <img class="flecha night" src="../img/flecha.png"/>
+                <div class="blank"></div>
+            </div>
+        </div>
+
+        <button id="startButton">Start Game</button>
+    </div>
+
+    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.6/phaser.min.js"></script>-->
+    <script src="../libs/phaser.js"></script>
+    <script src="Fmain.js"></script>
+</body>
+</html>

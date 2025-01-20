@@ -1,0 +1,222 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+:root {
+    --sliderValueSelect-width: auto;
+    --sliderValueDB-width: auto;
+}
+
+html, body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    background-color: #1c2128;
+    color: #bfd4e9;
+    width:100vw;
+    height:100vh;
+}
+
+#game {
+    width:100vw;
+    height:100vh;
+}
+
+#startMatchContainer {
+    display: flex; /* Usar flexbox para centrar internamente */
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    position: absolute; /* Asegura que esté sobre el contenedor principal */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centra con precisión */
+    width:400px; /* Adapta el ancho automáticamente al contenido */
+    height: 600px; /* Adapta la altura automáticamente al contenido */
+    background-color: rgba(20, 26, 31, 0.957);
+    padding: 20px; /* Añade espacio interno opcional */
+    border-radius: 10px; /* Bordes redondeados opcionales */
+
+    font-weight: bold;
+    font-family: "Roboto";
+}
+
+
+
+.sliderContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    font-size: 16px;
+    background-color: #607d9962;
+    width: calc(280px + var(--sliderValueSelect-width) + var(--sliderValueDB-width));
+    height: auto;
+    padding: 12px;
+    border-radius: 7px;
+    pointer-events: all;
+    filter: drop-shadow(0px 0px 0px black);
+
+    transform: scale(1) perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy));
+    transition: all 0.7s ease, width 0.2s ease, transform 150ms linear;
+}
+
+.sliderContainer.active {
+    transform: scale(1.05) perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy));
+    filter: drop-shadow(4px 6px 7px black);
+}
+
+.sliderRangeContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.sliderValueContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    align-items: center;
+    position: absolute;
+    right: 20px;
+    width: auto;
+    font-size: 14px;
+}
+
+#sliderValueSelect{
+    position: relative;
+    display: flex;
+    width: auto;
+    color: #E0888E;
+}
+
+.bar{
+    color: #d8686e;
+}
+
+#sliderValueDB{
+    position: relative;
+    display: flex;
+    width: auto;
+    color: #D0494D;
+}
+
+
+
+
+/* Estilos generales para el input de tipo range */
+input[type="range"] {
+    -webkit-appearance: none; /* Elimina el estilo por defecto en WebKit */
+    width: 200px; /* Ancho completo del contenedor padre */
+    height: 8px; /* Altura de la pista */
+    background: #e28d8d; /* Color de la pista */
+    border-radius: 5px; /* Bordes redondeados para la pista */
+    outline: none; /* Sin borde de enfoque */
+    padding: 0; /* Sin padding */
+    margin: 0; /* Sin margen */
+    align-items: center;
+  }
+  
+  /* Estilos para la pista del control deslizante en navegadores WebKit */
+  input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: #e28d8d;
+    border-radius: 5px;
+  }
+  
+  /* Estilos para el "thumb" en navegadores WebKit */
+/* Estilos para el "thumb" en navegadores WebKit */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 30px; /* Altura del thumb */
+    width: 22px;  /* Anchura del thumb */
+    border-radius: 20%; /* Forma circular */
+    background: url("../img/hamster/icons/iconTomato.svg"); /* Imagen de fondo del thumb */
+    background-size: 123%;
+    background-position: -2.5px 1px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    margin-top: -13px; /* Ajuste para alinear el thumb con la pista */
+    /*box-shadow: 0px 0px 4px black;*/
+}
+  
+
+
+.statsContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    font-size: 16px;
+    background-color: #607d9962;
+    width: auto;
+    height: auto;
+    padding: 12px;
+    padding-left: 18px;
+    border-radius: 7px;
+    pointer-events: all;
+    filter: drop-shadow(0px 0px 0px black);
+
+    transition: all 0.7s ease, width 0.5s ease, height 0.5s ease;
+}
+
+.statsTittleContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin-top: -2px;
+}
+
+.statsTittle{
+
+}
+
+.flecha{
+    width: auto;
+    height: 15px;
+    margin-top: 3px;
+    transform: rotateZ(-0deg);
+    transition: all 0.5s ease;
+}
+
+.flecha.rotated{
+    transform: rotateZ(-180deg);
+}
+
+.flecha.night{
+    filter: brightness(0) saturate(100%) invert(86%) sepia(4%) saturate(2668%) hue-rotate(185deg) brightness(104%) contrast(83%);
+}
+
+.blank{
+    height: 15px;
+    width: 1px;
+    transition: width 0.5s ease;
+}
+
+
+
+
+
+
+#startButton {
+    position: absolute;
+    bottom: 40px;
+    width: 200px;
+    height: 50px;
+    background-color: rgb(52, 81, 120); /* Añade un color de fondo para visibilidad */
+    border: none;
+    border-radius: 8px; /* Opcional: diseño más atractivo */
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; /* Asegúrate de centrar el texto dentro del botón */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    font-family: "Roboto";
+}
