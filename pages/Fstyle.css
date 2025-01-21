@@ -1,9 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 :root {
-    --sliderValueSelect-width: auto;
-    --sliderValueDB-width: auto;
+    --betValueSelect-width: auto;
+    --betValueDB-width: auto;
 }
+
+@font-face {
+    font-family: "kemco";
+    src: url("../img/Kemco Pixel Bold.ttf") format("woff2"),
+      url("../img/Kemco Pixel Bold.ttf") format("woff");
+    font-weight: normal;
+    font-style: normal;
+  }
 
 html, body {
     display: flex;
@@ -32,7 +40,7 @@ html, body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); /* Centra con precisión */
-    width:400px; /* Adapta el ancho automáticamente al contenido */
+    width: 540px; /* Adapta el ancho automáticamente al contenido */
     height: 600px; /* Adapta la altura automáticamente al contenido */
     background-color: rgba(20, 26, 31, 0.957);
     padding: 20px; /* Añade espacio interno opcional */
@@ -44,14 +52,14 @@ html, body {
 
 
 
-.sliderContainer{
+.betContainer{
     display: flex;
     flex-direction: row;
     gap: 20px;
     align-items: center;
     font-size: 16px;
     background-color: #607d9962;
-    width: calc(280px + var(--sliderValueSelect-width) + var(--sliderValueDB-width));
+    width: calc(450px + var(--betValueSelect-width) + var(--betValueDB-width));
     height: auto;
     padding: 12px;
     border-radius: 7px;
@@ -62,19 +70,19 @@ html, body {
     transition: all 0.7s ease, width 0.2s ease, transform 150ms linear;
 }
 
-.sliderContainer.active {
+.betContainer.active {
     transform: scale(1.05) perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy));
     filter: drop-shadow(4px 6px 7px black);
 }
 
-.sliderRangeContainer{
+.betRangeContainer{
     display: flex;
     flex-direction: row;
     gap: 10px;
     align-items: center;
 }
 
-.sliderValueContainer{
+.betValueContainer{
     display: flex;
     flex-direction: row;
     gap: 3px;
@@ -85,31 +93,40 @@ html, body {
     font-size: 14px;
 }
 
-#sliderValueSelect{
+#betCosts{
+    display: flex;
+    width: auto;
+    color: #E0888E;
+    margin-right: 3px;
+}
+.tomatoCosts{
+    margin-top: -1px;
+    width: 17px;
+    filter: brightness(0.9);
+}
+
+#betValueSelect{
     position: relative;
     display: flex;
     width: auto;
     color: #E0888E;
 }
 
-.bar{
+.barBet{
     color: #d8686e;
 }
 
-#sliderValueDB{
+#betValueDB{
     position: relative;
     display: flex;
     width: auto;
     color: #D0494D;
 }
 
-
-
-
 /* Estilos generales para el input de tipo range */
-input[type="range"] {
+#sliderTomatoes[type="range"] {
     -webkit-appearance: none; /* Elimina el estilo por defecto en WebKit */
-    width: 200px; /* Ancho completo del contenedor padre */
+    width: 300px; /* Ancho completo del contenedor padre */
     height: 8px; /* Altura de la pista */
     background: #e28d8d; /* Color de la pista */
     border-radius: 5px; /* Bordes redondeados para la pista */
@@ -117,20 +134,20 @@ input[type="range"] {
     padding: 0; /* Sin padding */
     margin: 0; /* Sin margen */
     align-items: center;
-  }
+}
   
   /* Estilos para la pista del control deslizante en navegadores WebKit */
-  input[type="range"]::-webkit-slider-runnable-track {
+#sliderTomatoes[type="range"]::-webkit-slider-runnable-track {
     width: 100%;
     height: 8px;
     cursor: pointer;
     background: #e28d8d;
     border-radius: 5px;
-  }
+}
   
   /* Estilos para el "thumb" en navegadores WebKit */
 /* Estilos para el "thumb" en navegadores WebKit */
-input[type="range"]::-webkit-slider-thumb {
+#sliderTomatoes[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     height: 30px; /* Altura del thumb */
     width: 22px;  /* Anchura del thumb */
@@ -143,13 +160,165 @@ input[type="range"]::-webkit-slider-thumb {
     margin-top: -13px; /* Ajuste para alinear el thumb con la pista */
     /*box-shadow: 0px 0px 4px black;*/
 }
+
+
+
+
+.multiContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    font-size: 16px;
+    background-color: #607d9962;
+    width: calc(450px + var(--betValueSelect-width) + var(--betValueDB-width));
+    height: auto;
+    padding: 12px;
+    border-radius: 7px;
+    pointer-events: all;
+    filter: drop-shadow(0px 0px 0px black);
+
+    transform: scale(1) perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy));
+    transition: all 0.7s ease, width 0.2s ease, transform 150ms linear;
+}
+
+.multiContainer.active {
+    transform: scale(1.05) perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy));
+    filter: drop-shadow(4px 6px 7px black);
+}
+
+.multiRangeContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.multiValueContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    align-items: center;
+    position: absolute;
+    right: 20px;
+    width: auto;
+    font-size: 14px;
+    background-color: #49d05b3a;
+}
+
+.multiHelpContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    align-items: center;
+    right: 20px;
+    width: auto;
+    background-color: #c5d0493a;
+    pointer-events: all;
+}
+
+#multiHelp{
+    transform: scaleX(0);
+    max-width: 0px;
+    max-height: 20px;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+#multiHelp.active{
+    transform: scaleX(1);
+    max-width: 50px;
+    max-height: 20px;
+}
+
+.coinCosts{
+    width: 22px;
+    height: 20px;
+}
+
+#multiValueSelect{
+    position: relative;
+    display: flex;
+    width: auto;
+    color: #E0888E;
+}
+
+.barMulti{
+    color: #d8686e;
+}
+
+#multiValueDB{
+    position: relative;
+    display: flex;
+    gap: 0px;
+    width: auto;
+    color: #D0494D;
+}
+
+.thumbMultiCont{
+    position: absolute;
+    left: 100px;
+    display: flex;
+    flex-direction: row;
+    font-family: 'kemco';
+    align-items: baseline;
+    letter-spacing: -2.1px;
+    z-index: 1;
+    pointer-events: none;
+    transform: translateX(-10px);
+}
+.thumbX{
+    font-size: 13px;
+}
+.thumbMulti{
+    font-size: 16px;
+}
+
+/* Estilos generales para el input de tipo range */
+#sliderMulti[type="range"] {
+    -webkit-appearance: none; /* Elimina el estilo por defecto en WebKit */
+    width: 100px; /* Ancho completo del contenedor padre */
+    height: 8px; /* Altura de la pista */
+    background: #e28d8d; /* Color de la pista */
+    border-radius: 5px; /* Bordes redondeados para la pista */
+    outline: none; /* Sin borde de enfoque */
+    padding: 0; /* Sin padding */
+    margin: 0; /* Sin margen */
+    align-items: center;
+}
+
+    /* Estilos para la pista del control deslizante en navegadores WebKit */
+#sliderMulti::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: #e28d8d;
+    border-radius: 5px;
+}
+  
+  /* Estilos para el "thumb" en navegadores WebKit */
+/* Estilos para el "thumb" en navegadores WebKit */
+#sliderMulti::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 27px; /* Altura del thumb */
+    width: 22px;  /* Anchura del thumb */
+    border-radius: 20%; /* Forma circular */
+    background-size: 123%;
+    background-position: -2.5px 1px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    margin-top: -10px; /* Ajuste para alinear el thumb con la pista */
+    pointer-events: all;
+    z-index: 2;
+    /*box-shadow: 0px 0px 4px black;*/
+}
   
 
 
 .statsContainer{
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 12px;
     align-items: center;
     font-size: 16px;
     background-color: #607d9962;
@@ -158,8 +327,8 @@ input[type="range"]::-webkit-slider-thumb {
     padding: 12px;
     padding-left: 18px;
     border-radius: 7px;
-    pointer-events: all;
     filter: drop-shadow(0px 0px 0px black);
+    overflow: hidden;
 
     transition: all 0.7s ease, width 0.5s ease, height 0.5s ease;
 }
@@ -169,6 +338,7 @@ input[type="range"]::-webkit-slider-thumb {
     flex-direction: row;
     gap: 8px;
     margin-top: -2px;
+    pointer-events: all;
 }
 
 .statsTittle{
@@ -179,12 +349,13 @@ input[type="range"]::-webkit-slider-thumb {
     width: auto;
     height: 15px;
     margin-top: 3px;
-    transform: rotateZ(-0deg);
+    margin-left: 0px;
+    transform: rotateZ(-0deg) translateX(0px);
     transition: all 0.5s ease;
 }
 
 .flecha.rotated{
-    transform: rotateZ(-180deg);
+    transform: rotateZ(-180deg) translateX(-4px);
 }
 
 .flecha.night{
@@ -197,7 +368,87 @@ input[type="range"]::-webkit-slider-thumb {
     transition: width 0.5s ease;
 }
 
+.statRowFirst{
+    transform: translateY(7px);
+}
+.statRow{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    width: 105%;
+    height: auto;
+    background-color: rgba(139, 51, 104, 0.2);
+}
 
+.br{
+    width: 105%;
+    height: 2px;
+    border-radius: 40%;
+    background-color: #bfd4e9;
+}
+
+.itemNameHead{
+    font-size: 14px;
+    font-weight: bold;
+    background-color: red;
+    width: 115px;
+}
+.itemPercentageHead{
+    font-size: 14px;
+    font-weight: bold;
+    background-color: rgb(0, 60, 255);
+    width: 73px;
+}
+.itemPicLogo{
+    width: auto;
+    height: 18px;
+    margin-left: 15px;
+}
+.itemPicLogo.night{
+    filter: brightness(0) saturate(100%) invert(86%) sepia(4%) saturate(2668%) hue-rotate(185deg) brightness(104%) contrast(83%);
+}
+
+
+.item{
+    width: auto;
+    height: 18px;
+    z-index: 1;
+    margin-left: 15px;
+}
+.itemName{
+    font-size: 13px;
+    font-weight: normal;
+    background-color: red;
+    width: 115px;
+}
+.itemSpark{
+    position: absolute;
+    margin-top: -15px;
+    margin-left: -10px;
+    margin-left: 15px;
+}
+.itemHalo{
+    position: absolute;
+    z-index: 0;
+    transform: scale(2);
+}
+.itemPercentage{
+    font-size: 13px;
+    font-weight: normal;
+    background-color: rgb(0, 60, 255);
+    width: 73px;
+}
+.itemMulti{
+    display: flex;
+    flex-direction: row;
+    font-size: 13px;
+    font-weight: normal;
+    background-color: rgb(0, 60, 255);
+    width: 50px;
+}
+.x{
+    
+}
 
 
 

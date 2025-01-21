@@ -9,14 +9,45 @@
 <body>
     <div id="game"></div>
     <div id="startMatchContainer">
-        <div class="sliderContainer perspCont">
+        <div class="betContainer perspCont">
             <label style="margin-top: -2px;" for="sliderTomatoes">Bet:</label>
-            <div class="sliderRangeContainer">
-                <input type="range" id="sliderTomatoes" min="1" max="100" value="20">
-                <div class="sliderValueContainer">
-                    <span id="sliderValueSelect"></span>
-                    <span class="bar">/</span>
-                    <span id="sliderValueDB">100</span>
+            <div class="betRangeContainer">
+                <input type="range" id="sliderTomatoes" min="1" max="100" value="1">
+                <div class="betValueContainer">
+                    <span id="betCosts">Costs</span>
+                    <span id="betValueSelect"></span>
+                    <span class="barBet">/</span>
+                    <span id="betValueDB">100</span>
+                    <img class="tomatoCosts" src="../img/hamster/icons/iconTomato.svg"/>
+                </div>
+             </div>
+        </div>
+
+        <div class="multiContainer perspCont">
+            <label style="margin-top: -2px;" for="sliderMulti">Multiplier:</label>
+            <div class="thumbMultiCont">
+                <div class="thumbX">x</div>
+                <div class="thumbMulti">1.25</div>
+            </div>
+            <div class="multiRangeContainer">
+                <input type="range" id="sliderMulti" min="100" max="499" value="100">
+                <div class="multiValueContainer">
+                    <span class="multiHelpContainer">
+                        <span>Costs </span>
+                        <span id="multiBetValue" style="margin-left: 4px;">1</span>
+                        <img class="coinCosts" src="../img/hamster/icons/iconCoin.png"/>
+                        <span id="multiHelp">( = Bet )</span>
+                    </span>
+
+                    <span style="margin-left: 4px;">x</span>
+                    <span id="multiValueLabel">1.00</span>
+
+                    <span style="margin-left: 4px; margin-right:4px;">=</span>
+                    <span id="multiCostsFinal">10.5</span>
+
+                    <span class="barMulti">/</span>
+                    <span id="multiValueDB">100</span>
+                    <img class="coinCosts" src="../img/hamster/icons/iconCoin.png"/>
                 </div>
              </div>
         </div>
@@ -26,6 +57,53 @@
                 <div class="statsTittle">Stats</div>
                 <img class="flecha night" src="../img/flecha.png"/>
                 <div class="blank"></div>
+            </div>
+            <div class="statRow statRowFirst">
+                <img class="itemPicLogo night" src="../img/photos.png"/>
+                <div class="itemNameHead">Name...</div>
+                <div class="itemPercentageHead">Spawn rate</div>
+                <div class="itemMultiHead">Multi</div>
+                <div class="itemMultiHead">Final rate</div>
+            </div>
+            <div class="br" style="margin-top: 0px;"></div>
+            <div class="statRow">
+                <img class="item" src="../img/fruitNinja/tomatoFull.png"/>
+                <div class="itemName">Tomato</div>
+                <div class="itemPercentage"></div>
+                <div class="itemMulti">
+                    <div class="x">x </div>
+                    <div class="multiN">1.2</div>
+                </div>
+            </div>
+            <div class="statRow">
+                <img class="item" src="../img/fruitNinja/tomatoGold.png"/>
+                <div class="itemName">Tomato gold</div>
+                <div class="itemPercentage"></div>
+            </div>
+            <div class="statRow">
+                <img class="item" src="../img/fruitNinja/bomb.png"/>
+                <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
+                <div class="itemName">Bomb</div>
+                <div class="itemPercentage"></div>
+            </div>
+            <div class="statRow">
+                <img class="item" src="../img/fruitNinja/bombCammo.png"/>
+                <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
+
+                <div class="itemName">Cammo bomb</div>
+                <div class="itemPercentage"></div>
+            </div>
+            <div class="statRow">
+                <img class="item" src="../img/fruitNinja/bombCammoGold.png"/>
+                <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
+                <div class="itemName">Cammo gold bomb</div>
+                <div class="itemPercentage"></div>
+            </div>
+            <div class="statRow">
+                <img class="item" src="../img/fruitNinja/goldCC.png"/>
+                <img class="item itemHalo" src="../img/fruitNinja/halo.gif"/>
+                <div class="itemName">Gold CC</div>
+                <div class="itemPercentage"></div>
             </div>
         </div>
 

@@ -9194,9 +9194,10 @@ elements.forEach(el => {
 });
 
 
-
-
-
+    /* HREF FRUIT NINJA */
+    tomatoContainerHitbox.addEventListener("click", function () {
+      window.location.href = "pages/Findex.html";
+    });
 
 
 

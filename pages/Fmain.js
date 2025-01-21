@@ -157,9 +157,9 @@ function createGroup(numItems, spriteKey) {
 // Configuración de probabilidades iniciales
 var probabilities = {
     tomato: 50,          // Probabilidad inicial del tomate (base buena)
+    tomatoGold: 7,      // Probabilidad inicial del tomate dorado
     bomb: 30,            // Probabilidad inicial de la bomba (base mala)
     bombCammo: 20,       // Probabilidad inicial de bombCammo
-    tomatoGold: 7,      // Probabilidad inicial del tomate dorado
     bombGold: 3,        // Probabilidad inicial de bombGold
     goldCC: 2           // Probabilidad inicial de goldCC
 };
@@ -691,34 +691,106 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    /* SLIDER VALUE ADJUST */
-    const slider = document.getElementById('sliderTomatoes');
-    const sliderValueSelect = document.getElementById('sliderValueSelect');
 
-    // Actualizar el contenido del span con el valor inicial del control deslizante
-    sliderValueSelect.textContent = slider.value;
 
-    // Añadir un evento 'input' para actualizar el span cuando el usuario mueva el control deslizante
-    slider.addEventListener('input', function() {
-        sliderValueSelect.textContent = this.value;
+    /* BET SLIDER VALUE ADJUST */
+    const sliderMulti = document.getElementById('sliderMulti');
+    const thumbMulti = document.querySelector('.thumbMulti');
+    const thumbMultiCont = document.querySelector('.thumbMultiCont');
+    const multiValueLabel = document.getElementById("multiValueLabel");
+    
+    function updateThumbPosition() {
+        let sliderWidth = sliderMulti.offsetWidth;
+        sliderWidth = sliderWidth - 20; // Ajustar el ancho del slider
+        const sliderMin = sliderMulti.min;           // Valor mínimo del slider
+        const sliderMax = sliderMulti.max;           // Valor máximo del slider
+    
+        // Calcular la posición en porcentaje
+        const valuePercent = (sliderMulti.value - sliderMin) / (sliderMax - sliderMin);
+    
+        // Calcular la posición del contenedor del thumb
+        const thumbOffset = valuePercent * sliderWidth; // Posición relativa al ancho del slider
+    
+        // Mover el contenedor para que siga el thumb
+        thumbMultiCont.style.left = `calc(${thumbOffset}px + 100px)`; // Ajustar con un margen opcional
+    }
+    
+    function formatValue(value) {
+        // Convertir el valor a cadena y agregar el punto después de la primera cifra
+        const valueStr = value.toString();
+        if (valueStr.length > 1) {
+            return `${valueStr[0]}.${valueStr.slice(1)}`;
+        }
+        return valueStr; // Devuelve el valor original si es de una sola cifra
+    }
+    
+    updateThumbPosition();
+    thumbMulti.textContent = formatValue(sliderMulti.value);
+    multiValueLabel.textContent = formatValue(sliderMulti.value);
+
+    sliderMulti.addEventListener('input', function () {
+        thumbMulti.textContent = formatValue(this.value); // Actualizar el contenido del texto con el formato
+        multiValueLabel.textContent = formatValue(this.value);
+        updateThumbPosition();   
+        updateFinalCostMulti();                        // Actualizar la posición del contenedor
+    });
+    
+    const multiHelpContainer = document.querySelector('.multiHelpContainer');
+    const multiHelp = document.getElementById("multiHelp");
+    multiHelpContainer.addEventListener('mouseenter', function () {
+        multiHelp.classList.add("active");
+    });
+    multiHelpContainer.addEventListener('mouseleave', function () {
+        multiHelp.classList.remove("active");
     });
 
-    slider.addEventListener('input', updateWidths);
+    const multiCostsFinal = document.getElementById("multiCostsFinal");
+    function updateFinalCostMulti() {
+        // Convertir thumbMulti y betValueSelect a números
+        const thumbValue = parseFloat(thumbMulti.textContent); // Convertir a número flotante
+        const betValue = parseInt(betValueSelect.textContent, 10); // Convertir a número entero
+
+        // Calcular el costo final y redondear hacia arriba
+        const finalCost = Math.ceil(thumbValue * betValue);
+
+        // Asignar el valor redondeado como texto
+        multiCostsFinal.textContent = finalCost;
+    }
 
 
 
-    /* SLIDER CONTAINER WIDTH ADJUST */
-    const sliderValueDB = document.getElementById('sliderValueDB');
-    const sliderContainer = document.querySelector('.sliderContainer');
+
+    /* BET SLIDER VALUE ADJUST */
+    const sliderTomatoes = document.getElementById('sliderTomatoes');
+    const betValueSelect = document.getElementById('betValueSelect');
+    const multiBetValue = document.getElementById('multiBetValue');
+
+    // Actualizar el contenido del span con el valor inicial del control deslizante
+    betValueSelect.textContent = sliderTomatoes.value;
+
+    // Añadir un evento 'input' para actualizar el span cuando el usuario mueva el control deslizante
+    sliderTomatoes.addEventListener('input', function() {
+        betValueSelect.textContent = this.value;
+        multiBetValue.textContent = this.value;
+        updateFinalCostMulti();
+    });
+
+    sliderTomatoes.addEventListener('input', updateWidths);
+
+
+
+    /* sliderTomatoesContainer WIDTH ADJUST */
+    const betValueDB = document.getElementById('betValueDB');
+    const betContainer = document.querySelector('.betContainer');
 
     // Calcular los anchos y asignarlos a las variables CSS
     function updateWidths() {
-        const selectWidth = sliderValueSelect.offsetWidth;
-        const dbWidth = sliderValueDB.offsetWidth;
+        const selectWidth = betValueSelect.offsetWidth;
+        const dbWidth = betValueDB.offsetWidth;
 
         // Actualizar las variables CSS
-        document.documentElement.style.setProperty('--sliderValueSelect-width', `${selectWidth}px`);
-        document.documentElement.style.setProperty('--sliderValueDB-width', `${dbWidth}px`);
+        document.documentElement.style.setProperty('--betValueSelect-width', `${selectWidth}px`);
+        document.documentElement.style.setProperty('--betValueDB-width', `${dbWidth}px`);
     }
     updateWidths();
     window.addEventListener('resize', updateWidths);
@@ -800,15 +872,16 @@ document.addEventListener("DOMContentLoaded", function () {
     /* STATS WIDTH ADJUST */
     let arrowState = false;
     const statsContainer = document.querySelector('.statsContainer');
+    const statsTittleContainer = document.querySelector('.statsTittleContainer');
     const blank = document.querySelector('.blank');
 
     function handleStatsWidth(isFromListener = false) {
-        const selectWidthStats = getComputedStyle(document.documentElement).getPropertyValue('--sliderValueSelect-width');
-        const dbWidthStats = getComputedStyle(document.documentElement).getPropertyValue('--sliderValueDB-width');
+        const selectWidthStats = getComputedStyle(document.documentElement).getPropertyValue('--betValueSelect-width');
+        const dbWidthStats = getComputedStyle(document.documentElement).getPropertyValue('--betValueDB-width');
 
         const selectWidthValueStats = parseFloat(selectWidthStats) || 0;
         const dbWidthValueStats = parseFloat(dbWidthStats) || 0;
-        const finalWidthStats = 280 + selectWidthValueStats + dbWidthValueStats;
+        const finalWidthStats = 444 + selectWidthValueStats + dbWidthValueStats;
 
 
         const statsTitle = document.querySelector('.statsTitle');
@@ -828,7 +901,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if(arrowState){
             //Expandido
             statsContainer.style.width = `${finalWidthStats}px`;
-            statsContainer.style.height = "200px";
+            statsContainer.style.height = "400px";
             flecha.classList.add("rotated");
             blank.style.width = `${blankWidth}px`;
         }else{
@@ -841,7 +914,32 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     handleStatsWidth(false);
-    statsContainer.addEventListener("click", () => handleStatsWidth(true));
-    slider.addEventListener("input", () => handleStatsWidth());
+    setTimeout(() => {
+        statsTittleContainer.click();
+    }, 200);
+    statsTittleContainer.addEventListener("click", () => handleStatsWidth(true));
+    sliderTomatoes.addEventListener("input", () => handleStatsWidth());
+
+
+
+    /* PERCENTAGE STATS MENU ADJUST */
+    const statsContainers = document.querySelectorAll(".itemPercentage");
+    const totalProbabilities = Object.values(probabilities).reduce((acc, value) => acc + value, 0);
+    const normalizedProbabilities = Object.entries(probabilities).map(([key, value]) => {
+        return { key, value: (value / totalProbabilities) * 100 };
+    });
+
+    statsContainers.forEach((statContainer, index) => {
+        if (index < normalizedProbabilities.length) {
+            const { key, value } = normalizedProbabilities[index];
+            statContainer.textContent = `${value.toFixed(2)}%`;
+        }
+    });
+
+
+
+
+
+
 });
 
