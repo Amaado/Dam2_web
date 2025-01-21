@@ -25,10 +25,36 @@ html, body {
     height:100vh;
 }
 
+img {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    pointer-events: none;
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
+  }
+
+
 #game {
     width:100vw;
     height:100vh;
 }
+
+#matchInfoContainer{
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+
+#matchInfoContainer > div{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+
+
 
 #startMatchContainer {
     display: flex; /* Usar flexbox para centrar internamente */
@@ -266,7 +292,9 @@ html, body {
     z-index: 1;
     pointer-events: none;
     transform: translateX(-10px);
+    transition: all 0.1s ease;
 }
+
 .thumbX{
     font-size: 13px;
 }
@@ -277,7 +305,7 @@ html, body {
 /* Estilos generales para el input de tipo range */
 #sliderMulti[type="range"] {
     -webkit-appearance: none; /* Elimina el estilo por defecto en WebKit */
-    width: 100px; /* Ancho completo del contenedor padre */
+    width: 140px; /* Ancho completo del contenedor padre */
     height: 8px; /* Altura de la pista */
     background: #e28d8d; /* Color de la pista */
     border-radius: 5px; /* Bordes redondeados para la pista */
@@ -285,6 +313,7 @@ html, body {
     padding: 0; /* Sin padding */
     margin: 0; /* Sin margen */
     align-items: center;
+    transition: all 0.5s ease;
 }
 
     /* Estilos para la pista del control deslizante en navegadores WebKit */
@@ -312,6 +341,146 @@ html, body {
     z-index: 2;
     /*box-shadow: 0px 0px 4px black;*/
 }
+
+
+.multiModeContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    font-size: 16px;
+    background-color: #607d9962;
+    width: calc(450px + var(--betValueSelect-width) + var(--betValueDB-width));
+    max-height: 17.2px;
+    padding: 12px;
+    border-radius: 7px;
+    pointer-events: all;
+    filter: drop-shadow(0px 0px 0px black);
+
+    transform: scale(1) perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy));
+    transition: all 0.7s ease, width 0.2s ease, transform 150ms linear;
+}
+
+.multiModeContainer.active {
+    transform: scale(1.05) perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy));
+    filter: drop-shadow(4px 6px 7px black);
+}
+.multiModeTittle{
+    min-width: 120px;
+}
+.multiModeLabel{
+    font-family: 'kemco';
+    font-size: 24px;
+    letter-spacing: -1px;
+    margin-top: 3px;
+    transition: all 0.5s ease;
+    text-align: center;
+    white-space: nowrap; /* Mantiene todo el contenido en una sola línea */
+    overflow: visible; /* Permite que el contenido que excede sea visible */
+    width: auto; /* Asegura que el ancho del contenedor no limite el contenido */
+    display: inline-block;
+}
+.multiModeLabel.active{
+    background: linear-gradient(90deg, #30d96c 0%, #eb005f 140%);
+    background: -webkit-linear-gradient(90deg, #30d96c 0%, #eb005f 140%); /* Compatibilidad con WebKit */
+    background: -moz-linear-gradient(90deg, #30d96c 0%, #eb005f 140%); /* Compatibilidad con Firefox */
+    background: -o-linear-gradient(90deg, #30d96c 0%, #eb005f 140%); /* Compatibilidad con Opera */
+    background: linear-gradient(90deg, #30d96c 0%, #eb005f 140%); /* Estándar */
+    -webkit-background-clip: text; /* Clipa el fondo al texto */
+    -webkit-text-fill-color: transparent; /* Hace el texto transparente para mostrar el gradiente */
+    background-clip: text;
+}
+@keyframes letterSpacingIn {
+    0% {
+      letter-spacing: -1px;
+    }
+    50% {
+      letter-spacing: 2px;
+    }
+    100% {
+      letter-spacing: -1px;
+    }
+  }
+
+  
+.modoLocoContainer{
+   display: flex;
+   flex-direction: row;
+}
+.modoLoco{
+    width: 25px;
+    height: auto;
+    margin-right: -10px;
+    transition: all 0.5s ease;
+}
+.modoLocoDefault.night{
+    filter: brightness(0) saturate(100%) invert(86%) sepia(4%) saturate(2668%) hue-rotate(185deg) brightness(104%) contrast(83%);
+}
+.modoLocoActive{
+    position: absolute;
+    opacity: 0;
+}
+
+
+#switch[type=checkbox] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+    position: absolute;
+  }
+  
+  #switch[type=checkbox] + label {
+    cursor: pointer;
+    text-indent: -9999px;
+    min-width: 200px;
+    min-height: 100px;
+    background: #141A1F;
+    display: block;
+    border-radius: 100px;
+    position: relative;
+    transform: scale(0.2) translateX(-370px);
+    transition: 0.3s;
+
+  }
+  
+  #switch[type=checkbox] + label:after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 80px;
+    height: 80px;
+    background: #bfd4e9;
+    border-radius: 90px;
+    transition: 0.3s;
+  }
+  
+  #switch[type=checkbox]:checked + label {
+    background: -webkit-linear-gradient(90deg, #30d96c -160%, #eb005f 100%); /* Compatibilidad con WebKit */
+    background: -moz-linear-gradient(90deg, #30d96c -160%, #eb005f 100%); /* Compatibilidad con Firefox */
+    background: -o-linear-gradient(90deg, #30d96c -160%, #eb005f 100%); /* Compatibilidad con Opera */
+    background: linear-gradient(90deg, #30d96c -160%, #eb005f 100%); /* Estándar */
+  }
+  
+  #switch[type=checkbox]:checked + label:after {
+    left: calc(100% - 5px);
+    transform: translateX(-110%);
+  }
+  
+  #switch[type=checkbox] + label:active:after {
+    width: 130px;
+  }
+  
+  
+
+
+
+
+
+
+
+
+
   
 
 

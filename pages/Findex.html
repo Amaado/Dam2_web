@@ -8,6 +8,29 @@
 </head>
 <body>
     <div id="game"></div>
+    <div id="matchInfoContainer">
+        <div>
+            <div>Tomatos Bet:</div>
+            <div id="tomatosBet"></div>
+        </div>
+        <div>
+            <div>Tomatos Throwed:</div>
+            <div id="tomatosThrowed"></div>
+        </div>
+        <div>
+            <div>Tomatos cuted:</div>
+            <div id="tomatosCuted"></div>
+        </div>
+        <div>
+            <div>Coins collected:</div>
+            <div id="coinsColected"></div>
+        </div>
+        <div>
+            <div>Mistakes:</div>
+            <div id="mistakes"></div>
+        </div>
+    </div>
+
     <div id="startMatchContainer">
         <div class="betContainer perspCont">
             <label style="margin-top: -2px;" for="sliderTomatoes">Bet:</label>
@@ -30,7 +53,7 @@
                 <div class="thumbMulti">1.25</div>
             </div>
             <div class="multiRangeContainer">
-                <input type="range" id="sliderMulti" min="100" max="499" value="100">
+                <input type="range" id="sliderMulti" min="100" max="199" value="100">
                 <div class="multiValueContainer">
                     <span class="multiHelpContainer">
                         <span>Costs </span>
@@ -50,6 +73,16 @@
                     <img class="coinCosts" src="../img/hamster/icons/iconCoin.png"/>
                 </div>
              </div>
+        </div>
+
+        <div class="multiModeContainer perspCont">
+            <div class="multiModeTittle">Multiplier mode: </div>
+            <div class="modoLocoContainer">
+                <img class="modoLoco modoLocoDefault night" src="../img/fruitNinja/modoLoco.svg"/>
+                <img class="modoLoco modoLocoActive" src="../img/fruitNinja/modoLocoActive.svg"/>
+            </div>
+            <div class="multiModeLabel">Normal Mode</div>
+            <input type="checkbox" id="switch" /><label for="switch"></label>
         </div>
 
         <div class="statsContainer">

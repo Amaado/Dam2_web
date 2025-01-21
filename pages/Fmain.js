@@ -6,6 +6,13 @@ var gameStarted = false; // Bandera para verificar si el juego está en progreso
 let gameActive = false;
 const startMatchContainer = document.getElementById("startMatchContainer");
 const startButton = document.getElementById("startButton");
+const tomatosBet = document.getElementById("tomatosBet");
+const tomatosCuted = document.getElementById("tomatosCuted");
+const tomatosThrowed = document.getElementById("tomatosThrowed");
+const coinsColected = document.getElementById("coinsColected");
+const mistakes = document.getElementById("mistakes");
+
+
 
 function preload() {
     // Carga de imágenes
@@ -37,7 +44,7 @@ function preload() {
 
 var good_objects = [];
 var bad_objects = [];
-var slashes, line, scoreLabel, score = 0, points = [];
+var slashes, line, score = 0, scoreCoins = 0, points = [];
 var fireRate = 1000;
 var nextFire = 0;
 
@@ -46,6 +53,20 @@ function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.gravity.y = 300;
     game.stage.backgroundColor = "#1c2128";
+
+    if (game && game.input) {
+        game.input.onDown.add(() => {
+            isClicking = true;
+            points = []; // Reinicia el trazado cuando se hace clic
+        });
+    
+        game.input.onUp.add(() => {
+            isClicking = false;
+            points = []; // Limpia el trazado al soltar el clic
+        });
+    } else {
+        console.error("Game or game.input is not available.");
+    }
 
     // Crear grupos para cada tipo de objeto
     good_objects = [
@@ -62,10 +83,6 @@ function create() {
 
     // Configuración de efectos visuales
     slashes = game.add.graphics(0, 0);
-
-    // Etiqueta de puntuación
-    scoreLabel = game.add.text(10, 10, 'Tip: get the green ones!');
-    scoreLabel.fill = 'white';
 
     // Configuración inicial del emisor
     emitter = game.add.emitter(0, 0, 300);
@@ -125,13 +142,13 @@ function create() {
 // Función para hacer desaparecer un emisor
 function fadeOutEmitter(emitter) {
     // Mantener las partículas visibles por 1 segundo
-    game.time.events.add(1000, () => {
+    game.time.events.add(750, () => {
         // Iterar sobre todas las partículas activas del emisor
         emitter.forEachAlive(particle => {
             // Desaparecer progresivamente durante 1 segundo
             game.add.tween(particle).to(
                 { alpha: 0 }, // Cambiar la opacidad a 0
-                1000,         // Duración de la animación
+                750,         // Duración de la animación
                 Phaser.Easing.Linear.None, // Interpolación lineal
                 true          // Iniciar inmediatamente
             ).onComplete.add(() => {
@@ -149,19 +166,41 @@ function createGroup(numItems, spriteKey) {
     group.createMultiple(numItems, spriteKey); // Usa las imágenes en lugar de bitmapData
     group.setAll('checkWorldBounds', true);
     group.setAll('outOfBoundsKill', true);
+
+    // Configurar evento para interceptar salida de los límites
+    group.forEach(function (obj) {
+        obj.events.onOutOfBounds.add(handleOutOfBounds, this);
+    });
     return group;
 }
 
 
+function handleOutOfBounds(obj) {
+    if(obj.key === 'bomb'){
+        objScreen.bomb--;
+    }else if(obj.key === 'bombCammo'){
+        objScreen.bombCammo--;
+    }else if(obj.key === 'bombCammoGold'){
+        objScreen.bombGold--;
+    }else if(obj.key === 'goldCC'){
+        objScreen.goldCC--;
+    }else if(obj.key === 'tomato'){
+        objScreen.tomato--;
+    }else if(obj.key === 'tomatoGold'){
+        objScreen.tomatoGold--;
+    }
+    console.log(objScreen);
+}
+
 
 // Configuración de probabilidades iniciales
 var probabilities = {
-    tomato: 50,          // Probabilidad inicial del tomate (base buena)
-    tomatoGold: 7,      // Probabilidad inicial del tomate dorado
-    bomb: 30,            // Probabilidad inicial de la bomba (base mala)
-    bombCammo: 20,       // Probabilidad inicial de bombCammo
-    bombGold: 3,        // Probabilidad inicial de bombGold
-    goldCC: 2           // Probabilidad inicial de goldCC
+    tomato: 50,          // 50
+    tomatoGold: 7,      // 7
+    bomb: 30,            // 30
+    bombCammo: 20,       // 20
+    bombGold: 3,        // 3
+    goldCC: 2           // 2
 };
 
 var dynamicStates = {
@@ -215,7 +254,7 @@ function throwObject() {
         } else if (random < (cumulative += probabilities.goldCC)) {
             selectedObject = spawnObject(good_objects, 'goldCC');
         }
-
+        /*
         console.log(`----------------------------------`);
         console.log(`----------------------------------`);
         console.log(`Objeto lanzado: ${selectedObject.key}`);
@@ -226,7 +265,7 @@ function throwObject() {
         console.log(`TomatoGold: ${(probabilities.tomatoGold / totalProbability * 100).toFixed(2)}%`);
         console.log(`BombGold: ${(dynamicStates.bombGoldChance / totalProbability * 100).toFixed(2)}%`);
         console.log(`GoldCC: ${(probabilities.goldCC / totalProbability * 100).toFixed(2)}%`);
-
+        */
         if (selectedObject) {
             throwRandomObject(selectedObject);
         }
@@ -262,7 +301,76 @@ function adjustFireRate() {
 }
 
 
+var objHistory = {
+    tomato: 0,
+    tomatoGold: 0,
+    bomb: 0,
+    bombCammo: 0,
+    bombGold: 0,
+    goldCC: 0
+};
+
+function addObjToHistory(obj){
+    if(obj.key === 'bomb'){
+        objHistory.bomb++;
+    }else if(obj.key === 'bombCammo'){
+        objHistory.bombCammo++;
+    }else if(obj.key === 'bombCammoGold'){
+        objHistory.bombGold++;
+    }else if(obj.key === 'goldCC'){
+        objHistory.goldCC++;
+    }else if(obj.key === 'tomato'){
+        objHistory.tomato++;
+        tomatosThrowed.textContent = objHistory.tomato;
+    }else if(obj.key === 'tomatoGold'){
+        objHistory.tomatoGold++;
+    }
+}
+
+var objScreen = {
+    tomato: 0,
+    tomatoGold: 0,
+    bomb: 0,
+    bombCammo: 0,
+    bombGold: 0,
+    goldCC: 0
+};
+
+function addObjToScreen(obj){
+    if(obj.key === 'bomb'){
+        objScreen.bomb++;
+    }else if(obj.key === 'bombCammo'){
+        objScreen.bombCammo++;
+    }else if(obj.key === 'bombCammoGold'){
+        objScreen.bombGold++;
+    }else if(obj.key === 'goldCC'){
+        objScreen.goldCC++;
+    }else if(obj.key === 'tomato'){
+        objScreen.tomato++;
+    }else if(obj.key === 'tomatoGold'){
+        objScreen.tomatoGold++;
+    }
+}
+
 function throwRandomObject(obj) {
+    /*console.log("tomatosBet.textContent: "+tomatosBet.textContent);
+    console.log("objHistory.tomato: "+objHistory.tomato);*/
+    if(tomatosCuted.textContent == tomatosBet.textContent && gameActive){
+        /*console.log("Dentro del if");*/ 
+        stopGame();
+        const intervalId = setInterval(() => {
+            const allZero = Object.values(objScreen).every(value => value === 0);
+            if (allZero) {
+                resetGame();
+                clearInterval(intervalId); // Detiene el intervalo
+            }
+        }, 500);
+        return;
+    }
+
+    addObjToScreen(obj);
+    addObjToHistory(obj);
+
     if (obj) {
         if (obj.key === 'bomb' || obj.key === 'bombCammo' || obj.key === 'bombCammoGold') {
             const spark = game.add.sprite(0, 0, 'spark');
@@ -386,6 +494,7 @@ function weightedAngle(mean, deviation, min, max) {
 
 
 function update() {
+    
     throwObject();
 
     good_objects.forEach(group => group.forEachAlive(obj => adjustRotation(obj)));
@@ -401,6 +510,8 @@ function update() {
         // Combinación de rotación inicial, trayectoria y oscilación
         obj.rotation = obj.initialRotation + trajectoryRotation + oscillation;
     }
+
+    if (!isClicking) return;
 
     // Resto del código para manejar los trazos e intersecciones
     points.push({ x: game.input.x, y: game.input.y });
@@ -431,6 +542,7 @@ function update() {
 
 var contactPoint = new Phaser.Point(0, 0);
 let gamePaused
+let isClicking = false;
 
 function checkIntersects(fruit) {
     var l1 = new Phaser.Line(fruit.body.right - fruit.width, fruit.body.bottom - fruit.height, fruit.body.right, fruit.body.bottom);
@@ -448,7 +560,7 @@ function checkIntersects(fruit) {
             setTimeout(() => {
                 //game.pause = false
                 gamePaused = false;
-                resetScore();
+                resetGame();
                 stopGame();
             }, 2000);
 
@@ -465,16 +577,28 @@ function stopGame() {
     gameActive = false; // Detener el lanzamiento de frutas
 }
 
-function resetScore() {
+function resetGame() {
     // Reinicia la puntuación y la visibilidad del contenedor del botón
     var highscore = Math.max(score, localStorage.getItem("highscore") || 0);
     localStorage.setItem("highscore", highscore);
 
-    good_objects.forEach(group => group.callAll('kill')); // Mata todos los objetos buenos
-    bad_objects.forEach(group => group.callAll('kill')); // Mata todos los objetos malos
+    /*
+    setTimeout(() => {
+        good_objects.forEach(group => group.callAll('kill')); // Mata todos los objetos buenos
+        bad_objects.forEach(group => group.callAll('kill')); // Mata todos los objetos malos
+    }, 2000);*/
+    
+    isClicking = false;
 
     score = 0;
-    scoreLabel.text = 'Tip: get the green ones!'; // Reinicia el texto
+    scoreCoins = 0;
+
+    Object.keys(objHistory).forEach(key => {
+        objHistory[key] = 0;
+    });
+    Object.keys(objScreen).forEach(key => {
+        objHistory[key] = 0;
+    });
 
     gameActive = false; // Marca que el juego ha terminado
     startMatchContainer.style.display = 'flex'; // Muestra el contenedor del botón nuevamente
@@ -488,15 +612,40 @@ function despawnFruit(fruit){
 }*/
 
 function spawnParticles(fruit) {
-    let emitterToUse = fruit.key.includes('Gold') ? emitterGold : emitter;
-    if(fruit.key === 'goldCC'){
+    let emitterToUse = emitter;
+    const randomNum = Math.floor(Math.random() * 5) + 3;
+
+    if(fruit.key === 'tomatoGold'){
+        emitterToUse = emitterGold;
+        emitterToUse.x = fruit.x;
+        emitterToUse.y = fruit.y;
+        emitterToUse.start(true, 2000, null, randomNum);
+        fadeOutEmitter(emitterToUse);
+        spawnParticleCoinForce(fruit);
+
+    }else if(fruit.key === 'goldCC'){
         emitterToUse = emitterCoin;
+        emitterToUse.x = fruit.x;
+        emitterToUse.y = fruit.y;
+        emitterToUse.start(true, 2000, null, 40);
+        fadeOutEmitter(emitterToUse);        
+    }else{
+        emitterToUse.x = fruit.x;
+        emitterToUse.y = fruit.y;
+        emitterToUse.start(true, 2000, null, randomNum);
+        fadeOutEmitter(emitterToUse);
     }
-    emitterToUse.x = fruit.x;
-    emitterToUse.y = fruit.y;
-    emitterToUse.start(true, 2000, null, 4); // Genera partículas para la fruta
-    
-    fadeOutEmitter(emitterToUse); // Aplica el fade-out a las partículas generadas
+}
+
+function spawnParticleCoinForce(fruit) {
+    let emitterToUse = emitter;
+    if(fruit.key === 'tomatoGold'){
+        emitterToUse = emitterCoin;
+        emitterToUse.x = fruit.x;
+        emitterToUse.y = fruit.y;
+        emitterToUse.start(true, 2000, null, 5);
+        fadeOutEmitter(emitterToUse);
+    }
 }
 
 
@@ -511,12 +660,16 @@ function killFruit(fruit) {
     if(fruit.key === 'goldCC'){
         leftHalf = game.add.sprite(fruit.x, fruit.y, 'goldCC_left');
         rightHalf = game.add.sprite(fruit.x, fruit.y, 'goldCC_right');
+        scoreCoinsUpdate(100);
     }else if (fruit.key === 'tomato'){
         leftHalf = game.add.sprite(fruit.x, fruit.y, 'tomato_left');
         rightHalf = game.add.sprite(fruit.x, fruit.y, 'tomato_right');
+        score++;
     }else if (fruit.key === 'tomatoGold'){
         leftHalf = game.add.sprite(fruit.x, fruit.y, 'tomatoGold_left');
         rightHalf = game.add.sprite(fruit.x, fruit.y, 'tomatoGold_right');
+        score++;
+        scoreCoinsUpdate(10);
     }else if (fruit.key === 'bomb'){
         leftHalf = game.add.sprite(fruit.x, fruit.y, 'bomb_left');
         rightHalf = game.add.sprite(fruit.x, fruit.y, 'bomb_right');
@@ -661,34 +814,81 @@ function killFruit(fruit) {
         
     }
 
+    /*
+    if (fruit.key === 'tomato' || fruit.key === 'tomatoGold') {
+        console.log("tomatosBet.textContent: "+tomatosBet.textContent);
+        console.log("objHistory.tomato: "+objHistory.tomato);
+        if(tomatosBet.textContent == tomatosCuted.textContent){
+            gamePaused = false;
+            resetGame();
+            stopGame();
+            return;
+        }
+    }*/
 
-    
-
+    handleOutOfBounds(fruit);
     // Eliminar el objeto original
     fruit.kill();
 
 
     // Actualizar puntuación
     points = [];
-    score++;
-    scoreLabel.text = 'Score: ' + score;
+    tomatosCuted.textContent = score;
 }
+
+let monedasUpdateInterval;
+function scoreCoinsUpdate(price){
+    // Limpia el intervalo existente, si lo hay
+    if (monedasUpdateInterval) {
+        clearInterval(monedasUpdateInterval);
+    }
+
+    let monedasViejas = scoreCoins;
+    let monedasNuevas = monedasViejas+price;
+    // Calcular la cantidad de pasos y la duración de cada paso
+    const pasos = Math.abs(monedasViejas - monedasNuevas);
+    const intervaloDuracion = pasos > 0 ? 1000 / pasos : 0; // Duración en ms por paso (2 segundos en total)
+
+    // Intervalo para animar la actualización de monedas
+    monedasUpdateInterval = setInterval(() => {
+        if (monedasViejas === monedasNuevas) {
+        clearInterval(monedasUpdateInterval); // Detener el intervalo si los valores coinciden
+        return;
+        }
+
+        if (monedasViejas < monedasNuevas) {
+        monedasViejas++; // Incrementa hacia el valor deseado
+        } else if (monedasViejas > monedasNuevas) {
+        monedasViejas--; // Decrementa hacia el valor deseado
+        }
+
+        // Actualiza el contenido de coinLabel
+        coinsColected.textContent = monedasViejas;
+    }, intervaloDuracion); // Ajusta la velocidad de la animación aquí
+
+    scoreCoins = scoreCoins+price;
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
     startButton.addEventListener("click", function () {
         if (!gameActive) {
             // Comienza el juego por primera vez
             startMatchContainer.style.display = 'none'; // Oculta el contenedor del botón
+            tomatosBet.textContent = sliderTomatoes.value;
             gameActive = true;
             document.getElementById("game").innerHTML = '';
             game = new Phaser.Game(w, h, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
+
         } else {
             // Reinicia el juego si se terminó anteriormente
             startMatchContainer.style.display = 'none'; // Oculta nuevamente
             gameActive = true;
-            resetScore(); // Reinicia los parámetros del juego sin recargar
+            resetGame(); // Reinicia los parámetros del juego sin recargar
         }
     });
+
+    console.log(gameActive);
 
 
 
@@ -699,8 +899,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const thumbMultiCont = document.querySelector('.thumbMultiCont');
     const multiValueLabel = document.getElementById("multiValueLabel");
     
-    function updateThumbPosition() {
+    function updateThumbPosition(offsetWidth) {
         let sliderWidth = sliderMulti.offsetWidth;
+        if(offsetWidth){
+            sliderWidth = offsetWidth;
+        }
         sliderWidth = sliderWidth - 20; // Ajustar el ancho del slider
         const sliderMin = sliderMulti.min;           // Valor mínimo del slider
         const sliderMax = sliderMulti.max;           // Valor máximo del slider
@@ -739,9 +942,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const multiHelp = document.getElementById("multiHelp");
     multiHelpContainer.addEventListener('mouseenter', function () {
         multiHelp.classList.add("active");
+        sliderMulti.style.width = "90px";
+        updateThumbPosition(90);
     });
     multiHelpContainer.addEventListener('mouseleave', function () {
         multiHelp.classList.remove("active");
+        sliderMulti.style.width = "140px";
+        updateThumbPosition(140);
     });
 
     const multiCostsFinal = document.getElementById("multiCostsFinal");
@@ -756,6 +963,49 @@ document.addEventListener("DOMContentLoaded", function () {
         // Asignar el valor redondeado como texto
         multiCostsFinal.textContent = finalCost;
     }
+
+
+
+    /* MODE CHECKBOX */
+    const modoLocoDefault = document.querySelector(".modoLocoDefault");
+    const modoLocoActive = document.querySelector(".modoLocoActive");
+    const multiModeLabel = document.querySelector(".multiModeLabel");
+    const checkboxSwitch = document.getElementById("switch");
+    checkboxSwitch.addEventListener("change", handleCheckboxSwitch);
+    handleCheckboxSwitch();
+
+    function handleCheckboxSwitch(){
+        if(checkboxSwitch.checked){
+            //CRAZY
+            modoLocoDefault.style.opacity = "0";
+            modoLocoActive.style.opacity = "1";
+            multiModeLabel.classList.add("active");
+            multiModeLabel.style.animation = 'letterSpacingIn 0.4s ease forwards';
+            setTimeout(() => {
+                multiModeLabel.textContent = "CRAZY MODE";
+            }, 200);
+            setTimeout(() => {
+                multiModeLabel.style.animation = '';
+            }, 400);
+        }else{
+            //NORMAL
+            modoLocoDefault.style.opacity = "1";
+            modoLocoActive.style.opacity = "0";
+            multiModeLabel.classList.remove("active");
+            multiModeLabel.style.animation = 'letterSpacingIn 0.4s ease forwards';
+            setTimeout(() => {
+                multiModeLabel.textContent = "NORMAL MODE";
+            }, 200);
+            setTimeout(() => {
+                multiModeLabel.style.animation = '';
+            }, 400);
+        }
+    }
+
+
+
+
+
 
 
 
