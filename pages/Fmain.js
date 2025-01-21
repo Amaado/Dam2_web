@@ -358,13 +358,7 @@ function throwRandomObject(obj) {
     if(tomatosCuted.textContent == tomatosBet.textContent && gameActive){
         /*console.log("Dentro del if");*/ 
         stopGame();
-        const intervalId = setInterval(() => {
-            const allZero = Object.values(objScreen).every(value => value === 0);
-            if (allZero) {
-                resetGame();
-                clearInterval(intervalId); // Detiene el intervalo
-            }
-        }, 500);
+        showMenu();
         return;
     }
 
@@ -541,7 +535,6 @@ function update() {
 
 
 var contactPoint = new Phaser.Point(0, 0);
-let gamePaused
 let isClicking = false;
 
 function checkIntersects(fruit) {
@@ -554,20 +547,12 @@ function checkIntersects(fruit) {
         contactPoint.y = game.input.y;
 
         if (belongsToGroup(fruit, bad_objects)) {
-                gamePaused = true;
-                killFruit(fruit);
-
-            setTimeout(() => {
-                //game.pause = false
-                gamePaused = false;
-                resetGame();
-                stopGame();
-            }, 2000);
+            killFruit(fruit);
+            stopGame();
+            showMenu();
 
         } else if (belongsToGroup(fruit, good_objects)) {
-            if(!gamePaused){
-                killFruit(fruit); // Maneja el corte de un objeto bueno
-            }
+            killFruit(fruit);
         }
     }
 }
@@ -577,10 +562,10 @@ function stopGame() {
     gameActive = false; // Detener el lanzamiento de frutas
 }
 
-function resetGame() {
+function showMenu() {
     // Reinicia la puntuación y la visibilidad del contenedor del botón
-    var highscore = Math.max(score, localStorage.getItem("highscore") || 0);
-    localStorage.setItem("highscore", highscore);
+    /*var highscore = Math.max(score, localStorage.getItem("highscore") || 0);
+    localStorage.setItem("highscore", highscore);*/
 
     /*
     setTimeout(() => {
@@ -588,6 +573,21 @@ function resetGame() {
         bad_objects.forEach(group => group.callAll('kill')); // Mata todos los objetos malos
     }, 2000);*/
     
+    const intervalId = setInterval(() => {
+        const allZero = Object.values(objScreen).every(value => value === 0);
+        if (allZero) {
+
+            gameActive = false; // Marca que el juego ha terminado
+            startMatchContainer.style.display = 'flex'; // Muestra el contenedor del botón nuevamente
+        
+
+
+            clearInterval(intervalId); // Detiene el intervalo
+        }
+    }, 500);
+}
+
+function startGame(){
     isClicking = false;
 
     score = 0;
@@ -599,9 +599,6 @@ function resetGame() {
     Object.keys(objScreen).forEach(key => {
         objHistory[key] = 0;
     });
-
-    gameActive = false; // Marca que el juego ha terminado
-    startMatchContainer.style.display = 'flex'; // Muestra el contenedor del botón nuevamente
 }
 
 function render() {
@@ -788,48 +785,55 @@ function killFruit(fruit) {
         
 
     }else{
-        const fadeOutTweenLeft = game.add.tween(leftHalf).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true); // Duración de 1 segundo
-        const fadeOutTweenRight = game.add.tween(rightHalf).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true); // Duración de 1 segundo
-
+        const fadeOutTweenLeft = game.add.tween(leftHalf).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true);
+        const fadeOutTweenRight = game.add.tween(rightHalf).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true);
+        
         fadeOutTweenLeft.onComplete.add(() => {
-            leftHalf.destroy(); // Elimina el elemento después de que desaparezca
+            leftHalf.destroy();
         });
-
+        
         fadeOutTweenRight.onComplete.add(() => {
-            rightHalf.destroy(); // Elimina el elemento después de que desaparezca
+            rightHalf.destroy();
         });
-
-        const explosion = game.add.sprite(fruit.x, fruit.y, 'explosion'); // Crea el sprite
-        explosion.anchor.setTo(0.5, 0.5); // Centra el sprite
-        explosion.scale.setTo(0.5); // Ajusta el tamaño
-    
-        // Añade la animación desde el spritesheet
-        const anim = explosion.animations.add('boom', null, 30, false); // No necesitas `Phaser.Animation.generateFrameNames`
-        explosion.animations.play('boom'); // Reproduce la animación
-    
-        // Elimina la explosión después de reproducir la animación
-        anim.onComplete.add(() => {
-            explosion.destroy();
-        });      
+        
+        const explosion = game.add.sprite(fruit.x, fruit.y, 'explosion');
+        explosion.anchor.setTo(0.5, 0.5);
+        explosion.scale.setTo(0.5);
+        
+        // Define y reproduce la animación
+        const anim = explosion.animations.add('boom', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 30, false);
+        
+        if (anim) {
+            // Reproduce la animación
+            explosion.animations.play('boom');
+        
+            // Cuando termine la animación, destruye el sprite y limpia eventos
+            anim.onComplete.add(() => {
+                explosion.destroy(); // Elimina el sprite
+            });
+        
+            // Limpia eventos para evitar fugas de memoria
+            anim.onComplete.removeAll();
+        } else {
+            console.error("La animación no pudo ser creada.");
+        }
         
     }
 
-    /*
+    
     if (fruit.key === 'tomato' || fruit.key === 'tomatoGold') {
-        console.log("tomatosBet.textContent: "+tomatosBet.textContent);
-        console.log("objHistory.tomato: "+objHistory.tomato);
+        /*console.log("tomatosBet.textContent: "+tomatosBet.textContent);
+        console.log("objHistory.tomato: "+objHistory.tomato);*/
         if(tomatosBet.textContent == tomatosCuted.textContent){
-            gamePaused = false;
-            resetGame();
             stopGame();
+            showMenu();
             return;
         }
-    }*/
+    }
 
     handleOutOfBounds(fruit);
     // Eliminar el objeto original
     fruit.kill();
-
 
     // Actualizar puntuación
     points = [];
@@ -871,24 +875,17 @@ function scoreCoinsUpdate(price){
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    startButton.addEventListener("click", function () {
-        if (!gameActive) {
-            // Comienza el juego por primera vez
-            startMatchContainer.style.display = 'none'; // Oculta el contenedor del botón
-            tomatosBet.textContent = sliderTomatoes.value;
-            gameActive = true;
-            document.getElementById("game").innerHTML = '';
-            game = new Phaser.Game(w, h, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
+    document.getElementById("game").innerHTML = '';
 
-        } else {
-            // Reinicia el juego si se terminó anteriormente
-            startMatchContainer.style.display = 'none'; // Oculta nuevamente
-            gameActive = true;
-            resetGame(); // Reinicia los parámetros del juego sin recargar
-        }
+    startButton.addEventListener("click", function () {
+        startMatchContainer.style.display = 'none'; // Oculta el contenedor del botón
+        tomatosBet.textContent = sliderTomatoes.value;
+        gameActive = true;
+        document.getElementById("game").innerHTML = '';
+        game = new Phaser.Game(w, h, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
+        startGame();
     });
 
-    console.log(gameActive);
 
 
 
