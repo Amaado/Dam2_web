@@ -14,10 +14,6 @@
             <div id="tomatosBet"></div>
         </div>
         <div>
-            <div>Tomatos Throwed:</div>
-            <div id="tomatosThrowed"></div>
-        </div>
-        <div>
             <div>Tomatos cuted:</div>
             <div id="tomatosCuted"></div>
         </div>
@@ -25,14 +21,116 @@
             <div>Coins collected:</div>
             <div id="coinsColected"></div>
         </div>
+    </div>
+
+    <div id="mistakerContainer">
         <div>
-            <div>Mistakes:</div>
-            <div id="mistakes"></div>
+            <img class="mistakeImg" src="../img/fruitNinja/x.png"/>
+        </div>
+        <div>
+            <img class="mistakeImg" src="../img/fruitNinja/x.png"/>
+        </div>
+        <div>
+            <img class="mistakeImg" src="../img/fruitNinja/x.png"/>
         </div>
     </div>
 
     <div id="endContainer">
-        
+        <div id="winImg"></div>
+        <div id="infoContainer">
+
+            <div id="informationContainer">
+                <div class="rewardsTittleContainer">
+                    <img class="rewardsTittleImg night" src="../img/info.png"/>
+                    <div class="rewardsTittle">Information:</div>
+                    <div class="rewardsTittleBlank"></div>
+                </div>
+                <div class="rewardsItems">
+                    <div class="rewardsRow">
+                        <div class="rewardsRowLabel">Original Bet:</div>
+                        <img class="item" src="../img/fruitNinja/tomatoFull.png"/>
+                        <div class="rewardsRowNumber rewardsBet">10</div>
+                    </div>
+                    <div class="rewardsRow">
+                        <div class="rewardsRowLabel">Mode:</div>
+                        <div class="rewardsRowNumber">
+                            <div class="modoLocoContainerR">
+                                <img class="modoLocoR modoLocoDefaultR night" src="../img/fruitNinja/modoLoco.svg"/>
+                                <img class="modoLocoR modoLocoActiveR" src="../img/fruitNinja/modoLocoActive.svg"/>
+                            </div>
+                            <div class="multiModeLabelR">Normal Mode</div>
+                        </div>
+                    </div>
+                    <div class="rewardsRow">
+                        <div class="rewardsRowLabel">Mode costs:</div>
+                        <img class="item" src="../img/fruitNinja/coin.png"/>
+                        <div class="rewardsRowNumber rewardsModeCosts"> 10</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="rewardsContainer">
+                <div class="rewardsTittleContainer">
+                    <img class="rewardsTittleImg night" src="../img/rewards.png"/>
+                    <div class="rewardsTittle">Rewards:</div>
+                    <div class="rewardsTittleBlank"></div>
+                </div>
+                <div class="rewardsItems">
+                    <div class="rewardsRow">
+                        <img class="item" src="../img/fruitNinja/tomatoFull.png"/>
+                        <div class="rewardsRowNumber rewardsTomatos">10</div>
+                    </div>
+                    <div class="rewardsRow">
+                        <img class="item" src="../img/fruitNinja/coin.png"/>
+                        <div class="rewardsRowNumber rewardsCoins">10</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="historyContainer">
+                <div class="rewardsTittleContainer">
+                    <img class="rewardsTittleImg night" src="../img/history.png"/>
+                    <div class="rewardsTittle">Spawn History:</div>
+                    <div class="rewardsTittleBlank"></div>
+                </div>
+                <div class="rewardsItems">
+                    <div class="rewardsColumn">
+                        <div class="rewardsRow">
+                            <img class="item" src="../img/fruitNinja/tomatoFull.png"/>
+                            <div class="rewardsRowNumber rewardsBet">10</div>
+                        </div>
+                        <div class="rewardsRow">
+                            <img class="item" src="../img/fruitNinja/tomatoGold.png"/>
+                            <div class="rewardsRowNumber rewardsTomatos">10</div>
+                        </div>
+                        <div class="rewardsRow">
+                            <img class="item" src="../img/fruitNinja/goldCC.png"/>
+                            <img class="item itemHalo" src="../img/fruitNinja/halo.gif"/>
+                            <div class="rewardsRowNumber rewardsTomatos">10</div>
+                        </div>
+                    </div>
+
+                    <div class="rewardsColumn">
+                        <div class="rewardsRow">
+                            <img class="item" src="../img/fruitNinja/bomb.png"/>
+                            <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
+                            <div class="rewardsRowNumber rewardsTomatos">10</div>
+                        </div>
+                        <div class="rewardsRow">
+                            <img class="item" src="../img/fruitNinja/bombCammo.png"/>
+                            <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
+                            <div class="rewardsRowNumber rewardsTomatos">10</div>
+                        </div>
+                        <div class="rewardsRow">
+                            <img class="item" src="../img/fruitNinja/bombCammoGold.png"/>
+                            <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
+                            <div class="rewardsRowNumber rewardsTomatos">10</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="nextButton">Next</button>
     </div>
 
     <div id="startMatchContainer">

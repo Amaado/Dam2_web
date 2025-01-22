@@ -5,13 +5,14 @@ var game; // Declarar la instancia del juego
 var gameStarted = false; // Bandera para verificar si el juego está en progreso
 let gameActive = false;
 const startMatchContainer = document.getElementById("startMatchContainer");
+const endContainer = document.getElementById("endContainer");
 const startButton = document.getElementById("startButton");
 const tomatosBet = document.getElementById("tomatosBet");
-const tomatosThrowed = document.getElementById("tomatosThrowed");
 const tomatosCuted = document.getElementById("tomatosCuted");
 const coinsColected = document.getElementById("coinsColected");
 const mistakes = document.getElementById("mistakes");
 
+let tomatosMistakedVar = 0;
 
 
 function preload() {
@@ -320,7 +321,6 @@ function addObjToHistory(obj){
         objHistory.goldCC++;
     }else if(obj.key === 'tomato'){
         objHistory.tomato++;
-        tomatosThrowed.textContent = objHistory.tomato;
     }else if(obj.key === 'tomatoGold'){
         objHistory.tomatoGold++;
     }
@@ -357,7 +357,7 @@ function throwRandomObject(obj) {
     if(tomatosCuted.textContent == tomatosBet.textContent && gameActive){
         /*console.log("Dentro del if");*/ 
         stopGame();
-        showMenu();
+        showMenu(endContainer);
         return;
     }
 
@@ -548,7 +548,7 @@ function checkIntersects(fruit) {
         if (belongsToGroup(fruit, bad_objects)) {
             killFruit(fruit);
             stopGame();
-            showMenu();
+            showMenu(endContainer);
 
         } else if (belongsToGroup(fruit, good_objects)) {
             killFruit(fruit);
@@ -561,23 +561,93 @@ function stopGame() {
     gameActive = false; // Detener el lanzamiento de frutas
 }
 
-function showMenu() {
+async function showMenu(menuPass) {
     // Reinicia la puntuación y la visibilidad del contenedor del botón
     /*var highscore = Math.max(score, localStorage.getItem("highscore") || 0);
     localStorage.setItem("highscore", highscore);*/
+    let menu;
+    if(menuPass.id == "startMatchContainer"){
+        menu = startMatchContainer;
+    }else if(menuPass.id == "endContainer"){
+        menu = endContainer;
+    }else{
+        console.err("Error en showMenu()");
+    }
+    
     setTimeout(() => {
-        startMatchContainer.style.display = 'flex';
+        menu.style.display = 'flex';
         setTimeout(() => {
-            startMatchContainer.style.opacity = "1";
+            menu.style.opacity = "1";
         }, 50);
     }, 700);
+
+    setTimeout(async () => {
+        if(menuPass.id == "endContainer"){
+            const informationContainer = document.getElementById("informationContainer");
+            const rewardsContainer = document.getElementById("rewardsContainer");
+            const historyContainer = document.getElementById("historyContainer");
+
+            for (let index = 0; index < 3; index++) {
+                let container;
+
+                if (index === 0) {
+                    container = informationContainer;
+                } else if (index === 1) {
+                    container = rewardsContainer;
+                } else if (index === 2) {
+                    container = historyContainer;
+                } else {
+                    console.error("Fallo en showMenu(endContainer)");
+                    return;
+                }
+
+                let rewardsRows = container.querySelectorAll(".rewardsRow");
+                let rewardsTittles = container.querySelectorAll(".rewardsTittle");
+                let rewardsTittleBlanks = container.querySelectorAll(".rewardsTittleBlank");
+                let rewardsTittleImgs = container.querySelectorAll(".rewardsTittleImg");
+                await delay(500);
+                rewardsRows.forEach(rewardsRow => {
+                    rewardsRow.classList.add("active");
+                });
+                rewardsTittles.forEach(rewardsTittle => {
+                    rewardsTittle.classList.add("active");
+                });
+                rewardsTittleBlanks.forEach(rewardsTittleBlank => {
+                    rewardsTittleBlank.classList.add("active");
+                });
+                rewardsTittleImgs.forEach(rewardsTittleImg => {
+                    rewardsTittleImg.classList.add("active");
+                });
+            }
+        }
+    }, 1000);
 
     const intervalId = setInterval(() => {
         const allZero = Object.values(objScreen).every(value => value === 0);
         if (allZero) {
-            gameActive = false; // Marca que el juego ha terminado
-            clearInterval(intervalId); // Detiene el intervalo
+            gameActive = false;
+            clearInterval(intervalId);
         }
+    }, 500);
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function hideMenu(menuPass) {
+    let menu;
+    if(menuPass.id == "startMatchContainer"){
+        menu = startMatchContainer;
+    }else if(menuPass.id == "endContainer"){
+        menu = endContainer;
+    }else{
+        console.err("Error en hideMenu()");
+    }
+    
+    menu.style.opacity = "0";
+    setTimeout(() => {
+        menu.style.display = 'none';
     }, 500);
 }
 
@@ -587,11 +657,11 @@ function startGame(){
     score = 0;
     scoreCoins = 0;
 
+    tomatosMistakedVar = 0;
+
     tomatosBet.textContent = "";
-    tomatosThrowed.textContent = "";
     tomatosCuted.textContent = "";
     coinsColected.textContent = "";
-    mistakes.textContent = "";
 
     Object.keys(objHistory).forEach(key => {
         objHistory[key] = 0;
@@ -826,7 +896,7 @@ function killFruit(fruit) {
         console.log("tomatosCuted.textContent: "+tomatosCuted.textContent);*/
         if(tomatosBet.textContent == tomatosCuted.textContent){
             stopGame();
-            showMenu();
+            showMenu(endContainer);
             return;
         }
     }
@@ -880,10 +950,7 @@ document.addEventListener("DOMContentLoaded", function () {
     startButton.addEventListener("click", function () {
         if(!gameActive){
             startGame();
-            startMatchContainer.style.opacity = "0";
-            setTimeout(() => {
-                startMatchContainer.style.display = 'none'; 
-            }, 500);
+            hideMenu(startMatchContainer);
             tomatosBet.textContent = sliderTomatoes.value;
             gameActive = true;
             document.getElementById("game").innerHTML = '';

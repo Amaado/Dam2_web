@@ -46,35 +46,209 @@ img {
     left: 20px;
     top: 20px;
 }
-
 #matchInfoContainer > div{
     display: flex;
     flex-direction: row;
     gap: 5px;
 }
 
+#mistakerContainer{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+#mistakerContainer > div{
+
+}
+.mistakeImg{
+    display: flex;
+    width: 60px;
+    height: auto;
+}
 
 #endContainer {
-    display: flex; /* Usar flexbox para centrar internamente */
+    display: none; /* Usar flexbox para centrar internamente */
     flex-direction: column;
-    gap: 20px;
+    gap: 30px;
     justify-content: center;
     align-items: center;
     position: absolute; /* Asegura que esté sobre el contenedor principal */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); /* Centra con precisión */
-    width: 540px; /* Adapta el ancho automáticamente al contenido */
-    height: 600px; /* Adapta la altura automáticamente al contenido */
+    width: 700px; /* Adapta el ancho automáticamente al contenido */
+    height: 100vh; /* Adapta la altura automáticamente al contenido */
     background-color: rgba(20, 26, 31, 0.957);
-    padding: 20px; /* Añade espacio interno opcional */
     border-radius: 10px; /* Bordes redondeados opcionales */
     transition: opacity 0.5s ease;
 
     font-weight: bold;
     font-family: "Roboto";
 }
+#winImg{
+    width: 100%;
+    height: 300px;
+    border: 1px solid #30d96bb2;
+}
+#infoContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 200px;
+    margin-bottom: 100px;
+    border: 1px solid #30d96bb2;
+}
+#informationContainer{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 150px;
+}
+#rewardsContainer{
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    height: 150px;
+}
+#historyContainer{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 150px;
+}
 
+
+.rewardsTittleContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    font-size: 18px;
+    font-weight: bold;
+}
+#historyContainer .rewardsRow {
+    margin-left: -10px;
+}
+#rewardsContainer .rewardsRow {
+    margin-left: -50px;
+}
+#informationContainer .rewardsRow {
+    margin-left: -15px;
+}
+.rewardsTittle{
+    display: flex;
+    width: 15%;
+    height: 15px;
+    opacity: 0;
+    white-space: nowrap;
+    margin-bottom: 15px;
+    transition: width 0.7s ease, opacity 0.7s ease;
+}
+.rewardsTittle.active{
+    width: 40%;
+    opacity: 1;
+}
+.rewardsTittleBlank{
+    display: flex;
+    width: 0px;
+    opacity: 0;
+    transition: width 0.7s ease, opacity 0.7s ease;
+}
+.rewardsTittleBlank.active{
+    width: 40px;
+    opacity: 1;
+}
+.rewardsTittleImg{
+    display: flex;
+    width: 0px;
+    opacity: 0;
+    transition: width 0.7s ease, opacity 0.7s ease;
+    margin-right: 5px;
+    margin-top: -7px;
+}
+.rewardsTittleImg.active{
+    width: 20px;
+    opacity: 1;
+}
+.rewardsTittleImg.night{
+    filter: brightness(0) saturate(100%) invert(86%) sepia(4%) saturate(2668%) hue-rotate(185deg) brightness(104%) contrast(83%);
+}
+
+.rewardsItems{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: normal;
+}
+#historyContainer > .rewardsItems{
+    display: flex;
+    flex-direction: row;
+}
+.rewardsColumn{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    height: 100%;
+    gap: 5px;
+}/*
+.rewardsColumn:nth-child(3){
+    margin-right: 10px;
+}*/
+.rewardsRow{
+    display: flex;
+    flex-direction: row;
+    width: 15%;
+    height: 30px;
+    /*border: 1px solid #7bd868;*/
+    gap: 5px;
+    opacity: 0;
+    white-space: nowrap;
+    transition: width 0.7s ease, opacity 0.7s ease;
+}
+.rewardsRow.active{
+    width: 40%;
+    opacity: 1;
+}
+.rewardsRowLabel{
+    display: flex;
+
+}
+.rewardsRowNumber{
+    display: flex;
+
+}
+
+
+
+
+#nextButton {
+    position: relative;
+    top: 50px;
+    width: 200px;
+    height: 50px;
+    background-color: rgb(52, 81, 120); /* Añade un color de fondo para visibilidad */
+    border: none;
+    border-radius: 8px; /* Opcional: diseño más atractivo */
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; /* Asegúrate de centrar el texto dentro del botón */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    font-family: "Roboto";
+}
 
 
 #startMatchContainer {
@@ -443,6 +617,46 @@ img {
     opacity: 0;
 }
 
+.modoLocoContainerR{
+    display: flex;
+    flex-direction: row;
+ }
+.modoLocoR{
+    width: 25px;
+    height: auto;
+    margin-right: -10px;
+    transition: all 0.5s ease;
+}
+.modoLocoDefaultR.night{
+    filter: brightness(0) saturate(100%) invert(86%) sepia(4%) saturate(2668%) hue-rotate(185deg) brightness(104%) contrast(83%);
+}
+.modoLocoActiveR{
+    position: absolute;
+    opacity: 0;
+}
+.multiModeLabelR{
+    font-family: 'kemco';
+    font-size: 24px;
+    letter-spacing: -1px;
+    margin-top: 3px;
+    transition: all 0.5s ease;
+    text-align: center;
+    white-space: nowrap; /* Mantiene todo el contenido en una sola línea */
+    overflow: visible; /* Permite que el contenido que excede sea visible */
+    width: auto; /* Asegura que el ancho del contenedor no limite el contenido */
+    display: inline-block;
+}
+.multiModeLabelR.active{
+    background: linear-gradient(90deg, #30d96c 0%, #eb005f 140%);
+    background: -webkit-linear-gradient(90deg, #30d96c 0%, #eb005f 140%); /* Compatibilidad con WebKit */
+    background: -moz-linear-gradient(90deg, #30d96c 0%, #eb005f 140%); /* Compatibilidad con Firefox */
+    background: -o-linear-gradient(90deg, #30d96c 0%, #eb005f 140%); /* Compatibilidad con Opera */
+    background: linear-gradient(90deg, #30d96c 0%, #eb005f 140%); /* Estándar */
+    -webkit-background-clip: text; /* Clipa el fondo al texto */
+    -webkit-text-fill-color: transparent; /* Hace el texto transparente para mostrar el gradiente */
+    background-clip: text;
+}
+
 
 #switch[type=checkbox] {
     height: 0;
@@ -612,8 +826,11 @@ img {
 .itemSpark{
     position: absolute;
     margin-top: -15px;
-    margin-left: -10px;
-    margin-left: 15px;
+    margin-left: 6px;
+}
+.rewardsRow > .itemSpark{
+    margin-top: -6.5px;
+    margin-left: 6px;
 }
 .itemHalo{
     position: absolute;
