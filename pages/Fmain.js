@@ -7,8 +7,8 @@ let gameActive = false;
 const startMatchContainer = document.getElementById("startMatchContainer");
 const startButton = document.getElementById("startButton");
 const tomatosBet = document.getElementById("tomatosBet");
-const tomatosCuted = document.getElementById("tomatosCuted");
 const tomatosThrowed = document.getElementById("tomatosThrowed");
+const tomatosCuted = document.getElementById("tomatosCuted");
 const coinsColected = document.getElementById("coinsColected");
 const mistakes = document.getElementById("mistakes");
 
@@ -189,7 +189,6 @@ function handleOutOfBounds(obj) {
     }else if(obj.key === 'tomatoGold'){
         objScreen.tomatoGold--;
     }
-    console.log(objScreen);
 }
 
 
@@ -354,7 +353,7 @@ function addObjToScreen(obj){
 
 function throwRandomObject(obj) {
     /*console.log("tomatosBet.textContent: "+tomatosBet.textContent);
-    console.log("objHistory.tomato: "+objHistory.tomato);*/
+    console.log("tomatosCuted.textContent: "+tomatosCuted.textContent);*/
     if(tomatosCuted.textContent == tomatosBet.textContent && gameActive){
         /*console.log("Dentro del if");*/ 
         stopGame();
@@ -566,22 +565,17 @@ function showMenu() {
     // Reinicia la puntuación y la visibilidad del contenedor del botón
     /*var highscore = Math.max(score, localStorage.getItem("highscore") || 0);
     localStorage.setItem("highscore", highscore);*/
-
-    /*
     setTimeout(() => {
-        good_objects.forEach(group => group.callAll('kill')); // Mata todos los objetos buenos
-        bad_objects.forEach(group => group.callAll('kill')); // Mata todos los objetos malos
-    }, 2000);*/
-    
+        startMatchContainer.style.display = 'flex';
+        setTimeout(() => {
+            startMatchContainer.style.opacity = "1";
+        }, 50);
+    }, 700);
+
     const intervalId = setInterval(() => {
         const allZero = Object.values(objScreen).every(value => value === 0);
         if (allZero) {
-
             gameActive = false; // Marca que el juego ha terminado
-            startMatchContainer.style.display = 'flex'; // Muestra el contenedor del botón nuevamente
-        
-
-
             clearInterval(intervalId); // Detiene el intervalo
         }
     }, 500);
@@ -592,6 +586,12 @@ function startGame(){
 
     score = 0;
     scoreCoins = 0;
+
+    tomatosBet.textContent = "";
+    tomatosThrowed.textContent = "";
+    tomatosCuted.textContent = "";
+    coinsColected.textContent = "";
+    mistakes.textContent = "";
 
     Object.keys(objHistory).forEach(key => {
         objHistory[key] = 0;
@@ -823,7 +823,7 @@ function killFruit(fruit) {
     
     if (fruit.key === 'tomato' || fruit.key === 'tomatoGold') {
         /*console.log("tomatosBet.textContent: "+tomatosBet.textContent);
-        console.log("objHistory.tomato: "+objHistory.tomato);*/
+        console.log("tomatosCuted.textContent: "+tomatosCuted.textContent);*/
         if(tomatosBet.textContent == tomatosCuted.textContent){
             stopGame();
             showMenu();
@@ -878,13 +878,18 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("game").innerHTML = '';
 
     startButton.addEventListener("click", function () {
-        startMatchContainer.style.display = 'none'; // Oculta el contenedor del botón
-        tomatosBet.textContent = sliderTomatoes.value;
-        gameActive = true;
-        document.getElementById("game").innerHTML = '';
-        game = new Phaser.Game(w, h, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
-        startGame();
-    });
+        if(!gameActive){
+            startGame();
+            startMatchContainer.style.opacity = "0";
+            setTimeout(() => {
+                startMatchContainer.style.display = 'none'; 
+            }, 500);
+            tomatosBet.textContent = sliderTomatoes.value;
+            gameActive = true;
+            document.getElementById("game").innerHTML = '';
+            game = new Phaser.Game(w, h, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
+        }
+});
 
 
 

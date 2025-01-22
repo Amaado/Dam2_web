@@ -33,7 +33,7 @@ img {
     pointer-events: none;
     -webkit-touch-callout: none;
     -webkit-user-drag: none;
-  }
+}
 
 
 #game {
@@ -54,6 +54,27 @@ img {
 }
 
 
+#endContainer {
+    display: flex; /* Usar flexbox para centrar internamente */
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    position: absolute; /* Asegura que esté sobre el contenedor principal */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centra con precisión */
+    width: 540px; /* Adapta el ancho automáticamente al contenido */
+    height: 600px; /* Adapta la altura automáticamente al contenido */
+    background-color: rgba(20, 26, 31, 0.957);
+    padding: 20px; /* Añade espacio interno opcional */
+    border-radius: 10px; /* Bordes redondeados opcionales */
+    transition: opacity 0.5s ease;
+
+    font-weight: bold;
+    font-family: "Roboto";
+}
+
 
 
 #startMatchContainer {
@@ -71,6 +92,7 @@ img {
     background-color: rgba(20, 26, 31, 0.957);
     padding: 20px; /* Añade espacio interno opcional */
     border-radius: 10px; /* Bordes redondeados opcionales */
+    transition: opacity 0.5s ease;
 
     font-weight: bold;
     font-family: "Roboto";
@@ -559,13 +581,11 @@ img {
 .itemNameHead{
     font-size: 14px;
     font-weight: bold;
-    background-color: red;
     width: 115px;
 }
 .itemPercentageHead{
     font-size: 14px;
     font-weight: bold;
-    background-color: rgb(0, 60, 255);
     width: 73px;
 }
 .itemPicLogo{
@@ -587,7 +607,6 @@ img {
 .itemName{
     font-size: 13px;
     font-weight: normal;
-    background-color: red;
     width: 115px;
 }
 .itemSpark{
@@ -604,7 +623,6 @@ img {
 .itemPercentage{
     font-size: 13px;
     font-weight: normal;
-    background-color: rgb(0, 60, 255);
     width: 73px;
 }
 .itemMulti{
@@ -612,7 +630,6 @@ img {
     flex-direction: row;
     font-size: 13px;
     font-weight: normal;
-    background-color: rgb(0, 60, 255);
     width: 50px;
 }
 .x{
