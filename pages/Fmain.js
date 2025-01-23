@@ -10,7 +10,6 @@ const startButton = document.getElementById("startButton");
 const tomatosBet = document.getElementById("tomatosBet");
 const tomatosCuted = document.getElementById("tomatosCuted");
 const coinsColected = document.getElementById("coinsColected");
-const mistakes = document.getElementById("mistakes");
 
 let tomatosMistakedVar = 0;
 
@@ -41,6 +40,7 @@ function preload() {
     this.load.spritesheet('spark', '../img/fruitNinja//spark_spritesheet.png', 480, 480, 20);
     this.load.spritesheet('halo', '../img/fruitNinja//halo_spritesheet.png', 337, 337, 34);
     this.load.spritesheet('coin', '../img/fruitNinja//coin_spritesheet.png', 310, 310, 50);
+    this.load.spritesheet('circle', '../img/fruitNinja//circle.png', 500, 500, 27);
 }
 
 var good_objects = [];
@@ -62,9 +62,17 @@ function create() {
         });
     
         game.input.onUp.add(() => {
-            isClicking = false;
-            points = []; // Limpia el trazado al soltar el clic
+            isClicking = false;  // Indica que ya no se está haciendo clic
+            slashes.clear();     // Borra cualquier trazado previo
+            points = [];
         });
+        
+        window.addEventListener("mouseout", () => {
+            isClicking = false;  // Indica que ya no se está haciendo clic
+            slashes.clear();     // Borra cualquier trazado previo
+            points = [];
+        });
+        
     } else {
         console.error("Game or game.input is not available.");
     }
@@ -85,55 +93,10 @@ function create() {
     // Configuración de efectos visuales
     slashes = game.add.graphics(0, 0);
 
-    // Configuración inicial del emisor
-    emitter = game.add.emitter(0, 0, 300);
-    emitter.makeParticles('peace');
-    emitter.setScale(0.8, 0.5, 0.8, 0.5);
-    emitter.gravity = 300;
-    emitter.setYSpeed(-400, 400);
-    emitter.alpha = 1; // Asegúrate de que sea completamente visible al inicio
-
-    emitterGold = game.add.emitter(0, 0, 300);
-    emitterGold.makeParticles('peaceGold');
-    emitterGold.setScale(0.8, 0.5, 0.8, 0.5);
-    emitterGold.gravity = 300;
-    emitterGold.setYSpeed(-400, 400);
-    emitterGold.alpha = 1; // Asegúrate de que sea completamente visible al inicio
-
-    // Configuración del emitter
-    emitterCoin = game.add.emitter(0, 0, 300); // Crea el emitter
-    emitterCoin.makeParticles('coin'); // Usa el spritesheet como partículas
-    emitterCoin.setScale(0.15, 0.1, 0.15, 0.1); // Escala de las partículas
-    emitterCoin.gravity = 300; // Gravedad aplicada a las partículas
-    emitterCoin.setYSpeed(-400, 400); // Velocidad vertical de las partículas
-    emitterCoin.alpha = 1; // Opacidad inicial
 
 
-    // Configurar partículas para animación personalizada
-    emitterCoin.forEach(function (particle) {
-        const totalFrames = 50; // Número total de frames del spritesheet
 
-        // Generar un frame inicial aleatorio
-        const startFrame = Math.floor(Math.random() * totalFrames);
 
-        // Decidir aleatoriamente si la animación será normal o inversa
-        const reverse = Math.random() < 0.5;
-
-        // Configurar los frames de la animación
-        let frames;
-        if (reverse) {
-            frames = Array.from({ length: totalFrames }, (_, i) => totalFrames - 1 - i); // Frames en orden inverso
-        } else {
-            frames = Array.from({ length: totalFrames }, (_, i) => i); // Frames en orden normal
-        }
-
-        // Agregar animación al sprite
-        particle.animations.add('spin', frames); // Configurar los frames generados
-        particle.animations.play('spin', 15, true, startFrame); // Reproducir la animación en bucle desde un frame aleatorio
-
-        particle.rotation = Phaser.Math.degToRad(Math.random() * 360); // Rotación aleatoria en radianes
-        particle.angle += Math.random() * 20 - 10; // Añadir un cambio de rotación aleatorio mientras está vivo
-    });
 
 
     throwObject();
@@ -166,7 +129,7 @@ function createGroup(numItems, spriteKey) {
     group.physicsBodyType = Phaser.Physics.ARCADE;
     group.createMultiple(numItems, spriteKey); // Usa las imágenes en lugar de bitmapData
     group.setAll('checkWorldBounds', true);
-    group.setAll('outOfBoundsKill', true);
+    group.setAll('outOfBoundsKill', false);
 
     // Configurar evento para interceptar salida de los límites
     group.forEach(function (obj) {
@@ -177,6 +140,25 @@ function createGroup(numItems, spriteKey) {
 
 
 function handleOutOfBounds(obj) {
+    // Si el objeto salió por el marco superior
+    if (obj.y < 0) {
+        // Ajustar la posición para que vuelva a caer
+        obj.body.velocity.y = Math.abs(obj.body.velocity.y); // Asegurar que la velocidad sea positiva (hacia abajo)
+        return;
+    }
+
+    // Manejar salida por los demás bordes (laterales e inferior)
+    if (obj.y > game.world.height || obj.x < 0 || obj.x > game.world.width) {
+        if (obj.key === 'tomato' && gameActive) {
+            handleMistakes(); // Incrementar el contador de errores solo si es un tomate
+        }
+        removeFromScreenList(obj); // Eliminar el objeto del contador en pantalla
+        obj.kill(); // Destruir el objeto solo si está fuera de los límites inferiores o laterales
+    }
+}
+
+
+function removeFromScreenList(obj) {
     if(obj.key === 'bomb'){
         objScreen.bomb--;
     }else if(obj.key === 'bombCammo'){
@@ -189,6 +171,34 @@ function handleOutOfBounds(obj) {
         objScreen.tomato--;
     }else if(obj.key === 'tomatoGold'){
         objScreen.tomatoGold--;
+    }
+}
+
+const mistake1 = document.querySelector(".mistake1");
+const mistake2 = document.querySelector(".mistake2");
+const mistake3 = document.querySelector(".mistake3");
+
+function handleMistakes(){
+    tomatosMistakedVar++;
+    if(tomatosMistakedVar==1){
+        mistake1.style.display = "flex";
+        setTimeout(() => {
+            mistake1.classList.add("active");
+        }, 100);
+    }else if(tomatosMistakedVar==2){
+        mistake2.style.display = "flex";
+        setTimeout(() => {
+            mistake2.classList.add("active");
+        }, 100);
+    }else if(tomatosMistakedVar==3){
+        mistake3.style.display = "flex";
+        setTimeout(() => {
+            mistake3.classList.add("active");
+        }, 100);
+        stopGame();
+        showMenu(endContainer);
+    }else{
+
     }
 }
 
@@ -274,6 +284,48 @@ function throwObject() {
     }
 }
 
+function addShadowToObject(obj, shadowImageKey, shadowAlpha = 0.5, offsetDistance = 10) {
+    // Crear la sombra como una imagen
+    const shadow = game.add.image(obj.x, obj.y, shadowImageKey);
+
+    // Ajustar propiedades de la sombra
+    shadow.alpha = shadowAlpha; // Ajustar opacidad de la sombra
+    shadow.tint = 0x000000; // Aplicar tinte negro a la sombra
+
+    // Configurar el punto de anclaje en el centro del objeto y la sombra
+    obj.anchor.setTo(0.5, 0.5); // Centro del objeto
+    shadow.anchor.setTo(0.5, 0.5); // Centro de la sombra
+
+    // Ajustar la escala de la sombra para que coincida con el objeto
+    shadow.scale.setTo(obj.scale.x, obj.scale.y);
+
+    // Mantener la sombra sincronizada con el objeto
+    obj.shadow = shadow;
+
+    obj.update = function () {
+        // Sincronizar la rotación de la sombra con el objeto
+        shadow.rotation = obj.rotation;
+
+        // Calcular la posición de la sombra para que siempre quede visualmente debajo del objeto
+        shadow.x = obj.x;
+
+        // La sombra se posiciona entre el objeto y el borde inferior de la pantalla
+        const screenBottom = game.world.height;
+        shadow.y = Math.min(screenBottom - offsetDistance, obj.y + offsetDistance);
+
+        // Sincronizar la escala de la sombra con el objeto
+        shadow.scale.setTo(obj.scale.x, obj.scale.y);
+
+        // Asegurar que la sombra siga detrás del objeto
+        shadow.z = obj.z - 1;
+        game.world.sort('z', Phaser.Group.SORT_ASCENDING);
+    };
+}
+
+
+
+
+
 // Función para manejar la aparición de objetos
 function spawnObject(groups, key) {
     let group = groups.find(g => g.children[0].key === key);
@@ -290,6 +342,7 @@ function spawnObject(groups, key) {
     }
 
     if (obj) {
+        addShadowToObject(obj);
         return obj;
     }
     return null;
@@ -487,26 +540,18 @@ function weightedAngle(mean, deviation, min, max) {
 
 
 function update() {
-    
     throwObject();
 
+    // Verificar si las frutas han salido del límite superior
     good_objects.forEach(group => group.forEachAlive(obj => adjustRotation(obj)));
     bad_objects.forEach(group => group.forEachAlive(obj => adjustRotation(obj)));
 
-    function adjustRotation(obj) {
-        // Rotación según la trayectoria
-        const trajectoryRotation = Math.atan2(obj.body.velocity.y, obj.body.velocity.x);
-
-        // Oscilación basada en el tiempo
-        const oscillation = 0.1 * Math.sin(game.time.now / 200); // Variación de +/- 0.1 radianes
-
-        // Combinación de rotación inicial, trayectoria y oscilación
-        obj.rotation = obj.initialRotation + trajectoryRotation + oscillation;
+    if (!isClicking) {
+        game.debug.stop();
+        return;
     }
 
-    if (!isClicking) return;
-
-    // Resto del código para manejar los trazos e intersecciones
+    // Manejo del trazado e intersecciones
     points.push({ x: game.input.x, y: game.input.y });
     points = points.splice(points.length - 10, points.length);
 
@@ -524,13 +569,25 @@ function update() {
 
     for (var i = 1; i < points.length; i++) {
         line = new Phaser.Line(points[i].x, points[i].y, points[i - 1].x, points[i - 1].y);
-        game.debug.geom(line);
+        if (isClicking) {
+            game.debug.geom(line);
+        }
 
         good_objects.forEach(group => group.forEachExists(checkIntersects));
         bad_objects.forEach(group => group.forEachExists(checkIntersects));
     }
 }
 
+function adjustRotation(obj) {
+    // Rotación según la trayectoria
+    const trajectoryRotation = Math.atan2(obj.body.velocity.y, obj.body.velocity.x);
+
+    // Oscilación basada en el tiempo
+    const oscillation = 0.1 * Math.sin(game.time.now / 200); // Variación de +/- 0.1 radianes
+
+    // Combinación de rotación inicial, trayectoria y oscilación
+    obj.rotation = obj.initialRotation + trajectoryRotation + oscillation;
+}
 
 
 var contactPoint = new Phaser.Point(0, 0);
@@ -545,12 +602,12 @@ function checkIntersects(fruit) {
         contactPoint.x = game.input.x;
         contactPoint.y = game.input.y;
 
-        if (belongsToGroup(fruit, bad_objects)) {
+        if (belongsToGroup(fruit, bad_objects)&&gameActive) {
             killFruit(fruit);
             stopGame();
             showMenu(endContainer);
 
-        } else if (belongsToGroup(fruit, good_objects)) {
+        } else if (belongsToGroup(fruit, good_objects)&&gameActive) {
             killFruit(fruit);
         }
     }
@@ -678,42 +735,118 @@ function despawnFruit(fruit){
     fruit.kill();
 }*/
 
-function spawnParticles(fruit) {
-    let emitterToUse = emitter;
-    const randomNum = Math.floor(Math.random() * 5) + 3;
+function getRandomBetween(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-    if(fruit.key === 'tomatoGold'){
-        emitterToUse = emitterGold;
-        emitterToUse.x = fruit.x;
-        emitterToUse.y = fruit.y;
-        emitterToUse.start(true, 2000, null, randomNum);
-        fadeOutEmitter(emitterToUse);
-        spawnParticleCoinForce(fruit);
+function spawnParticles(fruit, cutAngle) {
+    let emitterToUse, emitterPeaceGold;
 
-    }else if(fruit.key === 'goldCC'){
-        emitterToUse = emitterCoin;
-        emitterToUse.x = fruit.x;
-        emitterToUse.y = fruit.y;
-        emitterToUse.start(true, 2000, null, 40);
-        fadeOutEmitter(emitterToUse);        
-    }else{
-        emitterToUse.x = fruit.x;
-        emitterToUse.y = fruit.y;
-        emitterToUse.start(true, 2000, null, randomNum);
+    if (fruit.key === 'goldCC') {
+        // Crear un emisor único para goldCC
+        emitterToUse = game.add.emitter(fruit.x, fruit.y, 35); // 35 partículas para goldCC
+        emitterToUse.makeParticles('coin');
+        emitterToUse.setScale(0.15, 0.1, 0.15, 0.1);
+        emitterToUse.gravity = 0; // Sin gravedad para seguir la dirección del corte
+
+        configureCoinAnimation(emitterToUse); // Configurar animación para partículas de monedas
+
+        emitterToUse.start(true, 2000, null, 35);
         fadeOutEmitter(emitterToUse);
+
+    } else if (fruit.key === 'tomatoGold') {
+        // Crear el primer emisor para peaceGold
+        emitterPeaceGold = game.add.emitter(fruit.x, fruit.y, getRandomBetween(4, 10)); // Entre 4 y 10 partículas
+        emitterPeaceGold.makeParticles('peaceGold');
+        emitterPeaceGold.setScale(0.8, 0.5, 0.8, 0.5);
+        emitterPeaceGold.gravity = 0;
+
+        emitterPeaceGold.start(true, 2000, null, getRandomBetween(4, 10));
+        fadeOutEmitter(emitterPeaceGold);
+
+        // Crear el segundo emisor para monedas
+        emitterToUse = game.add.emitter(fruit.x, fruit.y, 10); // 10 partículas para monedas
+        emitterToUse.makeParticles('coin');
+        emitterToUse.setScale(0.15, 0.1, 0.15, 0.1);
+        emitterToUse.gravity = 0;
+
+        configureCoinAnimation(emitterToUse); // Configurar animación para partículas de monedas
+
+        emitterToUse.start(true, 2000, null, 10);
+        fadeOutEmitter(emitterToUse);
+
+    } else {
+        // Crear un emisor único para partículas estándar (peace)
+        emitterToUse = game.add.emitter(fruit.x, fruit.y, getRandomBetween(4, 10)); // Entre 4 y 10 partículas
+        emitterToUse.makeParticles('peace');
+        emitterToUse.setScale(0.8, 0.5, 0.8, 0.5);
+        emitterToUse.gravity = 0;
+
+        emitterToUse.start(true, 2000, null, getRandomBetween(4, 10));
+        fadeOutEmitter(emitterToUse);
+    }
+
+    // Ajustar la velocidad y dirección de las partículas según el ángulo del corte
+    const baseForce = 2500; // Incrementamos la fuerza base para un empuje más fuerte
+    const velocityVariation = 100; // Variación reducida para que sigan mejor la trayectoria del corte
+
+    // Configurar velocidad para las partículas del emisor principal
+    if (emitterToUse) {
+        emitterToUse.forEachAlive(particle => {
+            const angleVariation = Math.random() * 0.1 - 0.05; // Variación ligera del ángulo (±0.05 radianes)
+            const adjustedAngle = cutAngle + angleVariation;
+
+            particle.body.velocity.x = Math.cos(adjustedAngle) * baseForce; // Velocidad en X según el ángulo
+            particle.body.velocity.y = Math.sin(adjustedAngle) * baseForce; // Velocidad en Y según el ángulo
+
+            particle.rotation = Math.random() * 2 * Math.PI; // Rotación aleatoria inicial
+        });
+    }
+
+    // Configurar velocidad para las partículas del emisor peaceGold
+    if (emitterPeaceGold) {
+        emitterPeaceGold.forEachAlive(particle => {
+            const angleVariation = Math.random() * 0.1 - 0.05; // Variación ligera del ángulo (±0.05 radianes)
+            const adjustedAngle = cutAngle + angleVariation;
+
+            particle.body.velocity.x = Math.cos(adjustedAngle) * baseForce; // Velocidad en X según el ángulo
+            particle.body.velocity.y = Math.sin(adjustedAngle) * baseForce; // Velocidad en Y según el ángulo
+
+            particle.rotation = Math.random() * 2 * Math.PI; // Rotación aleatoria inicial
+        });
     }
 }
 
-function spawnParticleCoinForce(fruit) {
-    let emitterToUse = emitter;
-    if(fruit.key === 'tomatoGold'){
-        emitterToUse = emitterCoin;
-        emitterToUse.x = fruit.x;
-        emitterToUse.y = fruit.y;
-        emitterToUse.start(true, 2000, null, 5);
-        fadeOutEmitter(emitterToUse);
-    }
+
+
+function configureCoinAnimation(emitter) {
+    emitter.forEachAlive(function (particle) {
+        const totalFrames = 50; // Número total de frames del spritesheet
+
+        // Generar un frame inicial aleatorio
+        const startFrame = Math.floor(Math.random() * totalFrames);
+
+        // Decidir aleatoriamente si la animación será normal o inversa
+        const reverse = Math.random() < 0.5;
+
+        // Configurar los frames de la animación
+        let frames;
+        if (reverse) {
+            frames = Array.from({ length: totalFrames }, (_, i) => totalFrames - 1 - i); // Frames en orden inverso
+        } else {
+            frames = Array.from({ length: totalFrames }, (_, i) => i); // Frames en orden normal
+        }
+
+        // Agregar animación al sprite
+        particle.animations.add('spin', frames); // Configurar los frames generados
+        particle.animations.play('spin', 15, true, startFrame); // Reproducir la animación en bucle desde un frame aleatorio
+
+        particle.rotation = Phaser.Math.degToRad(Math.random() * 360); // Rotación aleatoria en radianes
+        particle.angle += Math.random() * 20 - 10; // Añadir un cambio de rotación aleatorio mientras está vivo
+    });
 }
+
+
 
 
 function belongsToGroup(fruit, groupsArray) {
@@ -749,12 +882,12 @@ function killFruit(fruit) {
     }
 
 
-    if (fruit.key === 'tomato' || fruit.key === 'tomatoGold' || fruit.key === 'goldCC') {
-        spawnParticles(fruit);
-    }
-
     // Coordenadas del corte
     const cutAngle = Math.atan2(contactPoint.y - fruit.y, contactPoint.x - fruit.x);
+
+    if (fruit.key === 'tomato' || fruit.key === 'tomatoGold' || fruit.key === 'goldCC') {
+        spawnParticles(fruit, cutAngle);
+    }
 
     leftHalf.anchor.setTo(0.5, 0.5);
     rightHalf.anchor.setTo(0.5, 0.5);
@@ -845,6 +978,53 @@ function killFruit(fruit) {
             fadeTween.onComplete.add(() => {
                 resplandor.destroy(true); // Destruye completamente el sprite
             });
+
+
+
+
+
+
+
+
+
+            const circle = game.add.sprite(fruit.x, fruit.y, 'circle'); // Crea el sprite
+            circle.anchor.setTo(0.5, 0.5); // Centra el sprite
+            circle.scale.setTo(1); // Tamaño inicial
+            circle.alpha = 1; // Completamente visible al inicio
+            circle.z = -200; // Coloca detrás de otros elementos
+            circle.offsetX = 0; // Desplazamiento horizontal
+            circle.offsetY = 0; 
+        
+            // Agregar y reproducir la animación
+            circle.animations.add('spin'); // Crear la animación con todos los frames del spritesheet
+            circle.animations.play('spin', 30, true); // Reproducir a 15 FPS en bucle
+        
+            // Animación de escala (agrandamiento)
+            const scaleTweenCircle = game.add.tween(circle.scale).to(
+                { x: 1.75, y: 1.75 }, // Tamaño final
+                1100, // Duración de 600ms
+                Phaser.Easing.Quadratic.Out, // Efecto de suavizado
+                true // Inicia automáticamente
+            );
+        
+            // Animación de opacidad (desaparecer)
+            const fadeTweenCircle = game.add.tween(circle).to(
+                { alpha: 0 }, // Transición a opacidad 0
+                900, // Duración de 600ms
+                Phaser.Easing.Linear.None, // Transición lineal
+                true // Inicia automáticamente
+            );
+        
+            // Actualizar la posición del circle según la velocidad original de fruit
+            circle.update = function () {
+                circle.x += fruitVelocity.x * game.time.physicsElapsed;
+                circle.y += fruitVelocity.y * game.time.physicsElapsed;
+            };
+        
+            // Destruir el sprite después de completar ambas animaciones
+            fadeTweenCircle.onComplete.add(() => {
+                circle.destroy(true); // Destruye completamente el sprite
+            });
         }
         
         
@@ -855,8 +1035,8 @@ function killFruit(fruit) {
         
 
     }else{
-        const fadeOutTweenLeft = game.add.tween(leftHalf).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true);
-        const fadeOutTweenRight = game.add.tween(rightHalf).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true);
+        const fadeOutTweenLeft = game.add.tween(leftHalf).to({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true);
+        const fadeOutTweenRight = game.add.tween(rightHalf).to({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true);
         
         fadeOutTweenLeft.onComplete.add(() => {
             leftHalf.destroy();
@@ -901,7 +1081,7 @@ function killFruit(fruit) {
         }
     }
 
-    handleOutOfBounds(fruit);
+    removeFromScreenList(fruit);
     // Eliminar el objeto original
     fruit.kill();
 
@@ -909,6 +1089,7 @@ function killFruit(fruit) {
     points = [];
     tomatosCuted.textContent = score;
 }
+
 
 let monedasUpdateInterval;
 function scoreCoinsUpdate(price){

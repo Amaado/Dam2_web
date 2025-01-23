@@ -59,14 +59,45 @@ img {
     display: flex;
     flex-direction: row;
     gap: 5px;
+    z-index: 3;
 }
 #mistakerContainer > div{
-
+    display: flex;
+    flex-direction: row;
 }
-.mistakeImg{
+.mistakeImgCont{
+    position: relative;
     display: flex;
     width: 60px;
     height: auto;
+}
+.mistakeImg{
+    position: absolute;
+    display: none;
+    transition: all 1s ease;
+
+    width: 500px;
+    height: auto;
+    right: calc(50vw - 250px);
+    top: calc(50vh - 250px);
+    opacity: 0;
+}
+.mistakeImg.active{
+    width: 60px;
+    height: auto;
+    opacity: 1;
+}
+.mistake1.mistakeImg.active{
+    right: 130px;
+    top: 0px;
+}
+.mistake2.mistakeImg.active{
+    right: 65px;
+    top: 0px;
+}
+.mistake3.mistakeImg.active{
+    right: 0px;
+    top: 0px;
 }
 
 #endContainer {
