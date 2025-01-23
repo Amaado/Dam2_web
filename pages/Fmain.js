@@ -26,6 +26,7 @@ function preload() {
     this.load.image('tomatoGold_left', '../img/fruitNinja//tomatoGoldIzq.png');
     this.load.image('tomatoGold_right', '../img/fruitNinja//tomatoGoldDer.png');
     this.load.image('bomb', '../img/fruitNinja//bomb.png');
+    this.load.image('bombShadow', '../img/fruitNinja//bombShadow.png');
     this.load.image('bomb_left', '../img/fruitNinja//bombIzq.png');
     this.load.image('bomb_right', '../img/fruitNinja//bombDer.png');
     this.load.image('bombCammo', '../img/fruitNinja//bombCammo.png');
@@ -286,7 +287,7 @@ function throwObject() {
 
 function addShadowToObject(obj, shadowImageKey, shadowAlpha = 0.5, offsetDistance = 10) {
     // Crear la sombra como una imagen
-    const shadow = game.add.image(obj.x, obj.y, shadowImageKey);
+    const shadow = game.add.image(obj.x, obj.y, "bombShadow");
 
     // Ajustar propiedades de la sombra
     shadow.alpha = shadowAlpha; // Ajustar opacidad de la sombra
