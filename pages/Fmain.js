@@ -43,12 +43,16 @@ function preload() {
     this.load.image('bombCammoGold', '../img/fruitNinja//bombCammoGold.png');
     this.load.image('bombCammoGold_left', '../img/fruitNinja//bombCammoGoldIzq.png');
     this.load.image('bombCammoGold_right', '../img/fruitNinja//bombCammoGoldDer.png');
-    this.load.image('peaceShadow', '../img/fruitNinja//peaceShadow.png');
     this.load.image('peace', '../img/fruitNinja//peace.png');
     this.load.image('peace2', '../img/fruitNinja//peace2.png');
     this.load.image('peace3', '../img/fruitNinja//peace3.png');
     this.load.image('peace4', '../img/fruitNinja//peace4.png');
     this.load.image('peace5', '../img/fruitNinja//peace5.png');
+    this.load.image('peaceShadow', '../img/fruitNinja//peaceShadow.png');
+    this.load.image('peace2Shadow', '../img/fruitNinja//peace2Shadow.png');
+    this.load.image('peace3Shadow', '../img/fruitNinja//peace3Shadow.png');
+    this.load.image('peace4Shadow', '../img/fruitNinja//peace4Shadow.png');
+    this.load.image('peace5Shadow', '../img/fruitNinja//peace5Shadow.png');
     this.load.image('peaceGold', '../img/fruitNinja//peaceGold.png');
     this.load.image('peaceGold2', '../img/fruitNinja//peaceGold2.png');
     this.load.image('peaceGold3', '../img/fruitNinja//peaceGold3.png');
@@ -57,11 +61,14 @@ function preload() {
     this.load.spritesheet('explosion', '../img/fruitNinja//explosion_spritesheet.png', 576, 576, 10);
     this.load.spritesheet('spark', '../img/fruitNinja//spark_spritesheet.png', 480, 480, 20);
     this.load.spritesheet('halo', '../img/fruitNinja//halo_spritesheet.png', 337, 337, 34);
-    this.load.spritesheet('coin', '../img/fruitNinja//coin_spritesheet.png', 310, 310, 50);
+    this.load.spritesheet('coin', '../img/fruitNinja//coin_spritesheet.png', 300, 300, 50);
+    this.load.spritesheet('coinShadow', '../img/fruitNinja//coinShadow_spritesheet.png', 300, 300, 50);
     this.load.spritesheet('circle', '../img/fruitNinja//circle.png', 500, 500, 27);
 }
 const peaces = ['peace', 'peace2', 'peace3', 'peace4', 'peace5'];
 const peacesGold = ['peaceGold', 'peaceGold2', 'peaceGold3', 'peaceGold4', 'peaceGold5'];
+const peacesShadow = ['peaceShadow', 'peace2Shadow', 'peace3Shadow', 'peace4Shadow', 'peace5Shadow'];
+const peacesGoldShadow = ['peaceShadow', 'peace2Shadow', 'peace3Shadow', 'peace4Shadow', 'peace5Shadow'];
 
 var good_objects = [];
 var bad_objects = [];
@@ -226,7 +233,7 @@ function handleMistakes(){
 // Configuración de probabilidades iniciales
 var probabilities = {
     tomato: 50,          // 50
-    tomatoGold: 7,      // 7
+    tomatoGold: 100,      // 7
     bomb: 30,            // 30
     bombCammo: 20,       // 20
     bombGold: 3,        // 3
@@ -790,40 +797,40 @@ function getRandomBetween(min, max) {
 }
 
 function spawnParticles(fruit, cutAngle) {
-    let emitterToUse, emitterPeaceGold;
+    let emitterToUse, emitterCoin;
 
     if (fruit.key === 'goldCC') {
         // Crear un emisor único para goldCC
-        emitterToUse = game.add.emitter(fruit.x, fruit.y, 35); // 35 partículas para goldCC
-        emitterToUse.makeParticles('coin');
-        emitterToUse.setScale(0.15, 0.1, 0.15, 0.1);
-        emitterToUse.gravity = 0; // Sin gravedad para seguir la dirección del corte
+        emitterCoin = game.add.emitter(fruit.x, fruit.y, 35); // 35 partículas para goldCC
+        emitterCoin.makeParticles('coin');
+        emitterCoin.setScale(0.15, 0.1, 0.15, 0.1);
+        emitterCoin.gravity = 0; // Sin gravedad para seguir la dirección del corte
 
-        configureCoinAnimation(emitterToUse); // Configurar animación para partículas de monedas
+        configureCoinAnimation(emitterCoin); // Configurar animación para partículas de monedas
 
-        emitterToUse.start(true, 2000, null, 35);
-        fadeOutEmitterWithShadow(emitterToUse);
+        emitterCoin.start(true, 2000, null, 35);
+        fadeOutEmitterWithShadow(emitterCoin);
 
     } else if (fruit.key === 'tomatoGold') {
         // Crear el primer emisor para peaceGold
-        emitterPeaceGold = game.add.emitter(fruit.x, fruit.y, getRandomBetween(4, 10)); // Entre 4 y 10 partículas
-        emitterPeaceGold.makeParticles(peacesGold);
-        emitterPeaceGold.setScale(0.8, 0.5, 0.8, 0.5);
-        emitterPeaceGold.gravity = 0;
-
-        emitterPeaceGold.start(true, 2000, null, getRandomBetween(4, 10));
-        fadeOutEmitterWithShadow(emitterPeaceGold);
-
-        // Crear el segundo emisor para monedas
-        emitterToUse = game.add.emitter(fruit.x, fruit.y, 10); // 10 partículas para monedas
-        emitterToUse.makeParticles('coin');
-        emitterToUse.setScale(0.15, 0.1, 0.15, 0.1);
+        emitterToUse = game.add.emitter(fruit.x, fruit.y, getRandomBetween(4, 10)); // Entre 4 y 10 partículas
+        emitterToUse.makeParticles(peacesGold);
+        emitterToUse.setScale(0.8, 0.5, 0.8, 0.5);
         emitterToUse.gravity = 0;
 
-        configureCoinAnimation(emitterToUse); // Configurar animación para partículas de monedas
-
-        emitterToUse.start(true, 2000, null, 10);
+        emitterToUse.start(true, 2000, null, getRandomBetween(4, 10));
         fadeOutEmitterWithShadow(emitterToUse);
+
+        // Crear el segundo emisor para monedas
+        emitterCoin = game.add.emitter(fruit.x, fruit.y, 10); // 10 partículas para monedas
+        emitterCoin.makeParticles('coin');
+        emitterCoin.setScale(0.15, 0.1, 0.15, 0.1);
+        emitterCoin.gravity = 0;
+
+        configureCoinAnimation(emitterCoin); // Configurar animación para partículas de monedas
+
+        emitterCoin.start(true, 2000, null, 10);
+        fadeOutEmitterWithShadow(emitterCoin);
 
     } else {
         // Crear un emisor único para partículas estándar (peace)
@@ -850,13 +857,13 @@ function spawnParticles(fruit, cutAngle) {
             particle.body.velocity.y = Math.sin(adjustedAngle) * baseForce; // Velocidad en Y según el ángulo
 
             particle.rotation = Math.random() * 2 * Math.PI; // Rotación aleatoria inicial
-            addShadowToParticle(particle, fruit); // Agregar sombra
+            addShadowToParticleTomato(particle, fruit); // Agregar sombra
         });
     }
 
     // Configurar velocidad para las partículas del emisor peaceGold
-    if (emitterPeaceGold) {
-        emitterPeaceGold.forEachAlive(particle => {
+    if (emitterCoin) {
+        emitterCoin.forEachAlive(particle => {
             const angleVariation = Math.random() * 0.1 - 0.05; // Variación ligera del ángulo (±0.05 radianes)
             const adjustedAngle = cutAngle + angleVariation;
 
@@ -864,7 +871,7 @@ function spawnParticles(fruit, cutAngle) {
             particle.body.velocity.y = Math.sin(adjustedAngle) * baseForce; // Velocidad en Y según el ángulo
 
             particle.rotation = Math.random() * 2 * Math.PI; // Rotación aleatoria inicial
-            addShadowToParticle(particle, fruit); // Agregar sombra
+            addShadowToParticleCoin(particle, fruit); // Agregar sombra
         });
     }
 
@@ -872,22 +879,100 @@ function spawnParticles(fruit, cutAngle) {
     game.world.sort('z', Phaser.Group.SORT_ASCENDING);
 }
 
-function addShadowToParticle(particle, fruit, shadowAlpha = 0.15, maxOffset = 10, minOffset = 30) {
+function addShadowToParticleTomato(particle, fruit, shadowAlpha = 0.25, maxOffset = 10, minOffset = 30) {
+    let shadow, shadowKey;
+
+    const index = fruit.key === 'tomato' 
+        ? peaces.indexOf(particle.key) 
+        : peacesGold.indexOf(particle.key);
+
+    if (index === -1) {
+        console.error(`Particle key "${particle.key}" not found in the corresponding array.`);
+        return; // Salir si el índice no es válido
+    }
+
+    shadowKey = fruit.key === 'tomato' 
+        ? peacesShadow[index] 
+        : peacesGoldShadow[index];
+
+    shadow = game.add.image(particle.x, particle.y, shadowKey);
+    shadow.scale.setTo(particle.scale.x, particle.scale.y);
+
+    // Configurar propiedades de la sombra
+    shadow.alpha = shadowAlpha; // Ajustar opacidad
+    shadow.tint = 0x000000; // Aplicar tinte negro
+
+    // Configurar el punto de anclaje en el centro del objeto y la sombra
+    particle.anchor.setTo(0.5, 0.5); // Centro de la partícula
+    shadow.anchor.setTo(0.5, 0.5); // Centro de la sombra
+
+    // Asociar la sombra a la partícula
+    particle.shadow = shadow;
+
+    // Sincronizar la sombra con la partícula
+    particle.update = function () {
+        if (!shadow) return;
+
+        // Sincronizar la posición y rotación de la sombra con la partícula
+        shadow.x = particle.x;
+        shadow.rotation = particle.rotation;
+
+        // Calcular dinámicamente el offsetDistance basado en la posición vertical de la partícula
+        const relativeY = Math.max(0, Math.min(1, particle.y / game.world.height)); // Normalizar particle.y entre 0 y 1
+        const offsetDistance = maxOffset - (relativeY * (maxOffset - minOffset)); // Interpolación lineal
+
+        // Calcular la posición vertical de la sombra
+        shadow.y = Math.min(game.world.height - offsetDistance, particle.y + offsetDistance);
+
+        // Sincronizar la escala de la sombra con la partícula
+        shadow.scale.setTo(particle.scale.x, particle.scale.y);
+
+        // Asegurar que la sombra esté detrás de la partícula
+        shadow.z = particle.z - 2;
+        game.world.sort('z', Phaser.Group.SORT_ASCENDING);
+
+        // Si la partícula sale del borde inferior, eliminar la sombra
+        if (particle.y > game.world.height) {
+            shadow.destroy(); // Destruir la sombra
+            particle.shadow = null; // Limpiar la referencia a la sombra
+        }
+    };
+}
+
+function addShadowToParticleCoin(particle, fruit, shadowAlpha = 0.2, maxOffset = 10, minOffset = 30) {
     let shadow;
 
-    // Detectar el tipo de partícula y configurar la sombra correspondiente
-    if (fruit.key === 'tomato' || fruit.key === 'tomatoGold') {
-        shadow = game.add.image(particle.x, particle.y, particle.key); // Usa la misma clave que la partícula
-    } else if (fruit.key === 'goldCC' || fruit.key === 'tomatoGold') {
-        // Crear la sombra como un nuevo sprite del mismo spritesheet que la moneda
-        shadow = game.add.sprite(particle.x, particle.y, particle.key);
-        shadow.animations.add('spin', particle.animations.currentAnim._frames); // Copiar los frames de animación
-        shadow.animations.play('spin', 15, true, particle.animations.currentAnim.currentFrame.index); // Iniciar desde el mismo frame actual
-        if(fruit.key === 'goldCC'){
-            shadow.scale.setTo(particle.scale.x*0.21, particle.scale.y*0.21);
-        }else{
-            shadow.scale.setTo(particle.scale.x, particle.scale.y);
+    shadow = game.add.sprite(particle.x, particle.y, 'coinShadow');
+
+    // Obtener las propiedades de la animación actual de la partícula
+    if (particle.animations && particle.animations.currentAnim) {
+        const currentAnim = particle.animations.currentAnim;
+
+        // Copiar los frames y la dirección de la animación
+        const totalFrames = currentAnim._frames.length;
+        const isReversed = currentAnim.isReversed;
+        const startFrame = currentAnim.currentFrame.index;
+
+        // Generar los frames de la sombra
+        let shadowFrames;
+        if (isReversed) {
+            shadowFrames = Array.from({ length: totalFrames }, (_, i) => totalFrames - 1 - i);
+        } else {
+            shadowFrames = Array.from({ length: totalFrames }, (_, i) => i);
         }
+
+        // Configurar la animación de la sombra
+        shadow.animations.add('spin', shadowFrames);
+        shadow.animations.play('spin', currentAnim.frameRate, true, startFrame);
+
+        console.log(`Sombra creada con frame inicial: ${startFrame}, reversa: ${isReversed}`);
+    }
+
+    // Ajustar la escala para goldCC
+    if (fruit.key === 'goldCC') {
+        shadow.scale.setTo(particle.scale.x * 0.21, particle.scale.y * 0.21);
+    } else {
+        shadow.scale.setTo(particle.scale.x, particle.scale.y);
     }
 
     // Configurar propiedades de la sombra
@@ -920,7 +1005,7 @@ function addShadowToParticle(particle, fruit, shadowAlpha = 0.15, maxOffset = 10
         shadow.scale.setTo(particle.scale.x, particle.scale.y);
 
         // Asegurar que la sombra esté detrás de la partícula
-        shadow.z = particle.z - 1;
+        shadow.z = particle.z - 2;
         game.world.sort('z', Phaser.Group.SORT_ASCENDING);
 
         // Si la partícula sale del borde inferior, eliminar la sombra
@@ -933,24 +1018,28 @@ function addShadowToParticle(particle, fruit, shadowAlpha = 0.15, maxOffset = 10
 
 
 function fadeOutEmitterWithShadow(emitter) {
-    game.time.events.add(750, () => {
-        emitter.forEachAlive(particle => {
-            // Desvanecer partícula
-            const fadeOut = game.add.tween(particle).to({ alpha: 0 }, 750, Phaser.Easing.Linear.None, true);
-            fadeOut.onComplete.add(() => {
-                if (particle.shadow) {
-                    particle.shadow.destroy(); // Destruir la sombra antes de matar la partícula
-                    particle.shadow = null; // Limpiar referencia a la sombra
-                }
-                particle.kill();
-            });
+    if(emitter){
+        game.time.events.add(750, () => {
+            emitter.forEachAlive(particle => {
+                // Desvanecer partícula
+                const fadeOut = game.add.tween(particle).to({ alpha: 0 }, 750, Phaser.Easing.Linear.None, true);
+                fadeOut.onComplete.add(() => {
+                    if (particle.shadow) {
+                        particle.shadow.destroy(); // Destruir la sombra antes de matar la partícula
+                        particle.shadow = null; // Limpiar referencia a la sombra
+                    }
+                    if(particle){
+                        particle.kill();
+                    }
+                });
 
-            // Desvanecer sombra si existe
-            if (particle.shadow) {
-                game.add.tween(particle.shadow).to({ alpha: 0 }, 750, Phaser.Easing.Linear.None, true);
-            }
+                // Desvanecer sombra si existe
+                if (particle.shadow) {
+                    game.add.tween(particle.shadow).to({ alpha: 0 }, 750, Phaser.Easing.Linear.None, true);
+                }
+            });
         });
-    });
+    }
 }
 
 
