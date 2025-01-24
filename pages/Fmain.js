@@ -19,30 +19,49 @@ function preload() {
     this.load.image('goldCC', '../img/fruitNinja//goldCC.png');
     this.load.image('goldCC_left', '../img/fruitNinja//goldCCIzq.png');
     this.load.image('goldCC_right', '../img/fruitNinja//goldCCDer.png');
+    this.load.image('tomatoShadow', '../img/fruitNinja//tomatoFullShadow.png');
     this.load.image('tomato', '../img/fruitNinja//tomatoFull.png');
+    this.load.image('tomato_left_Shadow', '../img/fruitNinja//tomatoIzqShadow.png');
     this.load.image('tomato_left', '../img/fruitNinja//tomatoIzq.png');
+    this.load.image('tomato_right_Shadow', '../img/fruitNinja//tomatoDerShadow.png');
     this.load.image('tomato_right', '../img/fruitNinja//tomatoDer.png');
     this.load.image('tomatoGold', '../img/fruitNinja//tomatoGold.png');
     this.load.image('tomatoGold_left', '../img/fruitNinja//tomatoGoldIzq.png');
     this.load.image('tomatoGold_right', '../img/fruitNinja//tomatoGoldDer.png');
-    this.load.image('bomb', '../img/fruitNinja//bomb.png');
     this.load.image('bombShadow', '../img/fruitNinja//bombShadow.png');
+    this.load.image('bomb', '../img/fruitNinja//bomb.png');
+    this.load.image('bomb_left_Shadow', '../img/fruitNinja//bombIzqShadow.png');
     this.load.image('bomb_left', '../img/fruitNinja//bombIzq.png');
+    this.load.image('bomb_right_Shadow', '../img/fruitNinja//bombDerShadow.png');
     this.load.image('bomb_right', '../img/fruitNinja//bombDer.png');
+    this.load.image('bombCammoShadow', '../img/fruitNinja//bombCammoShadow.png');
     this.load.image('bombCammo', '../img/fruitNinja//bombCammo.png');
+    this.load.image('bombCammo_left_Shadow', '../img/fruitNinja//bombCammoIzqShadow.png');
     this.load.image('bombCammo_left', '../img/fruitNinja//bombCammoIzq.png');
+    this.load.image('bombCammo_right_Shadow', '../img/fruitNinja//bombCammoDerShadow.png');
     this.load.image('bombCammo_right', '../img/fruitNinja//bombCammoDer.png');
     this.load.image('bombCammoGold', '../img/fruitNinja//bombCammoGold.png');
     this.load.image('bombCammoGold_left', '../img/fruitNinja//bombCammoGoldIzq.png');
     this.load.image('bombCammoGold_right', '../img/fruitNinja//bombCammoGoldDer.png');
+    this.load.image('peaceShadow', '../img/fruitNinja//peaceShadow.png');
     this.load.image('peace', '../img/fruitNinja//peace.png');
+    this.load.image('peace2', '../img/fruitNinja//peace2.png');
+    this.load.image('peace3', '../img/fruitNinja//peace3.png');
+    this.load.image('peace4', '../img/fruitNinja//peace4.png');
+    this.load.image('peace5', '../img/fruitNinja//peace5.png');
     this.load.image('peaceGold', '../img/fruitNinja//peaceGold.png');
+    this.load.image('peaceGold2', '../img/fruitNinja//peaceGold2.png');
+    this.load.image('peaceGold3', '../img/fruitNinja//peaceGold3.png');
+    this.load.image('peaceGold4', '../img/fruitNinja//peaceGold4.png');
+    this.load.image('peaceGold5', '../img/fruitNinja//peaceGold5.png');
     this.load.spritesheet('explosion', '../img/fruitNinja//explosion_spritesheet.png', 576, 576, 10);
     this.load.spritesheet('spark', '../img/fruitNinja//spark_spritesheet.png', 480, 480, 20);
     this.load.spritesheet('halo', '../img/fruitNinja//halo_spritesheet.png', 337, 337, 34);
     this.load.spritesheet('coin', '../img/fruitNinja//coin_spritesheet.png', 310, 310, 50);
     this.load.spritesheet('circle', '../img/fruitNinja//circle.png', 500, 500, 27);
 }
+const peaces = ['peace', 'peace2', 'peace3', 'peace4', 'peace5'];
+const peacesGold = ['peaceGold', 'peaceGold2', 'peaceGold3', 'peaceGold4', 'peaceGold5'];
 
 var good_objects = [];
 var bad_objects = [];
@@ -285,11 +304,34 @@ function throwObject() {
     }
 }
 
-function addShadowToObject(obj, shadowImageKey, shadowAlpha = 0.5, offsetDistance = 10) {
-    // Crear la sombra como una imagen
-    const shadow = game.add.image(obj.x, obj.y, "bombShadow");
+function addShadowToObject(obj, shadowAlpha = 0.3, maxOffset = 10, minOffset = 30) {
+    // Crear la sombra como una imagen basada en el tipo de objeto
+    let shadow;
+    if (obj.key === 'bomb') {
+        shadow = game.add.image(obj.x, obj.y, "bombShadow");
+    } else if (obj.key === 'bombCammo' || obj.key === 'bombCammoGold') {
+        shadow = game.add.image(obj.x, obj.y, "bombCammoShadow");
+    } else if (obj.key === 'goldCC') {
+        return; // No se aplica sombra para 'goldCC'
+    } else if (obj.key === 'tomato' || obj.key === 'tomatoGold') {
+        shadow = game.add.image(obj.x, obj.y, "tomatoShadow");
+    }else if(obj.key === 'bomb_left'){
+        shadow = game.add.image(obj.x, obj.y, "bomb_left_Shadow");
+    }else if(obj.key === 'bomb_right'){
+        shadow = game.add.image(obj.x, obj.y, "bomb_right_Shadow");
+    } else if (obj.key === 'bombCammo_left' || obj.key === 'bombCammoGold_left') {
+        shadow = game.add.image(obj.x, obj.y, "bombCammo_left_Shadow");
+    } else if (obj.key === 'bombCammo_right' || obj.key === 'bombCammoGold_right') {
+        shadow = game.add.image(obj.x, obj.y, "bombCammo_right_Shadow");
+    } else if (obj.key === 'tomato_left' || obj.key === 'tomatoGold_left') {
+        shadow = game.add.image(obj.x, obj.y, "tomato_left_Shadow");
+    } else if (obj.key === 'tomato_right' || obj.key === 'tomatoGold_right') {
+        shadow = game.add.image(obj.x, obj.y, "tomato_right_Shadow");
+    }else{
+        console.error("No hay sombra para esta mitad");
+    }
 
-    // Ajustar propiedades de la sombra
+    // Configurar propiedades de la sombra
     shadow.alpha = shadowAlpha; // Ajustar opacidad de la sombra
     shadow.tint = 0x000000; // Aplicar tinte negro a la sombra
 
@@ -300,28 +342,38 @@ function addShadowToObject(obj, shadowImageKey, shadowAlpha = 0.5, offsetDistanc
     // Ajustar la escala de la sombra para que coincida con el objeto
     shadow.scale.setTo(obj.scale.x, obj.scale.y);
 
-    // Mantener la sombra sincronizada con el objeto
+    // Asociar la sombra al objeto
     obj.shadow = shadow;
 
+    // Función para mantener la sombra sincronizada con el objeto
     obj.update = function () {
-        // Sincronizar la rotación de la sombra con el objeto
+        // Sincronizar la posición y rotación de la sombra con el objeto
+        shadow.x = obj.x;
         shadow.rotation = obj.rotation;
 
-        // Calcular la posición de la sombra para que siempre quede visualmente debajo del objeto
-        shadow.x = obj.x;
+        // Calcular dinámicamente el offsetDistance basado en la posición vertical del objeto
+        const relativeY = Math.max(0, Math.min(1, obj.y / game.world.height)); // Normalizar obj.y entre 0 y 1
+        const offsetDistance = maxOffset - (relativeY * (maxOffset - minOffset)); // Interpolación lineal
 
-        // La sombra se posiciona entre el objeto y el borde inferior de la pantalla
-        const screenBottom = game.world.height;
-        shadow.y = Math.min(screenBottom - offsetDistance, obj.y + offsetDistance);
+        // Calcular la posición vertical de la sombra
+        shadow.y = Math.min(game.world.height - offsetDistance, obj.y + offsetDistance);
 
         // Sincronizar la escala de la sombra con el objeto
         shadow.scale.setTo(obj.scale.x, obj.scale.y);
 
-        // Asegurar que la sombra siga detrás del objeto
-        shadow.z = obj.z - 1;
+        // Asegurar que la sombra esté detrás del objeto
+        shadow.z = obj.z - 2;
         game.world.sort('z', Phaser.Group.SORT_ASCENDING);
+
+        // Si el objeto sale del borde inferior, eliminar la sombra
+        if (obj.y > game.world.height) {
+            shadow.destroy(); // Destruir la sombra
+            obj.shadow = null; // Limpiar la referencia a la sombra
+        }
     };
 }
+
+
 
 
 
@@ -730,11 +782,8 @@ function startGame(){
 }
 
 function render() {
+
 }
-/*
-function despawnFruit(fruit){
-    fruit.kill();
-}*/
 
 function getRandomBetween(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -753,17 +802,17 @@ function spawnParticles(fruit, cutAngle) {
         configureCoinAnimation(emitterToUse); // Configurar animación para partículas de monedas
 
         emitterToUse.start(true, 2000, null, 35);
-        fadeOutEmitter(emitterToUse);
+        fadeOutEmitterWithShadow(emitterToUse);
 
     } else if (fruit.key === 'tomatoGold') {
         // Crear el primer emisor para peaceGold
         emitterPeaceGold = game.add.emitter(fruit.x, fruit.y, getRandomBetween(4, 10)); // Entre 4 y 10 partículas
-        emitterPeaceGold.makeParticles('peaceGold');
+        emitterPeaceGold.makeParticles(peacesGold);
         emitterPeaceGold.setScale(0.8, 0.5, 0.8, 0.5);
         emitterPeaceGold.gravity = 0;
 
         emitterPeaceGold.start(true, 2000, null, getRandomBetween(4, 10));
-        fadeOutEmitter(emitterPeaceGold);
+        fadeOutEmitterWithShadow(emitterPeaceGold);
 
         // Crear el segundo emisor para monedas
         emitterToUse = game.add.emitter(fruit.x, fruit.y, 10); // 10 partículas para monedas
@@ -774,17 +823,17 @@ function spawnParticles(fruit, cutAngle) {
         configureCoinAnimation(emitterToUse); // Configurar animación para partículas de monedas
 
         emitterToUse.start(true, 2000, null, 10);
-        fadeOutEmitter(emitterToUse);
+        fadeOutEmitterWithShadow(emitterToUse);
 
     } else {
         // Crear un emisor único para partículas estándar (peace)
         emitterToUse = game.add.emitter(fruit.x, fruit.y, getRandomBetween(4, 10)); // Entre 4 y 10 partículas
-        emitterToUse.makeParticles('peace');
+        emitterToUse.makeParticles(peaces);
         emitterToUse.setScale(0.8, 0.5, 0.8, 0.5);
         emitterToUse.gravity = 0;
 
         emitterToUse.start(true, 2000, null, getRandomBetween(4, 10));
-        fadeOutEmitter(emitterToUse);
+        fadeOutEmitterWithShadow(emitterToUse);
     }
 
     // Ajustar la velocidad y dirección de las partículas según el ángulo del corte
@@ -801,6 +850,7 @@ function spawnParticles(fruit, cutAngle) {
             particle.body.velocity.y = Math.sin(adjustedAngle) * baseForce; // Velocidad en Y según el ángulo
 
             particle.rotation = Math.random() * 2 * Math.PI; // Rotación aleatoria inicial
+            addShadowToParticle(particle, fruit); // Agregar sombra
         });
     }
 
@@ -814,9 +864,95 @@ function spawnParticles(fruit, cutAngle) {
             particle.body.velocity.y = Math.sin(adjustedAngle) * baseForce; // Velocidad en Y según el ángulo
 
             particle.rotation = Math.random() * 2 * Math.PI; // Rotación aleatoria inicial
+            addShadowToParticle(particle, fruit); // Agregar sombra
         });
     }
+
+    // Reordenar los elementos en la jerarquía
+    game.world.sort('z', Phaser.Group.SORT_ASCENDING);
 }
+
+function addShadowToParticle(particle, fruit, shadowAlpha = 0.15, maxOffset = 10, minOffset = 30) {
+    let shadow;
+
+    // Detectar el tipo de partícula y configurar la sombra correspondiente
+    if (fruit.key === 'tomato' || fruit.key === 'tomatoGold') {
+        shadow = game.add.image(particle.x, particle.y, particle.key); // Usa la misma clave que la partícula
+    } else if (fruit.key === 'goldCC' || fruit.key === 'tomatoGold') {
+        // Crear la sombra como un nuevo sprite del mismo spritesheet que la moneda
+        shadow = game.add.sprite(particle.x, particle.y, particle.key);
+        shadow.animations.add('spin', particle.animations.currentAnim._frames); // Copiar los frames de animación
+        shadow.animations.play('spin', 15, true, particle.animations.currentAnim.currentFrame.index); // Iniciar desde el mismo frame actual
+        if(fruit.key === 'goldCC'){
+            shadow.scale.setTo(particle.scale.x*0.21, particle.scale.y*0.21);
+        }else{
+            shadow.scale.setTo(particle.scale.x, particle.scale.y);
+        }
+    }
+
+    // Configurar propiedades de la sombra
+    shadow.alpha = shadowAlpha; // Ajustar opacidad
+    shadow.tint = 0x000000; // Aplicar tinte negro
+
+    // Configurar el punto de anclaje en el centro del objeto y la sombra
+    particle.anchor.setTo(0.5, 0.5); // Centro de la partícula
+    shadow.anchor.setTo(0.5, 0.5); // Centro de la sombra
+
+    // Asociar la sombra a la partícula
+    particle.shadow = shadow;
+
+    // Sincronizar la sombra con la partícula
+    particle.update = function () {
+        if (!shadow) return;
+
+        // Sincronizar la posición y rotación de la sombra con la partícula
+        shadow.x = particle.x;
+        shadow.rotation = particle.rotation;
+
+        // Calcular dinámicamente el offsetDistance basado en la posición vertical de la partícula
+        const relativeY = Math.max(0, Math.min(1, particle.y / game.world.height)); // Normalizar particle.y entre 0 y 1
+        const offsetDistance = maxOffset - (relativeY * (maxOffset - minOffset)); // Interpolación lineal
+
+        // Calcular la posición vertical de la sombra
+        shadow.y = Math.min(game.world.height - offsetDistance, particle.y + offsetDistance);
+
+        // Sincronizar la escala de la sombra con la partícula
+        shadow.scale.setTo(particle.scale.x, particle.scale.y);
+
+        // Asegurar que la sombra esté detrás de la partícula
+        shadow.z = particle.z - 1;
+        game.world.sort('z', Phaser.Group.SORT_ASCENDING);
+
+        // Si la partícula sale del borde inferior, eliminar la sombra
+        if (particle.y > game.world.height) {
+            shadow.destroy(); // Destruir la sombra
+            particle.shadow = null; // Limpiar la referencia a la sombra
+        }
+    };
+}
+
+
+function fadeOutEmitterWithShadow(emitter) {
+    game.time.events.add(750, () => {
+        emitter.forEachAlive(particle => {
+            // Desvanecer partícula
+            const fadeOut = game.add.tween(particle).to({ alpha: 0 }, 750, Phaser.Easing.Linear.None, true);
+            fadeOut.onComplete.add(() => {
+                if (particle.shadow) {
+                    particle.shadow.destroy(); // Destruir la sombra antes de matar la partícula
+                    particle.shadow = null; // Limpiar referencia a la sombra
+                }
+                particle.kill();
+            });
+
+            // Desvanecer sombra si existe
+            if (particle.shadow) {
+                game.add.tween(particle.shadow).to({ alpha: 0 }, 750, Phaser.Easing.Linear.None, true);
+            }
+        });
+    });
+}
+
 
 
 
@@ -856,7 +992,7 @@ function belongsToGroup(fruit, groupsArray) {
 
 function killFruit(fruit) {
     // Crear las dos mitades
-    let leftHalf, rightHalf, explosion;
+    let leftHalf, rightHalf;
 
     if(fruit.key === 'goldCC'){
         leftHalf = game.add.sprite(fruit.x, fruit.y, 'goldCC_left');
@@ -896,6 +1032,11 @@ function killFruit(fruit) {
     leftHalf.scale.setTo(0.5);
     rightHalf.scale.setTo(0.5);
 
+    if(fruit.key !== 'goldCC'){
+        addShadowToObject(leftHalf);
+        addShadowToObject(rightHalf);
+    }
+
     // Ajustar la rotación inicial
     leftHalf.rotation = cutAngle - Math.PI / 8; // Ajuste leve para que parezca más natural
     rightHalf.rotation = cutAngle + Math.PI / 8;
@@ -913,18 +1054,30 @@ function killFruit(fruit) {
     game.add.tween(rightHalf).to({ rotation: rightHalf.rotation + Math.PI / 4 }, 500, Phaser.Easing.Linear.None, true);
 
     // Desaparecen después de un tiempo
-    if(belongsToGroup(fruit, good_objects)){
-        game.time.events.add(1000, () => { // Espera 1 segundo antes de comenzar el desvanecimiento
-            const fadeOutTweenLeft = game.add.tween(leftHalf).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true); // Duración de 1 segundo
-            const fadeOutTweenRight = game.add.tween(rightHalf).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true); // Duración de 1 segundo
+    if (belongsToGroup(fruit, good_objects)) {
+        game.time.events.add(1000, () => {
+            // Fade out de las mitades y sus sombras
+            if (leftHalf.shadow) {
+                const shadowFadeOutLeft = game.add.tween(leftHalf.shadow).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
+                shadowFadeOutLeft.onComplete.add(() => {
+                    if (leftHalf.shadow) { // Verificar que la sombra aún existe antes de destruirla
+                        leftHalf.shadow.destroy();
+                    }
+                });
+            }
+            const fadeOutTweenLeft = game.add.tween(leftHalf).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
+            fadeOutTweenLeft.onComplete.add(() => leftHalf.destroy());
     
-            fadeOutTweenLeft.onComplete.add(() => {
-                leftHalf.destroy(); // Elimina el elemento después de que desaparezca
-            });
-    
-            fadeOutTweenRight.onComplete.add(() => {
-                rightHalf.destroy(); // Elimina el elemento después de que desaparezca
-            });
+            if (rightHalf.shadow) {
+                const shadowFadeOutRight = game.add.tween(rightHalf.shadow).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
+                shadowFadeOutRight.onComplete.add(() => {
+                    if (rightHalf.shadow) { // Verificar que la sombra aún existe antes de destruirla
+                        rightHalf.shadow.destroy();
+                    }
+                });
+            }
+            const fadeOutTweenRight = game.add.tween(rightHalf).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
+            fadeOutTweenRight.onComplete.add(() => rightHalf.destroy());
         });
 
         if (fruit.key === 'goldCC') {
@@ -1035,17 +1188,29 @@ function killFruit(fruit) {
         
         
 
-    }else{
+    } else {
+        // Fade out para las mitades y sombras de los objetos malos
+        if (leftHalf.shadow) {
+            const shadowFadeOutLeft = game.add.tween(leftHalf.shadow).to({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true);
+            shadowFadeOutLeft.onComplete.add(() => {
+                if (leftHalf.shadow) { // Verificar que la sombra aún existe antes de destruirla
+                    leftHalf.shadow.destroy();
+                }
+            });
+        }
         const fadeOutTweenLeft = game.add.tween(leftHalf).to({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true);
+        fadeOutTweenLeft.onComplete.add(() => leftHalf.destroy());
+
+        if (rightHalf.shadow) {
+            const shadowFadeOutRight = game.add.tween(rightHalf.shadow).to({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true);
+            shadowFadeOutRight.onComplete.add(() => {
+                if (rightHalf.shadow) { // Verificar que la sombra aún existe antes de destruirla
+                    rightHalf.shadow.destroy();
+                }
+            });
+        }
         const fadeOutTweenRight = game.add.tween(rightHalf).to({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true);
-        
-        fadeOutTweenLeft.onComplete.add(() => {
-            leftHalf.destroy();
-        });
-        
-        fadeOutTweenRight.onComplete.add(() => {
-            rightHalf.destroy();
-        });
+        fadeOutTweenRight.onComplete.add(() => rightHalf.destroy());
         
         const explosion = game.add.sprite(fruit.x, fruit.y, 'explosion');
         explosion.anchor.setTo(0.5, 0.5);
@@ -1072,6 +1237,21 @@ function killFruit(fruit) {
     }
 
     
+
+
+    removeFromScreenList(fruit);
+    if(fruit.key !== 'goldCC'){
+        fruit.shadow.destroy();
+    }
+
+    fruit.kill();
+
+    // Actualizar puntuación
+    points = [];
+    tomatosCuted.textContent = score;
+
+
+
     if (fruit.key === 'tomato' || fruit.key === 'tomatoGold') {
         /*console.log("tomatosBet.textContent: "+tomatosBet.textContent);
         console.log("tomatosCuted.textContent: "+tomatosCuted.textContent);*/
@@ -1081,14 +1261,6 @@ function killFruit(fruit) {
             return;
         }
     }
-
-    removeFromScreenList(fruit);
-    // Eliminar el objeto original
-    fruit.kill();
-
-    // Actualizar puntuación
-    points = [];
-    tomatosCuted.textContent = score;
 }
 
 
