@@ -12,6 +12,7 @@ const tomatosBet = document.getElementById("tomatosBet");
 const tomatosCuted = document.getElementById("tomatosCuted");
 const coinsColected = document.getElementById("coinsColected");
 const winGif = document.getElementById("winGif");
+const sliceIt = document.getElementById("sliceIt");
 
 const multiNTomato = document.querySelector("multiNTomato");
 const multiNTomatoGold = document.querySelector("multiNTomatoGold");
@@ -1477,6 +1478,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /* BET SLIDER VALUE ADJUST */
     const sliderMulti = document.getElementById('sliderMulti');
     const thumbMulti = document.querySelector('.thumbMulti');
+    const thumbX = document.querySelector('.thumbX');
     const thumbMultiCont = document.querySelector('.thumbMultiCont');
     const multiValueLabel = document.getElementById("multiValueLabel");
     
@@ -1485,7 +1487,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if(offsetWidth){
             sliderWidth = offsetWidth;
         }
-        sliderWidth = sliderWidth - 20; // Ajustar el ancho del slider
+        sliderWidth = sliderWidth - 2;
         const sliderMin = sliderMulti.min;           // Valor mínimo del slider
         const sliderMax = sliderMulti.max;           // Valor máximo del slider
     
@@ -1511,7 +1513,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     thumbMulti.textContent = formatValue(sliderMulti.value);
     multiValueLabel.textContent = formatValue(sliderMulti.value);
-
     sliderMulti.addEventListener('input', function () {
         thumbMulti.textContent = formatValue(this.value); // Actualizar el contenido del texto con el formato
         multiValueLabel.textContent = formatValue(this.value);
@@ -1519,18 +1520,42 @@ document.addEventListener("DOMContentLoaded", function () {
         updateFinalCostMulti();
         updateFinalProbMulti();
     });
-    
+
+    sliderMulti.addEventListener('mouseenter', function () {
+        thumbMulti.classList.add("active");
+        thumbX.classList.add("active");
+        thumbMultiCont.classList.add("active");
+    });
+    sliderMulti.addEventListener('mouseleave', function () {
+        thumbMulti.classList.remove("active");
+        thumbX.classList.remove("active");
+        thumbMultiCont.classList.remove("active");
+    });
+    sliderMulti.addEventListener('mousedown', function () {
+        thumbMultiCont.classList.add("activeBlur");
+    });
+    sliderMulti.addEventListener('mouseup', function () {
+        thumbMultiCont.classList.remove("activeBlur");
+    });
+
+
+
+
     const multiHelpContainer = document.querySelector('.multiHelpContainer');
     const multiHelp = document.getElementById("multiHelp");
     multiHelpContainer.addEventListener('mouseenter', function () {
+        thumbMultiCont.style.transition = "all 0.3s ease";
         multiHelp.classList.add("active");
-        sliderMulti.style.width = "90px";
-        updateThumbPosition(90);
+        sliderMulti.style.width = "30px";
+        updateThumbPosition(30);
     });
     multiHelpContainer.addEventListener('mouseleave', function () {
+        setTimeout(() => {
+            thumbMultiCont.style.transition = "";
+        }, 500);
         multiHelp.classList.remove("active");
-        sliderMulti.style.width = "140px";
-        updateThumbPosition(140);
+        sliderMulti.style.width = "100px";
+        updateThumbPosition(100);
     });
 
     const multiCostsFinal = document.getElementById("multiCostsFinal");
@@ -1651,7 +1676,7 @@ document.addEventListener("DOMContentLoaded", function () {
             multiModeLabel.classList.add("active");
             multiModeLabel.style.animation = 'letterSpacingIn 0.4s ease forwards';
             setTimeout(() => {
-                multiModeLabel.textContent = "CRAZY MODE";
+                multiModeLabel.textContent = "Modo Loco";
             }, 200);
             setTimeout(() => {
                 multiModeLabel.style.animation = '';
@@ -1663,7 +1688,7 @@ document.addEventListener("DOMContentLoaded", function () {
             multiModeLabel.classList.remove("active");
             multiModeLabel.style.animation = 'letterSpacingIn 0.4s ease forwards';
             setTimeout(() => {
-                multiModeLabel.textContent = "NORMAL MODE";
+                multiModeLabel.textContent = "Modo Normal";
             }, 200);
             setTimeout(() => {
                 multiModeLabel.style.animation = '';
@@ -1809,15 +1834,19 @@ document.addEventListener("DOMContentLoaded", function () {
         if(arrowState){
             //Expandido
             statsContainer.style.width = `${finalWidthStats}px`;
-            statsContainer.style.height = "400px";
+            statsContainer.style.height = "260px";
             flecha.classList.add("rotated");
             blank.style.width = `${blankWidth}px`;
+            sliceIt.classList.add("down");
+            startButton.style.marginTop = "0px";
         }else{
             //Contraído
             statsContainer.style.width = `${finalWidthAuto}px`;
             statsContainer.style.height = "15px";
             flecha.classList.remove("rotated");
             blank.style.width = "1px";
+            sliceIt.classList.remove("down");
+            startButton.style.marginTop = "40px";
         }
     }
 
