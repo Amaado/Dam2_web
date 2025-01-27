@@ -5,11 +5,36 @@ var game; // Declarar la instancia del juego
 var gameStarted = false; // Bandera para verificar si el juego está en progreso
 let gameActive = false;
 const startMatchContainer = document.getElementById("startMatchContainer");
+const startMatchContainerImg = document.getElementById("startMatchContainerImg");
 const endContainer = document.getElementById("endContainer");
 const startButton = document.getElementById("startButton");
 const tomatosBet = document.getElementById("tomatosBet");
 const tomatosCuted = document.getElementById("tomatosCuted");
 const coinsColected = document.getElementById("coinsColected");
+const winGif = document.getElementById("winGif");
+
+const multiNTomato = document.querySelector("multiNTomato");
+const multiNTomatoGold = document.querySelector("multiNTomatoGold");
+const multiNBomb = document.querySelector("multiNBomb");
+const multiNCammoBomb = document.querySelector("multiNCammoBomb");
+const multiNCammoGoldBomb = document.querySelector("multiNCammoGoldBomb");
+
+/* MODE CHECKBOX */
+const modoLocoDefault = document.querySelector(".modoLocoDefault");
+const modoLocoActive = document.querySelector(".modoLocoActive");
+const multiModeLabel = document.querySelector(".multiModeLabel");
+const checkboxSwitch = document.getElementById("switch");
+/* BET SLIDER VALUE ADJUST */
+const sliderTomatoes = document.getElementById('sliderTomatoes');
+const betValueSelect = document.getElementById('betValueSelect');
+const multiBetValue = document.getElementById('multiBetValue');
+/* sliderTomatoesContainer WIDTH ADJUST */
+const betValueDB = document.getElementById('betValueDB');
+const betContainer = document.querySelector('.betContainer');
+    /* STATS WIDTH ADJUST */
+const statsContainer = document.querySelector('.statsContainer');
+const statsTittleContainer = document.querySelector('.statsTittleContainer');
+const blank = document.querySelector('.blank');
 
 let tomatosMistakedVar = 0;
 
@@ -120,12 +145,6 @@ function create() {
     // Configuración de efectos visuales
     slashes = game.add.graphics(0, 0);
 
-
-
-
-
-
-
     throwObject();
 }
 
@@ -223,7 +242,7 @@ function handleMistakes(){
             mistake3.classList.add("active");
         }, 100);
         stopGame();
-        showMenu(endContainer);
+        showMenu(endContainer, "lose");
     }else{
 
     }
@@ -233,7 +252,7 @@ function handleMistakes(){
 // Configuración de probabilidades iniciales
 var probabilities = {
     tomato: 50,          // 50
-    tomatoGold: 100,      // 7
+    tomatoGold: 7,      // 7
     bomb: 30,            // 30
     bombCammo: 20,       // 20
     bombGold: 3,        // 3
@@ -470,7 +489,7 @@ function throwRandomObject(obj) {
     if(tomatosCuted.textContent == tomatosBet.textContent && gameActive){
         /*console.log("Dentro del if");*/ 
         stopGame();
-        showMenu(endContainer);
+        showMenu(endContainer, "win");
         return;
     }
 
@@ -665,7 +684,7 @@ function checkIntersects(fruit) {
         if (belongsToGroup(fruit, bad_objects)&&gameActive) {
             killFruit(fruit);
             stopGame();
-            showMenu(endContainer);
+            showMenu(endContainer, "lose");
 
         } else if (belongsToGroup(fruit, good_objects)&&gameActive) {
             killFruit(fruit);
@@ -678,7 +697,7 @@ function stopGame() {
     gameActive = false; // Detener el lanzamiento de frutas
 }
 
-async function showMenu(menuPass) {
+async function showMenu(menuPass, action) {
     // Reinicia la puntuación y la visibilidad del contenedor del botón
     /*var highscore = Math.max(score, localStorage.getItem("highscore") || 0);
     localStorage.setItem("highscore", highscore);*/
@@ -698,8 +717,8 @@ async function showMenu(menuPass) {
         }, 50);
     }, 700);
 
-    setTimeout(async () => {
-        if(menuPass.id == "endContainer"){
+    if(menuPass.id == "endContainer"){
+        setTimeout(async () => {
             const informationContainer = document.getElementById("informationContainer");
             const rewardsContainer = document.getElementById("rewardsContainer");
             const historyContainer = document.getElementById("historyContainer");
@@ -736,16 +755,24 @@ async function showMenu(menuPass) {
                     rewardsTittleImg.classList.add("active");
                 });
             }
-        }
-    }, 1000);
+        }, 1000);
 
-    const intervalId = setInterval(() => {
-        const allZero = Object.values(objScreen).every(value => value === 0);
-        if (allZero) {
-            gameActive = false;
-            clearInterval(intervalId);
+        startMatchContainer.classList.remove("active");
+        startMatchContainerImg.classList.remove("active");
+
+        if(action == "win"){
+            winGif.src = "../img/fruitNinja/winner.gif";
+        }else if(action == "lose"){
+            winGif.src = "../img/fruitNinja/foul.gif";
         }
-    }, 500);
+    }
+
+
+    if(menuPass.id == "startMatchContainer"){
+        startMatchContainer.classList.add("active");
+        startMatchContainerImg.classList.add("active");
+
+    }
 }
 
 function delay(ms) {
@@ -756,6 +783,7 @@ function hideMenu(menuPass) {
     let menu;
     if(menuPass.id == "startMatchContainer"){
         menu = startMatchContainer;
+        startMatchContainerImg.classList.remove("active");
     }else if(menuPass.id == "endContainer"){
         menu = endContainer;
     }else{
@@ -843,39 +871,45 @@ function spawnParticles(fruit, cutAngle) {
         fadeOutEmitterWithShadow(emitterToUse);
     }
 
-    // Ajustar la velocidad y dirección de las partículas según el ángulo del corte
-    const baseForce = 2500; // Incrementamos la fuerza base para un empuje más fuerte
-    const velocityVariation = 100; // Variación reducida para que sigan mejor la trayectoria del corte
+    // 2) Parámetros para dispersar las partículas
+    const baseForce = 200;        // Fuerza base (más alta que 100)
+    const velocityVariation = 200; // Rango de fuerza adicional aleatoria
+    const angleSpread = 1;       // Rango de dispersión en radianes ±0.6 (~±34°)
 
-    // Configurar velocidad para las partículas del emisor principal
+    // 3) Ajustar velocidad/dirección de las partículas del emitter principal
     if (emitterToUse) {
         emitterToUse.forEachAlive(particle => {
-            const angleVariation = Math.random() * 0.1 - 0.05; // Variación ligera del ángulo (±0.05 radianes)
-            const adjustedAngle = cutAngle + angleVariation;
+            // Variación de ángulo (± angleSpread/2)
+            const angleOffset = (Math.random() - 0.5) * angleSpread;
+            const finalAngle = cutAngle + angleOffset;
 
-            particle.body.velocity.x = Math.cos(adjustedAngle) * baseForce; // Velocidad en X según el ángulo
-            particle.body.velocity.y = Math.sin(adjustedAngle) * baseForce; // Velocidad en Y según el ángulo
+            // Calcular magnitud de la velocidad
+            const speed = baseForce + Math.random() * velocityVariation;
 
-            particle.rotation = Math.random() * 2 * Math.PI; // Rotación aleatoria inicial
-            addShadowToParticleTomato(particle, fruit); // Agregar sombra
+            particle.body.velocity.x = Math.cos(finalAngle) * speed;
+            particle.body.velocity.y = Math.sin(finalAngle) * speed;
+
+            particle.rotation = Math.random() * 2 * Math.PI; 
+            addShadowToParticleTomato(particle, fruit);
         });
     }
 
-    // Configurar velocidad para las partículas del emisor peaceGold
+    // 4) Ajustar velocidad/dirección de las partículas de monedas (si hay emitterCoin)
     if (emitterCoin) {
         emitterCoin.forEachAlive(particle => {
-            const angleVariation = Math.random() * 0.1 - 0.05; // Variación ligera del ángulo (±0.05 radianes)
-            const adjustedAngle = cutAngle + angleVariation;
+            const angleOffset = (Math.random() - 0.5) * angleSpread;
+            const finalAngle = cutAngle + angleOffset;
+            const speed = baseForce + Math.random() * velocityVariation;
 
-            particle.body.velocity.x = Math.cos(adjustedAngle) * baseForce; // Velocidad en X según el ángulo
-            particle.body.velocity.y = Math.sin(adjustedAngle) * baseForce; // Velocidad en Y según el ángulo
+            particle.body.velocity.x = Math.cos(finalAngle) * speed;
+            particle.body.velocity.y = Math.sin(finalAngle) * speed;
 
-            particle.rotation = Math.random() * 2 * Math.PI; // Rotación aleatoria inicial
-            addShadowToParticleCoin(particle, fruit); // Agregar sombra
+            particle.rotation = Math.random() * 2 * Math.PI;
+            addShadowToParticleCoin(particle, fruit);
         });
     }
 
-    // Reordenar los elementos en la jerarquía
+    // 5) Reordenar jerarquía para que las sombras/quiebres se dibujen en orden
     game.world.sort('z', Phaser.Group.SORT_ASCENDING);
 }
 
@@ -1346,7 +1380,7 @@ function killFruit(fruit) {
         console.log("tomatosCuted.textContent: "+tomatosCuted.textContent);*/
         if(tomatosBet.textContent == tomatosCuted.textContent){
             stopGame();
-            showMenu(endContainer);
+            showMenu(endContainer, "win");
             return;
         }
     }
@@ -1386,9 +1420,10 @@ function scoreCoinsUpdate(price){
     scoreCoins = scoreCoins+price;
 }
 
-
+let firstTime = 0;
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("game").innerHTML = '';
+    startMatchContainer.classList.add("active");
+    startMatchContainerImg.classList.add("active");
 
     startButton.addEventListener("click", function () {
         if(!gameActive){
@@ -1396,13 +1431,25 @@ document.addEventListener("DOMContentLoaded", function () {
             hideMenu(startMatchContainer);
             tomatosBet.textContent = sliderTomatoes.value;
             gameActive = true;
+        }
+        firstTime++;
+        if(firstTime == 1){
             document.getElementById("game").innerHTML = '';
             game = new Phaser.Game(w, h, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
+            setTimeout(() => {
+                const canvas = document.querySelector('canvas');
+                const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            }, 100);
+
         }
-});
+    });
 
-
-
+    nextButton.addEventListener("click", function () {
+        if(!gameActive){
+            hideMenu(endContainer);
+            showMenu(startMatchContainer);
+        }
+    });
 
 
     /* BET SLIDER VALUE ADJUST */
@@ -1439,7 +1486,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return valueStr; // Devuelve el valor original si es de una sola cifra
     }
     
-    updateThumbPosition();
+
     thumbMulti.textContent = formatValue(sliderMulti.value);
     multiValueLabel.textContent = formatValue(sliderMulti.value);
 
@@ -1447,7 +1494,8 @@ document.addEventListener("DOMContentLoaded", function () {
         thumbMulti.textContent = formatValue(this.value); // Actualizar el contenido del texto con el formato
         multiValueLabel.textContent = formatValue(this.value);
         updateThumbPosition();   
-        updateFinalCostMulti();                        // Actualizar la posición del contenedor
+        updateFinalCostMulti();
+        updateFinalProbMulti();
     });
     
     const multiHelpContainer = document.querySelector('.multiHelpContainer');
@@ -1476,19 +1524,71 @@ document.addEventListener("DOMContentLoaded", function () {
         multiCostsFinal.textContent = finalCost;
     }
 
+    function updateFinalProbMulti() {
+        // 1) Obtener el valor del multiplicador como número flotante
+        const thumbValue = parseFloat(thumbMulti.textContent);
+      
+        // 2) Seleccionar todas las filas de estadísticas
+        const statRows = document.querySelectorAll(".statRow");
+      
+        statRows.forEach(row => {
+          // 3) Obtener elementos de cada columna
+          const itemNameEl = row.querySelector(".itemName");
+          const itemPercentageEl = row.querySelector(".itemPercentage");
+          const multiNEl = row.querySelector(".multiN");
+          const multiFEl = row.querySelector(".multiF");
+      
+          // Si no existen estos elementos, no hacemos nada
+          if (!itemNameEl || !itemPercentageEl || !multiNEl || !multiFEl) return;
+      
+          // 4) Leer el texto del nombre y el porcentaje
+          const itemName = itemNameEl.textContent.trim().toLowerCase();
+          const percentageText = itemPercentageEl.textContent.replace("%", "").trim();
+          const percentageNum = parseFloat(percentageText) || 0; // Evita NaN
+      
+          // 5) Verificar si el checkbox está activado
+          if (checkboxSwitch.checked) {
+            // Modo "loco" => aplica solo a items con 'bomb'
+            if (itemName.includes("bomb")) {
+              multiNEl.textContent = "x" + thumbValue; // Agregar "x" delante
+              const finalRate = percentageNum * thumbValue;
+              multiFEl.textContent = finalRate.toFixed(2) + "%"; // Agregar "%" al final
+            } else {
+              multiNEl.textContent = "-";
+              multiFEl.textContent = "-";
+            }
+          } else {
+            // Modo "normal" => aplica solo a items con 'tomato'
+            if (itemName.includes("tomato")) {
+              multiNEl.textContent = "x" + thumbValue;
+              const finalRate = percentageNum * thumbValue;
+              multiFEl.textContent = finalRate.toFixed(2) + "%";
+            } else {
+              multiNEl.textContent = "-";
+              multiFEl.textContent = "-";
+            }
+          }
+        });
+    }
+      
+
+    setTimeout(() => {
+        updateThumbPosition();   
+        updateFinalCostMulti();
+        updateFinalProbMulti();
+    }, 100);
+
+    
+      
 
 
     /* MODE CHECKBOX */
-    const modoLocoDefault = document.querySelector(".modoLocoDefault");
-    const modoLocoActive = document.querySelector(".modoLocoActive");
-    const multiModeLabel = document.querySelector(".multiModeLabel");
-    const checkboxSwitch = document.getElementById("switch");
     checkboxSwitch.addEventListener("change", handleCheckboxSwitch);
     handleCheckboxSwitch();
 
     function handleCheckboxSwitch(){
         if(checkboxSwitch.checked){
-            //CRAZY
+            //LOCO
             modoLocoDefault.style.opacity = "0";
             modoLocoActive.style.opacity = "1";
             multiModeLabel.classList.add("active");
@@ -1512,6 +1612,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 multiModeLabel.style.animation = '';
             }, 400);
         }
+        updateFinalProbMulti();
     }
 
 
@@ -1523,11 +1624,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* BET SLIDER VALUE ADJUST */
-    const sliderTomatoes = document.getElementById('sliderTomatoes');
-    const betValueSelect = document.getElementById('betValueSelect');
-    const multiBetValue = document.getElementById('multiBetValue');
-
-    // Actualizar el contenido del span con el valor inicial del control deslizante
     betValueSelect.textContent = sliderTomatoes.value;
 
     // Añadir un evento 'input' para actualizar el span cuando el usuario mueva el control deslizante
@@ -1542,10 +1638,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* sliderTomatoesContainer WIDTH ADJUST */
-    const betValueDB = document.getElementById('betValueDB');
-    const betContainer = document.querySelector('.betContainer');
-
-    // Calcular los anchos y asignarlos a las variables CSS
     function updateWidths() {
         const selectWidth = betValueSelect.offsetWidth;
         const dbWidth = betValueDB.offsetWidth;
@@ -1633,9 +1725,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* STATS WIDTH ADJUST */
     let arrowState = false;
-    const statsContainer = document.querySelector('.statsContainer');
-    const statsTittleContainer = document.querySelector('.statsTittleContainer');
-    const blank = document.querySelector('.blank');
 
     function handleStatsWidth(isFromListener = false) {
         const selectWidthStats = getComputedStyle(document.documentElement).getPropertyValue('--betValueSelect-width');

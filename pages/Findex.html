@@ -39,9 +39,11 @@
     </div>
 
     <div id="endContainer">
-        <div id="winImg"></div>
-        <div id="infoContainer">
+        <div id="winImg">
+            <img id="winGif" src=""/>
+        </div>
 
+        <div id="infoContainer">
             <div id="informationContainer">
                 <div class="rewardsTittleContainer">
                     <img class="rewardsTittleImg night" src="../img/info.png"/>
@@ -136,7 +138,16 @@
         <button id="nextButton">Next</button>
     </div>
 
-    <div id="startMatchContainer">
+    <div id="startMatchContainerImg" class="">
+        <img id="bonsai" src="../img/fruitNinja/bonsai.png"/>
+        <div id="startMatchContainerImgBlank"></div>
+        <div id="samuraiContainer">
+            <div id="samuraiBlank"></div>
+            <img id="samurai" src="../img/fruitNinja/samurai.png"/>
+        </div>
+    </div>
+
+    <div id="startMatchContainer" class="">
         <div class="betContainer perspCont">
             <label style="margin-top: -2px;" for="sliderTomatoes">Bet:</label>
             <div class="betRangeContainer">
@@ -208,40 +219,47 @@
                 <img class="item" src="../img/fruitNinja/tomatoFull.png"/>
                 <div class="itemName">Tomato</div>
                 <div class="itemPercentage"></div>
-                <div class="itemMulti">
-                    <div class="x">x </div>
-                    <div class="multiN">1.2</div>
-                </div>
+                <div class="multiN multiNTomato"></div>
+                <div class="multiF multiFTomato"></div>
             </div>
             <div class="statRow">
                 <img class="item" src="../img/fruitNinja/tomatoGold.png"/>
                 <div class="itemName">Tomato gold</div>
                 <div class="itemPercentage"></div>
+                <div class="multiN multiNTomatoGold"></div>
+                <div class="multiF multiFTomatoGold"></div>
             </div>
             <div class="statRow">
                 <img class="item" src="../img/fruitNinja/bomb.png"/>
                 <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
                 <div class="itemName">Bomb</div>
                 <div class="itemPercentage"></div>
+                <div class="multiN multiNBomb"></div>
+                <div class="multiF multiFBomb"></div>
             </div>
             <div class="statRow">
                 <img class="item" src="../img/fruitNinja/bombCammo.png"/>
                 <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
-
                 <div class="itemName">Cammo bomb</div>
                 <div class="itemPercentage"></div>
+                <div class="multiN multiNCammoBomb"></div>
+                <div class="multiF multiFCammoBomb"></div>
             </div>
             <div class="statRow">
                 <img class="item" src="../img/fruitNinja/bombCammoGold.png"/>
                 <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
                 <div class="itemName">Cammo gold bomb</div>
                 <div class="itemPercentage"></div>
+                <div class="multiN multiNCammoGoldBomb"></div>
+                <div class="multiF multiFCammoGoldBomb"></div>
             </div>
             <div class="statRow">
                 <img class="item" src="../img/fruitNinja/goldCC.png"/>
                 <img class="item itemHalo" src="../img/fruitNinja/halo.gif"/>
                 <div class="itemName">Gold CC</div>
                 <div class="itemPercentage"></div>
+                <div class="multiN">-</div>
+                <div class="multiF">-</div>
             </div>
         </div>
 
