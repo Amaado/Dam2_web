@@ -310,18 +310,18 @@ function throwObject() {
         } else if (random < (cumulative += probabilities.goldCC)) {
             selectedObject = spawnObject(good_objects, 'goldCC');
         }
-        /*
+        
         console.log(`----------------------------------`);
         console.log(`----------------------------------`);
         console.log(`Objeto lanzado: ${selectedObject.key}`);
         console.log('Probabilidades actuales:');
         console.log(`Tomato: ${(probabilities.tomato / totalProbability * 100).toFixed(2)}%`);
+        console.log(`TomatoGold: ${(probabilities.tomatoGold / totalProbability * 100).toFixed(2)}%`);
         console.log(`Bomb: ${(probabilities.bomb / totalProbability * 100).toFixed(2)}%`);
         console.log(`BombCammo: ${(dynamicStates.bombCammoChance / totalProbability * 100).toFixed(2)}%`);
-        console.log(`TomatoGold: ${(probabilities.tomatoGold / totalProbability * 100).toFixed(2)}%`);
         console.log(`BombGold: ${(dynamicStates.bombGoldChance / totalProbability * 100).toFixed(2)}%`);
         console.log(`GoldCC: ${(probabilities.goldCC / totalProbability * 100).toFixed(2)}%`);
-        */
+        /**/
         if (selectedObject) {
             throwRandomObject(selectedObject);
         }
@@ -814,6 +814,28 @@ function startGame(){
     Object.keys(objScreen).forEach(key => {
         objHistory[key] = 0;
     });
+
+    // Asumiendo que el orden en el HTML de las .multiF es:
+    // 1) tomato
+    // 2) tomatoGold
+    // 3) bomb
+    // 4) bombCammo
+    // 5) bombCammoGold
+    // 6) goldCC
+    const probKeys = ["tomato", "tomatoGold", "bomb", "bombCammo", "bombGold", "goldCC"];
+    
+    // Selecciona las 6 celdas .multiF en su orden
+    const multiFElements = document.querySelectorAll(".multiF");
+    
+    // Recorre cada .multiF y asigna a probabilities
+    multiFElements.forEach((elem, index) => {
+        const finalRateText = elem.textContent.replace("%", "").trim();
+        const finalRate = parseFloat(finalRateText) || 0; // por si está vacío
+        probabilities[probKeys[index]] = finalRate;       // Ej: probabilities["tomato"] = 44.64
+    });
+
+    // A partir de aquí, probabilities ya está actualizado 
+    // con los valores que aparecen en multiF
 }
 
 function render() {
@@ -1525,51 +1547,86 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateFinalProbMulti() {
-        // 1) Obtener el valor del multiplicador como número flotante
-        const thumbValue = parseFloat(thumbMulti.textContent);
+        // 1) Obtener multiplicador
+        const thumbValue = parseFloat(thumbMulti.textContent) || 1;
       
         // 2) Seleccionar todas las filas de estadísticas
         const statRows = document.querySelectorAll(".statRow");
       
+        // Array para guardar la info intermedia de cada fila
+        let rowData = [];
+      
+        // ---------- PRIMERA PASADA: calcular "newRate" ----------
         statRows.forEach(row => {
-          // 3) Obtener elementos de cada columna
           const itemNameEl = row.querySelector(".itemName");
           const itemPercentageEl = row.querySelector(".itemPercentage");
           const multiNEl = row.querySelector(".multiN");
           const multiFEl = row.querySelector(".multiF");
       
-          // Si no existen estos elementos, no hacemos nada
+          // Comprobamos que existan
           if (!itemNameEl || !itemPercentageEl || !multiNEl || !multiFEl) return;
       
-          // 4) Leer el texto del nombre y el porcentaje
           const itemName = itemNameEl.textContent.trim().toLowerCase();
+          // Ej. "44.64%" => quitar símbolo para parsear
           const percentageText = itemPercentageEl.textContent.replace("%", "").trim();
-          const percentageNum = parseFloat(percentageText) || 0; // Evita NaN
+          const baseRate = parseFloat(percentageText) || 0;
       
-          // 5) Verificar si el checkbox está activado
+          // Por defecto, la probabilidad modificada es la misma
+          let newRate = baseRate;
+          let multiLabel = "-";
+      
           if (checkboxSwitch.checked) {
-            // Modo "loco" => aplica solo a items con 'bomb'
+            // "loco" => multiplicador SOLO en "bomb"
             if (itemName.includes("bomb")) {
-              multiNEl.textContent = "x" + thumbValue; // Agregar "x" delante
-              const finalRate = percentageNum * thumbValue;
-              multiFEl.textContent = finalRate.toFixed(2) + "%"; // Agregar "%" al final
+              newRate = baseRate * thumbValue;
+              // Mostrar siempre con 2 decimales => "x1.00"
+              multiLabel = "x" + thumbValue.toFixed(2);
             } else {
-              multiNEl.textContent = "-";
-              multiFEl.textContent = "-";
+              multiLabel = "-";
             }
           } else {
-            // Modo "normal" => aplica solo a items con 'tomato'
+            // "normal" => multiplicador SOLO en "tomato"
             if (itemName.includes("tomato")) {
-              multiNEl.textContent = "x" + thumbValue;
-              const finalRate = percentageNum * thumbValue;
-              multiFEl.textContent = finalRate.toFixed(2) + "%";
+              newRate = baseRate * thumbValue;
+              multiLabel = "x" + thumbValue.toFixed(2);
             } else {
-              multiNEl.textContent = "-";
-              multiFEl.textContent = "-";
+              multiLabel = "-";
             }
           }
+      
+          // Guardamos todo en rowData para la segunda pasada
+          rowData.push({
+            row,
+            multiNEl,
+            multiFEl,
+            newRate,
+            multiLabel // Para enseñar luego en la columna multiN
+          });
         });
-    }
+      
+        // Calcular la suma de todas las newRate
+        let totalRate = 0;
+        rowData.forEach(item => {
+          totalRate += item.newRate;
+        });
+      
+        // Evitar divisiones por cero (si totalRate = 0, ninguna prob > 0)
+        if (totalRate === 0) {
+          totalRate = 1; // Evitar NaN; o bien deja todo en 0%
+        }
+      
+        // ---------- SEGUNDA PASADA: normalizar a 100% ----------
+        rowData.forEach(item => {
+          const { multiNEl, multiFEl, newRate, multiLabel } = item;
+          // Normalizar
+          const finalProb = (newRate / totalRate) * 100;
+      
+          // Actualizar celdas
+          multiNEl.textContent = multiLabel;                  // x1.5 o -
+          multiFEl.textContent = finalProb.toFixed(2) + "%";  // 0.00% ... 100.00%
+        });
+      }
+      
       
 
     setTimeout(() => {
