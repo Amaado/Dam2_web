@@ -60,6 +60,11 @@ img {
     flex-direction: row;
     gap: 5px;
     z-index: 3;
+    transition: all 1s ease;
+    opacity: 0;
+}
+#mistakerContainer.active{
+    opacity: 1;
 }
 #mistakerContainer > div{
     display: flex;
@@ -74,18 +79,20 @@ img {
 .mistakeImg{
     position: absolute;
     display: none;
-    transition: all 1s ease;
+    transition: all 1s ease, filter 1.5s ease;
 
     width: 500px;
     height: auto;
     right: calc(50vw - 250px);
     top: calc(50vh - 250px);
     opacity: 0;
+    filter: drop-shadow(10px 10px 20px black);
 }
 .mistakeImg.active{
     width: 60px;
     height: auto;
     opacity: 1;
+    filter: drop-shadow(0px 0px 0px black);
 }
 .mistake1.mistakeImg.active{
     right: 130px;
@@ -112,7 +119,6 @@ img {
     transform: translate(-50%, -50%); /* Centra con precisión */
     width: 700px; /* Adapta el ancho automáticamente al contenido */
     height: 100vh; /* Adapta la altura automáticamente al contenido */
-    background-color: rgba(20, 26, 31, 0.957);
     border-radius: 10px; /* Bordes redondeados opcionales */
     transition: opacity 0.5s ease;
 
@@ -122,7 +128,6 @@ img {
 #winImg{
     width: 120%;
     height: 300px;
-    border: 1px solid #30d96bb2;
 }
 #winGif{
     width: 100%;
@@ -137,18 +142,34 @@ img {
     width: 100%;
     height: 200px;
     margin-bottom: 100px;
-    border: 1px solid #30d96bb2;
+    background-color: rgba(20, 26, 31, 0);
+    border-radius: 10px;
 }
+.borderAnim {
+    border: 2px solid;
+    border-color: #1c2128;
+    -webkit-mask: 
+      conic-gradient(from 180deg at top 8px right 8px, #0000 90deg,#000 0)
+       var(--_i,200%) 0  /200% var(--_i,8px) border-box no-repeat,
+      conic-gradient(at bottom 8px left  8px,  #0000 90deg,#000 0)
+       0   var(--_i,200%)/var(--_i,8px) 200% border-box no-repeat,
+      linear-gradient(#000 0 0) padding-box no-repeat;
+    transition: .5s, -webkit-mask-position .5s .5s;
+  }
+.borderAnim.active {
+    --_i: 100%;
+    border-color: #bfd4e9;
+    transition: .5s, -webkit-mask-size .5s .5s;
+}
+
+
+
+
+
 #informationContainer{
     display: flex;
     flex-direction: column;
     width: 50%;
-    height: 150px;
-}
-#rewardsContainer{
-    display: flex;
-    flex-direction: column;
-    width: 25%;
     height: 150px;
 }
 #historyContainer{
@@ -156,8 +177,16 @@ img {
     flex-direction: column;
     width: 50%;
     height: 150px;
+    margin-right: 30px;
+    margin-left: 20px;
 }
-
+#rewardsContainer{
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    height: 150px;
+    margin-right: 30px;
+}
 
 .rewardsTittleContainer{
     display: flex;
@@ -261,7 +290,10 @@ img {
 }
 .rewardsRowNumber{
     display: flex;
-
+}
+.rewardsRowModo{
+    display: flex;
+    transform: scale(0.7);
 }
 
 
@@ -283,6 +315,11 @@ img {
     text-align: center;
     font-weight: bold;
     font-family: "Roboto";
+    transition: all 0.5s ease;
+    opacity: 0;
+}
+#nextButton.active{
+    opacity: 1;
 }
 
 
@@ -298,6 +335,12 @@ img {
     transform: translate(-50%, -50%);
     width: 100vw;
     height: 100vh;
+    pointer-events: none;
+    transition: all 0.5s ease-in-out, opacity 0.5s ease;
+    opacity: 0;
+}
+#startMatchContainerFull.active{
+    opacity: 1;
 }
 #startMatchContainer {
     display: flex; /* Usar flexbox para centrar internamente */
@@ -332,6 +375,9 @@ img {
 }
 #sliceIt.down{
     transform: translateY(55px);
+}
+#sliceIt.out{
+    transform: translateY(-1800px);
 }
 
 #startMatchContainerImg{
@@ -669,7 +715,7 @@ img {
 /* Estilos generales para el input de tipo range */
 #sliderMulti[type="range"] {
     -webkit-appearance: none; /* Elimina el estilo por defecto en WebKit */
-    width: 100px; /* Ancho completo del contenedor padre */
+    width: 90px; /* Ancho completo del contenedor padre */
     height: 8px; /* Altura de la pista */
     background: #50ad6c; /* Color de la pista */
     border-radius: 5px; /* Bordes redondeados para la pista */
@@ -792,7 +838,9 @@ img {
 .modoLocoR{
     width: 25px;
     height: auto;
-    margin-left: 13px;
+    margin-right: 5px;
+    margin-left: -35px;
+    margin-top: -15px;
     transition: all 0.5s ease;
 }
 .modoLocoDefaultR.night{
@@ -806,7 +854,7 @@ img {
     font-family: 'kemco';
     font-size: 24px;
     letter-spacing: -1px;
-    margin-top: 3px;
+    margin-top: 1px;
     transition: all 0.5s ease;
     text-align: center;
     white-space: nowrap; /* Mantiene todo el contenido en una sola línea */
@@ -972,6 +1020,10 @@ img {
     font-weight: bold;
     width: 73px;
 }
+.itemMultiHead{
+    font-size: 14px;
+    font-weight: bold;
+}
 .itemPicLogo{
     width: auto;
     height: 18px;
@@ -981,11 +1033,26 @@ img {
     filter: brightness(0) saturate(100%) invert(86%) sepia(4%) saturate(2668%) hue-rotate(185deg) brightness(104%) contrast(83%);
 }
 
-
+.flechaDouble{
+    width: auto;
+    height: 13px;
+    z-index: 1;
+    margin-top: 4px;
+    margin-left: 5px;
+    margin-right: -2px;
+}
+.flechaDoubleMl{
+    margin-left: 15px;
+}
+.flechaDouble.down{
+    transform: rotateZ(180deg);
+}
 .item{
     width: auto;
     height: 18px;
     z-index: 1;
+}
+.itemGap{
     margin-left: 15px;
 }
 .itemName{
@@ -1018,6 +1085,7 @@ img {
     font-size: 13px;
     font-weight: normal;
     width: 50px;
+    margin-left: 15px;
 }
 .multiF{
     display: flex;
@@ -1045,5 +1113,6 @@ img {
     text-align: center;
     font-weight: bold;
     font-family: "Roboto";
+    pointer-events: all;
     transition: all 0.5s ease-in-out;
 }

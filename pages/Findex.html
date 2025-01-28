@@ -6,7 +6,7 @@
     <title>Tomato Cut</title>
     <link rel="stylesheet" href="Fstyle.css" />
 </head>
-<body>
+<body draggable="none" style="user-select: none;">
     <div id="game"></div>
     <div id="matchInfoContainer">
         <div>
@@ -43,51 +43,35 @@
             <img id="winGif" src=""/>
         </div>
 
-        <div id="infoContainer">
+        <div id="infoContainer" class="borderAnim">
             <div id="informationContainer">
                 <div class="rewardsTittleContainer">
                     <img class="rewardsTittleImg night" src="../img/info.png"/>
-                    <div class="rewardsTittle">Information:</div>
+                    <div class="rewardsTittle">Información:</div>
                     <div class="rewardsTittleBlank"></div>
                 </div>
                 <div class="rewardsItems">
                     <div class="rewardsRow">
-                        <div class="rewardsRowLabel">Original Bet:</div>
+                        <div class="rewardsRowLabel">Apuesta original:</div>
+                        <img class="flechaDouble" src="../img/dobleFlecha.png"/>
                         <img class="item" src="../img/fruitNinja/tomatoFull.png"/>
                         <div class="rewardsRowNumber rewardsBet">10</div>
                     </div>
                     <div class="rewardsRow">
-                        <div class="rewardsRowLabel">Mode:</div>
-                        <div class="rewardsRowNumber">
+                        <div class="rewardsRowLabel">Modo:</div>
+                        <div class="rewardsRowModo">
                             <div class="modoLocoContainerR">
                                 <img class="modoLocoR modoLocoDefaultR night" src="../img/fruitNinja/modoLoco.svg"/>
                                 <img class="modoLocoR modoLocoActiveR" src="../img/fruitNinja/modoLocoActive.svg"/>
                             </div>
-                            <div class="multiModeLabelR">Normal Mode</div>
+                            <div class="multiModeLabelR">Modo Normal</div>
                         </div>
                     </div>
                     <div class="rewardsRow">
-                        <div class="rewardsRowLabel">Mode costs:</div>
+                        <div class="rewardsRowLabel">Coste del modo:</div>
+                        <img class="flechaDouble" src="../img/dobleFlecha.png"/>
                         <img class="item" src="../img/fruitNinja/coin.png"/>
                         <div class="rewardsRowNumber rewardsModeCosts"> 10</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="rewardsContainer">
-                <div class="rewardsTittleContainer">
-                    <img class="rewardsTittleImg night" src="../img/rewards.png"/>
-                    <div class="rewardsTittle">Rewards:</div>
-                    <div class="rewardsTittleBlank"></div>
-                </div>
-                <div class="rewardsItems">
-                    <div class="rewardsRow">
-                        <img class="item" src="../img/fruitNinja/tomatoFull.png"/>
-                        <div class="rewardsRowNumber rewardsTomatos">10</div>
-                    </div>
-                    <div class="rewardsRow">
-                        <img class="item" src="../img/fruitNinja/coin.png"/>
-                        <div class="rewardsRowNumber rewardsCoins">10</div>
                     </div>
                 </div>
             </div>
@@ -95,47 +79,67 @@
             <div id="historyContainer">
                 <div class="rewardsTittleContainer">
                     <img class="rewardsTittleImg night" src="../img/history.png"/>
-                    <div class="rewardsTittle">Spawn History:</div>
+                    <div class="rewardsTittle">Historial de aparición:</div>
                     <div class="rewardsTittleBlank"></div>
                 </div>
                 <div class="rewardsItems">
                     <div class="rewardsColumn">
                         <div class="rewardsRow">
-                            <img class="item" src="../img/fruitNinja/tomatoFull.png"/>
+                            <img class="item itemGap" src="../img/fruitNinja/tomatoFull.png"/>
                             <div class="rewardsRowNumber rewardsBet">10</div>
                         </div>
                         <div class="rewardsRow">
-                            <img class="item" src="../img/fruitNinja/tomatoGold.png"/>
+                            <img class="item itemGap" src="../img/fruitNinja/tomatoGold.png"/>
                             <div class="rewardsRowNumber rewardsTomatos">10</div>
                         </div>
                         <div class="rewardsRow">
-                            <img class="item" src="../img/fruitNinja/goldCC.png"/>
-                            <img class="item itemHalo" src="../img/fruitNinja/halo.gif"/>
+                            <img class="item itemGap" src="../img/fruitNinja/goldCC.png"/>
+                            <img class="item itemGap itemHalo" src="../img/fruitNinja/halo.gif"/>
                             <div class="rewardsRowNumber rewardsTomatos">10</div>
                         </div>
                     </div>
 
                     <div class="rewardsColumn">
                         <div class="rewardsRow">
-                            <img class="item" src="../img/fruitNinja/bomb.png"/>
-                            <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
+                            <img class="item itemGap" src="../img/fruitNinja/bomb.png"/>
+                            <img class="item itemGap itemSpark" src="../img/fruitNinja/spark.gif"/>
                             <div class="rewardsRowNumber rewardsTomatos">10</div>
                         </div>
                         <div class="rewardsRow">
-                            <img class="item" src="../img/fruitNinja/bombCammo.png"/>
-                            <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
+                            <img class="item itemGap" src="../img/fruitNinja/bombCammo.png"/>
+                            <img class="item itemGap itemSpark" src="../img/fruitNinja/spark.gif"/>
                             <div class="rewardsRowNumber rewardsTomatos">10</div>
                         </div>
                         <div class="rewardsRow">
-                            <img class="item" src="../img/fruitNinja/bombCammoGold.png"/>
-                            <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
+                            <img class="item itemGap" src="../img/fruitNinja/bombCammoGold.png"/>
+                            <img class="item itemGap itemSpark" src="../img/fruitNinja/spark.gif"/>
                             <div class="rewardsRowNumber rewardsTomatos">10</div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div id="rewardsContainer">
+                <div class="rewardsTittleContainer">
+                    <img class="rewardsTittleImg night" src="../img/rewards.png"/>
+                    <div class="rewardsTittle">Recompensas:</div>
+                    <div class="rewardsTittleBlank"></div>
+                </div>
+                <div class="rewardsItems">
+                    <div class="rewardsRow">
+                        <img class="flechaDouble flechaDoubleMl" src="../img/dobleFlecha.png"/>
+                        <img class="item" src="../img/fruitNinja/tomatoFull.png"/>
+                        <div class="rewardsRowNumber rewardsTomatos">10</div>
+                    </div>
+                    <div class="rewardsRow">
+                        <img class="flechaDouble flechaDoubleMl down" src="../img/dobleFlecha.png"/>
+                        <img class="item" src="../img/fruitNinja/coin.png"/>
+                        <div class="rewardsRowNumber rewardsCoins">10</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button id="nextButton">Next</button>
+        <button id="nextButton">Siguiente</button>
     </div>
 
     <div id="startMatchContainerImg" class="">
@@ -147,13 +151,13 @@
         </div>
     </div>
 
-    <div id="startMatchContainerFull">
-        <img id="sliceIt" class="down" src="../img/fruitNinja/sliceIt.png"/>
+    <div id="startMatchContainerFull" class="active">
+        <img id="sliceIt" class="" src="../img/fruitNinja/sliceIt.png"/>
         <div id="startMatchContainer" class="">
             <div class="betContainer perspCont">
                 <label style="margin-top: -2px;" for="sliderTomatoes">Apuesta:</label>
                 <div class="betRangeContainer">
-                    <input type="range" id="sliderTomatoes" min="1" max="100" value="10">
+                    <input type="range" id="sliderTomatoes" min="1" max="100" value="1">
                     <div class="betValueContainer">
                         <span id="betCosts">Cuesta</span>
                         <span id="betValueSelect"></span>
@@ -165,7 +169,7 @@
             </div>
 
             <div class="multiContainer perspCont">
-                <label style="margin-top: -2px;" for="sliderMulti">Multiplicador:</label>
+                <label style="margin-top: -2px; margin-right: 10px;" for="sliderMulti">Multiplicador:</label>
                 <div class="thumbMultiCont">
                     <div class="thumbX">x</div>
                     <div class="thumbMulti">1.25</div>
@@ -205,67 +209,67 @@
 
             <div class="statsContainer">
                 <div class="statsTittleContainer">
-                    <div class="statsTittle">Stats</div>
+                    <div class="statsTittle">Estadísticas</div>
                     <img class="flecha night" src="../img/flecha.png"/>
                     <div class="blank"></div>
                 </div>
                 <div class="statRow statRowFirst">
                     <img class="itemPicLogo night" src="../img/photos.png"/>
-                    <div class="itemNameHead">Name...</div>
-                    <div class="itemPercentageHead">Spawn rate</div>
-                    <div class="itemMultiHead">Multi</div>
-                    <div class="itemMultiHead">Final rate</div>
+                    <div class="itemNameHead">Nombre...</div>
+                    <div class="itemPercentageHead">Probabilidad</div>
+                    <div class="itemMultiHead" style="margin-left: 15px;">Multi</div>
+                    <div class="itemMultiHead" style="margin-left: 17px;">Probabilidad Final</div>
                 </div>
                 <div class="br" style="margin-top: 0px;"></div>
                 <div class="statRow">
-                    <img class="item" src="../img/fruitNinja/tomatoFull.png"/>
-                    <div class="itemName">Tomato</div>
+                    <img class="item itemGap" src="../img/fruitNinja/tomatoFull.png"/>
+                    <div class="itemName">Tomate</div>
                     <div class="itemPercentage"></div>
                     <div class="multiN multiNTomato"></div>
                     <div class="multiF multiFTomato"></div>
                 </div>
                 <div class="statRow">
-                    <img class="item" src="../img/fruitNinja/tomatoGold.png"/>
-                    <div class="itemName">Tomato gold</div>
+                    <img class="item itemGap" src="../img/fruitNinja/tomatoGold.png"/>
+                    <div class="itemName">Tomate dorado</div>
                     <div class="itemPercentage"></div>
                     <div class="multiN multiNTomatoGold"></div>
                     <div class="multiF multiFTomatoGold"></div>
                 </div>
                 <div class="statRow">
-                    <img class="item" src="../img/fruitNinja/bomb.png"/>
-                    <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
-                    <div class="itemName">Bomb</div>
+                    <img class="item itemGap" src="../img/fruitNinja/bomb.png"/>
+                    <img class="item itemGap itemSpark" src="../img/fruitNinja/spark.gif"/>
+                    <div class="itemName">Bomba</div>
                     <div class="itemPercentage"></div>
                     <div class="multiN multiNBomb"></div>
                     <div class="multiF multiFBomb"></div>
                 </div>
                 <div class="statRow">
-                    <img class="item" src="../img/fruitNinja/bombCammo.png"/>
-                    <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
-                    <div class="itemName">Cammo bomb</div>
+                    <img class="item itemGap" src="../img/fruitNinja/bombCammo.png"/>
+                    <img class="item itemGap itemSpark" src="../img/fruitNinja/spark.gif"/>
+                    <div class="itemName">Bomba camuflada</div>
                     <div class="itemPercentage"></div>
                     <div class="multiN multiNCammoBomb"></div>
                     <div class="multiF multiFCammoBomb"></div>
                 </div>
                 <div class="statRow">
-                    <img class="item" src="../img/fruitNinja/bombCammoGold.png"/>
-                    <img class="item itemSpark" src="../img/fruitNinja/spark.gif"/>
-                    <div class="itemName">Cammo gold bomb</div>
+                    <img class="item itemGap" src="../img/fruitNinja/bombCammoGold.png"/>
+                    <img class="item itemGap itemSpark" src="../img/fruitNinja/spark.gif"/>
+                    <div class="itemName">Bomba camuflada dorada</div>
                     <div class="itemPercentage"></div>
                     <div class="multiN multiNCammoGoldBomb"></div>
                     <div class="multiF multiFCammoGoldBomb"></div>
                 </div>
                 <div class="statRow">
-                    <img class="item" src="../img/fruitNinja/goldCC.png"/>
-                    <img class="item itemHalo" src="../img/fruitNinja/halo.gif"/>
-                    <div class="itemName">Gold CC</div>
+                    <img class="item itemGap" src="../img/fruitNinja/goldCC.png"/>
+                    <img class="item itemGap itemHalo" src="../img/fruitNinja/halo.gif"/>
+                    <div class="itemName">CC Dorado</div>
                     <div class="itemPercentage"></div>
                     <div class="multiN">-</div>
                     <div class="multiF">-</div>
                 </div>
             </div>
 
-            <button id="startButton">Start Game</button>
+            <button id="startButton">Empezar Partida</button>
         </div>
     </div>
     <!--<script src="//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.6/phaser.min.js"></script>-->

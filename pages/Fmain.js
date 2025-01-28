@@ -5,6 +5,7 @@ var game; // Declarar la instancia del juego
 var gameStarted = false; // Bandera para verificar si el juego está en progreso
 let gameActive = false;
 const startMatchContainer = document.getElementById("startMatchContainer");
+const startMatchContainerFull = document.getElementById("startMatchContainerFull");
 const startMatchContainerImg = document.getElementById("startMatchContainerImg");
 const endContainer = document.getElementById("endContainer");
 const startButton = document.getElementById("startButton");
@@ -36,8 +37,14 @@ const betContainer = document.querySelector('.betContainer');
 const statsContainer = document.querySelector('.statsContainer');
 const statsTittleContainer = document.querySelector('.statsTittleContainer');
 const blank = document.querySelector('.blank');
+const informationContainer = document.getElementById("informationContainer");
+const rewardsContainer = document.getElementById("rewardsContainer");
+const historyContainer = document.getElementById("historyContainer");
+const infoContainer = document.getElementById("infoContainer");
 
+const mistakeImgs = document.querySelectorAll(".mistakeImg");
 let tomatosMistakedVar = 0;
+let action;
 
 
 function preload() {
@@ -243,7 +250,8 @@ function handleMistakes(){
             mistake3.classList.add("active");
         }, 100);
         stopGame();
-        showMenu(endContainer, "lose");
+        action="lose";
+        showMenu(endContainer);
     }else{
 
     }
@@ -314,7 +322,11 @@ function throwObject() {
         
         console.log(`----------------------------------`);
         console.log(`----------------------------------`);
-        console.log(`Objeto lanzado: ${selectedObject.key}`);
+        if (selectedObject && selectedObject.key) {
+            console.log(`Objeto lanzado: ${selectedObject.key}`);
+        } else {
+            console.log('selectedObject es nulo o no tiene la propiedad "key".');
+        }
         console.log('Probabilidades actuales:');
         console.log(`Tomato: ${(probabilities.tomato / totalProbability * 100).toFixed(2)}%`);
         console.log(`TomatoGold: ${(probabilities.tomatoGold / totalProbability * 100).toFixed(2)}%`);
@@ -490,7 +502,8 @@ function throwRandomObject(obj) {
     if(tomatosCuted.textContent == tomatosBet.textContent && gameActive){
         /*console.log("Dentro del if");*/ 
         stopGame();
-        showMenu(endContainer, "win");
+        action = "win";
+        showMenu(endContainer);
         return;
     }
 
@@ -685,7 +698,8 @@ function checkIntersects(fruit) {
         if (belongsToGroup(fruit, bad_objects)&&gameActive) {
             killFruit(fruit);
             stopGame();
-            showMenu(endContainer, "lose");
+            action = "lose";
+            showMenu(endContainer);
 
         } else if (belongsToGroup(fruit, good_objects)&&gameActive) {
             killFruit(fruit);
@@ -698,13 +712,13 @@ function stopGame() {
     gameActive = false; // Detener el lanzamiento de frutas
 }
 
-async function showMenu(menuPass, action) {
+async function showMenu(menuPass) {
     // Reinicia la puntuación y la visibilidad del contenedor del botón
     /*var highscore = Math.max(score, localStorage.getItem("highscore") || 0);
     localStorage.setItem("highscore", highscore);*/
     let menu;
     if(menuPass.id == "startMatchContainer"){
-        menu = startMatchContainer;
+        menu = startMatchContainerFull;
     }else if(menuPass.id == "endContainer"){
         menu = endContainer;
     }else{
@@ -720,19 +734,19 @@ async function showMenu(menuPass, action) {
 
     if(menuPass.id == "endContainer"){
         setTimeout(async () => {
-            const informationContainer = document.getElementById("informationContainer");
-            const rewardsContainer = document.getElementById("rewardsContainer");
-            const historyContainer = document.getElementById("historyContainer");
-
-            for (let index = 0; index < 3; index++) {
+            for (let index = 0; index < 4; index++) {
                 let container;
 
                 if (index === 0) {
                     container = informationContainer;
                 } else if (index === 1) {
-                    container = rewardsContainer;
-                } else if (index === 2) {
                     container = historyContainer;
+                } else if (index === 2) {
+                    container = rewardsContainer;
+                } else if (index === 3) {
+                    infoContainer.classList.add("active");
+                    nextButton.classList.add("active");
+                    return;
                 } else {
                     console.error("Fallo en showMenu(endContainer)");
                     return;
@@ -756,23 +770,24 @@ async function showMenu(menuPass, action) {
                     rewardsTittleImg.classList.add("active");
                 });
             }
-        }, 1000);
+        }, 1200);
 
-        startMatchContainer.classList.remove("active");
-        startMatchContainerImg.classList.remove("active");
 
         if(action == "win"){
-            winGif.src = "../img/fruitNinja/winner.gif";
+            winGif.src = "../img/fruitNinja/winner.gif" + "?t=" + new Date().getTime();;
         }else if(action == "lose"){
-            winGif.src = "../img/fruitNinja/foul.gif";
+            winGif.src = "../img/fruitNinja/foul.gif" + "?t=" + new Date().getTime();;
         }
     }
 
 
     if(menuPass.id == "startMatchContainer"){
-        startMatchContainer.classList.add("active");
-        startMatchContainerImg.classList.add("active");
-
+        await delay(0); //Reverse delay
+        setTimeout(() => {
+            startMatchContainerImg.classList.add("active");
+            startMatchContainer.classList.add("active");
+            sliceIt.classList.remove("out");
+        }, 500);
     }
 }
 
@@ -780,13 +795,63 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function hideMenu(menuPass) {
+async function hideMenu(menuPass) {
     let menu;
     if(menuPass.id == "startMatchContainer"){
-        menu = startMatchContainer;
+        menu = startMatchContainerFull;
         startMatchContainerImg.classList.remove("active");
+        startMatchContainer.classList.remove("active");
+        sliceIt.classList.add("out");
+        mistakerContainer.classList.add("active");
+
+        for (let index = 0; index < 3; index++) {
+            let container;
+
+            if (index === 0) {
+                container = informationContainer;
+            } else if (index === 1) {
+                container = historyContainer;
+            } else if (index === 2) {
+                container = rewardsContainer;
+            } else {
+                console.error("Fallo en hideMenu(startMatchContainer)");
+                return;
+            }
+
+            let rewardsRows = container.querySelectorAll(".rewardsRow");
+            let rewardsTittles = container.querySelectorAll(".rewardsTittle");
+            let rewardsTittleBlanks = container.querySelectorAll(".rewardsTittleBlank");
+            let rewardsTittleImgs = container.querySelectorAll(".rewardsTittleImg");
+            rewardsRows.forEach(rewardsRow => {
+                rewardsRow.classList.remove("active");
+            });
+            rewardsTittles.forEach(rewardsTittle => {
+                rewardsTittle.classList.remove("active");
+            });
+            rewardsTittleBlanks.forEach(rewardsTittleBlank => {
+                rewardsTittleBlank.classList.remove("active");
+            });
+            rewardsTittleImgs.forEach(rewardsTittleImg => {
+                rewardsTittleImg.classList.remove("active");
+            });
+        }
+
     }else if(menuPass.id == "endContainer"){
+        if(action == "win"){
+            winGif.src = "../img/fruitNinja/winner_reverse.gif" + "?t=" + new Date().getTime();;
+        }else if(action == "lose"){
+            winGif.src = "../img/fruitNinja/foul_reverse.gif" + "?t=" + new Date().getTime();;
+        }
+        await delay(700);//Reverse delay
         menu = endContainer;
+        mistakerContainer.style.transition = "";
+        mistakerContainer.classList.remove("active");
+        mistakerContainer.style.transition = "all 1s ease";
+        setTimeout(() => {
+            mistakeImgs.forEach(mistakeImg => {
+                mistakeImg.classList.remove("active");
+            });
+        }, 1000);
     }else{
         console.err("Error en hideMenu()");
     }
@@ -804,6 +869,7 @@ function startGame(){
     scoreCoins = 0;
 
     tomatosMistakedVar = 0;
+    action = "";
 
     tomatosBet.textContent = "";
     tomatosCuted.textContent = "";
@@ -816,13 +882,11 @@ function startGame(){
         objHistory[key] = 0;
     });
 
+    mistakerContainer.classList.add("active");
+    infoContainer.classList.remove("active");
+    nextButton.classList.remove("active");
+
     // Asumiendo que el orden en el HTML de las .multiF es:
-    // 1) tomato
-    // 2) tomatoGold
-    // 3) bomb
-    // 4) bombCammo
-    // 5) bombCammoGold
-    // 6) goldCC
     const probKeys = ["tomato", "tomatoGold", "bomb", "bombCammo", "bombGold", "goldCC"];
     
     // Selecciona las 6 celdas .multiF en su orden
@@ -1022,7 +1086,7 @@ function addShadowToParticleCoin(particle, fruit, shadowAlpha = 0.2, maxOffset =
         shadow.animations.add('spin', shadowFrames);
         shadow.animations.play('spin', currentAnim.frameRate, true, startFrame);
 
-        console.log(`Sombra creada con frame inicial: ${startFrame}, reversa: ${isReversed}`);
+        //console.log(`Sombra creada con frame inicial: ${startFrame}, reversa: ${isReversed}`);
     }
 
     // Ajustar la escala para goldCC
@@ -1232,27 +1296,30 @@ function killFruit(fruit) {
                 delete fruit.halo; // Eliminar la referencia para liberar memoria
             }
         
-            const resplandor = game.add.sprite(fruit.x, fruit.y, 'halo'); // Crea el sprite
-            resplandor.anchor.setTo(0.5, 0.5); // Centra el sprite
+            const resplandor = game.add.sprite(0, 0, 'halo'); // Crear como sprite independiente
+            resplandor.anchor.setTo(0.5, 0.5); // Centrar
             resplandor.scale.setTo(1); // Tamaño inicial
-            resplandor.alpha = 1; // Completamente visible al inicio
-            resplandor.z = -200; // Coloca detrás de otros elementos
-            resplandor.offsetX = 0; // Desplazamiento horizontal
-            resplandor.offsetY = 0; 
+            resplandor.animations.add('spin');
+            resplandor.animations.play('spin', 15, true); // Animación a 15 FPS en bucle
         
-            // Agregar y reproducir la animación
-            resplandor.animations.add('spin'); // Crear la animación con todos los frames del spritesheet
-            resplandor.animations.play('spin', 15, true); // Reproducir a 15 FPS en bucle
+            // Crear el círculo
+            const circle = game.add.sprite(0, 0, 'circle'); // Crear como sprite independiente
+            circle.anchor.setTo(0.5, 0.5); // Centrar
+            circle.scale.setTo(1); // Tamaño inicial
+            circle.animations.add('spin');
+            circle.animations.play('spin', 30, true); // Animación a 30 FPS en bucle
         
-            game.world.sort('z', Phaser.Group.SORT_ASCENDING);
+            // Configurar para que ambos sigan al fruit
+            fruit.update = function () {
+                // Resplandor sigue al fruit
+                resplandor.x = fruit.x;
+                resplandor.y = fruit.y;
         
-            // Guardar la velocidad actual de fruit
-            const fruitVelocity = {
-                x: fruit.body.velocity.x,
-                y: fruit.body.velocity.y
+                // Circle sigue al fruit
+                circle.x = fruit.x;
+                circle.y = fruit.y;
             };
-        
-            // Animación de escala (agrandamiento)
+            
             const scaleTween = game.add.tween(resplandor.scale).to(
                 { x: 2, y: 2 }, // Tamaño final
                 600, // Duración de 600ms
@@ -1268,38 +1335,13 @@ function killFruit(fruit) {
                 true // Inicia automáticamente
             );
         
-            // Actualizar la posición del resplandor según la velocidad original de fruit
-            resplandor.update = function () {
-                resplandor.x += fruitVelocity.x * game.time.physicsElapsed;
-                resplandor.y += fruitVelocity.y * game.time.physicsElapsed;
-            };
-        
-            // Destruir el sprite después de completar ambas animaciones
             fadeTween.onComplete.add(() => {
-                resplandor.destroy(true); // Destruye completamente el sprite
+                resplandor.destroy(); // Destruir completamente el sprite
             });
 
 
 
-
-
-
-
-
-
-            const circle = game.add.sprite(fruit.x, fruit.y, 'circle'); // Crea el sprite
-            circle.anchor.setTo(0.5, 0.5); // Centra el sprite
-            circle.scale.setTo(1); // Tamaño inicial
-            circle.alpha = 1; // Completamente visible al inicio
-            circle.z = -200; // Coloca detrás de otros elementos
-            circle.offsetX = 0; // Desplazamiento horizontal
-            circle.offsetY = 0; 
         
-            // Agregar y reproducir la animación
-            circle.animations.add('spin'); // Crear la animación con todos los frames del spritesheet
-            circle.animations.play('spin', 30, true); // Reproducir a 15 FPS en bucle
-        
-            // Animación de escala (agrandamiento)
             const scaleTweenCircle = game.add.tween(circle.scale).to(
                 { x: 1.75, y: 1.75 }, // Tamaño final
                 1100, // Duración de 600ms
@@ -1315,17 +1357,16 @@ function killFruit(fruit) {
                 true // Inicia automáticamente
             );
         
-            // Actualizar la posición del circle según la velocidad original de fruit
-            circle.update = function () {
-                circle.x += fruitVelocity.x * game.time.physicsElapsed;
-                circle.y += fruitVelocity.y * game.time.physicsElapsed;
-            };
-        
-            // Destruir el sprite después de completar ambas animaciones
             fadeTweenCircle.onComplete.add(() => {
-                circle.destroy(true); // Destruye completamente el sprite
+                circle.destroy(); // Destruir completamente el sprite
             });
+        
+            // Asegurar que el resplandor y el círculo se rendericen en el orden correcto
+            resplandor.z = -1; // Resplandor detrás
+            circle.z = -1; // Circle también detrás
+            game.world.sort('z', Phaser.Group.SORT_ASCENDING); // Ordenar elementos por z-index
         }
+        
         
         
         
@@ -1403,6 +1444,7 @@ function killFruit(fruit) {
         console.log("tomatosCuted.textContent: "+tomatosCuted.textContent);*/
         if(tomatosBet.textContent == tomatosCuted.textContent){
             stopGame();
+            action="win";
             showMenu(endContainer, "win");
             return;
         }
@@ -1498,7 +1540,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const thumbOffset = valuePercent * sliderWidth; // Posición relativa al ancho del slider
     
         // Mover el contenedor para que siga el thumb
-        thumbMultiCont.style.left = `calc(${thumbOffset}px + 100px)`; // Ajustar con un margen opcional
+        thumbMultiCont.style.left = `calc(${thumbOffset}px + 110px)`; // Ajustar con un margen opcional
     }
     
     function formatValue(value) {
@@ -1554,8 +1596,8 @@ document.addEventListener("DOMContentLoaded", function () {
             thumbMultiCont.style.transition = "";
         }, 500);
         multiHelp.classList.remove("active");
-        sliderMulti.style.width = "100px";
-        updateThumbPosition(100);
+        sliderMulti.style.width = "90px";
+        updateThumbPosition(90);
     });
 
     const multiCostsFinal = document.getElementById("multiCostsFinal");
@@ -1602,7 +1644,7 @@ document.addEventListener("DOMContentLoaded", function () {
       
           if (checkboxSwitch.checked) {
             // "loco" => multiplicador SOLO en "bomb"
-            if (itemName.includes("bomb")) {
+            if (itemName.includes("bomba")) {
               newRate = baseRate * thumbValue;
               // Mostrar siempre con 2 decimales => "x1.00"
               multiLabel = "x" + thumbValue.toFixed(2);
@@ -1611,7 +1653,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
           } else {
             // "normal" => multiplicador SOLO en "tomato"
-            if (itemName.includes("tomato")) {
+            if (itemName.includes("tomate")) {
               newRate = baseRate * thumbValue;
               multiLabel = "x" + thumbValue.toFixed(2);
             } else {
@@ -1822,7 +1864,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const statsTitleWidth = statsTitle ? statsTitle.offsetWidth : 0;
         const flechaWidth = flecha ? flecha.offsetWidth : 0;
-        const finalWidthAuto = statsTitleWidth + flechaWidth + 44;
+        const finalWidthAuto = statsTitleWidth + flechaWidth + 108;
 
 
         const blankWidth = finalWidthStats-finalWidthAuto;
