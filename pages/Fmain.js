@@ -41,6 +41,14 @@ const informationContainer = document.getElementById("informationContainer");
 const rewardsContainer = document.getElementById("rewardsContainer");
 const historyContainer = document.getElementById("historyContainer");
 const infoContainer = document.getElementById("infoContainer");
+/*GIF CANVAS */
+let gifUrl = ""; // Cambia esto por la URL de tu GIF
+const canvas = document.getElementById("gifCanvas");
+const ctx = canvas.getContext("2d");
+let frames = [];
+let frameIndex = 0;
+let frameDelay = 0.1;
+let playing = true;
 
 const mistakeImgs = document.querySelectorAll(".mistakeImg");
 let tomatosMistakedVar = 0;
@@ -774,9 +782,11 @@ async function showMenu(menuPass) {
 
 
         if(action == "win"){
-            winGif.src = "../img/fruitNinja/winner.gif" + "?t=" + new Date().getTime();;
+            gifUrl = "../img/fruitNinja/winner.gif";
+            loadGif(gifUrl);
         }else if(action == "lose"){
-            winGif.src = "../img/fruitNinja/foul.gif" + "?t=" + new Date().getTime();;
+            gifUrl = "../img/fruitNinja/foul.gif";
+            loadGif(gifUrl);
         }
     }
 
@@ -790,6 +800,41 @@ async function showMenu(menuPass) {
         }, 500);
     }
 }
+
+
+
+// Cargar el GIF y extraer los frames
+function loadGif(url) {
+    const img = new Image();
+    img.src = url;
+    img.crossOrigin = "Anonymous";
+    img.onload = () => {
+        const tempCanvas = document.createElement("canvas");
+        const tempCtx = tempCanvas.getContext("2d");
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+        tempCanvas.width = img.width;
+        tempCanvas.height = img.height;
+
+        const frameCount = 50; // Número de frames a capturar
+        for (let i = 0; i < frameCount; i++) {
+            tempCtx.clearRect(0, 0, img.width, img.height);
+            tempCtx.drawImage(img, 0, 0);
+            frames.push(tempCtx.getImageData(0, 0, img.width, img.height));
+        }
+        playGif();
+    };
+}
+
+// Reproducir el GIF en el Canvas
+function playGif() {
+    if (!playing) return;
+    ctx.putImageData(frames[frameIndex], 0, 0);
+    frameIndex = (frameIndex + 1) % frames.length;
+    setTimeout(playGif, frameDelay);
+}
+
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -838,9 +883,11 @@ async function hideMenu(menuPass) {
 
     }else if(menuPass.id == "endContainer"){
         if(action == "win"){
-            winGif.src = "../img/fruitNinja/winner_reverse.gif" + "?t=" + new Date().getTime();;
+            gifUrl = "../img/fruitNinja/winner.gif";
+            loadGif(gifUrl);
         }else if(action == "lose"){
-            winGif.src = "../img/fruitNinja/foul_reverse.gif" + "?t=" + new Date().getTime();;
+            gifUrl = "../img/fruitNinja/foul_reverse.gif";
+            loadGif(gifUrl);
         }
         await delay(700);//Reverse delay
         menu = endContainer;
@@ -1501,11 +1548,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if(firstTime == 1){
             document.getElementById("game").innerHTML = '';
             game = new Phaser.Game(w, h, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
-            setTimeout(() => {
-                const canvas = document.querySelector('canvas');
-                const ctx = canvas.getContext('2d', { willReadFrequently: true });
-            }, 100);
-
         }
     });
 
