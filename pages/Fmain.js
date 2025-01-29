@@ -41,19 +41,18 @@ const informationContainer = document.getElementById("informationContainer");
 const rewardsContainer = document.getElementById("rewardsContainer");
 const historyContainer = document.getElementById("historyContainer");
 const infoContainer = document.getElementById("infoContainer");
-/*GIF CANVAS */
-let gifUrl = ""; // Cambia esto por la URL de tu GIF
-const canvas = document.getElementById("gifCanvas");
-const ctx = canvas.getContext("2d");
-let frames = [];
-let frameIndex = 0;
-let frameDelay = 0.1;
-let playing = true;
 
 const mistakeImgs = document.querySelectorAll(".mistakeImg");
+const warningMessageContainer = document.querySelector(".warningMessageContainer");
+const warningMessage = document.querySelector(".warningMessage");
+const warningImg = document.getElementById("warningImg");
 let tomatosMistakedVar = 0;
 let action;
 
+const idLogeado = localStorage.getItem("idLogeado");
+if (!idLogeado || isNaN(parseInt(idLogeado)) || parseInt(idLogeado) === 0) {
+    handleWarningMessage("flex", "Hay un fallo de registro. Prueba a volver a la página principal y loguearte", "red");
+}
 
 function preload() {
     // Carga de imágenes
@@ -782,16 +781,16 @@ async function showMenu(menuPass) {
 
 
         if(action == "win"){
-            gifUrl = "../img/fruitNinja/winner.gif";
-            loadGif(gifUrl);
+            executeAction(action);
         }else if(action == "lose"){
-            gifUrl = "../img/fruitNinja/foul.gif";
-            loadGif(gifUrl);
+            executeAction(action);
         }
     }
 
 
     if(menuPass.id == "startMatchContainer"){
+        actualizarMonedas(idLogeado);
+        actualizarTomatos(idLogeado);
         await delay(0); //Reverse delay
         setTimeout(() => {
             startMatchContainerImg.classList.add("active");
@@ -802,37 +801,133 @@ async function showMenu(menuPass) {
 }
 
 
+const canvas = document.getElementById("gifCanvas"); // Usamos el canvas existente
+const ctx = canvas.getContext("2d");
 
-// Cargar el GIF y extraer los frames
-function loadGif(url) {
-    const img = new Image();
-    img.src = url;
-    img.crossOrigin = "Anonymous";
-    img.onload = () => {
-        const tempCanvas = document.createElement("canvas");
-        const tempCtx = tempCanvas.getContext("2d");
+let gifFrames = { win: [], lose: [] }; // Guardamos los frames de cada GIF
+let frameIndex = 0;
+const frameDelay = 10; // 🔹 10ms entre cada frame (100 FPS)
+let playing = false;
+let reverseMode = false; // 🔹 Para reproducir en reversa
+let allGifsLoaded = false; // 🔹 Bandera para indicar si los GIFs han terminado de cargar
 
-        canvas.width = img.width;
-        canvas.height = img.height;
-        tempCanvas.width = img.width;
-        tempCanvas.height = img.height;
+// URLs de los GIFs
+const gifs = {
+    win: "../img/fruitNinja/winner.gif",
+    lose: "../img/fruitNinja/foul.gif",
+};
 
-        const frameCount = 50; // Número de frames a capturar
-        for (let i = 0; i < frameCount; i++) {
-            tempCtx.clearRect(0, 0, img.width, img.height);
-            tempCtx.drawImage(img, 0, 0);
-            frames.push(tempCtx.getImageData(0, 0, img.width, img.height));
-        }
-        playGif();
-    };
+// Contador para verificar que todos los GIFs han cargado
+let gifsToLoad = Object.keys(gifs).length;
+let gifsLoaded = 0;
+
+// Cargar los GIFs al inicio sin crear elementos extra
+function preloadGifs() {
+    for (const key in gifs) {
+        loadGif(gifs[key], key);
+    }
 }
 
-// Reproducir el GIF en el Canvas
-function playGif() {
-    if (!playing) return;
-    ctx.putImageData(frames[frameIndex], 0, 0);
-    frameIndex = (frameIndex + 1) % frames.length;
-    setTimeout(playGif, frameDelay);
+function loadGif(url, action) {
+    let img = document.createElement("img");
+    img.src = url;
+    img.style.display = "none"; // Ocultamos la imagen
+    img.style.position = "absolute";
+    img.style.pointerEvents = "none";
+    document.body.appendChild(img);
+
+    let gif = new SuperGif({
+        gif: img,
+        auto_play: false,
+        draw_while_loading: false, // Evita dibujar automáticamente
+        progressbar_height: 0, // Oculta la barra de carga
+        loop_mode: false, // Evita loops innecesarios
+    });
+
+    gif.load(() => {
+        let frames = gif.get_length();
+        for (let i = 0; i < frames; i++) {
+            gif.move_to(i);
+            let frameCanvas = gif.get_canvas();
+            let frameCtx = frameCanvas.getContext("2d");
+            gifFrames[action].push(frameCtx.getImageData(0, 0, frameCanvas.width, frameCanvas.height));
+        }
+
+        // Ajustar el tamaño del canvas una sola vez
+        if (gifFrames[action].length > 0) {
+            canvas.width = gifFrames[action][0].width;
+            canvas.height = gifFrames[action][0].height;
+        }
+
+        // Incrementar el contador de GIFs cargados
+        gifsLoaded++;
+
+        // Si todos los GIFs se han cargado, cambiar la bandera a `true`
+        if (gifsLoaded === gifsToLoad) {
+            allGifsLoaded = true;
+            if(warningMessageContainer.style.display === "flex"){
+                if (!idLogeado || isNaN(parseInt(idLogeado)) || parseInt(idLogeado) === 0) {
+                    handleWarningMessage("flex", "Hay un fallo de registro. Prueba a volver a la página principal y loguearte", "red");
+                    return;
+                }
+                handleWarningMessage("flex", "La carga ha finalizado", "green");
+            }
+        }
+    });
+}
+
+function playGif(action, reverse = false) {
+    if (!gifFrames[action].length) {
+        console.error(`No se encontraron frames para ${action}`);
+        return;
+    }
+
+    playing = true;
+    frameIndex = reverse ? gifFrames[action].length - 1 : 0; // 🔹 Inicia en el primer o último frame según reverseMode
+    reverseMode = reverse;
+
+    function animate() {
+        if (!playing) return;
+
+        ctx.putImageData(gifFrames[action][frameIndex], 0, 0);
+
+        if (reverseMode) {
+            if (frameIndex === 0) {
+                playing = false; // 🔹 Se congela en el primer frame
+            } else {
+                frameIndex--;
+                setTimeout(animate, frameDelay);
+            }
+        } else {
+            if (frameIndex === gifFrames[action].length - 1) {
+                playing = false; // 🔹 Se congela en el último frame
+            } else {
+                frameIndex++;
+                setTimeout(animate, frameDelay);
+            }
+        }
+    }
+
+    animate();
+}
+
+// 🔹 Preload GIFs al cargar la página
+preloadGifs();
+
+function executeAction(action) {
+    if (action === "win") {
+        playGif("win");
+    } else if (action === "lose") {
+        playGif("lose");
+    }
+}
+
+function executeReverse(action) {
+    if (action === "win") {
+        playGif("win", true);
+    } else if (action === "lose") {
+        playGif("lose", true);
+    }
 }
 
 
@@ -883,11 +978,9 @@ async function hideMenu(menuPass) {
 
     }else if(menuPass.id == "endContainer"){
         if(action == "win"){
-            gifUrl = "../img/fruitNinja/winner.gif";
-            loadGif(gifUrl);
+            executeReverse(action);
         }else if(action == "lose"){
-            gifUrl = "../img/fruitNinja/foul_reverse.gif";
-            loadGif(gifUrl);
+            executeReverse(action);
         }
         await delay(700);//Reverse delay
         menu = endContainer;
@@ -1532,15 +1625,156 @@ function scoreCoinsUpdate(price){
     scoreCoins = scoreCoins+price;
 }
 
+
+function handleWarningMessage(container, message, color){
+    if(container == "none"){
+        warningMessageContainer.style.display = "none";
+    }else if(container == "flex"){
+        warningMessageContainer.style.display = "flex";
+    }else{
+        console.log("ERROR. handleWarningMessage -> container: "+container);
+    }
+
+    if(message){
+        warningMessage.textContent = message;
+    }else{
+        console.log("ERROR. handleWarningMessage -> message: "+message);
+    }
+
+    if(color == "blue"){
+        warningMessage.style.color = "#bfd4e9";
+        warningImg.src = "../img/charge.gif";
+        warningImg.className = "chargeGif";
+    }else if(color == "green"){
+        warningMessage.style.color = "#11ff00";
+        warningImg.src = "../img/tickCheck.png";
+        warningImg.className = "messageTick";
+    }else if(color == "red"){
+        warningMessage.style.color = "#CA2128";
+        warningImg.src = "../img/error.png";
+        warningImg.className = "messageError";
+    }else{
+        console.log("ERROR. handleWarningMessage -> color: "+color);
+    }
+}
+
 let firstTime = 0;
 document.addEventListener("DOMContentLoaded", function () {
+    let gifUrl = ""; // Cambia esto con la URL de tu GIF
+    const canvas = document.getElementById("gifCanvas");
+    const ctx = canvas.getContext("2d");
+    let gifFrames = [];
+    let frameIndex = 0;
+    const frameDelay = 10; // 🔹 Fijamos el tiempo por frame en 10ms (100 FPS)
+    let playing = true;
+
+    const supabaseUrl =
+    "https://jlinrmkailmfvzjkdfni.supabase.co/rest/v1/usuario";
+    const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsaW5ybWthaWxtZnZ6amtkZm5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc1MzMwNjUsImV4cCI6MjA0MzEwOTA2NX0.0BmL21nXr61WxALojF7kRk7glhB522Ss87zbBVzpSPo";
+
+    // 3. Obtener las monedas (coins) de un usuario por id
+    async function obtenerMonedasDeUsuario(id) {
+        const url = `${supabaseUrl}?id=eq.${id}`;
+
+        const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            apikey: supabaseKey,
+            Authorization: `Bearer ${supabaseKey}`,
+            "Content-Type": "application/json",
+        },
+        });
+
+        const data = await response.json();
+
+        if (data.length > 0) {
+        return data[0].coins; // Devuelve el valor de coins
+        } else {
+        console.error("Usuario no encontrado");
+        return null;
+        }
+    }
+
+    async function actualizarMonedas(idLogeado) {
+        try {
+          //console.log("ID logeado:", idLogeado);
+          const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
+          multiValueDB.textContent = monedasLogeado;
+
+          console.log("Monedas obtenidas:", monedasLogeado);
+        } catch (error) {
+          console.error("Error durante ACTUALIZAR MONEDAS:", error);
+        }
+    }
+    actualizarMonedas(idLogeado);
+
+
+
+
+    async function obtenerTomatosDeUsuario(id) {
+        const url = `${supabaseUrl}?id=eq.${id}`;
+    
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            apikey: supabaseKey,
+            Authorization: `Bearer ${supabaseKey}`,
+            "Content-Type": "application/json",
+          },
+        });
+    
+        const data = await response.json();
+    
+        if (data.length > 0) {
+          const tomatos = data[0].tomatos;
+          if (tomatos === null) {
+            console.warn("Tomatos obtenidos: null. Inicializando tomatos a 0.");
+            await actualizarTomatosUsuario(id, 0);
+            return 0;
+          }
+          return tomatos; // Devuelve el valor de tomatos
+        } else {
+          console.warn("Usuario no encontrado. Inicializando tomatos a 0.");
+          await actualizarTomatosUsuario(id, 0);
+          return 0;
+        }
+    }
+
+    async function actualizarTomatos(idLogeado) {
+        try {
+          console.log("ID logeado:", idLogeado);
+          const tomatosLogeado = await obtenerTomatosDeUsuario(idLogeado);
+          betValueDB.textContent = tomatosLogeado;
+          sliderTomatoes.max = tomatosLogeado;
+
+          console.log("Tomatos obtenidos:", tomatosLogeado);
+        } catch (error) {
+          console.error("Error durante ACTUALIZAR TOMATOS:", error);
+        }
+      }
+      actualizarTomatos(idLogeado);
+
+
+
+
+
     startMatchContainer.classList.add("active");
     startMatchContainerImg.classList.add("active");
 
     startButton.addEventListener("click", function () {
+        if (!idLogeado || isNaN(parseInt(idLogeado)) || parseInt(idLogeado) === 0) {
+            handleWarningMessage("flex", "Hay un fallo de registro. Prueba a volver a la página principal y loguearte", "red");
+            return;
+        }
+        if (!allGifsLoaded) {
+            handleWarningMessage("flex", "Espera mientras los recursos se cargan...", "blue");
+            return;
+        }
         if(!gameActive){
             startGame();
             hideMenu(startMatchContainer);
+            warningMessageContainer.style.display = "none";
             tomatosBet.textContent = sliderTomatoes.value;
             gameActive = true;
         }
@@ -1551,7 +1785,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    let nextButtonPressed = 0;
     nextButton.addEventListener("click", function () {
+        nextButtonPressed++;
+        if(nextButtonPressed !== 1){
+            return;
+        }
+        setTimeout(() => {
+            nextButtonPressed = 0;
+        }, 1000);
         if(!gameActive){
             hideMenu(endContainer);
             showMenu(startMatchContainer);
@@ -1600,8 +1842,8 @@ document.addEventListener("DOMContentLoaded", function () {
     sliderMulti.addEventListener('input', function () {
         thumbMulti.textContent = formatValue(this.value); // Actualizar el contenido del texto con el formato
         multiValueLabel.textContent = formatValue(this.value);
-        updateThumbPosition();   
-        updateFinalCostMulti();
+        updateThumbPosition();
+        if(!blockCoinsFree){updateFinalCostMulti();}
         updateFinalProbMulti();
     });
 
@@ -1628,6 +1870,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const multiHelpContainer = document.querySelector('.multiHelpContainer');
     const multiHelp = document.getElementById("multiHelp");
     multiHelpContainer.addEventListener('mouseenter', function () {
+        if(blockCoinsFree){return;}
         thumbMultiCont.style.transition = "all 0.3s ease";
         multiHelp.classList.add("active");
         sliderMulti.style.width = "30px";
@@ -1739,8 +1982,8 @@ document.addEventListener("DOMContentLoaded", function () {
       
 
     setTimeout(() => {
-        updateThumbPosition();   
-        updateFinalCostMulti();
+        updateThumbPosition();
+        if(!blockCoinsFree){updateFinalCostMulti();}
         updateFinalProbMulti();
     }, 100);
 
@@ -1749,12 +1992,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* MODE CHECKBOX */
+    let blockCoinsFree = false;
+    
     checkboxSwitch.addEventListener("change", handleCheckboxSwitch);
     handleCheckboxSwitch();
 
     function handleCheckboxSwitch(){
         if(checkboxSwitch.checked){
             //LOCO
+            blockCoinsFree = true;
+            multiBetValue.textContent = 0;
+            multiCostsFinal.textContent = 0;
+
             modoLocoDefault.style.opacity = "0";
             modoLocoActive.style.opacity = "1";
             multiModeLabel.classList.add("active");
@@ -1767,6 +2016,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 400);
         }else{
             //NORMAL
+            blockCoinsFree = false;
+            multiBetValue.textContent = parseInt(betValueSelect.textContent.trim()) || 1;
+            updateFinalCostMulti();
+
             modoLocoDefault.style.opacity = "1";
             modoLocoActive.style.opacity = "0";
             multiModeLabel.classList.remove("active");
@@ -1791,15 +2044,68 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* BET SLIDER VALUE ADJUST */
     betValueSelect.textContent = sliderTomatoes.value;
+    let previousValue;
 
-    // Añadir un evento 'input' para actualizar el span cuando el usuario mueva el control deslizante
     sliderTomatoes.addEventListener('input', function() {
         betValueSelect.textContent = this.value;
-        multiBetValue.textContent = this.value;
-        updateFinalCostMulti();
+        if(!blockCoinsFree){
+            multiBetValue.textContent = this.value;
+        }
+        betValueSelect.innerHTML = betValueSelect.innerHTML.replace(/<br\s*\/?>/g, "");
+        previousValue = betValueSelect.textContent.trim();
+
+        if(!blockCoinsFree){updateFinalCostMulti();}
+        updateWidths();
+    });
+    betValueSelect.addEventListener('input', function() {
+        if(!blockCoinsFree){
+            multiBetValue.textContent = betValueSelect.textContent.trim();
+        }
+        sliderTomatoes.value = betValueSelect.textContent.trim();
+
+        if(!blockCoinsFree){updateFinalCostMulti();}
+        updateWidths();
+    });
+    betValueSelect.addEventListener("focus", function () {
+        betValueSelect.classList.add("active");
+        betValueSelect.innerHTML = betValueSelect.innerHTML.replace(/<br\s*\/?>/g, "");
+        previousValue = betValueSelect.textContent.trim();
+    });
+    betValueSelect.addEventListener("blur", function () {
+        if(!blockCoinsFree){
+            multiBetValue.textContent = parseInt(betValueSelect.textContent.trim());
+        }
+        betValueSelect.textContent = parseInt(betValueSelect.textContent.trim());
+        betValueSelect.classList.remove("active");
+        checkGoodInput();
     });
 
-    sliderTomatoes.addEventListener('input', updateWidths);
+    function checkGoodInput(){
+        betValueSelect.innerHTML = betValueSelect.innerHTML.replace(/<br\s*\/?>/g, "");
+        let currentValue = betValueSelect.textContent.trim(); // Obtener el nuevo valor sin espacios
+    
+        // Validar si es vacío, solo espacios, salto de línea, NaN o null
+        if (
+            currentValue === "" || // Vacío
+            currentValue === "0" || // Si es "0"
+            isNaN(Number(currentValue)) || // No es un número válido
+            currentValue === null || // Si es null
+            currentValue === undefined || // Si es undefined
+            currentValue > parseInt(betValueDB.textContent)
+        ) {
+            betValueSelect.textContent = previousValue;
+            sliderTomatoes.value = previousValue;
+
+            if(!blockCoinsFree){
+                multiBetValue.textContent = previousValue;
+                updateFinalCostMulti();
+            }
+            updateWidths();
+        } else {
+            previousValue = currentValue; // Guardar el nuevo valor si es válido
+        }
+    }
+
 
 
 

@@ -15,11 +15,11 @@
         </div>
         <div>
             <div>Tomatos cuted:</div>
-            <div id="tomatosCuted"></div>
+            <div id="tomatosCuted">0</div>
         </div>
         <div>
             <div>Coins collected:</div>
-            <div id="coinsColected"></div>
+            <div id="coinsColected">0</div>
         </div>
     </div>
 
@@ -157,10 +157,10 @@
             <div class="betContainer perspCont">
                 <label style="margin-top: -2px;" for="sliderTomatoes">Apuesta:</label>
                 <div class="betRangeContainer">
-                    <input type="range" id="sliderTomatoes" min="1" max="100" value="1">
+                    <input type="range" id="sliderTomatoes" min="1" value="1">
                     <div class="betValueContainer">
                         <span id="betCosts">Cuesta</span>
-                        <span id="betValueSelect"></span>
+                        <span id="betValueSelect" contenteditable="true"></span>
                         <span class="barBet">/</span>
                         <span id="betValueDB">100</span>
                         <img class="tomatoCosts" src="../img/hamster/icons/iconTomato.svg"/>
@@ -179,7 +179,7 @@
                     <div class="multiValueContainer">
                         <span class="multiHelpContainer">
                             <span style="color: #FEF780;">Cuesta </span>
-                            <span id="multiBetValue" style="margin-left: 4px; color: #FFE640;">1</span>
+                            <span id="multiBetValue" style="margin-left: 4px; color: #FFE640;"></span>
                             <img class="coinCosts" src="../img/hamster/icons/iconCoin.png"/>
                             <span id="multiHelp">( = Apuesta )</span>
                         </span>
@@ -270,10 +270,15 @@
             </div>
 
             <button id="startButton">Empezar Partida</button>
+
+            <div class="warningMessageContainer">
+                <img id="warningImg"/>
+                <div class="warningMessage"></div>
+            </div>
         </div>
     </div>
     <!--<script src="//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.6/phaser.min.js"></script>-->
-    <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/libgif@0.0.3/libgif.min.js"></script>        
     <script src="../libs/phaser.js"></script>
     <script src="Fmain.js"></script>
 </body>

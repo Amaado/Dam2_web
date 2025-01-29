@@ -128,12 +128,46 @@ img {
 #gifCanvas{
     width: 120%;
     height: 300px;
+    margin-left: -45px;
 }
 #winGif{
     width: 100%;
     height: auto;
     margin-top: -10%;
 }
+.jsgif{
+    display: none;
+    position: absolute;
+    pointer-events: none;
+}
+
+.warningMessageContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+.warningMessage{
+    display: flex;
+}
+.chargeGif{
+    display: flex;
+    width: auto;
+    height: 15px;
+    margin-top: 2.8px;
+}
+.messageTick{
+    display: flex;
+    width: auto;
+    height: 19px;
+    filter: brightness(0) saturate(100%) invert(69%) sepia(48%) saturate(2278%) hue-rotate(65deg) brightness(99%) contrast(143%);
+}
+.messageError{
+    display: flex;
+    width: auto;
+    height: 21px;
+    margin-top: -0.5px;
+}
+
 #infoContainer{
     display: flex;
     flex-direction: row;
@@ -317,9 +351,11 @@ img {
     font-family: "Roboto";
     transition: all 0.5s ease;
     opacity: 0;
+    pointer-events: none;
 }
 #nextButton.active{
     opacity: 1;
+    pointer-events: all;
 }
 
 
@@ -401,9 +437,9 @@ img {
 }
 #bonsai{
     display: flex;
-    width: 50%;
+    width: auto;
     height: 125%;
-    transform: scaleX(-1) translateX(26%) translateY(9%);
+    transform: scaleX(-0.85) translateX(33%) translateY(11%);
 }
 #startMatchContainerImgBlank{
     display: flex;
@@ -484,6 +520,20 @@ img {
     display: flex;
     width: auto;
     color: #E0888E;
+    background-color: #d0494e00;
+    border-radius: 1px;
+    outline: 1px solid #2D3B46;
+    box-shadow: 0 0 0 2px #bfd4e936;
+    filter: drop-shadow(0 0 20px #d0494e33);
+    transition: .3s ease;
+}
+#betValueSelect:hover{
+    box-shadow: 0 0 0 2px #bfd4e98f;
+}
+#betValueSelect.active{
+    box-shadow: 0 0 0 2px #bfd4e98f;
+    filter: drop-shadow(0 0 10px #d0494ed3);
+    background-color: #d0494e36;
 }
 
 .barBet{
