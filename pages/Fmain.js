@@ -54,6 +54,95 @@ if (!idLogeado || isNaN(parseInt(idLogeado)) || parseInt(idLogeado) === 0) {
     handleWarningMessage("flex", "Hay un fallo de registro. Prueba a volver a la página principal y loguearte", "red");
 }
 
+const supabaseUrl =
+"https://jlinrmkailmfvzjkdfni.supabase.co/rest/v1/usuario";
+const supabaseKey =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsaW5ybWthaWxtZnZ6amtkZm5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc1MzMwNjUsImV4cCI6MjA0MzEwOTA2NX0.0BmL21nXr61WxALojF7kRk7glhB522Ss87zbBVzpSPo";
+
+// 3. Obtener las monedas (coins) de un usuario por id
+async function obtenerMonedasDeUsuario(id) {
+const url = `${supabaseUrl}?id=eq.${id}`;
+
+const response = await fetch(url, {
+method: "GET",
+headers: {
+    apikey: supabaseKey,
+    Authorization: `Bearer ${supabaseKey}`,
+    "Content-Type": "application/json",
+},
+});
+
+const data = await response.json();
+
+if (data.length > 0) {
+return data[0].coins; // Devuelve el valor de coins
+} else {
+console.error("Usuario no encontrado");
+return null;
+}
+}
+
+async function actualizarMonedas(idLogeado) {
+try {
+    //console.log("ID logeado:", idLogeado);
+    const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
+    multiValueDB.textContent = monedasLogeado;
+
+    console.log("Monedas obtenidas:", monedasLogeado);
+} catch (error) {
+    console.error("Error durante ACTUALIZAR MONEDAS:", error);
+}
+}
+actualizarMonedas(idLogeado);
+
+
+
+
+async function obtenerTomatosDeUsuario(id) {
+const url = `${supabaseUrl}?id=eq.${id}`;
+
+const response = await fetch(url, {
+    method: "GET",
+    headers: {
+    apikey: supabaseKey,
+    Authorization: `Bearer ${supabaseKey}`,
+    "Content-Type": "application/json",
+    },
+});
+
+const data = await response.json();
+
+if (data.length > 0) {
+    const tomatos = data[0].tomatos;
+    if (tomatos === null) {
+    console.warn("Tomatos obtenidos: null. Inicializando tomatos a 0.");
+    await actualizarTomatosUsuario(id, 0);
+    return 0;
+    }
+    return tomatos; // Devuelve el valor de tomatos
+} else {
+    console.warn("Usuario no encontrado. Inicializando tomatos a 0.");
+    await actualizarTomatosUsuario(id, 0);
+    return 0;
+}
+}
+
+async function actualizarTomatos(idLogeado) {
+try {
+    console.log("ID logeado:", idLogeado);
+    const tomatosLogeado = await obtenerTomatosDeUsuario(idLogeado);
+    betValueDB.textContent = tomatosLogeado;
+    sliderTomatoes.max = tomatosLogeado;
+
+    console.log("Tomatos obtenidos:", tomatosLogeado);
+} catch (error) {
+    console.error("Error durante ACTUALIZAR TOMATOS:", error);
+}
+}
+actualizarTomatos(idLogeado);
+
+
+
 function preload() {
     // Carga de imágenes
     this.load.image('goldCC', '../img/fruitNinja//goldCC.png');
@@ -98,6 +187,7 @@ function preload() {
     this.load.image('peaceGold3', '../img/fruitNinja//peaceGold3.png');
     this.load.image('peaceGold4', '../img/fruitNinja//peaceGold4.png');
     this.load.image('peaceGold5', '../img/fruitNinja//peaceGold5.png');
+    this.load.image('fireDificulty', '../img/fruitNinja//fireDificulty.png');
     this.load.spritesheet('explosion', '../img/fruitNinja//explosion_spritesheet.png', 576, 576, 10);
     this.load.spritesheet('spark', '../img/fruitNinja//spark_spritesheet.png', 480, 480, 20);
     this.load.spritesheet('halo', '../img/fruitNinja//halo_spritesheet.png', 337, 337, 34);
@@ -161,6 +251,47 @@ function create() {
     slashes = game.add.graphics(0, 0);
 
     throwObject();
+    manageDificultyGame();
+}
+
+function manageDificultyGame(){
+    // Calculamos la posición basada en vw y vh
+    var xPos = window.innerWidth * 0.02; // 2vw
+    var yPos = window.innerHeight * 0.10; // 10vh
+
+    var emitter = game.add.emitter(xPos, yPos, 200); // Posición basada en vw/vh
+    
+    emitter.makeParticles('fireDificulty'); // Usar la textura cargada
+    
+    // Configuración del efecto de fuego
+    emitter.setYSpeed(-200, -100); // Velocidad hacia arriba
+    emitter.setXSpeed(-50, 50); // Movimiento lateral aleatorio
+    emitter.setScale(0.5, 0, 0.5, 0, 2000, Phaser.Easing.Sinusoidal.Out); // Disminuye el tamaño progresivamente
+    emitter.setAlpha(1, 0, 2000, Phaser.Easing.Quadratic.Out); // Desaparece suavemente
+    emitter.gravity = 0; // Sin gravedad
+    emitter.setRotation(0, 0); // Sin rotación de partículas
+    emitter.setAll('blendMode', Phaser.blendModes.ADD); // Modo de fusión para efectos de fuego
+    emitter.setAll('tint', 0xfacc22); // Color inicial amarillo
+
+    emitter.start(false, 2400, 50); // No explota, duración de partículas, cada 50ms
+
+    // Cambio de color progresivo (imitando `colorEase`)
+    game.time.events.loop(500, function() {
+        emitter.forEachAlive(function(p) {
+            p.tint = Phaser.Color.interpolateColor(0xfacc22, 0x9f0404, 4, game.rnd.integerInRange(0, 3), 1);
+        });
+    });
+
+    // Ajustar tamaño del juego al cambiar la ventana
+    window.addEventListener('resize', function() {
+        game.scale.setGameSize(window.innerWidth, window.innerHeight);
+        emitter.x = window.innerWidth * 0.02;
+        emitter.y = window.innerHeight * 0.10;
+    });
+
+
+
+    ///difficultyLevel
 }
 
 
@@ -266,6 +397,14 @@ function handleMistakes(){
 
 
 // Configuración de probabilidades iniciales
+var probabilitiesToReset = {
+    tomato: 50,          // 50
+    tomatoGold: 7,      // 7
+    bomb: 30,            // 30
+    bombCammo: 20,       // 20
+    bombGold: 3,        // 3
+    goldCC: 2           // 2
+};
 var probabilities = {
     tomato: 50,          // 50
     tomatoGold: 7,      // 7
@@ -274,8 +413,7 @@ var probabilities = {
     bombGold: 3,        // 3
     goldCC: 2           // 2
 };
-
-var dynamicStates = {
+var dynamicStatesToReset = {
     bombCammoBoost: false,   // Aumenta si sale un tomato
     bombGoldBoost: false,    // Aumenta si sale un tomatoGold
     bombCammoChance: probabilities.bombCammo, // Probabilidad dinámica para bombCammo
@@ -284,24 +422,67 @@ var dynamicStates = {
     burstMode: false,        // Indica si se está en "modo agrupación"
     burstCount: 0            // Número de objetos restantes en la agrupación
 };
+var dynamicStates = {
+    bombCammoBoost: false,   // Aumenta si sale un tomato
+    bombGoldBoost: false,    // Aumenta si sale un tomatoGold
+    bombCammoChance: probabilities.bombCammo, // Probabilidad dinámica para bombCammo
+    bombGoldChance: probabilities.bombGold,   // Probabilidad dinámica para bombGold
+    fireRate: 1500,          // Frecuencia inicial de aparición
+    burstMode: false,        // Indica si se está en "modo agrupación"
+    burstCount: 0            // Número de objetos restantes en la agrupación
+};
+
+let burstProbability;
+let fireRateReduction;
+let burstReduction;
 
 // Función para lanzar objetos
 function throwObject() {
     if (gameActive && game.time.now > nextFire) {
         if (dynamicStates.burstMode) {
+            // Reducir el número de objetos restantes en el modo burst
             dynamicStates.burstCount--;
+        
             if (dynamicStates.burstCount <= 0) {
-                dynamicStates.burstMode = false; // Salir de modo agrupación
+                dynamicStates.burstMode = false; // Salir del modo burst
+            } else {
+                // Ajustar el retardo entre lanzamientos en burstMode, reduciendo hasta 0ms
+                burstReduction = Math.max(75 - tomatosCuted.textContent * 1.5, 0);
+                nextFire = game.time.now + Math.random() * burstReduction;
             }
         } else {
-            dynamicStates.fireRate = Math.random() * 2000;
-
-            if (Math.random() < 0.2) { // 20% de probabilidad de iniciar agrupación
+            // 🔹 Ajustar la frecuencia de lanzamiento fuera de burstMode
+            fireRateReduction = Math.floor(tomatosCuted.textContent / 5) * 100;
+            dynamicStates.fireRate = Math.max(Math.random() * (1500 - fireRateReduction), 0);
+            nextFire = game.time.now + dynamicStates.fireRate;
+        
+            // 🔹 Ajustar la probabilidad de entrar en burstMode (40% - 90%)
+            let minProb = 0.4; // Probabilidad base (40%)
+            let maxProb = 0.9; // Probabilidad máxima (90%)
+            let scalingFactor = 0.0005; // Aumento gradual
+            burstProbability = Math.min(minProb + tomatosCuted.textContent * scalingFactor, maxProb); // ← Definimos burstProbability
+        
+            if (Math.random() < burstProbability) { 
                 dynamicStates.burstMode = true;
-                dynamicStates.burstCount = Math.floor(Math.random() * 4) + 2; // Entre 2 y 5 objetos
+                
+                // Determinar el rango dinámico de objetos en burstMode
+                let minBurst = Math.min(2 + Math.floor(tomatosCuted.textContent / 10), 12);
+                let maxBurst = minBurst + 3;
+                dynamicStates.burstCount = Math.floor(Math.random() * (maxBurst - minBurst + 1)) + minBurst;
+        
+                // Iniciar inmediatamente el primer objeto del burstMode
+                nextFire = game.time.now;
             }
         }
+        
+        let difficultyLevel = calculateDifficulty(burstProbability);
 
+        console.log("---------------");
+        console.log("nextFire=" + (nextFire / 10000).toFixed(3));
+        console.log("burstMode=" + dynamicStates.burstMode);
+        console.log("difficultyLevel=" + difficultyLevel.toFixed(1));
+        console.log("---------------");
+        
         nextFire = game.time.now + dynamicStates.fireRate;
 
         let totalProbability = probabilities.tomato + probabilities.bomb + dynamicStates.bombCammoChance +
@@ -326,7 +507,7 @@ function throwObject() {
         } else if (random < (cumulative += probabilities.goldCC)) {
             selectedObject = spawnObject(good_objects, 'goldCC');
         }
-        
+        /*
         console.log(`----------------------------------`);
         console.log(`----------------------------------`);
         if (selectedObject && selectedObject.key) {
@@ -341,13 +522,46 @@ function throwObject() {
         console.log(`BombCammo: ${(dynamicStates.bombCammoChance / totalProbability * 100).toFixed(2)}%`);
         console.log(`BombGold: ${(dynamicStates.bombGoldChance / totalProbability * 100).toFixed(2)}%`);
         console.log(`GoldCC: ${(probabilities.goldCC / totalProbability * 100).toFixed(2)}%`);
-        /**/
+        */
         if (selectedObject) {
             throwRandomObject(selectedObject);
         }
 
         adjustFireRate();
     }
+}
+
+function calculateDifficulty(burstProbability) { // ← Ahora recibe burstProbability como argumento
+    // Factores de dificultad ponderados (ajusta los valores si es necesario)
+    let weightFireRate = 0.25;  // Menor fireRate aumenta la dificultad
+    let weightBurstMode = 0.20; // Mayor probabilidad de burstMode aumenta la dificultad
+    let weightBurstCount = 0.15; // Más objetos en burstMode aumentan la dificultad
+    let weightBurstDelay = 0.15; // Menor retardo en burstMode aumenta la dificultad
+    let weightBadObjects = 0.25; // Mayor presencia de bombas aumenta la dificultad
+
+    // Normalizar valores entre 0 y 1
+    let normalizedFireRate = (2500 - dynamicStates.fireRate) / 2500; // 0 cuando fireRate es 2500ms, 1 cuando es 0ms
+    let normalizedBurstMode = (burstProbability - 0.4) / (0.9 - 0.4); // ← Ahora usamos el argumento en lugar de una variable global
+    let normalizedBurstCount = (dynamicStates.burstCount - 2) / (15 - 2); // 0 cuando es 2, 1 cuando es 15
+    let normalizedBurstDelay = (75 - Math.max(75 - tomatosCuted.textContent * 1.5, 0)) / 75; // 0 cuando es 75ms, 1 cuando es 0ms
+    
+    // Normalizar la cantidad de bombas
+    let totalProbability = probabilities.tomato + probabilities.bomb + dynamicStates.bombCammoChance +
+                           probabilities.tomatoGold + dynamicStates.bombGoldChance + probabilities.goldCC;
+    let badObjectsProbability = (probabilities.bomb + dynamicStates.bombCammoChance + dynamicStates.bombGoldChance) / totalProbability; // Ratio de bombas en relación al total
+
+    // Calcular el nivel de dificultad
+    let difficultyLevel = (
+        weightFireRate * normalizedFireRate +
+        weightBurstMode * normalizedBurstMode +
+        weightBurstCount * normalizedBurstCount +
+        weightBurstDelay * normalizedBurstDelay +
+        weightBadObjects * badObjectsProbability
+    ) * 100; // Convertir a porcentaje
+
+    // Asegurar que la dificultad esté entre 0% y 100%
+    difficultyLevel = Math.min(100, Math.max(0, difficultyLevel));
+    return difficultyLevel;
 }
 
 function addShadowToObject(obj, shadowAlpha = 0.3, maxOffset = 10, minOffset = 30) {
@@ -1022,6 +1236,20 @@ function startGame(){
         objHistory[key] = 0;
     });
 
+    for (let key in probabilitiesToReset) {
+        if (probabilitiesToReset.hasOwnProperty(key)) {
+            probabilities[key] = probabilitiesToReset[key];
+        }
+    }
+    for (let key in dynamicStatesToReset) {
+        if (dynamicStatesToReset.hasOwnProperty(key)) {
+            dynamicStates[key] = dynamicStatesToReset[key];
+        }
+    }
+
+    burstProbability = 0.4; // Restablecer la probabilidad inicial de burstMode
+
+
     mistakerContainer.classList.add("active");
     infoContainer.classList.remove("active");
     nextButton.classList.remove("active");
@@ -1667,97 +1895,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let frameIndex = 0;
     const frameDelay = 10; // 🔹 Fijamos el tiempo por frame en 10ms (100 FPS)
     let playing = true;
-
-    const supabaseUrl =
-    "https://jlinrmkailmfvzjkdfni.supabase.co/rest/v1/usuario";
-    const supabaseKey =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsaW5ybWthaWxtZnZ6amtkZm5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc1MzMwNjUsImV4cCI6MjA0MzEwOTA2NX0.0BmL21nXr61WxALojF7kRk7glhB522Ss87zbBVzpSPo";
-
-    // 3. Obtener las monedas (coins) de un usuario por id
-    async function obtenerMonedasDeUsuario(id) {
-        const url = `${supabaseUrl}?id=eq.${id}`;
-
-        const response = await fetch(url, {
-        method: "GET",
-        headers: {
-            apikey: supabaseKey,
-            Authorization: `Bearer ${supabaseKey}`,
-            "Content-Type": "application/json",
-        },
-        });
-
-        const data = await response.json();
-
-        if (data.length > 0) {
-        return data[0].coins; // Devuelve el valor de coins
-        } else {
-        console.error("Usuario no encontrado");
-        return null;
-        }
-    }
-
-    async function actualizarMonedas(idLogeado) {
-        try {
-          //console.log("ID logeado:", idLogeado);
-          const monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
-          multiValueDB.textContent = monedasLogeado;
-
-          console.log("Monedas obtenidas:", monedasLogeado);
-        } catch (error) {
-          console.error("Error durante ACTUALIZAR MONEDAS:", error);
-        }
-    }
-    actualizarMonedas(idLogeado);
-
-
-
-
-    async function obtenerTomatosDeUsuario(id) {
-        const url = `${supabaseUrl}?id=eq.${id}`;
-    
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            apikey: supabaseKey,
-            Authorization: `Bearer ${supabaseKey}`,
-            "Content-Type": "application/json",
-          },
-        });
-    
-        const data = await response.json();
-    
-        if (data.length > 0) {
-          const tomatos = data[0].tomatos;
-          if (tomatos === null) {
-            console.warn("Tomatos obtenidos: null. Inicializando tomatos a 0.");
-            await actualizarTomatosUsuario(id, 0);
-            return 0;
-          }
-          return tomatos; // Devuelve el valor de tomatos
-        } else {
-          console.warn("Usuario no encontrado. Inicializando tomatos a 0.");
-          await actualizarTomatosUsuario(id, 0);
-          return 0;
-        }
-    }
-
-    async function actualizarTomatos(idLogeado) {
-        try {
-          console.log("ID logeado:", idLogeado);
-          const tomatosLogeado = await obtenerTomatosDeUsuario(idLogeado);
-          betValueDB.textContent = tomatosLogeado;
-          sliderTomatoes.max = tomatosLogeado;
-
-          console.log("Tomatos obtenidos:", tomatosLogeado);
-        } catch (error) {
-          console.error("Error durante ACTUALIZAR TOMATOS:", error);
-        }
-      }
-      actualizarTomatos(idLogeado);
-
-
-
-
 
     startMatchContainer.classList.add("active");
     startMatchContainerImg.classList.add("active");
