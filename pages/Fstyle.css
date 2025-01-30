@@ -183,7 +183,7 @@ img {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: auto;
     height: 200px;
     margin-bottom: 100px;
     background-color: rgba(20, 26, 31, 0);
@@ -909,6 +909,7 @@ img {
 .modoLocoActiveR{
     position: absolute;
     opacity: 0;
+    margin-top: -5px;
 }
 .multiModeLabelR{
     font-family: 'kemco';
@@ -1093,6 +1094,20 @@ img {
     filter: brightness(0) saturate(100%) invert(86%) sepia(4%) saturate(2668%) hue-rotate(185deg) brightness(104%) contrast(83%);
 }
 
+.flechaStand{
+    min-width: 11px;
+    height: 5px;
+    border-radius: 1.5px;
+    margin-left: 7px;
+    margin-right: -20px;
+    margin-top: 7px;
+    background-color: rgb(189, 170, 0);
+    opacity: 0;
+}
+.flechaStandMl{
+    margin-left: 16px;
+    margin-right: -32px;
+}
 .flechaDouble{
     width: auto;
     height: 13px;
@@ -1100,17 +1115,28 @@ img {
     margin-top: 4px;
     margin-left: 5px;
     margin-right: -2px;
+    filter: brightness(0) saturate(100%) invert(70%) sepia(98%) saturate(294%) hue-rotate(71deg) brightness(91%) contrast(105%);
 }
 .flechaDoubleMl{
     margin-left: 15px;
 }
 .flechaDouble.down{
     transform: rotateZ(180deg);
+    filter: brightness(0) saturate(100%) invert(14%) sepia(94%) saturate(5241%) hue-rotate(359deg) brightness(85%) contrast(116%);
 }
 .item{
     width: auto;
     height: 18px;
     z-index: 1;
+}
+.itemTomatoSlice{
+    width: auto;
+    height: 12px;
+    margin-top: 4px;
+    transform: scaleY(1.2);
+}
+.rewardsTomatos{
+    margin-left: -2px;
 }
 .itemGap{
     margin-left: 15px;

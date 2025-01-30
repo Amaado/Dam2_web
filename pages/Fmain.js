@@ -23,8 +23,11 @@ const multiNCammoGoldBomb = document.querySelector("multiNCammoGoldBomb");
 
 /* MODE CHECKBOX */
 const modoLocoDefault = document.querySelector(".modoLocoDefault");
+const modoLocoDefaulR = document.querySelector(".modoLocoDefaultR");
 const modoLocoActive = document.querySelector(".modoLocoActive");
+const modoLocoActiveR = document.querySelector(".modoLocoActiveR");
 const multiModeLabel = document.querySelector(".multiModeLabel");
+const multiModeLabelR = document.querySelector(".multiModeLabelR");
 const checkboxSwitch = document.getElementById("switch");
 /* BET SLIDER VALUE ADJUST */
 const sliderTomatoes = document.getElementById('sliderTomatoes');
@@ -41,11 +44,16 @@ const informationContainer = document.getElementById("informationContainer");
 const rewardsContainer = document.getElementById("rewardsContainer");
 const historyContainer = document.getElementById("historyContainer");
 const infoContainer = document.getElementById("infoContainer");
+const rewardsModeCosts = document.querySelector(".rewardsModeCosts");
+const rewardsBet = document.querySelector(".rewardsBet");
+const rewardsTomatos = document.querySelector(".rewardsTomatos");
+const rewardsCoins = document.querySelector(".rewardsCoins");
 
 const mistakeImgs = document.querySelectorAll(".mistakeImg");
 const warningMessageContainer = document.querySelector(".warningMessageContainer");
 const warningMessage = document.querySelector(".warningMessage");
 const warningImg = document.getElementById("warningImg");
+const flechaDoubles = document.querySelectorAll(".flechaDouble");
 let tomatosMistakedVar = 0;
 let action;
 
@@ -942,6 +950,10 @@ async function showMenu(menuPass) {
         menu = startMatchContainerFull;
     }else if(menuPass.id == "endContainer"){
         menu = endContainer;
+
+        while (!allGifsLoaded) {
+            await new Promise(resolve => setTimeout(resolve, 100)); // Espera 100ms antes de volver a comprobar
+        }
     }else{
         console.err("Error en showMenu()");
     }
@@ -955,6 +967,7 @@ async function showMenu(menuPass) {
 
     if(menuPass.id == "endContainer"){
         setTimeout(async () => {
+            // Animaciones
             for (let index = 0; index < 4; index++) {
                 let container;
 
@@ -990,6 +1003,74 @@ async function showMenu(menuPass) {
                 rewardsTittleImgs.forEach(rewardsTittleImg => {
                     rewardsTittleImg.classList.add("active");
                 });
+
+                // Texto de etiquetas
+                flechaDoubles.forEach(flechaDouble => {
+                    flechaDouble.style.opacity = "1";
+                });
+                if(checkboxSwitch.checked){    
+                    modoLocoDefaulR.style.opacity = "0";
+                    modoLocoActiveR.style.opacity = "1";
+                    multiModeLabelR.classList.add("active");
+                    multiModeLabelR.textContent = "Modo Loco";
+                    let rewardsRow = rewardsModeCosts.closest(".rewardsRow");
+                    let flechaDoubleCloseModo = rewardsRow.querySelector(".flechaDouble");
+                    let flechaStandCloseModo = rewardsRow.querySelector(".flechaStand");
+                    flechaDoubleCloseModo.style.opacity = "0";
+                    flechaStandCloseModo.style.opacity = "1";
+                }else{
+                    modoLocoDefaulR.style.opacity = "1";
+                    modoLocoActiveR.style.opacity = "0";
+                    multiModeLabelR.classList.remove("active");
+                    multiModeLabelR.textContent = "Modo Normal";
+                    let rewardsRow = rewardsModeCosts.closest(".rewardsRow");
+                    let flechaDoubleCloseModo = rewardsRow.querySelector(".flechaDouble");
+                    let flechaStandCloseModo = rewardsRow.querySelector(".flechaStand");
+                    flechaDoubleCloseModo.style.opacity = "1";
+                    flechaStandCloseModo.style.opacity = "0";
+                }
+
+                rewardsBet.textContent = betValueSelect.textContent;
+                rewardsModeCosts.textContent = multiCostsFinal.textContent;
+
+                const rewardsRowsHistory = document.querySelectorAll("#historyContainer .rewardsRow");
+                rewardsRowsHistory.forEach(row => {
+                    const img = row.querySelector(".item"); // Primera imagen en la fila
+                    const numberElement = row.querySelector(".rewardsRowNumber");
+
+                    if (!img || !numberElement) return; // Si no hay imagen o número, saltar
+                    // Obtener el nombre del archivo de imagen sin extensión
+                    const imgSrc = img.src.split('/').pop().split('.')[0];
+
+                    if (imgSrc == "tomatoFull") {
+                        numberElement.textContent = objHistory.tomato;
+                    } else if (imgSrc == "tomatoGold") {
+                        numberElement.textContent = objHistory.tomatoGold;
+                    } else if (imgSrc == "bomb") {
+                        numberElement.textContent = objHistory.bomb;
+                    } else if (imgSrc == "bombCammo") {
+                        numberElement.textContent = objHistory.bombCammo;
+                    } else if (imgSrc == "bombCammoGold") {
+                        numberElement.textContent = objHistory.bombGold;
+                    } else if (imgSrc == "goldCC") {
+                        numberElement.textContent = objHistory.goldCC;
+                    }
+                });
+
+                rewardsTomatos.textContent = tomatosCuted.textContent*2;
+                rewardsCoins.textContent = coinsColected.textContent;
+                
+                let rewardsRow = rewardsCoins.closest(".rewardsRow");
+                let flechaDoubleCloseCoins = rewardsRow.querySelector(".flechaDouble");
+                let flechaStandCloseCoins = rewardsRow.querySelector(".flechaStand");
+                if(rewardsCoins.textContent == 0){
+                    flechaDoubleCloseCoins.style.opacity = "0";
+                    flechaStandCloseCoins.style.opacity = "1";
+                }else{
+                    flechaDoubleCloseCoins.style.opacity = "1";
+                    flechaStandCloseCoins.style.opacity = "0";
+                }
+
             }
         }, 1200);
 
@@ -1079,13 +1160,6 @@ function loadGif(url, action) {
         // Si todos los GIFs se han cargado, cambiar la bandera a `true`
         if (gifsLoaded === gifsToLoad) {
             allGifsLoaded = true;
-            if(warningMessageContainer.style.display === "flex"){
-                if (!idLogeado || isNaN(parseInt(idLogeado)) || parseInt(idLogeado) === 0) {
-                    handleWarningMessage("flex", "Hay un fallo de registro. Prueba a volver a la página principal y loguearte", "red");
-                    return;
-                }
-                handleWarningMessage("flex", "La carga ha finalizado", "green");
-            }
         }
     });
 }
@@ -1225,9 +1299,8 @@ function startGame(){
     tomatosMistakedVar = 0;
     action = "";
 
-    tomatosBet.textContent = "";
-    tomatosCuted.textContent = "";
-    coinsColected.textContent = "";
+    tomatosCuted.textContent = "0";
+    coinsColected.textContent = "0";
 
     Object.keys(objHistory).forEach(key => {
         objHistory[key] = 0;
@@ -1902,10 +1975,6 @@ document.addEventListener("DOMContentLoaded", function () {
     startButton.addEventListener("click", function () {
         if (!idLogeado || isNaN(parseInt(idLogeado)) || parseInt(idLogeado) === 0) {
             handleWarningMessage("flex", "Hay un fallo de registro. Prueba a volver a la página principal y loguearte", "red");
-            return;
-        }
-        if (!allGifsLoaded) {
-            handleWarningMessage("flex", "Espera mientras los recursos se cargan...", "blue");
             return;
         }
         if(!gameActive){
