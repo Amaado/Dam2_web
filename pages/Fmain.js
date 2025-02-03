@@ -47,6 +47,8 @@ const infoContainer = document.getElementById("infoContainer");
 const rewardsModeCosts = document.querySelector(".rewardsModeCosts");
 const rewardsBet = document.querySelector(".rewardsBet");
 const rewardsTomatos = document.querySelector(".rewardsTomatos");
+const rewardsTomatosFinal = document.querySelector(".rewardsTomatosFinal");
+const rewardsMulti = document.querySelector(".rewardsMulti");
 const rewardsCoins = document.querySelector(".rewardsCoins");
 
 const mistakeImgs = document.querySelectorAll(".mistakeImg");
@@ -259,7 +261,7 @@ function create() {
     slashes = game.add.graphics(0, 0);
 
     throwObject();
-    manageDificultyGame();
+    //manageDificultyGame();
 }
 
 function manageDificultyGame(){
@@ -411,7 +413,7 @@ var probabilitiesToReset = {
     bomb: 30,            // 30
     bombCammo: 20,       // 20
     bombGold: 3,        // 3
-    goldCC: 2           // 2
+    goldCC: 100           // 2
 };
 var probabilities = {
     tomato: 50,          // 50
@@ -419,7 +421,7 @@ var probabilities = {
     bomb: 30,            // 30
     bombCammo: 20,       // 20
     bombGold: 3,        // 3
-    goldCC: 2           // 2
+    goldCC: 100           // 2
 };
 var dynamicStatesToReset = {
     bombCammoBoost: false,   // Aumenta si sale un tomato
@@ -928,6 +930,9 @@ function checkIntersects(fruit) {
             killFruit(fruit);
             stopGame();
             action = "lose";
+            handleMistakes();
+            handleMistakes();
+            handleMistakes();
             showMenu(endContainer);
 
         } else if (belongsToGroup(fruit, good_objects)&&gameActive) {
@@ -1003,76 +1008,65 @@ async function showMenu(menuPass) {
                 rewardsTittleImgs.forEach(rewardsTittleImg => {
                     rewardsTittleImg.classList.add("active");
                 });
-
-                // Texto de etiquetas
-                flechaDoubles.forEach(flechaDouble => {
-                    flechaDouble.style.opacity = "1";
-                });
-                if(checkboxSwitch.checked){    
-                    modoLocoDefaulR.style.opacity = "0";
-                    modoLocoActiveR.style.opacity = "1";
-                    multiModeLabelR.classList.add("active");
-                    multiModeLabelR.textContent = "Modo Loco";
-                    let rewardsRow = rewardsModeCosts.closest(".rewardsRow");
-                    let flechaDoubleCloseModo = rewardsRow.querySelector(".flechaDouble");
-                    let flechaStandCloseModo = rewardsRow.querySelector(".flechaStand");
-                    flechaDoubleCloseModo.style.opacity = "0";
-                    flechaStandCloseModo.style.opacity = "1";
-                }else{
-                    modoLocoDefaulR.style.opacity = "1";
-                    modoLocoActiveR.style.opacity = "0";
-                    multiModeLabelR.classList.remove("active");
-                    multiModeLabelR.textContent = "Modo Normal";
-                    let rewardsRow = rewardsModeCosts.closest(".rewardsRow");
-                    let flechaDoubleCloseModo = rewardsRow.querySelector(".flechaDouble");
-                    let flechaStandCloseModo = rewardsRow.querySelector(".flechaStand");
-                    flechaDoubleCloseModo.style.opacity = "1";
-                    flechaStandCloseModo.style.opacity = "0";
-                }
-
-                rewardsBet.textContent = betValueSelect.textContent;
-                rewardsModeCosts.textContent = multiCostsFinal.textContent;
-
-                const rewardsRowsHistory = document.querySelectorAll("#historyContainer .rewardsRow");
-                rewardsRowsHistory.forEach(row => {
-                    const img = row.querySelector(".item"); // Primera imagen en la fila
-                    const numberElement = row.querySelector(".rewardsRowNumber");
-
-                    if (!img || !numberElement) return; // Si no hay imagen o número, saltar
-                    // Obtener el nombre del archivo de imagen sin extensión
-                    const imgSrc = img.src.split('/').pop().split('.')[0];
-
-                    if (imgSrc == "tomatoFull") {
-                        numberElement.textContent = objHistory.tomato;
-                    } else if (imgSrc == "tomatoGold") {
-                        numberElement.textContent = objHistory.tomatoGold;
-                    } else if (imgSrc == "bomb") {
-                        numberElement.textContent = objHistory.bomb;
-                    } else if (imgSrc == "bombCammo") {
-                        numberElement.textContent = objHistory.bombCammo;
-                    } else if (imgSrc == "bombCammoGold") {
-                        numberElement.textContent = objHistory.bombGold;
-                    } else if (imgSrc == "goldCC") {
-                        numberElement.textContent = objHistory.goldCC;
-                    }
-                });
-
-                rewardsTomatos.textContent = tomatosCuted.textContent*2;
-                rewardsCoins.textContent = coinsColected.textContent;
-                
-                let rewardsRow = rewardsCoins.closest(".rewardsRow");
-                let flechaDoubleCloseCoins = rewardsRow.querySelector(".flechaDouble");
-                let flechaStandCloseCoins = rewardsRow.querySelector(".flechaStand");
-                if(rewardsCoins.textContent == 0){
-                    flechaDoubleCloseCoins.style.opacity = "0";
-                    flechaStandCloseCoins.style.opacity = "1";
-                }else{
-                    flechaDoubleCloseCoins.style.opacity = "1";
-                    flechaStandCloseCoins.style.opacity = "0";
-                }
-
             }
         }, 1200);
+
+
+
+        // Texto de etiquetas
+        flechaDoubles.forEach(flechaDouble => {
+            flechaDouble.style.opacity = "1";
+        });
+        if(checkboxSwitch.checked){    
+            modoLocoDefaulR.style.opacity = "0";
+            modoLocoActiveR.style.opacity = "1";
+            multiModeLabelR.classList.add("active");
+            multiModeLabelR.textContent = "Modo Loco";
+            let rewardsRow = rewardsModeCosts.closest(".rewardsRow");
+            let flechaDoubleCloseModo = rewardsRow.querySelector(".flechaDouble");
+            let flechaStandCloseModo = rewardsRow.querySelector(".flechaStand");
+            flechaDoubleCloseModo.style.opacity = "0";
+            flechaStandCloseModo.style.opacity = "1";
+        }else{
+            modoLocoDefaulR.style.opacity = "1";
+            modoLocoActiveR.style.opacity = "0";
+            multiModeLabelR.classList.remove("active");
+            multiModeLabelR.textContent = "Modo Normal";
+            let rewardsRow = rewardsModeCosts.closest(".rewardsRow");
+            let flechaDoubleCloseModo = rewardsRow.querySelector(".flechaDouble");
+            let flechaStandCloseModo = rewardsRow.querySelector(".flechaStand");
+            flechaDoubleCloseModo.style.opacity = "1";
+            flechaStandCloseModo.style.opacity = "0";
+        }
+
+        rewardsBet.textContent = betValueSelect.textContent;
+        rewardsModeCosts.textContent = multiCostsFinal.textContent;
+
+        const rewardsRowsHistory = document.querySelectorAll("#historyContainer .rewardsRow");
+        rewardsRowsHistory.forEach(row => {
+            const img = row.querySelector(".item"); // Primera imagen en la fila
+            const numberElement = row.querySelector(".rewardsRowNumber");
+
+            if (!img || !numberElement) return; // Si no hay imagen o número, saltar
+            // Obtener el nombre del archivo de imagen sin extensión
+            const imgSrc = img.src.split('/').pop().split('.')[0];
+
+            if (imgSrc == "tomatoFull") {
+                numberElement.textContent = objHistory.tomato;
+            } else if (imgSrc == "tomatoGold") {
+                numberElement.textContent = objHistory.tomatoGold;
+            } else if (imgSrc == "bomb") {
+                numberElement.textContent = objHistory.bomb;
+            } else if (imgSrc == "bombCammo") {
+                numberElement.textContent = objHistory.bombCammo;
+            } else if (imgSrc == "bombCammoGold") {
+                numberElement.textContent = objHistory.bombGold;
+            } else if (imgSrc == "goldCC") {
+                numberElement.textContent = objHistory.goldCC;
+            }
+        });
+
+        updateRewards();
 
 
         if(action == "win"){
@@ -1094,6 +1088,75 @@ async function showMenu(menuPass) {
         }, 500);
     }
 }
+
+function updateRewards(){
+    if(checkboxSwitch.checked){
+        rewardsTomatos.style.display = "block";
+        rewardsMulti.style.display = "block";
+        rewardsTomatosFinal.style.display = "block";
+
+        // Calcula los tomates cortados multiplicados por 2
+        rewardsTomatos.textContent = tomatosCuted.textContent * 2;
+
+        // Calcula el multiplicador con dos decimales y el prefijo "x"
+        let multiplier = (sliderMulti.value / 100).toFixed(2);
+
+        // Calcula el resultado final antes de redondear
+        let finalValue = parseFloat(multiplier) * parseInt(rewardsTomatos.textContent);
+
+        // Redondeo según la condición
+        let roundedValue = Math.round(finalValue);
+        let difference = Math.abs(finalValue - roundedValue);
+
+        // Determinar si hay que redondear con símbolo "≃" o "="
+        // Siempre pondrá "=" en caso de que la diferencia sea <= 0.10
+        let symbol = (difference > 0.10) ? " ≃ " : " = ";
+
+        // Mostrar los valores finales
+        rewardsTomatosFinal.textContent = roundedValue;
+        rewardsMulti.textContent = "x" + multiplier + symbol;
+
+    }else{
+        rewardsTomatos.style.display = "none";
+        rewardsMulti.style.display = "none";
+        rewardsTomatosFinal.style.display = "block";
+        rewardsTomatosFinal.textContent = tomatosCuted.textContent*2;
+    }
+    
+    rewardsCoins.textContent = monedasDB;
+
+
+    if(action == "lose"){
+        rewardsTomatos.style.display = "none";
+        rewardsMulti.style.display = "none";
+        rewardsCoins.textContent = 0;
+        rewardsTomatosFinal.textContent = 0;
+    }
+    
+    //Update flechaStand
+    let rewardsRowC = rewardsCoins.closest(".rewardsRow");
+    let flechaDoubleCloseCoinsC = rewardsRowC.querySelector(".flechaDouble");
+    let flechaStandCloseCoinsC = rewardsRowC.querySelector(".flechaStand");
+    if(rewardsCoins.textContent == 0){
+        flechaDoubleCloseCoinsC.style.opacity = "0";
+        flechaStandCloseCoinsC.style.opacity = "1";
+    }else{
+        flechaDoubleCloseCoinsC.style.opacity = "1";
+        flechaStandCloseCoinsC.style.opacity = "0";
+    }
+
+    let rewardsRowT = rewardsTomatosFinal.closest(".rewardsRow");
+    let flechaDoubleCloseCoinsT = rewardsRowT.querySelector(".flechaDouble");
+    let flechaStandCloseCoinsT = rewardsRowT.querySelector(".flechaStand");
+    if(rewardsTomatosFinal.textContent == 0){
+        flechaDoubleCloseCoinsT.style.opacity = "0";
+        flechaStandCloseCoinsT.style.opacity = "1";
+    }else{
+        flechaDoubleCloseCoinsT.style.opacity = "1";
+        flechaStandCloseCoinsT.style.opacity = "0";
+    }
+}
+
 
 
 const canvas = document.getElementById("gifCanvas"); // Usamos el canvas existente
@@ -1203,10 +1266,43 @@ function playGif(action, reverse = false) {
 preloadGifs();
 
 function executeAction(action) {
+    let gifCanvas = document.getElementById("gifCanvas");
+    let borderAnim = document.querySelector(".borderAnim");
+
+    let rewardsTittles = document.querySelectorAll(".rewardsTittle");
+    rewardsTittles.forEach(rewardsTittle => {
+        rewardsTittle.classList.remove("lose");
+        rewardsTittle.classList.remove("win");
+        if (action === "win") {
+            rewardsTittle.classList.add("win");
+        } else if (action === "lose") {
+            rewardsTittle.classList.add("lose");
+        }
+    });
+
+    let rewardsTittleImgs = document.querySelectorAll(".rewardsTittleImg");
+    rewardsTittleImgs.forEach(rewardsTittleImg => {
+        rewardsTittleImg.classList.remove("lose");
+        rewardsTittleImg.classList.remove("win");
+        if (action === "win") {
+            rewardsTittleImg.classList.add("win");
+        } else if (action === "lose") {
+            rewardsTittleImg.classList.add("lose");
+        }
+    });
+
     if (action === "win") {
         playGif("win");
+        gifCanvas.classList.remove("lose");
+        gifCanvas.classList.add("win");
+        borderAnim.classList.remove("lose");
+        borderAnim.classList.add("win");
     } else if (action === "lose") {
         playGif("lose");
+        gifCanvas.classList.remove("win");
+        gifCanvas.classList.add("lose");
+        borderAnim.classList.remove("win");
+        borderAnim.classList.add("lose");
     }
 }
 
@@ -1298,6 +1394,7 @@ function startGame(){
 
     tomatosMistakedVar = 0;
     action = "";
+    monedasDB = 0;
 
     tomatosCuted.textContent = "0";
     coinsColected.textContent = "0";
@@ -1894,6 +1991,8 @@ function killFruit(fruit) {
 
 
 let monedasUpdateInterval;
+let monedasDB = 0;
+
 function scoreCoinsUpdate(price){
     // Limpia el intervalo existente, si lo hay
     if (monedasUpdateInterval) {
@@ -1902,6 +2001,8 @@ function scoreCoinsUpdate(price){
 
     let monedasViejas = scoreCoins;
     let monedasNuevas = monedasViejas+price;
+    monedasDB = monedasDB+price;
+    
     // Calcular la cantidad de pasos y la duración de cada paso
     const pasos = Math.abs(monedasViejas - monedasNuevas);
     const intervaloDuracion = pasos > 0 ? 1000 / pasos : 0; // Duración en ms por paso (2 segundos en total)
@@ -1990,6 +2091,7 @@ document.addEventListener("DOMContentLoaded", function () {
             game = new Phaser.Game(w, h, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
         }
     });
+
 
     let nextButtonPressed = 0;
     nextButton.addEventListener("click", function () {

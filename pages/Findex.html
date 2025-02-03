@@ -10,16 +10,14 @@
     <div id="game"></div>
     <div id="matchInfoContainer">
         <div>
-            <div>Tomatos Bet:</div>
-            <div id="tomatosBet"></div>
-        </div>
-        <div>
-            <div>Tomatos cuted:</div>
+            <img class="matchInfoContainerImg" src="../img/hamster/icons/iconTomatoSvgPlane.png"/>
             <div id="tomatosCuted">0</div>
+            <div class="slashBar">/</div>
+            <div id="tomatosBet">0</div>
         </div>
         <div>
-            <div>Coins collected:</div>
-            <div id="coinsColected"></div>
+            <img class="matchInfoContainerImg" src="../img/fruitNinja/coin.png"/>
+            <div id="coinsColected">0</div>
         </div>
     </div>
     <div id="dificultyBar"></div>
@@ -47,7 +45,7 @@
         <div id="infoContainer" class="borderAnim">
             <div id="informationContainer">
                 <div class="rewardsTittleContainer">
-                    <img class="rewardsTittleImg night" src="../img/info.png"/>
+                    <div class="rewardsTittleImg info"></div>
                     <div class="rewardsTittle">Información:</div>
                     <div class="rewardsTittleBlank"></div>
                 </div>
@@ -79,8 +77,8 @@
             </div>
 
             <div id="historyContainer">
-                <div class="rewardsTittleContainer">
-                    <img class="rewardsTittleImg night" src="../img/history.png"/>
+                <div class="rewardsTittleContainer" style="margin-top: 8px;">
+                    <div class="rewardsTittleImg history"></div>
                     <div class="rewardsTittle">Historial de aparición:</div>
                     <div class="rewardsTittleBlank"></div>
                 </div>
@@ -123,18 +121,18 @@
 
             <div id="rewardsContainer">
                 <div class="rewardsTittleContainer">
-                    <img class="rewardsTittleImg night" src="../img/rewards.png"/>
+                    <div class="rewardsTittleImg rewards"></div>
                     <div class="rewardsTittle">Recompensas:</div>
-                    <div class="rewardsTittleBlank"></div>
+                    <div class="rewardsTittleBlank" style="margin-right: 40px;"></div>
                 </div>
                 <div class="rewardsItems">
                     <div class="rewardsRow">
+                        <div class="flechaStand flechaStandMl"></div>
                         <img class="flechaDouble flechaDoubleMl" src="../img/dobleFlecha.png"/>
                         <img class="item itemTomatoSlice" src="../img/hamster/icons/iconTomatoSlice.png"/>
                         <div class="rewardsRowNumber rewardsTomatos"></div>
-                        <div class="rewardsRowNumber">x1.25 = </div>
-                        <div class="rewardsRowNumber">=</div>
-                        <div class="rewardsRowNumber">4</div>
+                        <div class="rewardsRowNumber rewardsMulti">x1.69 = </div>
+                        <div class="rewardsRowNumber rewardsTomatosFinal">69</div>
                     </div>
                     <div class="rewardsRow">
                         <div class="flechaStand flechaStandMl"></div>
@@ -163,7 +161,7 @@
             <div class="betContainer perspCont">
                 <label style="margin-top: -2px;" for="sliderTomatoes">Apuesta:</label>
                 <div class="betRangeContainer">
-                    <input type="range" id="sliderTomatoes" min="1" value="1">
+                    <input type="range" id="sliderTomatoes" min="1" value="9">
                     <div class="betValueContainer">
                         <span id="betCosts">Cuesta</span>
                         <span id="betValueSelect" contenteditable="true"></span>
