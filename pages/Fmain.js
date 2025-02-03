@@ -408,20 +408,20 @@ function handleMistakes(){
 
 // Configuración de probabilidades iniciales
 var probabilitiesToReset = {
-    tomato: 50,          // 50
-    tomatoGold: 7,      // 7
-    bomb: 30,            // 30
-    bombCammo: 20,       // 20
-    bombGold: 3,        // 3
-    goldCC: 100           // 2
+    tomato: 60,          // 50
+    tomatoGold: 20,      // 7
+    bomb: 50,            // 30
+    bombCammo: 13,       // 20
+    bombGold: 7,        // 3
+    goldCC: 2           // 2
 };
 var probabilities = {
-    tomato: 50,          // 50
-    tomatoGold: 7,      // 7
-    bomb: 30,            // 30
-    bombCammo: 20,       // 20
-    bombGold: 3,        // 3
-    goldCC: 100           // 2
+    tomato: 60,          // 50
+    tomatoGold: 20,      // 7
+    bomb: 50,            // 30
+    bombCammo: 13,       // 20
+    bombGold: 7,        // 3
+    goldCC: 2           // 2
 };
 var dynamicStatesToReset = {
     bombCammoBoost: false,   // Aumenta si sale un tomato
@@ -655,9 +655,9 @@ function spawnObject(groups, key) {
     let obj = group.getFirstDead();
 
     if (key === 'tomato') {
-        dynamicStates.bombCammoChance = 50; // Aumentar probabilidad de bombCammo
+        dynamicStates.bombCammoChance = 100; // Aumentar probabilidad de bombCammo
     } else if (key === 'tomatoGold') {
-        dynamicStates.bombGoldChance = 50; // Aumentar probabilidad de bombGold
+        dynamicStates.bombGoldChance = 100; // Aumentar probabilidad de bombGold
     } else if (key === 'bombCammo') {
         dynamicStates.bombCammoChance = probabilities.bombCammo; // Reducir probabilidad de bombCammo
     } else if (key === 'bombCammoGold') {
@@ -1123,7 +1123,7 @@ function updateRewards(){
         rewardsTomatosFinal.textContent = tomatosCuted.textContent*2;
     }
     
-    rewardsCoins.textContent = monedasDB;
+    rewardsCoins.textContent = scoreCoins;
 
 
     if(action == "lose"){
@@ -1394,7 +1394,6 @@ function startGame(){
 
     tomatosMistakedVar = 0;
     action = "";
-    monedasDB = 0;
 
     tomatosCuted.textContent = "0";
     coinsColected.textContent = "0";
@@ -1453,16 +1452,80 @@ function spawnParticles(fruit, cutAngle) {
     let emitterToUse, emitterCoin;
 
     if (fruit.key === 'goldCC') {
-        // Crear un emisor único para goldCC
         emitterCoin = game.add.emitter(fruit.x, fruit.y, 35); // 35 partículas para goldCC
         emitterCoin.makeParticles('coin');
         emitterCoin.setScale(0.15, 0.1, 0.15, 0.1);
-        emitterCoin.gravity = 0; // Sin gravedad para seguir la dirección del corte
+        emitterCoin.gravity = 0; // Sin gravedad inicial para que siga la dirección del corte
 
         configureCoinAnimation(emitterCoin); // Configurar animación para partículas de monedas
 
-        emitterCoin.start(true, 2000, null, 35);
-        fadeOutEmitterWithShadow(emitterCoin);
+        // Asegurar que las partículas tengan una vida suficientemente larga
+        emitterCoin.setAll('lifespan', 3000);  
+
+        // Emitir partículas
+        emitterCoin.start(true, 3000, null, 35); 
+
+        // Definir el punto de atracción
+        let targetX = 60; // Coordenada X en la esquina superior izquierda
+        let targetY = 80; // Coordenada Y en la esquina superior izquierda
+
+        let laGordaStart = Math.floor(Math.random() * (800 - 400 + 1)) + 400;
+        game.time.events.add(laGordaStart, function () {
+            emitterCoin.forEachAlive(function (particle) {
+                let dx = targetX - particle.x;
+                let dy = targetY - particle.y;
+        
+                let fuerza = 1500 + Math.random() * 500; // Variar la fuerza aleatoriamente entre 1500 y 2000
+        
+                // Aplicar la nueva gravedad con ligeras variaciones
+                particle.body.gravity.x = (dx * fuerza / game.world.width) + Math.random() * 20 - 10; // Variación de -10 a 10
+                particle.body.gravity.y = (dy * fuerza / game.world.height) + Math.random() * 20 - 10; // Variación de -10 a 10
+            });
+        
+            game.time.events.add(200, function () {
+                setTimeout(() => {
+                    scoreCoinsUpdate(100);
+                }, 1500);
+        
+                emitterCoin.forEachAlive(function (particle) {
+                    let randomOffsetX = Math.random() * 20 - 10; // Variación en X (-10 a 10)
+                    let randomOffsetY = Math.random() * 20 - 10; // Variación en Y (-10 a 10)
+                    let randomDuration = 1500 + Math.random() * 400; // Variación en la duración del tween (1500-1900ms)
+        
+                    // Usamos un Tween para hacer que las partículas se junten progresivamente con ligeras variaciones
+                    let tween = game.add.tween(particle).to(
+                        { x: targetX + randomOffsetX, y: targetY + randomOffsetY },
+                        randomDuration, // Duración variable
+                        Phaser.Easing.Quadratic.Out, // Movimiento suavizado
+                        true
+                    );
+        
+                    // Desactivar la gravedad para que no interfiera en la agrupación
+                    particle.body.gravity.x = 0;
+                    particle.body.gravity.y = 0;
+                    particle.body.velocity.setTo(0, 0);
+        
+                    // Cuando el tween termine, eliminar la partícula con una animación de desaparición
+                    tween.onComplete.add(function () {
+                        game.add.tween(particle).to(
+                            { alpha: 0 }, // Desvanecer hasta desaparecer
+                            10, // Duración de la animación de desaparición
+                            Phaser.Easing.Linear.None,
+                            true
+                        ).onComplete.add(function () {
+                            if (particle.shadow) {
+                                particle.shadow.destroy(); // Destruir la sombra antes de matar la partícula
+                                particle.shadow = null; // Limpiar referencia a la sombra
+                            }
+                            if (particle) {
+                                particle.kill();
+                            }
+                        });
+                    });
+                });
+            });
+        });
+        
 
     } else if (fruit.key === 'tomatoGold') {
         // Crear el primer emisor para peaceGold
@@ -1474,16 +1537,84 @@ function spawnParticles(fruit, cutAngle) {
         emitterToUse.start(true, 2000, null, getRandomBetween(4, 10));
         fadeOutEmitterWithShadow(emitterToUse);
 
-        // Crear el segundo emisor para monedas
-        emitterCoin = game.add.emitter(fruit.x, fruit.y, 10); // 10 partículas para monedas
+        
+        //------------
+        //------------
+
+        emitterCoin = game.add.emitter(fruit.x, fruit.y, 35); // 35 partículas para goldCC
         emitterCoin.makeParticles('coin');
         emitterCoin.setScale(0.15, 0.1, 0.15, 0.1);
-        emitterCoin.gravity = 0;
+        emitterCoin.gravity = 0; // Sin gravedad inicial para que siga la dirección del corte
 
         configureCoinAnimation(emitterCoin); // Configurar animación para partículas de monedas
 
-        emitterCoin.start(true, 2000, null, 10);
-        fadeOutEmitterWithShadow(emitterCoin);
+        // Asegurar que las partículas tengan una vida suficientemente larga
+        emitterCoin.setAll('lifespan', 3000);  
+
+        // Emitir partículas
+        emitterCoin.start(true, 3000, null, 35); 
+
+        // Definir el punto de atracción
+        let targetX = 60; // Coordenada X en la esquina superior izquierda
+        let targetY = 80; // Coordenada Y en la esquina superior izquierda
+
+        let laGordaStart = Math.floor(Math.random() * (800 - 400 + 1)) + 400;
+        game.time.events.add(laGordaStart, function () {
+            emitterCoin.forEachAlive(function (particle) {
+                let dx = targetX - particle.x;
+                let dy = targetY - particle.y;
+        
+                let fuerza = 1500 + Math.random() * 500; // Variar la fuerza aleatoriamente entre 1500 y 2000
+        
+                // Aplicar la nueva gravedad con ligeras variaciones
+                particle.body.gravity.x = (dx * fuerza / game.world.width) + Math.random() * 20 - 10; // Variación de -10 a 10
+                particle.body.gravity.y = (dy * fuerza / game.world.height) + Math.random() * 20 - 10; // Variación de -10 a 10
+            });
+        
+            game.time.events.add(200, function () {
+                setTimeout(() => {
+                    scoreCoinsUpdate(10);
+                }, 1500);
+        
+                emitterCoin.forEachAlive(function (particle) {
+                    let randomOffsetX = Math.random() * 20 - 10; // Variación en X (-10 a 10)
+                    let randomOffsetY = Math.random() * 20 - 10; // Variación en Y (-10 a 10)
+                    let randomDuration = 1500 + Math.random() * 400; // Variación en la duración del tween (1500-1900ms)
+        
+                    // Usamos un Tween para hacer que las partículas se junten progresivamente con ligeras variaciones
+                    let tween = game.add.tween(particle).to(
+                        { x: targetX + randomOffsetX, y: targetY + randomOffsetY },
+                        randomDuration, // Duración variable
+                        Phaser.Easing.Quadratic.Out, // Movimiento suavizado
+                        true
+                    );
+        
+                    // Desactivar la gravedad para que no interfiera en la agrupación
+                    particle.body.gravity.x = 0;
+                    particle.body.gravity.y = 0;
+                    particle.body.velocity.setTo(0, 0);
+        
+                    // Cuando el tween termine, eliminar la partícula con una animación de desaparición
+                    tween.onComplete.add(function () {
+                        game.add.tween(particle).to(
+                            { alpha: 0 }, // Desvanecer hasta desaparecer
+                            20, // Duración de la animación de desaparición
+                            Phaser.Easing.Linear.None,
+                            true
+                        ).onComplete.add(function () {
+                            if (particle.shadow) {
+                                particle.shadow.destroy(); // Destruir la sombra antes de matar la partícula
+                                particle.shadow = null; // Limpiar referencia a la sombra
+                            }
+                            if (particle) {
+                                particle.kill();
+                            }
+                        });
+                    });
+                });
+            });
+        });
+        
 
     } else {
         // Crear un emisor único para partículas estándar (peace)
@@ -1745,7 +1876,7 @@ function killFruit(fruit) {
     if(fruit.key === 'goldCC'){
         leftHalf = game.add.sprite(fruit.x, fruit.y, 'goldCC_left');
         rightHalf = game.add.sprite(fruit.x, fruit.y, 'goldCC_right');
-        scoreCoinsUpdate(100);
+        
     }else if (fruit.key === 'tomato'){
         leftHalf = game.add.sprite(fruit.x, fruit.y, 'tomato_left');
         rightHalf = game.add.sprite(fruit.x, fruit.y, 'tomato_right');
@@ -1754,7 +1885,6 @@ function killFruit(fruit) {
         leftHalf = game.add.sprite(fruit.x, fruit.y, 'tomatoGold_left');
         rightHalf = game.add.sprite(fruit.x, fruit.y, 'tomatoGold_right');
         score++;
-        scoreCoinsUpdate(10);
     }else if (fruit.key === 'bomb'){
         leftHalf = game.add.sprite(fruit.x, fruit.y, 'bomb_left');
         rightHalf = game.add.sprite(fruit.x, fruit.y, 'bomb_right');
@@ -1991,7 +2121,6 @@ function killFruit(fruit) {
 
 
 let monedasUpdateInterval;
-let monedasDB = 0;
 
 function scoreCoinsUpdate(price){
     // Limpia el intervalo existente, si lo hay
@@ -2001,7 +2130,6 @@ function scoreCoinsUpdate(price){
 
     let monedasViejas = scoreCoins;
     let monedasNuevas = monedasViejas+price;
-    monedasDB = monedasDB+price;
     
     // Calcular la cantidad de pasos y la duración de cada paso
     const pasos = Math.abs(monedasViejas - monedasNuevas);
