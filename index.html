@@ -140,7 +140,7 @@
       <div class="coinsContainerHitbox"></div>
       <div class="coinsHoverTooltip">
         <img src="img/info.png" class="infoLogo coinsContainerHitboxLogo"/>
-        <div class="infoText coinsContainerHitboxInfo">Click to earn coins. Easy. The gold coins are primarily used to exchange for skins but can also be used for purchase other items or services.</div>
+        <div class="infoText coinsContainerHitboxInfo">Haz clicks para conseguir monedas! Sencillo! Con las monedas puedes comprar skins de cursor, otros objetos y servicios.</div>
       </div>
       <div class="coinLabel"></div>
     </div>
@@ -151,11 +151,11 @@
       <div class="tomatoContainerHitbox"></div>
       <div class="tomatoHoverTooltipUsage">
         <img src="img/clickLogo.png" class="usageLogo tomatoContainerHitboxLogo"/>
-        <div class="infoTextUsage tomatoContainerHitboxInfo">Click to slice tomatoes</div>
+        <div class="infoTextUsage tomatoContainerHitboxInfo">Haz click para entrar a SliceIt y cortar tus tomates!</div>
       </div>
       <div class="tomatoHoverTooltip">
         <img src="img/info.png" class="infoLogo tomatoContainerHitboxLogo"/>
-        <div class="infoText tomatoContainerHitboxInfo">Tomatoes are used to feed hamsters, but you’ll need to slice them first. You can purchase tomatoes in the Grocery Store, located in the Boosters section.</div>
+        <div class="infoText tomatoContainerHitboxInfo">Los tomates se usan para alimentar a los hamsters, pero para ponerlos en el comedero necesitas cortarlos primero! Puedes comprarlos en la Grocery, ubicada en la sección de Boosters.</div>
       </div>
       <div id="tomatoLabel"></div>
     </div>
@@ -166,9 +166,9 @@
       <div class="tomatoSliceContainerHitbox"></div>
       <div class="tomatoSliceHoverTooltip">
         <img src="img/info.png" class="infoLogo tomatoSliceContainerHitboxLogo"/>
-        <div class="infoText tomatoSliceContainerHitboxInfo">Click to earn coins . Easy . The gold coins are primarily used to exchange for skins but can also be used for purchase other items or services.</div>
+        <div class="infoText tomatoSliceContainerHitboxInfo">Usa los tomates cortados para alimentar a tus hamsters!</div>
       </div>
-      <div id="tomatoSliceLabel">100</div>
+      <div id="tomatoSliceLabel"></div>
     </div>
 
     <div id="helloMessage">ㅤ</div>
@@ -771,6 +771,7 @@
     
     <div id="cageContainer">
       <img id="cage" src="img/hamster/cage.png"/>
+      <div id="glass"></div>
       <div id="hitboxSlotUpLeft" class="hitbox"></div>
       <div id="hitboxSlotUpRight" class="hitbox"></div>
       <div id="hitboxSlotDown" class="hitbox"></div>
@@ -819,6 +820,11 @@
             <img src="img/hamster/icons/iconThunder.svg"/>
             <img src="img/hamster/icons/iconTomato.svg"/>
             <img src="img/hamster/icons/iconWater.svg"/>
+          </div>
+          <div class="sliderHamsterWarningIcons">
+            <img class="warning yellow" src="img/error.png"/>
+            <img class="warning red" src="img/error.png"/>
+            <img class="warning red" src="img/error.png"/>
           </div>
           <div class="sliderHamsterSliders">
             <input class="sliderHamster sliderEnergy" type="range" min="0" max="1000" value="500" disabled/>

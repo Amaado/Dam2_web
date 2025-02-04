@@ -1905,7 +1905,7 @@ function updateBubbles() {
               campoNameRegister.value,
               campoPasswordRegister.value,
               "0",
-              "11LLLLLLLLLLLLLL"
+              "11LLLLLLLLLLLLLLLLL"
             );
             ajustesColorLoginYregister(checkbox);
             errorLabelRegister.style.visibility = "visible";
@@ -2368,8 +2368,8 @@ function updateBubbles() {
 
   async function atualizarTomatoSliceContainerHitboxWidth(tomatosSlice){
     const tomatosSliceLength = String(Math.abs(tomatosSlice)).length;
-    let pixelesAsumar1 = tomatosSliceLength*30 + 30 + 65;
-    let pixelesAsumar2 = tomatosSliceLength*30 + 60 + 60;
+    let pixelesAsumar1 = tomatosSliceLength*30 + 30 + 30;
+    let pixelesAsumar2 = tomatosSliceLength*30 + 60 + 25;
     tomatoSliceContainerHitbox.style.width = pixelesAsumar1+"px";
     tomatoSliceHoverTooltip.style.left = pixelesAsumar2+"px";
   }
@@ -2423,6 +2423,8 @@ function updateBubbles() {
   const idLogeadoLoc = parseInt(localStorage.getItem("idLogeado"));
   if (!isNaN(idLogeadoLoc)) {
     actualizarLocalCoinsCounter(idLogeadoLoc);
+    actualizarTomatos(idLogeadoLoc);
+    actualizarTomatosSlice(idLogeadoLoc);
   } else {
     console.error(
       "Usuario no logeado al intentar actualizar el contador local."
@@ -2539,7 +2541,7 @@ async function obtenerTomatosDeUsuario(id) {
       await actualizarTomatosUsuario(id, 0);
       return 0;
     }
-  }
+}
 
 let zIndexValueTomatos = 60; // Variable global para controlar el z-index para tomatos
 let imageCounterTomatos = 0; // Contador para generar identificadores únicos para tomatos
@@ -2602,6 +2604,95 @@ async function incrementTomatos(idLogeado, tomatesAnhadir) {
 }
 
 
+
+/* TOMATOS SLICE DB CONNECTION */
+
+async function obtenerTomatosSliceDeUsuario(id) {
+  const url = `${supabaseUrl}?id=eq.${id}`;
+
+  try {
+      const response = await fetch(url, {
+          method: "GET",
+          headers: {
+              apikey: supabaseKey,
+              Authorization: `Bearer ${supabaseKey}`,
+              "Content-Type": "application/json",
+          },
+      });
+
+      if (!response.ok) {
+          throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      if (Array.isArray(data) && data.length > 0) {
+          const tomatosSlice = data[0].tomatos_slice; // Ahora usa "tomatos_slice"
+
+          if (tomatosSlice === null || tomatosSlice === undefined) {
+              console.warn(`tomatos_slice es ${tomatosSlice}. Se inicializa a 0.`);
+              await actualizarTomatosSliceUsuario(id, 0);
+              return 0;
+          }
+
+          return tomatosSlice;
+      } else {
+          console.warn("Usuario no encontrado. Inicializando tomatos_slice a 0.");
+          await actualizarTomatosSliceUsuario(id, 0);
+          return 0;
+      }
+  } catch (error) {
+      console.error("Error obteniendo tomatos_slice:", error);
+      return 0; // Retorna 0 en caso de fallo para evitar interrupciones
+  }
+}
+
+async function actualizarTomatosSlice(idLogeado) {
+  try {
+      console.log("ID logeado:", idLogeado);
+      const tomatosSliceLogeado = await obtenerTomatosSliceDeUsuario(idLogeado);
+      await atualizarTomatoSliceContainerHitboxWidth(tomatosSliceLogeado);
+
+      if (tomatoSliceLabel) {
+          tomatoSliceLabel.textContent = tomatosSliceLogeado;
+      } else {
+          console.warn("Elemento slicesInfoContainer no encontrado en el DOM.");
+      }
+
+      console.log("tomatos_slice obtenidos:", tomatosSliceLogeado);
+  } catch (error) {
+      console.error("Error al actualizar tomatos_slice:", error);
+  }
+}
+
+async function actualizarTomatosSliceUsuario(id, nuevaCantidad) {
+  if (!id || nuevaCantidad === undefined || nuevaCantidad === null) {
+      console.error("ID o nueva cantidad de tomatos_slice no válidos.");
+      return;
+  }
+
+  const url = `${supabaseUrl}?id=eq.${id}`;
+
+  try {
+      const response = await fetch(url, {
+          method: "PATCH",
+          headers: {
+              apikey: supabaseKey,
+              Authorization: `Bearer ${supabaseKey}`,
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ tomatos_slice: nuevaCantidad }), // Solo actualiza el campo tomatos_slice
+      });
+
+      if (!response.ok) {
+          throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+      }
+
+      console.log(`Tomatos_slice actualizados correctamente a ${nuevaCantidad} para el usuario con ID ${id}`);
+  } catch (error) {
+      console.error("Error actualizando tomatos_slice:", error);
+  }
+}
 
 
   let activeAnimations = 0;
@@ -6922,6 +7013,39 @@ function setHamster(hamsterElement){
   }
 }
 
+
+// Función para precargar las imágenes de los hámsters
+function preloadHamsterImages() {
+  const hamsterTypes = ["Biggie", "Coco", "Dior"];
+  const strokeCount = 3; // Número de frames de stroke
+
+  hamsterTypes.forEach(type => {
+    // Convertimos el tipo a minúsculas para construir la ruta de la imagen
+    const typeLower = type.toLowerCase();
+    for (let i = 1; i <= strokeCount; i++) {
+      // Definimos las URLs de las imágenes según el patrón utilizado en setStrokeHamster
+      // Nota: En el caso de '--bum' se utiliza la misma imagen que '--puff-before', 
+      // por lo que solo es necesario precargarla una vez.
+      const imageUrls = [
+        `img/hamster/${typeLower}/stroke/puff${type}Stroke${i}.png`,
+        `img/hamster/${typeLower}/stroke/puff${type}BeforeStroke${i}.png`,
+        `img/hamster/${typeLower}/stroke/ear${type}Stroke${i}.png`,
+        `img/hamster/${typeLower}/stroke/earAfter${type}2Stroke${i}.png`
+      ];
+
+      imageUrls.forEach(url => {
+        const img = new Image();
+        img.src = url;
+        // Opcional: puedes agregar un listener para confirmar que se precargó correctamente
+        // img.onload = () => console.log(`Imagen precargada: ${url}`);
+      });
+    }
+  });
+}
+
+window.addEventListener("load", preloadHamsterImages);
+
+
 function setStrokeHamster(hamsterElement) {
   let type = getHamsterType(hamsterElement);
 
@@ -6972,6 +7096,7 @@ function setStrokeHamster(hamsterElement) {
   // Guardar el nuevo intervalo para este hámster
   hamsterIntervals.set(hamsterElement, newIntervalId);
 }
+
 
 let explosionTimeoutId;
 let isResetToContainer = false;
@@ -8271,9 +8396,9 @@ async function descontarMonedas(price, event) {
 }
 
 function tomatoAnimStart() {
-  const initialMarginLeft = -120;
-  const longitud = tomatoLabel.textContent.toString().length;
-  const marginLeftTomatoAnim = initialMarginLeft + longitud * 18;
+  let initialMarginLeft = 13;
+  const longitud = tomatoLabel.textContent.toString().length - 1;
+  const marginLeftTomatoAnim = initialMarginLeft + longitud * 25;
 
   const existingTomatoAnims = tomatoContainer.querySelectorAll(".tomatoAnim");
   existingTomatoAnims.forEach((element) => element.remove());
@@ -8284,8 +8409,6 @@ function tomatoAnimStart() {
     "img/hamster/icons/tomatoAnim.gif" + "?t=" + new Date().getTime();
   
   tomatoContainer.appendChild(tomatoAnim);
-
-  //TODO: con distintas cifras en el contador de tomates, la animación se rompe
 
   setTimeout(() => {
     tomatoAnim.style.marginLeft = `${marginLeftTomatoAnim}px`;
@@ -8644,7 +8767,7 @@ async function cargarHamstersDesdeBD() {
       }
 
       const offsetX = Math.floor(Math.random() * 801); // Entre 0 y 800 (incluidos)
-      const offsetY = Math.floor(Math.random() * 501); // Entre 0 y 500 (incluidos)
+      const offsetY = window.innerHeight-100; // Entre 0 y 500 (incluidos)
 
       switch (contenedor.id) {
         case "hitboxSlotWeel":
@@ -8944,6 +9067,7 @@ function decrementEnergy(hamsterId, amount) {
   hamsterEl.setAttribute("energy", currentEnergy);
   const slider = hamsterEl.querySelector(".sliderEnergy");
   if (slider) slider.value = currentEnergy;
+  slider.dispatchEvent(new Event('input'));
 }
 
 /**
@@ -8961,6 +9085,7 @@ function decrementHunger(hamsterId, amount) {
   hamsterEl.setAttribute("hunger", currentHunger);
   const slider = hamsterEl.querySelector(".sliderHunger");
   if (slider) slider.value = currentHunger;
+  slider.dispatchEvent(new Event('input'));
 }
 
 /**
@@ -8978,6 +9103,7 @@ function decrementThirst(hamsterId, amount) {
   hamsterEl.setAttribute("thirst", currentThirst);
   const slider = hamsterEl.querySelector(".sliderWater");
   if (slider) slider.value = currentThirst;
+  slider.dispatchEvent(new Event('input'));
 }
 
 
@@ -8990,6 +9116,7 @@ function fillFullStats(hamsterId){
   hamsterEl.setAttribute("thirst", currentThirst);
   const slider = hamsterEl.querySelector(".sliderWater");
   if (slider) slider.value = currentThirst;
+  slider.dispatchEvent(new Event('input'));
 }
 
 
@@ -9038,12 +9165,26 @@ function startPeriodicStatsUpdate(userId) {
 
     // 2) Enviar con UNA sola petición
     await setHamsterStatsInDB(userId, statsObj);
-    //console.log("Actualización global de stats en BD:", statsObj);
-    console.log('%c Actualización global de stats en BD: %o', 'background: blue; color: white; padding: 4px;', statsObj);
+    //console.log('%c Actualización global de stats en BD: %o', 'background: blue; color: white; padding: 4px;', statsObj);
   }, 20000);
 }
 
 
+//ACTUALIZACION DEL ::BEFORE DE LOS SLIDER STATS
+document.querySelectorAll('.sliderHamster').forEach(slider => {
+  slider.addEventListener('input', function() {
+      const max = this.max || 1000;
+      const percentage = this.value / max;
+
+      // Interpolar el width entre 0 y 60px
+      const thumbWidth = percentage * 60; // Si value=0 → 0px, Si value=1000 → 60px
+
+      this.style.setProperty('--thumb-width', `${thumbWidth}px`);
+  });
+
+  // Forzar actualización inicial
+  slider.dispatchEvent(new Event('input'));
+});
 
 
 /******************************************************
@@ -9081,19 +9222,27 @@ window.addEventListener("load", async () => {
       // 2.2) Encontrar sus estadísticas en userHamstersStats
       const hamsterData = userHamstersStats.hamsters.find(h => h.id === hamsterId);
       if (hamsterData) {
-        // 2.3) Cargar los valores en el DOM (atributos + sliders)
         hamsterEl.setAttribute("energy", hamsterData.energy);
         hamsterEl.setAttribute("hunger", hamsterData.hunger);
         hamsterEl.setAttribute("thirst", hamsterData.thirst);
 
         const sliderEnergy = hamsterEl.querySelector(".sliderEnergy");
-        if (sliderEnergy) sliderEnergy.value = hamsterData.energy;
+        if (sliderEnergy) {
+          sliderEnergy.value = hamsterData.energy;
+          sliderEnergy.dispatchEvent(new Event('input')); // 🔹 Forzar actualización visual
+        }
 
         const sliderHunger = hamsterEl.querySelector(".sliderHunger");
-        if (sliderHunger) sliderHunger.value = hamsterData.hunger;
+        if (sliderHunger) {
+          sliderHunger.value = hamsterData.hunger;
+          sliderHunger.dispatchEvent(new Event('input')); // 🔹 Forzar actualización visual
+        }
 
         const sliderThirst = hamsterEl.querySelector(".sliderWater");
-        if (sliderThirst) sliderThirst.value = hamsterData.thirst;
+        if (sliderThirst) {
+          sliderThirst.value = hamsterData.thirst;
+          sliderThirst.dispatchEvent(new Event('input')); // 🔹 Forzar actualización visual
+        }
       }
 
       // 2.4) Si el hamster está en la tienda (ej: id incluye "hitboxSlotBuy"), lo llenamos a tope

@@ -50,6 +50,9 @@ const rewardsTomatos = document.querySelector(".rewardsTomatos");
 const rewardsTomatosFinal = document.querySelector(".rewardsTomatosFinal");
 const rewardsMulti = document.querySelector(".rewardsMulti");
 const rewardsCoins = document.querySelector(".rewardsCoins");
+const matchInfoContainer = document.getElementById("matchInfoContainer");
+const slicesInfoContainer = document.getElementById("slicesInfoContainer");
+const slicesDB = document.getElementById("slicesDB");
 
 const mistakeImgs = document.querySelectorAll(".mistakeImg");
 const warningMessageContainer = document.querySelector(".warningMessageContainer");
@@ -105,6 +108,36 @@ try {
 }
 actualizarMonedas(idLogeado);
 
+async function actualizarMonedasUsuario(id, nuevaCantidad) {
+    if (!id || nuevaCantidad === undefined || nuevaCantidad === null) {
+        console.error("ID o nueva cantidad de monedas no válidos.");
+        return;
+    }
+
+    const url = `${supabaseUrl}?id=eq.${id}`;
+
+    try {
+        const response = await fetch(url, {
+            method: "PATCH", // Usa PATCH para modificar solo el campo coins
+            headers: {
+                apikey: supabaseKey,
+                Authorization: `Bearer ${supabaseKey}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ coins: nuevaCantidad }), // Envía la nueva cantidad de monedas
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+        }
+
+        console.log(`Monedas actualizadas correctamente a ${nuevaCantidad} para el usuario con ID ${id}`);
+    } catch (error) {
+        console.error("Error actualizando monedas:", error);
+    }
+}
+
+
 
 
 
@@ -150,6 +183,128 @@ try {
 }
 }
 actualizarTomatos(idLogeado);
+
+async function actualizarTomatosUsuario(id, nuevaCantidad) {
+    if (!id || nuevaCantidad === undefined || nuevaCantidad === null) {
+        console.error("ID o nueva cantidad de tomatos no válidos.");
+        return;
+    }
+
+    const url = `${supabaseUrl}?id=eq.${id}`;
+
+    try {
+        const response = await fetch(url, {
+            method: "PATCH",
+            headers: {
+                apikey: supabaseKey,
+                Authorization: `Bearer ${supabaseKey}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ tomatos: nuevaCantidad }), // Solo actualiza el campo tomatos
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+        }
+
+        console.log(`Tomatos actualizados correctamente a ${nuevaCantidad} para el usuario con ID ${id}`);
+    } catch (error) {
+        console.error("Error actualizando tomatos:", error);
+    }
+}
+
+
+
+
+
+async function obtenerTomatosSliceDeUsuario(id) {
+    const url = `${supabaseUrl}?id=eq.${id}`;
+
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                apikey: supabaseKey,
+                Authorization: `Bearer ${supabaseKey}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (Array.isArray(data) && data.length > 0) {
+            const tomatosSlice = data[0].tomatos_slice; // Ahora usa "tomatos_slice"
+
+            if (tomatosSlice === null || tomatosSlice === undefined) {
+                console.warn(`tomatos_slice es ${tomatosSlice}. Se inicializa a 0.`);
+                await actualizarTomatosSliceUsuario(id, 0);
+                return 0;
+            }
+
+            return tomatosSlice;
+        } else {
+            console.warn("Usuario no encontrado. Inicializando tomatos_slice a 0.");
+            await actualizarTomatosSliceUsuario(id, 0);
+            return 0;
+        }
+    } catch (error) {
+        console.error("Error obteniendo tomatos_slice:", error);
+        return 0; // Retorna 0 en caso de fallo para evitar interrupciones
+    }
+}
+
+async function actualizarTomatosSlice(idLogeado) {
+    try {
+        console.log("ID logeado:", idLogeado);
+        const tomatosSliceLogeado = await obtenerTomatosSliceDeUsuario(idLogeado);
+
+        if (slicesInfoContainer) {
+            slicesDB.textContent = tomatosSliceLogeado;
+        } else {
+            console.warn("Elemento slicesInfoContainer no encontrado en el DOM.");
+        }
+
+        console.log("tomatos_slice obtenidos:", tomatosSliceLogeado);
+    } catch (error) {
+        console.error("Error al actualizar tomatos_slice:", error);
+    }
+}
+
+// Llamada a la función con el ID del usuario
+actualizarTomatosSlice(idLogeado);
+
+async function actualizarTomatosSliceUsuario(id, nuevaCantidad) {
+    if (!id || nuevaCantidad === undefined || nuevaCantidad === null) {
+        console.error("ID o nueva cantidad de tomatos_slice no válidos.");
+        return;
+    }
+
+    const url = `${supabaseUrl}?id=eq.${id}`;
+
+    try {
+        const response = await fetch(url, {
+            method: "PATCH",
+            headers: {
+                apikey: supabaseKey,
+                Authorization: `Bearer ${supabaseKey}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ tomatos_slice: nuevaCantidad }), // Solo actualiza el campo tomatos_slice
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+        }
+
+        console.log(`Tomatos_slice actualizados correctamente a ${nuevaCantidad} para el usuario con ID ${id}`);
+    } catch (error) {
+        console.error("Error actualizando tomatos_slice:", error);
+    }
+}
 
 
 
@@ -212,7 +367,7 @@ const peacesGoldShadow = ['peaceShadow', 'peace2Shadow', 'peace3Shadow', 'peace4
 
 var good_objects = [];
 var bad_objects = [];
-var slashes, line, score = 0, scoreCoins = 0, points = [];
+var slashes, line, score = 0, scoreCoins = 0, scoreCoinsToReward = 0, points = [];
 var fireRate = 1000;
 var nextFire = 0;
 
@@ -417,7 +572,7 @@ var probabilitiesToReset = {
 };
 var probabilities = {
     tomato: 60,          // 50
-    tomatoGold: 20,      // 7
+    tomatoGold: 100,      // 7
     bomb: 50,            // 30
     bombCammo: 13,       // 20
     bombGold: 7,        // 3
@@ -1089,7 +1244,7 @@ async function showMenu(menuPass) {
     }
 }
 
-function updateRewards(){
+async function updateRewards(){
     if(checkboxSwitch.checked){
         rewardsTomatos.style.display = "block";
         rewardsMulti.style.display = "block";
@@ -1123,8 +1278,7 @@ function updateRewards(){
         rewardsTomatosFinal.textContent = tomatosCuted.textContent*2;
     }
     
-    rewardsCoins.textContent = scoreCoins;
-
+    rewardsCoins.textContent = scoreCoinsToReward;
 
     if(action == "lose"){
         rewardsTomatos.style.display = "none";
@@ -1132,7 +1286,15 @@ function updateRewards(){
         rewardsCoins.textContent = 0;
         rewardsTomatosFinal.textContent = 0;
     }
-    
+
+    let totalMonedas = parseInt(multiValueDB.textContent, 10) + parseInt(rewardsCoins.textContent, 10);
+    await actualizarMonedasUsuario(idLogeado, totalMonedas);
+    actualizarMonedas(idLogeado);
+
+    let totalTomatosSlice = parseInt(rewardsTomatosFinal.textContent, 10) + parseInt(slicesDB.textContent, 10);
+    await actualizarTomatosSliceUsuario(idLogeado, totalTomatosSlice);
+    actualizarTomatosSlice(idLogeado);
+
     //Update flechaStand
     let rewardsRowC = rewardsCoins.closest(".rewardsRow");
     let flechaDoubleCloseCoinsC = rewardsRowC.querySelector(".flechaDouble");
@@ -1155,6 +1317,20 @@ function updateRewards(){
         flechaDoubleCloseCoinsT.style.opacity = "1";
         flechaStandCloseCoinsT.style.opacity = "0";
     }
+}
+
+async function discountBets(){
+    
+    /*let totalTomatos = slicesDB.textContent - rewardsBet.textContent
+    await actualizarTomatosUsuario(idLogeado, totalTomatos);*/
+
+    let totalMonedas = parseInt(multiValueDB.textContent, 10) - parseInt(multiCostsFinal.textContent, 10);
+    await actualizarMonedasUsuario(idLogeado, totalMonedas);
+    actualizarMonedas(idLogeado);
+
+    let totalTomatosSlice = parseInt(betValueDB.textContent, 10) - parseInt(betValueSelect.textContent, 10);
+    await actualizarTomatosUsuario(idLogeado, totalTomatosSlice);
+    actualizarTomatos(idLogeado);
 }
 
 
@@ -1327,6 +1503,7 @@ async function hideMenu(menuPass) {
         startMatchContainer.classList.remove("active");
         sliceIt.classList.add("out");
         mistakerContainer.classList.add("active");
+        slicesInfoContainer.classList.remove("active");
 
         for (let index = 0; index < 3; index++) {
             let container;
@@ -1371,6 +1548,10 @@ async function hideMenu(menuPass) {
         mistakerContainer.style.transition = "";
         mistakerContainer.classList.remove("active");
         mistakerContainer.style.transition = "all 1s ease";
+
+        matchInfoContainer.classList.remove("active");
+        slicesInfoContainer.classList.add("active");
+
         setTimeout(() => {
             mistakeImgs.forEach(mistakeImg => {
                 mistakeImg.classList.remove("active");
@@ -1391,6 +1572,7 @@ function startGame(){
 
     score = 0;
     scoreCoins = 0;
+    scoreCoinsToReward = 0;
 
     tomatosMistakedVar = 0;
     action = "";
@@ -2106,10 +2288,16 @@ function killFruit(fruit) {
     tomatosCuted.textContent = score;
 
 
+    if (fruit.key === 'tomatoGold'){
+        scoreCoinsToReward = scoreCoinsToReward+10;
+    }else if (fruit.key === 'goldCC'){
+        scoreCoinsToReward = scoreCoinsToReward+100;
+    }
 
     if (fruit.key === 'tomato' || fruit.key === 'tomatoGold') {
         /*console.log("tomatosBet.textContent: "+tomatosBet.textContent);
-        console.log("tomatosCuted.textContent: "+tomatosCuted.textContent);*/
+        console.log("tomatosCuted.textContent: "+tomatosCuted.textContent);*/        
+
         if(tomatosBet.textContent == tomatosCuted.textContent){
             stopGame();
             action="win";
@@ -2201,17 +2389,33 @@ document.addEventListener("DOMContentLoaded", function () {
     startMatchContainer.classList.add("active");
     startMatchContainerImg.classList.add("active");
 
-    startButton.addEventListener("click", function () {
+    startButton.addEventListener("click", async function () {
+        //WARNINGS & ERRORS
         if (!idLogeado || isNaN(parseInt(idLogeado)) || parseInt(idLogeado) === 0) {
             handleWarningMessage("flex", "Hay un fallo de registro. Prueba a volver a la página principal y loguearte", "red");
             return;
         }
+        if (parseInt(betValueSelect.textContent, 10) > parseInt(betValueDB.textContent, 10)) {
+            console.log(parseInt(betValueSelect.textContent, 10) + " > " + parseInt(betValueDB.textContent, 10));
+            handleWarningMessage("flex", "El número que intentas apostar es mayor que tus tomates", "red");
+            return;
+        }
+        
+        if (parseInt(multiCostsFinal.textContent, 10) > parseInt(multiValueDB.textContent, 10)) {
+            handleWarningMessage("flex", "No te llegan las monedas para pagar", "red");
+            return;
+        }
+        
+
         if(!gameActive){
             startGame();
             hideMenu(startMatchContainer);
+            matchInfoContainer.classList.add("active");
+            slicesInfoContainer.classList.remove("active");
             warningMessageContainer.style.display = "none";
             tomatosBet.textContent = sliderTomatoes.value;
             gameActive = true;
+            await discountBets();
         }
         firstTime++;
         if(firstTime == 1){

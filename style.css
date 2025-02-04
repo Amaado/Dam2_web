@@ -1699,11 +1699,13 @@ div.img img {
 }
 
 .tomatoAnim {
+  position: absolute;
+  left: 0px;
   width: 115px;
   height: 115px;
   z-index: 1;
   margin-top: -2px;
-  margin-left: -120px;
+  margin-left: 0px;
   filter: brightness(1.33) saturate(1.5);
   opacity: 1;
   transition: margin-left 1s ease, opacity 0.5s ease;
@@ -1860,7 +1862,7 @@ div.img img {
 }
 .tomatoHoverTooltip{
   position: absolute;
-  top: 40px;
+  top: 90px;
   left: 60px;
   width: auto;
   height: 40px;
@@ -1929,13 +1931,16 @@ div.img img {
 .infoLogo.tomatoSliceContainerHitboxLogo{
   filter: brightness(0) saturate(100%) invert(35%) sepia(14%) saturate(2863%) hue-rotate(316deg) brightness(94%) contrast(89%);
 }
+.infoLogo.tomatoContainerHitboxLogo{
+  margin-top: -20px;
+}
 
 .infoTextUsage{
   font-family: verti;
   font-size: 18px;
-  width: 550px;
-  margin-top: 7px;
-  text-align: justify;
+  width: 360px;
+  margin-top: 25px;
+  text-align: left;
   letter-spacing: 3px;
   line-height: 1.2;
 }
@@ -1943,11 +1948,19 @@ div.img img {
 .infoText{
   font-family: verti;
   font-size: 18px;
-  width: 550px;
-  margin-top: 55px;
-  text-align: justify;
+  width: 310px;
+  margin-top: 85px;
+  text-align: left;
   letter-spacing: 3px;
   line-height: 1.2;
+}
+.tomatoContainer .infoText{
+  margin-top: 105px;
+  width: 350px;
+}
+.tomatoSliceContainer .infoText{
+  margin-top: 20px;
+  width: 350px;
 }
 
 .infoText.coinsContainerHitboxInfo{
@@ -4398,9 +4411,14 @@ canvas {
 
 #cage{
   width: 70%;
-  height: auto;
+  height: 70%;
   -webkit-user-drag: none;
   image-rendering: pixelated;
+}
+#glass{
+  width: 70%;
+  height: auto;
+  background-color: #00a2e818;
 }
 
 .hitbox{
@@ -4604,7 +4622,7 @@ canvas {
 
 
 .sliderHamster{
-  /*filter: brightness(0) saturate(100%) invert(57%) sepia(92%) saturate(2118%) hue-rotate(82deg) brightness(119%) contrast(124%);*/
+  
 }
 
 .sliderEnergy{
@@ -4671,39 +4689,79 @@ canvas {
   border-radius: 2px;
 }
 
+/* Ocultar el thumb real */
 .sliderHamster::-webkit-slider-thumb {
   -webkit-appearance: none;
-  appearance: none; 
-  height: 5px;
-  width: 10px;
-  border-radius: 2px;
+  appearance: none;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  position: absolute;
 }
 
-.sliderEnergy::-webkit-slider-thumb{
-  box-shadow: -407px 0 0 400px #f5f555;
-  background: #f5f555;
+/* Crear el thumb falso */
+.sliderHamster::before {
+  content: "";
+  position: absolute;
+  height: 10px;
+  width: var(--thumb-width, 10px);
+  background: #bfd4e9;
+  border-radius: 2px;
+  top: -2px;
+  transition: left 0.05s linear;
 }
+
+.sliderEnergy::before {
+  background: #f5f555;
+  box-shadow: -407px 0 0 400px #f5f555;
+}
+
+.sliderHunger::before {
+  background: #d3544b;
+  box-shadow: -407px 0 0 400px #d3544b;
+}
+
+.sliderWater::before {
+  background: #69c7da;
+  box-shadow: -407px 0 0 400px #69c7da;
+}
+
 
 .sliderHamsterIcons img:nth-child(1){
   filter: brightness(0) saturate(100%) invert(71%) sepia(100%) saturate(288%) hue-rotate(11deg) brightness(117%) contrast(92%);
 }
 
-.sliderHunger::-webkit-slider-thumb{
-  box-shadow: -407px 0 0 400px #d3544b;
-  background: #d3544b;
-}
-
 .sliderHamsterIcons img:nth-child(2){
-}
-
-.sliderWater::-webkit-slider-thumb{
-  box-shadow: -407px 0 0 400px #69c7da;
-  background: #69c7da;
 }
 
 .sliderHamsterIcons img:nth-child(3){
   filter: brightness(0) saturate(100%) invert(78%) sepia(23%) saturate(838%) hue-rotate(146deg) brightness(92%) contrast(85%);
 }
+
+.sliderHamsterWarningIcons{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  left: -60px;
+  margin-top: -1px;
+}
+
+.warning{
+  width: auto;
+  height: 18px;
+  image-rendering: crisp-edges;
+  margin-top: -1px;
+}
+.warning.yellow{
+  /*color: #e4cf56;*/
+  filter: brightness(0) saturate(100%) invert(84%) sepia(49%) saturate(513%) hue-rotate(358deg) brightness(93%) contrast(92%);
+}
+.red{
+  /*color: #e43b3b;*/
+  filter: brightness(0) saturate(100%) invert(44%) sepia(88%) saturate(3464%) hue-rotate(337deg) brightness(91%) contrast(96%);
+}
+
 
 
 .hamster.fallingAnim.active .ear {
