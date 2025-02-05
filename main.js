@@ -148,6 +148,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const tomatoSliceContainerHitbox = document.querySelector('.tomatoSliceContainerHitbox');
   const tomatoSliceHoverTooltip = document.querySelector('.tomatoSliceHoverTooltip');
 
+  let defaultTittle = "D A M";
+  let warningTittle = "";
+  let defaultFavicon = "img/favicon.png";
+  let favicon = document.querySelector("link[rel*='icon']");
+
 
 /* BUBBLES */
 let animationFrameId;
@@ -6698,16 +6703,19 @@ let originalParent = null;
 // Variables globales para controlar la visibilidad de las tooltips
 let checkboxTooltipsNamesShown = false;
 let checkboxTooltipsStatesShown = false;
+let helpIconWarnings = false;
 
 // Función para cargar los valores desde localStorage
 function loadTooltipSettings() {
   // Cargar los valores del localStorage o usar los valores predeterminados (false)
   const savedNamesShown = localStorage.getItem('checkboxTooltipsNamesShown');
   const savedStatesShown = localStorage.getItem('checkboxTooltipsStatesShown');
+  const savedIconHelpShown = localStorage.getItem('helpIconWarnings');
 
   // Si no hay valores guardados en el localStorage, se usan los valores predeterminados (false)
   checkboxTooltipsNamesShown = savedNamesShown !== null ? JSON.parse(savedNamesShown) : false;
   checkboxTooltipsStatesShown = savedStatesShown !== null ? JSON.parse(savedStatesShown) : false;
+  helpIconWarnings = savedIconHelpShown !== null ? JSON.parse(savedIconHelpShown) : false;
 
   // Actualizar la visibilidad de los tooltips en base a los valores cargados
   updateTooltipVisibility();
@@ -6719,6 +6727,7 @@ function saveTooltipSettings() {
   // Guardar los valores actuales de las variables en el localStorage
   localStorage.setItem('checkboxTooltipsNamesShown', JSON.stringify(checkboxTooltipsNamesShown));
   localStorage.setItem('checkboxTooltipsStatesShown', JSON.stringify(checkboxTooltipsStatesShown));
+  localStorage.setItem('helpIconWarnings', JSON.stringify(helpIconWarnings));
 }
 
 function activarShowTags(){
@@ -6745,10 +6754,20 @@ function desactivarShowStatsInTags(){
   updateTooltipVisibility(); // Actualizar la visibilidad de los tooltips
 }
 
+function desactivarhelpIconWarnings(){
+  helpIconWarnings = false;
+  saveTooltipSettings();
+}
+function activarhelpIconWarnings(){
+  helpIconWarnings = true;
+  saveTooltipSettings();
+}
+
 // Esta función actualiza la visibilidad de los tooltips basados en el estado actual de las variables
 function updateTooltipVisibility(){
   let hamsterTooltipContainers = document.querySelectorAll(".hamsterTooltipContainer");
   let sliderHamsterContainers = document.querySelectorAll(".sliderHamsterContainer");
+  let sliderHamsterWarningIconss = document.querySelectorAll(".sliderHamsterWarningIcons");
 
   // Actualizar la visibilidad de las tooltips de los nombres
   hamsterTooltipContainers.forEach((tooltip) => {
@@ -6767,6 +6786,14 @@ function updateTooltipVisibility(){
       container.style.opacity = "0"; // Ocultar el tooltip de estado
     }
   });
+
+  sliderHamsterWarningIconss.forEach((container) => {
+    if (checkboxTooltipsStatesShown) {
+      container.style.opacity = "1"; // Mostrar el tooltip de estado
+    } else {
+      container.style.opacity = "0"; // Ocultar el tooltip de estado
+    }
+  });
 }
 
 // Función para actualizar el menú contextual
@@ -6774,18 +6801,31 @@ function updateContextMenu() {
   const contextMenuItems = document.querySelectorAll('.contextMenu li');
   
   contextMenuItems.forEach((item) => {
-    if (item.textContent.includes("Show tags")) {
+    // Obtenemos el texto actual sin espacios extra
+    const itemText = item.textContent.trim();
+
+    // Opción 1: Mostrar etiquetas (tooltips de nombres)
+    if (itemText.includes("Mostrar etiquetas") || itemText.includes("✔ Mostrar etiquetas")) {
       if (checkboxTooltipsNamesShown) {
-        item.textContent = "✔ Show tags"; // Marcamos la opción como activada
+        item.textContent = "✔ Mostrar etiquetas";
       } else {
-        item.textContent = "Show tags"; // Marcamos la opción como desactivada
+        item.textContent = "Mostrar etiquetas";
       }
     }
-    if (item.textContent.includes("Show stats in tags")) {
+    // Opción 2: Mostrar estadísticas en las etiquetas (tooltips de estados)
+    else if (itemText.includes("Mostrar estadísticas en las etiquetas") || itemText.includes("✔ Mostrar estadísticas en las etiquetas")) {
       if (checkboxTooltipsStatesShown) {
-        item.textContent = "✔ Show stats in tags"; // Marcamos la opción como activada
+        item.textContent = "✔ Mostrar estadísticas en las etiquetas";
       } else {
-        item.textContent = "Show stats in tags"; // Marcamos la opción como desactivada
+        item.textContent = "Mostrar estadísticas en las etiquetas";
+      }
+    }
+    // Opción 3: Ayuda nombre de venana para warnings (opción general)
+    else if (itemText.includes("Ayuda icono de venana para warnings")) {
+      if (helpIconWarnings) {
+        item.textContent = "✔ Ayuda icono de venana para warnings";
+      } else {
+        item.textContent = "Ayuda icono de venana para warnings";
       }
     }
   });
@@ -6922,6 +6962,7 @@ let tooltipHamsterFlag = false;
 function showTooltipHamster(hamsterElement){
   let tooltip = hamsterElement.querySelector(".hamsterTooltipContainer");
   let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
+  let sliderHamsterWarningIcons = hamsterElement.querySelector(".sliderHamsterWarningIcons");
 
   if(tooltipHamsterFlag){
     return;
@@ -6933,6 +6974,7 @@ function showTooltipHamster(hamsterElement){
   
   if(checkboxTooltipsStatesShown){
     tooltipStates.style.opacity = "1";
+    sliderHamsterWarningIcons.style.opacity = "1";
   }
 }
 
@@ -6940,6 +6982,7 @@ function showTooltipHamster(hamsterElement){
 function hideTooltipHamster(hamsterElement){
   let tooltip = hamsterElement.querySelector(".hamsterTooltipContainer");
   let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
+  let sliderHamsterWarningIcons = hamsterElement.querySelector(".sliderHamsterWarningIcons");
 
   if (!checkboxTooltipsNamesShown) {
     tooltip.style.opacity = "0";
@@ -6948,6 +6991,7 @@ function hideTooltipHamster(hamsterElement){
   if(checkboxTooltipsStatesShown){
     if(!checkboxTooltipsNamesShown){
       tooltipStates.style.opacity = "0";
+      sliderHamsterWarningIcons.style.opacity = "0";
     }
   }
 }
@@ -6955,18 +6999,24 @@ function hideTooltipHamster(hamsterElement){
 function showTooltipHamsterForce(hamsterElement){
   let tooltip = hamsterElement.querySelector(".hamsterTooltipContainer");
   let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
+  let sliderHamsterWarningIcons = hamsterElement.querySelector(".sliderHamsterWarningIcons");
 
   tooltip.style.visibility = "visible";
   tooltipStates.style.visibility = "visible";
+  sliderHamsterWarningIcons.style.visibility = "visible";
+
   tooltipHamsterFlag = false;
 }
 
 function hideTooltipHamsterForce(hamsterElement){
   let tooltip = hamsterElement.querySelector(".hamsterTooltipContainer");
   let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
+  let sliderHamsterWarningIcons = hamsterElement.querySelector(".sliderHamsterWarningIcons");
 
   tooltip.style.visibility = "hidden";
   tooltipStates.style.visibility = "hidden";
+  sliderHamsterWarningIcons.style.visibility = "hidden";
+
   tooltipHamsterFlag = true;
 }
 
@@ -7215,7 +7265,8 @@ function stopDragHamster(e) {
   }else{
     currentHamster.classList.remove("grabAnim");
   }
-  showTooltipHamsterForce(currentHamster);
+  
+  hideTooltipHamsterForce(currentHamster);
 
   // Verificar si el hámster está sobre un hitbox
   const hamsterRect = currentHamster.getBoundingClientRect();
@@ -7253,7 +7304,7 @@ function stopDragHamster(e) {
 
       if (hitbox.id === 'hitboxSlotWorld') {
         currentHamster.setAttribute("pos", "");
-        showTooltipHamsterForce(currentHamster);
+        hideTooltipHamsterForce(currentHamster);
         isResetToContainer = false;
         cloneHamsterToContainer(hitbox, offsetX, offsetY);
         actualizarSlotHamster(currentHamster, hitbox);
@@ -7284,7 +7335,7 @@ function stopDragHamster(e) {
       // Clonar el hámster y moverlo al hitbox
       currentHamster.setAttribute("pos", "");
       isResetToContainer = false;
-      showTooltipHamsterForce(currentHamster);
+      hideTooltipHamsterForce(currentHamster);
       cloneHamsterToContainer(hitbox, offsetX, offsetY);
       actualizarSlotHamster(currentHamster, hitbox);
       resetDragVariables();
@@ -7973,28 +8024,42 @@ gorceryContextMenu.addEventListener('click', (event) => {
 });
 
 modifiersSettingsContextMenu.addEventListener('click', (event) => {
-    if (event.target.tagName === 'LI') {
-      if(event.target.textContent.includes("stats")){
-        // Opción 2
-        if(event.target.textContent.includes("✔ ")){
-          event.target.textContent = "Show stats in tags";
-          desactivarShowStatsInTags();
-        } else {
-          event.target.textContent = "✔ Show stats in tags";
-          activarShowStatsInTags();
-        }
+  if (event.target.tagName === 'LI') {
+    const itemText = event.target.textContent.trim();
+  
+    // Opción: Mostrar estadísticas en las etiquetas
+    if (itemText.includes("Mostrar estadísticas en las etiquetas")) {
+      if (itemText.startsWith("✔")) {
+        event.target.textContent = "Mostrar estadísticas en las etiquetas";
+        desactivarShowStatsInTags();
       } else {
-        // Opción 1
-        if(event.target.textContent.includes("✔ ")){
-          event.target.textContent = "Show tags";
-          desactivarShowTags();
-        } else {
-          event.target.textContent = "✔ Show tags";
-          activarShowTags();
-        }
+        event.target.textContent = "✔ Mostrar estadísticas en las etiquetas";
+        activarShowStatsInTags();
       }
-      modifiersSettingsContextMenu.style.display = 'none'; // Ocultar el menú contextual
+    } 
+    // Opción: Mostrar etiquetas
+    else if (itemText.includes("Mostrar etiquetas") && !itemText.includes("estadísticas")) {
+      if (itemText.startsWith("✔")) {
+        event.target.textContent = "Mostrar etiquetas";
+        desactivarShowTags();
+      } else {
+        event.target.textContent = "✔ Mostrar etiquetas";
+        activarShowTags();
+      }
+    } 
+    // Opción: Ayuda icono de venana para warnings
+    else if (itemText.includes("Ayuda icono de venana para warnings")) {
+      if (itemText.startsWith("✔")) {
+        event.target.textContent = "Ayuda icono de venana para warnings";
+        desactivarhelpIconWarnings();
+      } else {
+        event.target.textContent = "✔ Ayuda icono de venana para warnings";
+        activarhelpIconWarnings();
+      }
     }
+  
+    modifiersSettingsContextMenu.style.display = 'none'; // Ocultar el menú contextual
+  }
 });
 
 
@@ -9067,7 +9132,7 @@ function decrementEnergy(hamsterId, amount) {
   hamsterEl.setAttribute("energy", currentEnergy);
   const slider = hamsterEl.querySelector(".sliderEnergy");
   if (slider) slider.value = currentEnergy;
-  slider.dispatchEvent(new Event('input'));
+  actualizarSlider(slider);
 }
 
 /**
@@ -9085,7 +9150,7 @@ function decrementHunger(hamsterId, amount) {
   hamsterEl.setAttribute("hunger", currentHunger);
   const slider = hamsterEl.querySelector(".sliderHunger");
   if (slider) slider.value = currentHunger;
-  slider.dispatchEvent(new Event('input'));
+  actualizarSlider(slider);
 }
 
 /**
@@ -9103,7 +9168,7 @@ function decrementThirst(hamsterId, amount) {
   hamsterEl.setAttribute("thirst", currentThirst);
   const slider = hamsterEl.querySelector(".sliderWater");
   if (slider) slider.value = currentThirst;
-  slider.dispatchEvent(new Event('input'));
+  actualizarSlider(slider);
 }
 
 
@@ -9111,12 +9176,16 @@ function fillFullStats(hamsterId){
   const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
   if (!hamsterEl) return;
 
-  let currentThirst = Number(1000);
+  let currentMax = Number(1000);
 
-  hamsterEl.setAttribute("thirst", currentThirst);
-  const slider = hamsterEl.querySelector(".sliderWater");
-  if (slider) slider.value = currentThirst;
-  slider.dispatchEvent(new Event('input'));
+  hamsterEl.setAttribute("energy", currentMax);
+  hamsterEl.setAttribute("hunger", currentMax);
+  hamsterEl.setAttribute("thirst", currentMax);
+  const sliders = hamsterEl.querySelectorAll(".sliderHamster");
+  sliders.forEach(slider => {
+    if (slider) slider.value = currentMax;
+    actualizarSlider(slider);
+  });
 }
 
 
@@ -9171,19 +9240,93 @@ function startPeriodicStatsUpdate(userId) {
 
 
 //ACTUALIZACION DEL ::BEFORE DE LOS SLIDER STATS
+function actualizarSlider(slider) {
+  // Actualización del slider (por ejemplo, interpolando un ancho)
+  const max = slider.max || 1000;
+  const percentage = slider.value / max;
+  const thumbWidth = percentage * 60; // Si value=0 → 0px, si value=1000 → 60px
+  slider.style.setProperty('--thumb-width', `${thumbWidth}px`);
+
+  // -----------------------------
+  // Buscar el icono warning correspondiente
+  // -----------------------------
+  // 1. Encontrar el contenedor de sliders (su contenedor padre más cercano)
+  const slidersContainer = slider.closest('.sliderHamsterSliders');
+  if (!slidersContainer) return; // Si no se encuentra, abortamos
+
+  // 2. Obtener el índice del slider dentro de ese contenedor
+  const sliderElements = Array.from(slidersContainer.querySelectorAll('.sliderHamster'));
+  const index = sliderElements.indexOf(slider);
+
+  // 3. Buscar el contenedor de iconos, asumiendo que es el hermano anterior
+  const warningContainer = slidersContainer.previousElementSibling;
+  if (!warningContainer) return;
+
+  // 4. Obtener todos los iconos warning dentro de ese contenedor
+  const warningIcons = Array.from(warningContainer.querySelectorAll('img.warning'));
+  
+  // 5. Verificar que exista un icono en la posición 'index'
+  if (index >= 0 && index < warningIcons.length) {
+    const warningIcon = warningIcons[index];
+    // Convertir el valor del slider a número
+    const value = Number(slider.value);
+        
+    // Actualizar clases según el valor del slider (las clases se asignan siempre)
+    if (value < 150) {
+      // Valor crítico: rojo
+      warningIcon.classList.add("red");
+      warningIcon.classList.remove("yellow");
+    } else if (value < 350) {
+      // Advertencia: amarillo
+      warningIcon.classList.add("yellow");
+      warningIcon.classList.remove("red");
+    } else {
+      // Valor normal: sin clases de advertencia
+      warningIcon.classList.remove("yellow");
+      warningIcon.classList.remove("red");
+    }
+  }
+
+  // -----------------------------
+  // Actualizar el favicon según el conteo global de iconos warning
+  // -----------------------------
+  // Si helpIconWarnings es true, se cuentan globalmente los iconos warning
+  if (helpIconWarnings) {
+    // Obtener todos los warning icons en el documento
+    const allWarningIcons = document.querySelectorAll('img.warning');
+    let redCount = 0;
+    let yellowCount = 0;
+    allWarningIcons.forEach(icon => {
+      if (icon.classList.contains("red")) redCount++;
+      if (icon.classList.contains("yellow")) yellowCount++;
+    });
+    
+    // Si existe exactamente un icono rojo, usar el favicon rojo.
+    // Si no, pero existe exactamente un icono amarillo, usar el favicon amarillo.
+    // En cualquier otro caso se usa el favicon por defecto.
+    if (redCount > 0) {
+      favicon.href = "img/errorRed.png";
+    } else if (yellowCount > 0) {
+      favicon.href = "img/errorYellow.png";
+    } else {
+      favicon.href = defaultFavicon;
+    }
+  } else {
+    favicon.href = defaultFavicon;
+  }
+}
+
+
+
+
+// Asignamos el event listener a cada slider y forzamos la actualización inicial
 document.querySelectorAll('.sliderHamster').forEach(slider => {
-  slider.addEventListener('input', function() {
-      const max = this.max || 1000;
-      const percentage = this.value / max;
-
-      // Interpolar el width entre 0 y 60px
-      const thumbWidth = percentage * 60; // Si value=0 → 0px, Si value=1000 → 60px
-
-      this.style.setProperty('--thumb-width', `${thumbWidth}px`);
+  slider.addEventListener('input', () => {
+    actualizarSlider(slider);
   });
-
-  // Forzar actualización inicial
-  slider.dispatchEvent(new Event('input'));
+  
+  // Actualización inicial sin necesidad de dispatchEvent
+  actualizarSlider(slider);
 });
 
 
@@ -9229,19 +9372,19 @@ window.addEventListener("load", async () => {
         const sliderEnergy = hamsterEl.querySelector(".sliderEnergy");
         if (sliderEnergy) {
           sliderEnergy.value = hamsterData.energy;
-          sliderEnergy.dispatchEvent(new Event('input')); // 🔹 Forzar actualización visual
+          actualizarSlider(sliderEnergy);
         }
 
         const sliderHunger = hamsterEl.querySelector(".sliderHunger");
         if (sliderHunger) {
           sliderHunger.value = hamsterData.hunger;
-          sliderHunger.dispatchEvent(new Event('input')); // 🔹 Forzar actualización visual
+          actualizarSlider(sliderHunger);
         }
 
         const sliderThirst = hamsterEl.querySelector(".sliderWater");
         if (sliderThirst) {
           sliderThirst.value = hamsterData.thirst;
-          sliderThirst.dispatchEvent(new Event('input')); // 🔹 Forzar actualización visual
+          actualizarSlider(sliderThirst);
         }
       }
 

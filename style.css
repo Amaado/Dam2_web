@@ -4752,14 +4752,18 @@ canvas {
   height: 18px;
   image-rendering: crisp-edges;
   margin-top: -1px;
+  opacity: 0;
+  transition: all 0.7s ease;
 }
 .warning.yellow{
   /*color: #e4cf56;*/
   filter: brightness(0) saturate(100%) invert(84%) sepia(49%) saturate(513%) hue-rotate(358deg) brightness(93%) contrast(92%);
+  opacity: 1;
 }
-.red{
+.warning.red{
   /*color: #e43b3b;*/
   filter: brightness(0) saturate(100%) invert(44%) sepia(88%) saturate(3464%) hue-rotate(337deg) brightness(91%) contrast(96%);
+  opacity: 1;
 }
 
 
