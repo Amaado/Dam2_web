@@ -4204,6 +4204,8 @@ canvas {
   z-index: 99;
   transition: transform 1s ease-in-out; /* Transición para `transform` */
   will-change: transform;
+  pointer-events: all;
+  z-index: 1000;
 }
 
 .y{
@@ -4415,10 +4417,163 @@ canvas {
   -webkit-user-drag: none;
   image-rendering: pixelated;
 }
-#glass{
-  width: 70%;
-  height: auto;
-  background-color: #00a2e818;
+#glassLeft{
+  position: absolute;
+  z-index: 1100;
+  top: 26px;
+  left: 9px;
+  width: 149px;
+  height: 305px;
+  background-color: #00a2e813;
+  border-top: 4px solid #0379ac13;
+  border-right: 4px solid #0379ac13;
+  border-bottom: 4px solid #0379ac13;
+  pointer-events: auto;
+  overflow: hidden;
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  transition: all 0.7s ease;
+}
+#glassLeft.active{
+  transform: rotateY(180deg);
+}
+#glassLeft::before{
+  content: "";
+  position: absolute;
+  z-index: 1100;
+  top: 148px;
+  right: 5px;
+  width: 5px;
+  height: 5px;
+  background-color: #5e5e5e;
+  border: 2px solid #7c7c7c;
+}
+#glassLeft::after {
+  content: "";
+  position: absolute;
+  z-index: 1100;
+  top: 500px;
+  left: -200px;
+  width: 600px;
+  height: 100px;
+  transform: rotateZ(-40deg);
+  background-color: rgba(117, 117, 117, 0.329);
+  filter: blur(5px);
+  transition: all 0.7s ease;
+}
+#glassLeft.active::after {
+  top: -200px;
+  height: 20px;
+  filter: blur(5px);
+  transform: rotateZ(-60deg);
+}
+
+#glassRightHitbox{
+  position: absolute;
+  top: 20px;
+  right: 145px;
+  width: 157px;
+  height: 315px;
+  background-color: rgba(0, 0, 0, 0);
+  pointer-events: all;
+  z-index: 1000;
+}
+#glassLeftHitbox{
+  position: absolute;
+  top: 20px;
+  left: 5px;
+  width: 156px;
+  height: 315px;
+  background-color: rgba(0, 0, 0, 0);
+  pointer-events: all;
+  z-index: 1000;
+}
+
+#glassRight{
+  position: absolute;
+  top: 26px;
+  right: 152px;
+  width: 149px;
+  height: 305px;
+  background-color: #00a2e813;
+  border-top: 4px solid #0379ac13;
+  border-left: 4px solid #0379ac13;
+  border-bottom: 4px solid #0379ac13;
+  pointer-events: auto;
+  z-index: 1100;
+  overflow: hidden;
+  transform-origin: right center;
+  transform: rotateY(0deg);
+  transition: all 0.7s ease;
+}
+#glassRight.active{
+  transform: rotateY(180deg);
+}
+#glassRight::before{
+  content: "";
+  position: absolute;
+  z-index: 1100;
+  top: 148px;
+  left: 5px;
+  width: 5px;
+  height: 5px;
+  background-color: #5e5e5e;
+  border: 2px solid #7c7c7c;
+}
+
+#glassRight::after {
+  content: "";
+  position: absolute;
+  z-index: 1100;
+  top: 500px;
+  left: -200px;
+  width: 600px;
+  height: 100px;
+  transform: rotateZ(-40deg);
+  background-color: rgba(117, 117, 117, 0.329);
+  filter: blur(5px);
+  transition: all 0.7s ease;
+}
+#glassRight.active::after {
+  top: -200px;
+  height: 20px;
+  filter: blur(5px);
+  transform: rotateZ(-60deg);
+}
+
+.comida{
+  position: absolute;
+  width: auto;
+  height: 41px;
+}
+#comida1{
+  left: 17.6px;
+  top: 72px;
+}
+#comida2{
+  left: 235.5px;
+  top: 69px;
+}
+#comida3{
+  left: 21.8px;
+  top: 252.6px;
+}
+.bebida{
+  position: absolute;
+  width: auto;
+  height: 100px;
+}
+#bebida1{
+  left: 35px;
+  top: -10px;
+}
+#bebida2{
+  left: 185px;
+  top: -10px;
+}
+#bebida3{
+  left: 38px;
+  top: 165px;
 }
 
 .hitbox{
@@ -5132,6 +5287,33 @@ canvas {
   height: 5%;
 }
 
+#buttonMenos{
+  position: absolute;
+  width: 15%;
+  height: 3.5vh;
+  left: 1.4vh;
+  bottom: 3.5vh;
+  display: none;
+  pointer-events: none;
+}
+#buttonMenos.active{
+  display: flex;
+  pointer-events: all;
+}
+#buttonMas{
+  position: absolute;
+  width: 15%;
+  height: 3.5vh;
+  left: 5.4vh;
+  bottom: 3.5vh;
+  display: none;
+  pointer-events: none;
+}
+#buttonMas.active{
+  display: flex;
+  pointer-events: all;
+}
+
 #buttonV{
   position: absolute;
   display: flex;
@@ -5139,7 +5321,11 @@ canvas {
   height: 3.5vh;
   left: 1.4vh;
   bottom: 3.5vh;
-  pointer-events: all;  
+  pointer-events: all;
+}
+
+#buttonV.active{
+  left: 10.9vh;
 }
 
 #buttonX{
@@ -5150,6 +5336,9 @@ canvas {
   left: 5.4vh;
   bottom: 3.5vh;
   pointer-events: all;
+}
+#buttonX.active{
+  left: 14.9vh;
 }
 
 .iconDialog{
@@ -5175,12 +5364,29 @@ canvas {
   width: 22vh;
   height: 17vh;
   top: 1vh;
+  left: 0;
   -webkit-user-drag: none;
   image-rendering: pixelated;
   background-image: url(img/hamster/viñetaButtons.png);
   background-size: contain;
 }
-
+#buttonsImg.active{
+  left: 9.5vh;
+}
+#buttonsImgSpinner{
+  position: absolute;
+  width: 22vh;
+  height: 17vh;
+  top: 1vh;
+  -webkit-user-drag: none;
+  image-rendering: pixelated;
+  background-image: url(img/hamster/viñetaButtonsSpinner.png);
+  background-size: contain;
+  opacity: 0;
+}
+#buttonsImgSpinner.active{
+  opacity: 1;
+}
 
 
 #grocery{

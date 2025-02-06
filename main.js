@@ -136,9 +136,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const dialogFlex = document.getElementById('dialogFlex');
   const iconDialogElement = document.getElementById('iconDialogElement');
   const iconDialogCoin = document.getElementById('iconDialogCoin');
+  const buttonMenos = document.getElementById('buttonMenos');
+  const buttonMas = document.getElementById('buttonMas');
   const buttonV = document.getElementById('buttonV');
   const buttonX = document.getElementById('buttonX');
   const buttonsImg = document.getElementById('buttonsImg');
+  const buttonsImgSpinner = document.getElementById('buttonsImgSpinner');
   const coinsContainerHitbox = document.querySelector('.coinsContainerHitbox');
   const coinsHoverTooltip = document.querySelector('.coinsHoverTooltip');
   const coinsContainerAnimationContainer = document.getElementById("coinsContainerAnimationContainer");
@@ -147,6 +150,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const tomatoHoverTooltip = document.querySelector('.tomatoHoverTooltip');
   const tomatoSliceContainerHitbox = document.querySelector('.tomatoSliceContainerHitbox');
   const tomatoSliceHoverTooltip = document.querySelector('.tomatoSliceHoverTooltip');
+  const glassLeft = document.getElementById("glassLeft");
+  const glassRight = document.getElementById("glassRight");
+  const glassLeftHitbox = document.getElementById("glassLeftHitbox");
+  const glassRightHitbox = document.getElementById("glassRightHitbox");
+
 
   let defaultTittle = "D A M";
   let warningTittle = "";
@@ -3984,6 +3992,8 @@ function setNormalPrice(skinContainer, price) {
         e.target.closest("#cestaHibox") ||
         e.target.closest("#buttonV") ||
         e.target.closest("#buttonX") ||
+        e.target.closest("#buttonMas") ||
+        e.target.closest("#buttonMenos") ||
         e.target.closest("li") ||
         e.target.closest("#modifiersInformationCont") ||
         e.target.closest("#modifiersEmailCont") ||
@@ -4022,6 +4032,8 @@ function setNormalPrice(skinContainer, price) {
         e.target.closest("#cestaHibox") ||
         e.target.closest("#buttonV") ||
         e.target.closest("#buttonX") ||
+        e.target.closest("#buttonMas") ||
+        e.target.closest("#buttonMenos") ||
         e.target.closest("li") ||
         e.target.closest("#modifiersInformationCont") ||
         e.target.closest("#modifiersEmailCont") ||
@@ -8568,8 +8580,8 @@ buttonV.addEventListener("click", async function (event) {
       return;
     }
 
-    await descontarMonedas(10, event);
-    await incrementTomatos(idLogeado, 1);
+    await descontarMonedas(countTomatos2Recive*10, event);
+    await incrementTomatos(idLogeado, countTomatos2Recive);
     tomatoAnimStart();
 
   }
@@ -8578,6 +8590,125 @@ buttonV.addEventListener("click", async function (event) {
 
 buttonX.addEventListener("click", function () {
   hideDialog();
+  setTimeout(() => {
+    unblockClicks();
+  }, 600);
+});
+
+
+
+
+// Valor inicial: 1 tomate (1 tomate = 10 monedas)
+let countTomatos2Recive = 1;
+
+function updateDialog() {
+  // Convertir countTomatos2Recive a cadena para comprobar la cantidad de dígitos.
+  const countStr = countTomatos2Recive.toString();
+  let spacing;
+
+  if(countStr.length === 1){
+    spacing = "ㅤㅤㅤ";
+    iconDialogElement.style.transform = "translateX(0vh)";
+    iconDialogCoin.style.transform = "translateX(0vh)";
+  }else{
+    spacing = "ㅤㅤ";
+    iconDialogElement.style.transform = "translateX(0.7vh)";
+    iconDialogCoin.style.transform = "translateX(0.9vh)";
+  }
+  // Actualizar el contenido, usando el espaciado adecuado
+  dialogFlex.textContent = `Quieres comprar ${countTomatos2Recive}${spacing}por ${countTomatos2Recive * 10}ㅤㅤ?`;
+}
+
+// Función para incrementar (máximo 99)
+function increment() {
+  if (countTomatos2Recive < 99) {
+    countTomatos2Recive++;
+    updateDialog();
+  }
+}
+
+// Función para decrementar (mínimo 1)
+function decrement() {
+  if (countTomatos2Recive > 1) {
+    countTomatos2Recive--;
+    updateDialog();
+  }
+}
+
+/*
+  --- IMPLEMENTACIÓN DEL HOLD (mantener pulsado) ---
+  Para que al mantener pulsado se incremente/decremente “rápido” usaremos:
+   - Un timer de retardo (300 ms) que, una vez cumplido, inicia un setInterval.
+   - Al soltar el botón (mouseup o salir con el ratón, mouseleave) se detiene el intervalo.
+   - Se usa una bandera para que, en el click normal (cuando no se mantiene pulsado),
+     se ejecute la acción una única vez.
+*/
+
+// ----- Botón AUMENTAR (buttonMas) -----
+let pressTimerMas, intervalMas;
+let masAutoIncremented = false;
+
+buttonMas.addEventListener("mousedown", function () {
+  // Reseteamos la bandera
+  masAutoIncremented = false;
+  // Iniciamos un timeout: si se mantiene pulsado 300 ms,
+  // comenzamos a incrementar cada 50 ms.
+  pressTimerMas = setTimeout(() => {
+    intervalMas = setInterval(() => {
+      masAutoIncremented = true; // ya se está auto-incrementando
+      increment();
+    }, 50); // velocidad de incremento continuo (ajusta este valor a tu gusto)
+  }, 300);
+});
+
+// Al soltar o salir del botón se cancelan los timers
+buttonMas.addEventListener("mouseup", function () {
+  clearTimeout(pressTimerMas);
+  clearInterval(intervalMas);
+});
+buttonMas.addEventListener("mouseleave", function () {
+  clearTimeout(pressTimerMas);
+  clearInterval(intervalMas);
+});
+
+// Además, para clicks rápidos (sin mantener pulsado) se ejecuta una única acción:
+buttonMas.addEventListener("click", function () {
+  // Si no se ha activado el auto-incremento, incrementamos una sola vez
+  if (!masAutoIncremented) {
+    increment();
+  }
+  setTimeout(() => {
+    unblockClicks();
+  }, 600);
+});
+
+// ----- Botón DISMINUIR (buttonMenos) -----
+let pressTimerMenos, intervalMenos;
+let menosAutoIncremented = false;
+
+buttonMenos.addEventListener("mousedown", function () {
+  menosAutoIncremented = false;
+  pressTimerMenos = setTimeout(() => {
+    intervalMenos = setInterval(() => {
+      menosAutoIncremented = true;
+      decrement();
+    }, 50); // velocidad de decremento continuo
+  }, 300);
+});
+
+buttonMenos.addEventListener("mouseup", function () {
+  clearTimeout(pressTimerMenos);
+  clearInterval(intervalMenos);
+});
+buttonMenos.addEventListener("mouseleave", function () {
+  clearTimeout(pressTimerMenos);
+  clearInterval(intervalMenos);
+});
+
+buttonMenos.addEventListener("click", function () {
+  if (!menosAutoIncremented) {
+    decrement();
+  }
   setTimeout(() => {
     unblockClicks();
   }, 600);
@@ -8597,6 +8728,13 @@ function showDialogDefault(texto) {
   buttonX.style.display = "none";
   buttonsImg.style.display = "none";
 
+  buttonsImg.classList.remove("active");
+  buttonsImgSpinner.classList.remove("active");
+  buttonMenos.classList.remove("active");
+  buttonMas.classList.remove("active");
+  buttonV.classList.remove("active");
+  buttonX.classList.remove("active");
+
   setTimeout(() => {
     hideDialog();
   }, 2000);
@@ -8613,6 +8751,15 @@ function showDialog(hitbox) {
   buttonX.style.display = "flex";
   buttonsImg.style.display = "block";
 
+  buttonsImg.classList.remove("active");
+  buttonsImgSpinner.classList.remove("active");
+  buttonMenos.classList.remove("active");
+  buttonMas.classList.remove("active");
+  buttonV.classList.remove("active");
+  buttonX.classList.remove("active");
+  iconDialogElement.style.transform = "translateX(0vh)";
+  iconDialogCoin.style.transform = "translateX(0vh)";
+  countTomatos2Recive = 1;
 
   if (hitbox.id === "hitboxSlotBuyBiggieClick") {
     dialogFlex.textContent = "Quieres comprar 1ㅤㅤㅤpor 500ㅤㅤ?";
@@ -8633,6 +8780,12 @@ function showDialog(hitbox) {
     dialogFlex.textContent = "Quieres comprar 1ㅤㅤㅤpor 10ㅤㅤ?";
     iconDialogElement.src = "img/hamster/icons/iconTomato.png";
     iconDialogCoin.className = "iconDialog icon10";
+    buttonsImg.classList.add("active");
+    buttonsImgSpinner.classList.add("active");
+    buttonMenos.classList.add("active");
+    buttonMas.classList.add("active");
+    buttonV.classList.add("active");
+    buttonX.classList.add("active");
   }
 }
 
@@ -9495,6 +9648,134 @@ elements.forEach(el => {
 
 
 
+    /* CAGE CRISTALS */
+    // EVENTOS PARA CUANDO isDragging ES TRUE (se usan hitboxes y mouseenter/mouseleave)
+// Supongamos que 'isDragging' es una variable global o definida en un scope accesible
+// let isDragging = true; // Cuando true, se usarán los hitboxes y eventos de mouseenter/leave
+
+// EVENTOS PARA CUANDO isDragging ES TRUE (se usan hitboxes y mouseenter/mouseleave)
+glassLeftHitbox.addEventListener("mouseenter", function(){
+  glassLeft.classList.add("active");
+});
+
+glassRightHitbox.addEventListener("mouseenter", function(){
+  glassRight.classList.add("active");
+});
+
+wrapper.addEventListener("mouseenter", function(){
+  glassRight.classList.add("active");
+});
+
+glassLeftHitbox.addEventListener("mouseleave", function(event){
+  if (!isDragging) {return;}
+
+  const hamsters = document.querySelectorAll('.hamster');
+  if (
+    glassRight.contains(event.relatedTarget) ||
+    glassLeft.contains(event.relatedTarget) ||
+    glassRightHitbox.contains(event.relatedTarget) ||
+    glassLeftHitbox.contains(event.relatedTarget) ||
+    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+    wrapper.contains(event.relatedTarget)
+  ) {
+    return;
+  }
+  glassLeft.classList.remove("active");
+  glassRight.classList.remove("active");
+});
+
+glassRightHitbox.addEventListener("mouseleave", function(event){
+  if (!isDragging) {return;}
+
+  const hamsters = document.querySelectorAll('.hamster');
+  if (
+    glassRight.contains(event.relatedTarget) ||
+    glassLeft.contains(event.relatedTarget) ||
+    glassRightHitbox.contains(event.relatedTarget) ||
+    glassLeftHitbox.contains(event.relatedTarget) ||
+    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+    wrapper.contains(event.relatedTarget)
+  ) {
+    return;
+  }
+  glassLeft.classList.remove("active");
+  glassRight.classList.remove("active");
+});
+
+wrapper.addEventListener("mouseleave", function(event){
+  
+  const hamsters = document.querySelectorAll('.hamster');
+  if (
+    glassLeftHitbox.contains(event.relatedTarget) ||
+    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+    wrapper.contains(event.relatedTarget)
+  ) {
+    return;
+  }
+  glassLeft.classList.remove("active");
+  glassRight.classList.remove("active");
+});
+
+// EVENTOS PARA CUANDO isDragging ES FALSE (se usan clicks directos en glassLeft y glassRight)
+
+  glassLeft.addEventListener("mouseenter", function(){
+    if (!isDragging) {return;}
+    glassLeft.classList.add("active");
+  });
+  
+  glassRight.addEventListener("mouseenter", function(){
+    if (!isDragging) {return;}
+    glassRight.classList.add("active");
+  });
+
+  glassLeft.addEventListener("mouseleave", function(event){
+    if (!isDragging) {return;}
+
+    const hamsters = document.querySelectorAll('.hamster');  
+    if (
+      glassRight.contains(event.relatedTarget) ||
+      glassLeft.contains(event.relatedTarget) ||
+      glassRightHitbox.contains(event.relatedTarget) ||
+      glassLeftHitbox.contains(event.relatedTarget) ||
+      Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+      wrapper.contains(event.relatedTarget)
+    ) {
+      return;
+    }
+    glassLeft.classList.remove("active");
+    glassRight.classList.remove("active");
+  });
+  
+  glassRight.addEventListener("mouseleave", function(event){
+    if (!isDragging) {return;}
+
+    const hamsters = document.querySelectorAll('.hamster');  
+    if (
+      glassRight.contains(event.relatedTarget) ||
+      glassLeft.contains(event.relatedTarget) ||
+      glassRightHitbox.contains(event.relatedTarget) ||
+      glassLeftHitbox.contains(event.relatedTarget) ||
+      Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+      wrapper.contains(event.relatedTarget)
+    ) {
+      return;
+    }
+    glassLeft.classList.remove("active");
+    glassRight.classList.remove("active");
+  });
+
+
+
+  glassLeft.addEventListener("click", function(){
+    if (isDragging) {return;}
+    // Aquí puedes definir la lógica para alternar la clase 'active'
+    glassLeft.classList.toggle("active");
+  });
+  
+  glassRight.addEventListener("click", function(){
+    if (isDragging) {return;}
+    glassRight.classList.toggle("active");
+  });
 
   //TODO !: hacer que el hamster reste enetrgía entra en la rueda y sume cuando sale de la rueda 
   //TODO !: hacer que se empicen a restar Stats cuando compras un hamster
