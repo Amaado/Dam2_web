@@ -4143,7 +4143,7 @@ canvas {
   --wheel-angle: 0deg;
   bottom: 32px;
   right: 93px;
-  z-index: 50px;
+  z-index: 1001;
   transition: margin-right 0.5s ease;
 }
 
@@ -4574,6 +4574,29 @@ canvas {
 #bebida3{
   left: 38px;
   top: 165px;
+}
+.bebidaGif, .bebidaCharco{
+  position: absolute;
+  width: auto;
+  height: 30px;
+  filter: brightness(0.9) contrast(0.5) saturate(0.6);
+  mix-blend-mode: hard-light;
+}
+.bebidaGif{
+  opacity: 1;
+}
+#bebida1Gif, #bebida1Charco{
+  left: 62px;
+  top: 85px;
+}
+#bebida2Gif, #bebida2Charco{
+  left: 212px;
+  top: 85px;
+}
+#bebida3Gif, #bebida3Charco{
+  left: 65px;
+  top: 265px;
+  transform: scaleY(1.25);
 }
 
 .hitbox{

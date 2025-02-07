@@ -9639,143 +9639,159 @@ elements.forEach(el => {
 });
 
 
-    /* HREF FRUIT NINJA */
-    tomatoContainerHitbox.addEventListener("click", function () {
-      window.location.href = "pages/Findex.html";
-    });
+/* HREF FRUIT NINJA */
+tomatoContainerHitbox.addEventListener("click", function () {
+  window.location.href = "pages/Findex.html";
+});
 
 
 
 
 
     /* CAGE CRISTALS */
-    // EVENTOS PARA CUANDO isDragging ES TRUE (se usan hitboxes y mouseenter/mouseleave)
-// Supongamos que 'isDragging' es una variable global o definida en un scope accesible
-// let isDragging = true; // Cuando true, se usarán los hitboxes y eventos de mouseenter/leave
+glassLeftHitbox.addEventListener("mouseleave", function(event) {
+  if (!isDragging) {return;}
+  const hamsters = document.querySelectorAll('.hamster');
+  if (
+    glassRight.contains(event.relatedTarget) ||
+    glassLeft.contains(event.relatedTarget) ||
+    glassRightHitbox.contains(event.relatedTarget) ||
+    glassLeftHitbox.contains(event.relatedTarget) ||
+    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+    wrapper.contains(event.relatedTarget)
+  ) {
+    return;
+  }
 
-// EVENTOS PARA CUANDO isDragging ES TRUE (se usan hitboxes y mouseenter/mouseleave)
+  // Si no está en ningún elemento de la lista anterior, se quitan las clases
+  glassLeft.classList.remove("active");
+  glassRight.classList.remove("active");
+});
+glassRightHitbox.addEventListener("mouseleave", function(event) {
+  if (!isDragging) {return;}
+  const hamsters = document.querySelectorAll('.hamster');
+  if (
+    glassRight.contains(event.relatedTarget) ||
+    glassLeft.contains(event.relatedTarget) ||
+    glassRightHitbox.contains(event.relatedTarget) ||
+    glassLeftHitbox.contains(event.relatedTarget) ||
+    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+    wrapper.contains(event.relatedTarget)
+  ) {
+    return;
+  }
+
+  glassLeft.classList.remove("active");
+  glassRight.classList.remove("active");
+});
+glassLeft.addEventListener("mouseleave", function(event) {
+  if (!isDragging) {return;}
+  const hamsters = document.querySelectorAll('.hamster');
+  if (
+    glassRight.contains(event.relatedTarget) ||
+    glassLeft.contains(event.relatedTarget) ||
+    glassRightHitbox.contains(event.relatedTarget) ||
+    glassLeftHitbox.contains(event.relatedTarget) ||
+    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+    wrapper.contains(event.relatedTarget)
+  ) {
+    return;
+  }
+
+  // Si no está en ningún elemento de la lista anterior, se quitan las clases
+  glassLeft.classList.remove("active");
+  glassRight.classList.remove("active");
+});
+
+glassRight.addEventListener("mouseleave", function(event) {
+  if (!isDragging) {return;}
+  const hamsters = document.querySelectorAll('.hamster');
+  if (
+    glassRight.contains(event.relatedTarget) ||
+    glassLeft.contains(event.relatedTarget) ||
+    glassRightHitbox.contains(event.relatedTarget) ||
+    glassLeftHitbox.contains(event.relatedTarget) ||
+    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+    wrapper.contains(event.relatedTarget)
+  ) {
+    return;
+  }
+
+  glassLeft.classList.remove("active");
+  glassRight.classList.remove("active");
+});
 glassLeftHitbox.addEventListener("mouseenter", function(){
+  if (!isDragging) {return;}
   glassLeft.classList.add("active");
 });
 
 glassRightHitbox.addEventListener("mouseenter", function(){
+  if (!isDragging) {return;}
   glassRight.classList.add("active");
 });
 
-wrapper.addEventListener("mouseenter", function(){
+glassLeft.addEventListener("mouseenter", function(){
+  if (!isDragging) {return;}
+  glassLeft.classList.add("active");
+});
+
+glassRight.addEventListener("mouseenter", function(){
+  if (!isDragging) {return;}
   glassRight.classList.add("active");
 });
 
-glassLeftHitbox.addEventListener("mouseleave", function(event){
-  if (!isDragging) {return;}
 
-  const hamsters = document.querySelectorAll('.hamster');
-  if (
-    glassRight.contains(event.relatedTarget) ||
-    glassLeft.contains(event.relatedTarget) ||
-    glassRightHitbox.contains(event.relatedTarget) ||
-    glassLeftHitbox.contains(event.relatedTarget) ||
-    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
-    wrapper.contains(event.relatedTarget)
-  ) {
-    return;
-  }
-  glassLeft.classList.remove("active");
-  glassRight.classList.remove("active");
+
+glassLeft.addEventListener("click", function(){
+  if (isDragging) {return;}
+  // Aquí puedes definir la lógica para alternar la clase 'active'
+  glassLeft.classList.toggle("active");
 });
 
-glassRightHitbox.addEventListener("mouseleave", function(event){
-  if (!isDragging) {return;}
-
-  const hamsters = document.querySelectorAll('.hamster');
-  if (
-    glassRight.contains(event.relatedTarget) ||
-    glassLeft.contains(event.relatedTarget) ||
-    glassRightHitbox.contains(event.relatedTarget) ||
-    glassLeftHitbox.contains(event.relatedTarget) ||
-    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
-    wrapper.contains(event.relatedTarget)
-  ) {
-    return;
-  }
-  glassLeft.classList.remove("active");
-  glassRight.classList.remove("active");
+glassRight.addEventListener("click", function(){
+  if (isDragging) {return;}
+  glassRight.classList.toggle("active");
 });
 
-wrapper.addEventListener("mouseleave", function(event){
-  
-  const hamsters = document.querySelectorAll('.hamster');
-  if (
-    glassLeftHitbox.contains(event.relatedTarget) ||
-    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
-    wrapper.contains(event.relatedTarget)
-  ) {
-    return;
-  }
-  glassLeft.classList.remove("active");
-  glassRight.classList.remove("active");
-});
 
-// EVENTOS PARA CUANDO isDragging ES FALSE (se usan clicks directos en glassLeft y glassRight)
 
-  glassLeft.addEventListener("mouseenter", function(){
-    if (!isDragging) {return;}
-    glassLeft.classList.add("active");
+/* GOTAS DE AGUA */
+// Función auxiliar para obtener un delay aleatorio entre 'min' y 'max' segundos
+function getRandomDelay(minSeconds, maxSeconds) {
+  // Convierte segundos a milisegundos
+  const minMs = minSeconds * 1000;
+  const maxMs = maxSeconds * 1000;
+  return Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
+}
+
+// Recarga (reinicia) un GIF concreto forzando al navegador a pedirlo de nuevo
+function reloadGif(img) {
+  const baseSrc = img.src.split("?")[0]; // quitamos cualquier ?t= anterior
+  img.src = baseSrc + "?t=" + Date.now();
+}
+
+// Programa la recarga del GIF con un delay aleatorio entre 1 y 10 segundos.
+// Cada vez que recarga, vuelve a programar la siguiente recarga.
+function scheduleGifRefresh(img) {
+  const randomDelay = getRandomDelay(1, 5); // entre 1s y 10s
+  setTimeout(() => {
+    reloadGif(img);
+    scheduleGifRefresh(img); // se reprograma a sí misma para continuar
+  }, randomDelay);
+}
+
+// Función principal: inicia el bucle de recargas independientes para cada .bebidaGif
+function startRandomGifRefreshIndividually() {
+  const gifs = document.querySelectorAll(".bebidaGif");
+  gifs.forEach((gif) => {
+    scheduleGifRefresh(gif);
   });
-  
-  glassRight.addEventListener("mouseenter", function(){
-    if (!isDragging) {return;}
-    glassRight.classList.add("active");
-  });
+}
 
-  glassLeft.addEventListener("mouseleave", function(event){
-    if (!isDragging) {return;}
-
-    const hamsters = document.querySelectorAll('.hamster');  
-    if (
-      glassRight.contains(event.relatedTarget) ||
-      glassLeft.contains(event.relatedTarget) ||
-      glassRightHitbox.contains(event.relatedTarget) ||
-      glassLeftHitbox.contains(event.relatedTarget) ||
-      Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
-      wrapper.contains(event.relatedTarget)
-    ) {
-      return;
-    }
-    glassLeft.classList.remove("active");
-    glassRight.classList.remove("active");
-  });
-  
-  glassRight.addEventListener("mouseleave", function(event){
-    if (!isDragging) {return;}
-
-    const hamsters = document.querySelectorAll('.hamster');  
-    if (
-      glassRight.contains(event.relatedTarget) ||
-      glassLeft.contains(event.relatedTarget) ||
-      glassRightHitbox.contains(event.relatedTarget) ||
-      glassLeftHitbox.contains(event.relatedTarget) ||
-      Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
-      wrapper.contains(event.relatedTarget)
-    ) {
-      return;
-    }
-    glassLeft.classList.remove("active");
-    glassRight.classList.remove("active");
-  });
+// Llamada inicial, por ejemplo al cargar la página:
+startRandomGifRefreshIndividually();
 
 
-
-  glassLeft.addEventListener("click", function(){
-    if (isDragging) {return;}
-    // Aquí puedes definir la lógica para alternar la clase 'active'
-    glassLeft.classList.toggle("active");
-  });
-  
-  glassRight.addEventListener("click", function(){
-    if (isDragging) {return;}
-    glassRight.classList.toggle("active");
-  });
 
   //TODO !: hacer que el hamster reste enetrgía entra en la rueda y sume cuando sale de la rueda 
   //TODO !: hacer que se empicen a restar Stats cuando compras un hamster
