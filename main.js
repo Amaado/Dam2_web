@@ -1736,6 +1736,9 @@ function updateBubbles() {
       await actualizarMonedas(idLogeado);
       await actualizarTomatos(idLogeado);
       await cargarSkins(idLogeado);
+      await loadCursorSelection(idLogeado);
+      cargarNotas(idLogeado);
+      cargarDibujosEnTodasLasPaginas();
       applyTheme();
       ajustesColorLoginYregister(checkbox);
 
@@ -1743,8 +1746,11 @@ function updateBubbles() {
       loadCursorSelection(idLogeado);
 
       cargarHamstersDesdeBDF();
+      updateStatsHamsters();
 
       cargarNotas(idLogeado);
+      updateAudioMaster();
+
 
       horarioImg.style.setProperty(
         "transform",
@@ -2025,7 +2031,16 @@ function updateBubbles() {
         cargarNotas(idLogeado);
         cargarDibujosEnTodasLasPaginas();
         actualizarEstadoElementosSesion();
+        ajustesColorLoginYregister(checkbox);
         cargarHamstersDesdeBDF();
+        updateStatsHamsters();
+
+        cargarNotas(idLogeado);
+        horarioImg.style.setProperty(
+          "transform",
+          "translateX(-10px) scale(0.02, 0.02)",
+          "important"
+        );
       } catch (error) {
         console.error("Error durante el inicio de sesión automático:", error);
       }
@@ -7301,6 +7316,10 @@ function stopDragHamster(e) {
 
 
       // Si es el contenedor especial `hitboxSlotWeel`
+      if (hitbox.id !== 'hitboxSlotWeel') {
+        stopSpecificInterval(currentHamster.id, "energy");
+        startFillingEnergy(currentHamster.id, "energy");
+      }
       if (hitbox.id === 'hitboxSlotWeel') {
         isResetToContainer = false;
         handleWheelContainer(originalParent, hitbox);
@@ -7310,6 +7329,8 @@ function stopDragHamster(e) {
           actualizarSlotHamster(currentHamster, hitbox);
         }
         modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
+        startDecreasingEnergy(currentHamster.id);
+
         resetDragVariables();
         return;
       }
@@ -8994,8 +9015,9 @@ async function cargarHamstersDesdeBD() {
           currentHamster.style.display = 'flex';
           handleWheelContainer(contenedor, contenedor);
           modifyHamsterSpeed(currentHamster, setHamsterSpeed, 1.5, false);
-          resetDragVariables();
-          
+          startDecreasingEnergy(currentHamster.id);
+
+          resetDragVariables(); 
           break;
 
         case "hitboxSlotWorld":
@@ -9268,6 +9290,47 @@ function getDefaultHamsterStats() {
  * Timers / Lógicas de decremento y recuperación
  ******************************************************/
 
+function fillEnergy(hamsterId) {
+  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  if (!hamsterEl) return;
+
+  let currentEnergy = 100;  // Asumimos que el valor máximo es 100
+  hamsterEl.setAttribute("energy", currentEnergy);
+  const slider = hamsterEl.querySelector(".sliderEnergy");
+  if (slider) {
+    slider.value = currentEnergy;
+    actualizarSlider(slider);
+  }
+}
+
+// Función para llenar el hambre
+function fillHunger(hamsterId) {
+  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  if (!hamsterEl) return;
+
+  let currentHunger = 100;  // Asumimos que el valor máximo es 100
+  hamsterEl.setAttribute("hunger", currentHunger);
+  const slider = hamsterEl.querySelector(".sliderHunger");
+  if (slider) {
+    slider.value = currentHunger;
+    actualizarSlider(slider);
+  }
+}
+
+// Función para llenar la sed
+function fillThirst(hamsterId) {
+  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  if (!hamsterEl) return;
+
+  let currentThirst = 100;  // Asumimos que el valor máximo es 100
+  hamsterEl.setAttribute("thirst", currentThirst);
+  const slider = hamsterEl.querySelector(".sliderWater");
+  if (slider) {
+    slider.value = currentThirst;
+    actualizarSlider(slider);
+  }
+}
+
 /**
  * Decrementa energía en `amount` (ej: 16.7 por segundo)
  * y actualiza el atributo y slider en el DOM.
@@ -9343,8 +9406,8 @@ function fillFullStats(hamsterId){
 
 
 
-function startPeriodicStatsUpdate(userId) {
-  // Se ejecutará cada 20 segundos
+function startPeriodicStatsUpdate(idLogeado) {
+  // Se ejecutará cada 15 segundos
   setInterval(async () => {
     // 1) Tomar todos los hamsters del DOM
     const hamsterEls = document.querySelectorAll(".hamster");
@@ -9386,9 +9449,9 @@ function startPeriodicStatsUpdate(userId) {
     });
 
     // 2) Enviar con UNA sola petición
-    await setHamsterStatsInDB(userId, statsObj);
+    await setHamsterStatsInDB(idLogeado, statsObj);
     //console.log('%c Actualización global de stats en BD: %o', 'background: blue; color: white; padding: 4px;', statsObj);
-  }, 20000);
+  }, 15000);
 }
 
 
@@ -9486,16 +9549,112 @@ document.querySelectorAll('.sliderHamster').forEach(slider => {
 /******************************************************
  * Uso típico al cargar página, según si un hamster se compró o no
  ******************************************************/
-window.addEventListener("load", async () => {
-  const userId = idLogeado; // Ajusta a tu variable real
 
+
+// Objeto que contiene los intervalos para cada hamster
+const hamsterIntervalsStats = {};
+
+// Función global para asignar los intervalos de llenado
+function startFillingHunger(hamsterId) {
+  // Asegurarnos de que no haya intervalos duplicados
+  if (!hamsterIntervalsStats[hamsterId]) {
+    hamsterIntervalsStats[hamsterId] = {};
+  }
+
+  // Intervalo para llenar el hambre
+  if (!hamsterIntervalsStats[hamsterId].hunger) {
+    hamsterIntervalsStats[hamsterId].hunger = setInterval(() => {
+      fillHunger(hamsterId);
+    }, 1000);
+  }
+}
+
+
+function startFillingThirst(hamsterId) {
+  // Asegurarnos de que no haya intervalos duplicados
+  if (!hamsterIntervalsStats[hamsterId]) {
+    hamsterIntervalsStats[hamsterId] = {};
+  }
+
+  // Intervalo para llenar la sed
+  if (!hamsterIntervalsStats[hamsterId].thirst) {
+    hamsterIntervalsStats[hamsterId].thirst = setInterval(() => {
+      fillThirst(hamsterId);
+    }, 1000);
+  }
+}
+
+function startFillingEnergy(hamsterId) {
+  // Asegurarnos de que no haya intervalos duplicados
+  if (!hamsterIntervalsStats[hamsterId]) {
+    hamsterIntervalsStats[hamsterId] = {};
+  }
+
+  // Intervalo para llenar la energía
+  if (!hamsterIntervalsStats[hamsterId].energy) {
+    hamsterIntervalsStats[hamsterId].energy = setInterval(() => {
+      fillEnergy(hamsterId);
+    }, 1000);
+  }
+}
+
+
+function startDecreasingStats(hamsterId) {
+  // Asegurarnos de que no haya intervalos duplicados
+  if (!hamsterIntervalsStats[hamsterId]) {
+    hamsterIntervalsStats[hamsterId] = {};
+  }
+
+  // Intervalo para decrementar hambre
+  if (!hamsterIntervalsStats[hamsterId].hunger) {
+    hamsterIntervalsStats[hamsterId].hunger = setInterval(() => {
+      decrementHunger(hamsterId, 1.67);
+    }, 1000);
+  }
+
+  // Intervalo para decrementar sed
+  if (!hamsterIntervalsStats[hamsterId].thirst) {
+    hamsterIntervalsStats[hamsterId].thirst = setInterval(() => {
+      decrementThirst(hamsterId, 1.11);
+    }, 1000);
+  }
+}
+
+// Función para asignar el intervalo de energía
+function startDecreasingEnergy(hamsterId) {
+  // Asegurarnos de que no haya intervalos duplicados
+  if (!hamsterIntervalsStats[hamsterId]) {
+    hamsterIntervalsStats[hamsterId] = {};
+  }
+
+  // Intervalo para decrementar energía
+  if (!hamsterIntervalsStats[hamsterId].energy) {
+    hamsterIntervalsStats[hamsterId].energy = setInterval(() => {
+      decrementEnergy(hamsterId, 16.67);
+    }, 1000);
+  }
+}
+
+// Función para detener un intervalo específico de un hamster (por estadística)
+function stopSpecificInterval(hamsterId, stat) {
+  if (hamsterIntervalsStats[hamsterId] && hamsterIntervalsStats[hamsterId][stat]) {
+    clearInterval(hamsterIntervalsStats[hamsterId][stat]);
+    delete hamsterIntervalsStats[hamsterId][stat];  // Limpiar el objeto del intervalo de esa estadística
+    //console.log(`Intervalo de ${stat} para el hamster con id: ${hamsterId} detenido.`);
+  } else {
+    console.log(`No se encontró el intervalo de ${stat} para el hamster con id: ${hamsterId}.`);
+  }
+}
+
+
+async function updateStatsHamsters() {
   // 1) Cargar stats desde la BD
-  let userHamstersStats = await getHamsterStatsFromDB(userId);
+  let userHamstersStats = await getHamsterStatsFromDB(idLogeado);
 
   // Si la función devolvió null, forzamos valores por defecto y guardamos
   if (!userHamstersStats) {
     userHamstersStats = getDefaultHamsterStats();
-    await setHamsterStatsInDB(userId, userHamstersStats);
+    await setHamsterStatsInDB(idLogeado, userHamstersStats);
   }
 
   console.log("Hamster Stats al iniciar:", userHamstersStats);
@@ -9546,27 +9705,12 @@ window.addEventListener("load", async () => {
         fillFullStats(hamsterId);
       } else {
         // 2.5) Si está fuera de la tienda, iniciamos decrementos y la actualización periódica
-        function startDecreasingStats(hamsterId) {
-          setInterval(() => {
-            // Energy: 16.67 por segundo -> 1 minuto (60s)
-            decrementEnergy(hamsterId, 16.67);
-
-            // Hunger: 1.67 por segundo -> 10 min
-            decrementHunger(hamsterId, 1.67);
-
-            // Thirst: ~1.11 por segundo -> 15 min
-            decrementThirst(hamsterId, 1.11);
-          }, 1000);
-
-          // Actualización global cada 20s (una sola petición)
-          startPeriodicStatsUpdate(userId);
-        }
-
-        startDecreasingStats(hamsterId);
+        startDecreasingStats(hamsterId);  // Inicia todos los intervalos para el hamster con id
+        startPeriodicStatsUpdate(idLogeado);
       }
     });
   }, 2000);
-});
+}
 
 
 
