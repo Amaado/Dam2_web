@@ -6956,7 +6956,6 @@ function initHamster() {
   setHamsterSpeed();
 
   return { hamster, setHamsterSpeed, modifyHamsterSpeed };
-
 }
 
 let { hamster, setHamsterSpeed, modifyHamsterSpeed } = initHamster();
@@ -7186,6 +7185,9 @@ function startDragHamster(e, hamsterElement) {
 
 
   if (hamsterElement.closest('.wrapper')) {
+    currentHamster.classList.remove("exhaust");
+    currentHamster.classList.remove("tong");
+    currentHamster.classList.remove("tongU");
     modifyHamsterSpeed(hamster, setHamsterSpeed, 0.0, true);
   }
 
@@ -7240,6 +7242,7 @@ function startDragHamster(e, hamsterElement) {
     clonedHamster.style.left = originalX + 'px';
     clonedHamster.style.top = originalY + 'px';
     clonedHamster.style.zIndex = 1000;
+
   } else {
     // Configurar el hámster para posicionamiento absoluto
     hamsterElement.style.position = 'absolute';
@@ -7315,20 +7318,55 @@ function stopDragHamster(e) {
       const offsetY = e.clientY - hitboxRect.top;
 
 
-      // Si es el contenedor especial `hitboxSlotWeel`
-      if (hitbox.id !== 'hitboxSlotWeel') {
-        stopSpecificInterval(currentHamster.id, "energy");
-        startFillingEnergy(currentHamster.id, "energy");
+      let hamstersArray = Array.from(hitbox.querySelectorAll('.hamster'));
+      let extendedHamstersArray = [...hamstersArray];
+      const wheelHamster = document.querySelector('.wheel .hamster');
+      if (wheelHamster) {
+        extendedHamstersArray.push(wheelHamster);
       }
+      const hamstersInHitbox = extendedHamstersArray.filter(h => h !== currentHamster);
+
+      if (hamstersInHitbox.length > 0) {
+        // Si está ocupado, devolver al contenedor original
+        if (originalParent.closest('.wheel')) {
+          //console.log("originalParent.closest('.wheel')");
+
+          console.log("stopDragHamster: Ocupado, devolviendo a wheel");
+          isResetToContainer = true;
+          handleWheelContainer(originalParent, hitbox);
+          modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
+          stopSpecificInterval(currentHamster.id, "energy");
+          startDecreasingEnergy(currentHamster.id);
+
+          resetDragVariables();
+        }else{
+          //console.log("!originalParent.closest('.wheel')");
+
+          console.log("stopDragHamster: Ocupado, devolviendo a Normal");
+          currentHamster.style.transition = "";
+          isResetToContainer = true;
+          cloneHamsterToContainer(originalParent, offsetX, offsetY);
+
+          stopSpecificInterval(currentHamster.id, "energy");
+          startFillingEnergy(currentHamster.id);
+          resetDragVariables();
+        }
+        //console.log("Return if wheel ocupate");
+        return;
+      }
+
       if (hitbox.id === 'hitboxSlotWeel') {
-        isResetToContainer = false;
-        handleWheelContainer(originalParent, hitbox);
         const wheel = document.querySelector('.wheel');
         const existingWheelHamster = wheel.querySelector('.hamster');
         if (!existingWheelHamster) {
           actualizarSlotHamster(currentHamster, hitbox);
         }
+        //console.log("stopDragHamster: Moviendo a hitboxSlotWeel");
+
+        isResetToContainer = false;
+        handleWheelContainer(originalParent, hitbox);
         modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
+        stopSpecificInterval(currentHamster.id, "energy");
         startDecreasingEnergy(currentHamster.id);
 
         resetDragVariables();
@@ -7336,41 +7374,30 @@ function stopDragHamster(e) {
       }
 
       if (hitbox.id === 'hitboxSlotWorld') {
+        //console.log("stopDragHamster: Moviendo a hitboxSlotWorld");
+
         currentHamster.setAttribute("pos", "");
         hideTooltipHamsterForce(currentHamster);
         isResetToContainer = false;
         cloneHamsterToContainer(hitbox, offsetX, offsetY);
         actualizarSlotHamster(currentHamster, hitbox);
+
+        stopSpecificInterval(currentHamster.id, "energy");
+        startFillingEnergy(currentHamster.id);
         resetDragVariables();
         return;
       }
 
-
-      // Para otros hitboxes, verificar si ya están ocupados
-      const hamstersInHitbox = Array.from(hitbox.querySelectorAll('.hamster')).filter(h => h !== currentHamster);
-      if (hamstersInHitbox.length > 0) {
-        // Si está ocupado, devolver al contenedor original
-        if (originalParent.closest('.wheel')) {
-          isResetToContainer = true;
-          handleWheelContainer(originalParent, hitbox);
-          modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
-          resetDragVariables();
-        }else{
-          currentHamster.style.transition = "";
-          isResetToContainer = true;
-          cloneHamsterToContainer(originalParent, offsetX, offsetY);
-          resetDragVariables();
-        }
-        //console.log("Return if wheel ocupate");
-        return;
-      }
-
+      //console.log("stopDragHamster: Moviendo a Noramal");
       // Clonar el hámster y moverlo al hitbox
       currentHamster.setAttribute("pos", "");
       isResetToContainer = false;
       hideTooltipHamsterForce(currentHamster);
       cloneHamsterToContainer(hitbox, offsetX, offsetY);
       actualizarSlotHamster(currentHamster, hitbox);
+
+      stopSpecificInterval(currentHamster.id, "energy");
+      startFillingEnergy(currentHamster.id);
       resetDragVariables();
       return;
     }
@@ -7378,14 +7405,22 @@ function stopDragHamster(e) {
 
   if (!droppedInHitbox) {
     // Si no se suelta en ningún hitbox, devolver al contenedor original
+    
+    //console.log("stopDragHamster: No se dropeó en una hitbox");
     if (originalParent.closest('.wheel')) {
       isResetToContainer = true;
       handleWheelContainer(originalParent, originalParent);
       modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
+      stopSpecificInterval(currentHamster.id, "energy");
+      startDecreasingEnergy(currentHamster.id);
+
       resetDragVariables();
     }else{
       isResetToContainer = true;
       cloneHamsterToContainer(originalParent, offsetX, offsetY);
+
+      stopSpecificInterval(currentHamster.id, "energy");
+      startFillingEnergy(currentHamster.id);
       resetDragVariables();
     }
   }
@@ -7416,6 +7451,7 @@ function setPositionHamster(currentHamster, hitbox, originalContainer) {
       currentHamster.classList.remove("fallingLess30AnimY");
       currentHamster.classList.remove("fallingAnim");
       currentHamster.classList.remove("fallingAnimY");
+
     return;
   }
 
@@ -7835,6 +7871,9 @@ function resetHmasterClassList(currentHamster) {
   currentHamster.classList.remove("fallingAnim");
   currentHamster.classList.remove("fallingAnimY");
   currentHamster.classList.remove("walkAnim");
+  currentHamster.classList.remove("exhaust");
+  currentHamster.classList.remove("tong");
+  currentHamster.classList.remove("tongU");
 }
 
 // Función para resetear las variables de arrastre
@@ -8493,6 +8532,39 @@ async function descontarMonedas(price, event) {
   }
 }
 
+
+async function añadirMonedasWheel(price) {
+  try {
+      let coinRestar = document.createElement("div");
+      document.body.appendChild(coinRestar);
+      coinRestar.classList.add("coinRestar");
+      coinRestar.style.display = "block";
+      coinRestar.textContent = "+" + price;
+
+      let longitud = coinLabel.textContent.toString().length;
+      let marginLeftCoinRestar = 50 + longitud * 30;
+      coinRestar.style.marginLeft = `${marginLeftCoinRestar}px`;
+
+      // Posicionar el elemento en el cursor
+      incrementCoins();
+
+      coinRestar.style.right = `${Math.floor(Math.random() * 101) + 100}px`;
+      coinRestar.style.bottom = `${Math.floor(Math.random() * 131) + 50}px`;
+
+      setTimeout(() => {
+          coinRestar.style.display = "none";
+          coinRestar.remove();
+      }, 2000);
+  } catch (error) {
+      console.error(
+          "Error durante la actualización de monedas en la base de datos:",
+          error
+      );
+  }
+}
+
+
+
 function tomatoAnimStart() {
   let initialMarginLeft = 13;
   const longitud = tomatoLabel.textContent.toString().length - 1;
@@ -8594,7 +8666,7 @@ buttonV.addEventListener("click", async function (event) {
     resetDragVariables();
 
   }else if (iconDialogElement.src.includes("iconTomato")) {
-    if (monedasLogeado < 10) {
+    if (monedasLogeado < countTomatos2Recive*10) {
       setTimeout(() => {
         showDialogDefault(textDefaultMessage);
       }, 700);
@@ -9027,6 +9099,9 @@ async function cargarHamstersDesdeBD() {
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
           wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
+
+          stopSpecificInterval(currentHamster.id, "energy");
+          startFillingEnergy(currentHamster.id);
           resetDragVariables();
 
           break;
@@ -9038,6 +9113,8 @@ async function cargarHamstersDesdeBD() {
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
           wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
+
+          fillFullStats(currentHamster.id);
           resetDragVariables();
 
           hitboxSlotBuyBiggieClick.style.display = "block";
@@ -9052,6 +9129,8 @@ async function cargarHamstersDesdeBD() {
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
           wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
+
+          fillFullStats(currentHamster.id);
           resetDragVariables();
 
           hitboxSlotBuyDiorClick.style.display = "block";
@@ -9066,6 +9145,8 @@ async function cargarHamstersDesdeBD() {
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
           wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
+
+          fillFullStats(currentHamster.id);
           resetDragVariables();
 
           hitboxSlotBuyCocoClick.style.display = "block";
@@ -9080,6 +9161,9 @@ async function cargarHamstersDesdeBD() {
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
           wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
+
+          stopSpecificInterval(currentHamster.id, "energy");
+          startFillingEnergy(currentHamster.id);
           resetDragVariables();
           
           break;
@@ -9290,25 +9374,42 @@ function getDefaultHamsterStats() {
  * Timers / Lógicas de decremento y recuperación
  ******************************************************/
 
-function fillEnergy(hamsterId) {
+function fillEnergy(hamsterId, speed) {
   const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
   if (!hamsterEl) return;
 
-  let currentEnergy = 100;  // Asumimos que el valor máximo es 100
+  // Llenar progresivamente la energía en función de la velocidad
+  let currentEnergy = Number(hamsterEl.getAttribute("energy")) || 0;
+  const maxEnergy = 1000;  // Valor máximo de energía
+  if (currentEnergy < maxEnergy) {
+    currentEnergy += speed;
+    if (currentEnergy > maxEnergy) currentEnergy = maxEnergy;
+  }
+
   hamsterEl.setAttribute("energy", currentEnergy);
   const slider = hamsterEl.querySelector(".sliderEnergy");
   if (slider) {
     slider.value = currentEnergy;
     actualizarSlider(slider);
   }
+
+  hamsterEl.classList.remove("exhaust");
+  hamsterEl.classList.remove("tong");
 }
 
-// Función para llenar el hambre
-function fillHunger(hamsterId) {
+// Función para llenar el hambre con velocidad
+function fillHunger(hamsterId, speed) {
   const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
   if (!hamsterEl) return;
 
-  let currentHunger = 100;  // Asumimos que el valor máximo es 100
+  // Llenar progresivamente el hambre en función de la velocidad
+  let currentHunger = Number(hamsterEl.getAttribute("hunger")) || 0;
+  const maxHunger = 1000;  // Valor máximo de hambre
+  if (currentHunger < maxHunger) {
+    currentHunger += speed;
+    if (currentHunger > maxHunger) currentHunger = maxHunger;
+  }
+
   hamsterEl.setAttribute("hunger", currentHunger);
   const slider = hamsterEl.querySelector(".sliderHunger");
   if (slider) {
@@ -9317,12 +9418,19 @@ function fillHunger(hamsterId) {
   }
 }
 
-// Función para llenar la sed
-function fillThirst(hamsterId) {
+// Función para llenar la sed con velocidad
+function fillThirst(hamsterId, speed) {
   const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
   if (!hamsterEl) return;
 
-  let currentThirst = 100;  // Asumimos que el valor máximo es 100
+  // Llenar progresivamente la sed en función de la velocidad
+  let currentThirst = Number(hamsterEl.getAttribute("thirst")) || 0;
+  const maxThirst = 1000;  // Valor máximo de sed
+  if (currentThirst < maxThirst) {
+    currentThirst += speed;
+    if (currentThirst > maxThirst) currentThirst = maxThirst;
+  }
+
   hamsterEl.setAttribute("thirst", currentThirst);
   const slider = hamsterEl.querySelector(".sliderWater");
   if (slider) {
@@ -9349,6 +9457,37 @@ function decrementEnergy(hamsterId, amount) {
   const slider = hamsterEl.querySelector(".sliderEnergy");
   if (slider) slider.value = currentEnergy;
   actualizarSlider(slider);
+
+  if (hamsterEl.closest('.wrapper')) {
+    if (slider.value <= 0) {
+      hamsterEl.classList.add("tong");
+      hamsterEl.classList.add("exhaust");
+      hamsterEl.classList.remove("tongU");
+      if (hamsterEl.closest('.wrapper')) {
+        modifyHamsterSpeed(hamster, setHamsterSpeed, 0.0, true);
+      }
+    } else if (slider.value < 150) {
+      hamsterEl.classList.add("exhaust");
+      hamsterEl.classList.remove("tong");
+      hamsterEl.classList.add("tongU");
+      modifyHamsterSpeed(hamsterEl, setHamsterSpeed, 1.5, false);
+    } else {
+      // 150 en adelante
+      hamsterEl.classList.remove("exhaust");
+      hamsterEl.classList.remove("tong");
+      hamsterEl.classList.add("tongU");
+      modifyHamsterSpeed(hamsterEl, setHamsterSpeed, 1.5, false);
+    }
+
+    if(slider.value < 1000 && slider.value > 0){
+      añadirMonedasWheel(1);
+    }
+  }else{
+      hamsterEl.classList.remove("exhaust");
+      hamsterEl.classList.remove("tong");
+      hamsterEl.classList.add("tongU");
+  }
+  
 }
 
 /**
@@ -9564,7 +9703,7 @@ function startFillingHunger(hamsterId) {
   // Intervalo para llenar el hambre
   if (!hamsterIntervalsStats[hamsterId].hunger) {
     hamsterIntervalsStats[hamsterId].hunger = setInterval(() => {
-      fillHunger(hamsterId);
+      fillHunger(hamsterId, speed);
     }, 1000);
   }
 }
@@ -9579,7 +9718,7 @@ function startFillingThirst(hamsterId) {
   // Intervalo para llenar la sed
   if (!hamsterIntervalsStats[hamsterId].thirst) {
     hamsterIntervalsStats[hamsterId].thirst = setInterval(() => {
-      fillThirst(hamsterId);
+      fillThirst(hamsterId, speed);
     }, 1000);
   }
 }
@@ -9593,7 +9732,7 @@ function startFillingEnergy(hamsterId) {
   // Intervalo para llenar la energía
   if (!hamsterIntervalsStats[hamsterId].energy) {
     hamsterIntervalsStats[hamsterId].energy = setInterval(() => {
-      fillEnergy(hamsterId);
+      fillEnergy(hamsterId, 25);
     }, 1000);
   }
 }
