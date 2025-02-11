@@ -7281,6 +7281,21 @@ function onDragHamster(e) {
 }
 
 
+function estaOcupadoHitbox(currentHamster, hitbox) {
+  if (hitbox.id === 'hitboxSlotWeel') {
+    // Para el hitbox de la rueda, revisamos en el contenedor .wheel
+    const wheelHamsters = Array.from(document.querySelectorAll('.wheel .hamster'))
+      .filter(ham => ham !== currentHamster);
+    return wheelHamsters.length > 0 ? 1 : 0;
+  } else {
+    // Para los demás hitboxes, comprobamos directamente en el elemento
+    const hitboxHamsters = Array.from(hitbox.querySelectorAll('.hamster'))
+      .filter(ham => ham !== currentHamster);
+    return hitboxHamsters.length > 0 ? 1 : 0;
+  }
+}
+
+
 let isStoppingDrag = false;
 function stopDragHamster(e) {
   if (!isDragging || !currentHamster || isStoppingDrag) return;
@@ -7318,22 +7333,15 @@ function stopDragHamster(e) {
       const offsetY = e.clientY - hitboxRect.top;
 
 
-      let hamstersArray = Array.from(hitbox.querySelectorAll('.hamster'));
-      let extendedHamstersArray = [...hamstersArray];
-      const wheelHamster = document.querySelector('.wheel .hamster');
-      if (wheelHamster) {
-        extendedHamstersArray.push(wheelHamster);
-      }
-      const hamstersInHitbox = extendedHamstersArray.filter(h => h !== currentHamster);
-
-      if (hamstersInHitbox.length > 0) {
+      let estaOcupHitbox = estaOcupadoHitbox(currentHamster, hitbox);
+      if (estaOcupHitbox > 0 && hitbox.id !== 'hitboxSlotWorld') {
         // Si está ocupado, devolver al contenedor original
         if (originalParent.closest('.wheel')) {
           //console.log("originalParent.closest('.wheel')");
 
           console.log("stopDragHamster: Ocupado, devolviendo a wheel");
           isResetToContainer = true;
-          handleWheelContainer(originalParent, hitbox);
+          handleWheelContainer(originalParent, originalParent);
           modifyHamsterSpeed(hamster, setHamsterSpeed, 1.5, false);
           stopSpecificInterval(currentHamster.id, "energy");
           startDecreasingEnergy(currentHamster.id);
@@ -7354,6 +7362,8 @@ function stopDragHamster(e) {
         //console.log("Return if wheel ocupate");
         return;
       }
+    
+      
 
       if (hitbox.id === 'hitboxSlotWeel') {
         const wheel = document.querySelector('.wheel');
@@ -8546,9 +8556,15 @@ async function añadirMonedasWheel(price) {
       coinRestar.style.marginLeft = `${marginLeftCoinRestar}px`;
 
       // Posicionar el elemento en el cursor
-      incrementCoins();
+      incrementCoins(idLogeado);
 
-      coinRestar.style.right = `${Math.floor(Math.random() * 101) + 100}px`;
+      if (modifiersContainer.classList.contains("active")) {
+        coinRestar.style.right = `calc(${Math.floor(Math.random() * 101) + 100}px + 15vw)`;
+
+      }else{
+        coinRestar.style.right = `calc(${Math.floor(Math.random() * 101) + 100}px + 0vw)`;
+      }
+
       coinRestar.style.bottom = `${Math.floor(Math.random() * 131) + 50}px`;
 
       setTimeout(() => {
@@ -9546,7 +9562,7 @@ function fillFullStats(hamsterId){
 
 
 function startPeriodicStatsUpdate(idLogeado) {
-  // Se ejecutará cada 15 segundos
+  // Se ejecutará cada 5 segundos
   setInterval(async () => {
     // 1) Tomar todos los hamsters del DOM
     const hamsterEls = document.querySelectorAll(".hamster");
@@ -9590,7 +9606,7 @@ function startPeriodicStatsUpdate(idLogeado) {
     // 2) Enviar con UNA sola petición
     await setHamsterStatsInDB(idLogeado, statsObj);
     //console.log('%c Actualización global de stats en BD: %o', 'background: blue; color: white; padding: 4px;', statsObj);
-  }, 15000);
+  }, 5000);
 }
 
 

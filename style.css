@@ -4341,10 +4341,12 @@ canvas {
 }
 @keyframes exhaustTong {
   0%, 100% {
-    height: 7px;
+    height: 5px;
+    top: 18px;
   }
   50% {
-    height: 5px;
+    height: 8px;
+    top: 17px;
   }
 }
 @keyframes exhaustMouth {
@@ -4544,11 +4546,11 @@ canvas {
   pointer-events: auto;
   overflow: hidden;
   transform-origin: left center;
-  transform: rotateY(0deg);
+  transform: perspective(1300px) (0deg);
   transition: all 0.7s ease;
 }
 #glassLeft.active{
-  transform: rotateY(180deg);
+  transform: perspective(1300px) rotateY(-180deg);
 }
 #glassLeft::before{
   content: "";
@@ -4616,11 +4618,11 @@ canvas {
   z-index: 1100;
   overflow: hidden;
   transform-origin: right center;
-  transform: rotateY(0deg);
+  transform: perspective(1300px) rotateY(0deg);
   transition: all 0.7s ease;
 }
 #glassRight.active{
-  transform: rotateY(180deg);
+  transform: perspective(1300px) rotateY(180deg);
 }
 #glassRight::before{
   content: "";
