@@ -161,6 +161,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let defaultFavicon = "img/favicon.png";
   let favicon = document.querySelector("link[rel*='icon']");
 
+  let isOnAction = false;
+
 
 /* BUBBLES */
 let animationFrameId;
@@ -7048,6 +7050,8 @@ function hideTooltipHamsterForce(hamsterElement){
 
 
 function setHamster(hamsterElement){
+  if(isOnAction){return;}
+
   let type = getHamsterType(hamsterElement);
   const intervalId = hamsterIntervals.get(hamsterElement);
   if (intervalId) {
@@ -7123,6 +7127,7 @@ window.addEventListener("load", preloadHamsterImages);
 
 
 function setStrokeHamster(hamsterElement) {
+  if(isOnAction){return;}
   let type = getHamsterType(hamsterElement);
 
   const intervalId = hamsterIntervals.get(hamsterElement);
@@ -7171,6 +7176,44 @@ function setStrokeHamster(hamsterElement) {
 
   // Guardar el nuevo intervalo para este hámster
   hamsterIntervals.set(hamsterElement, newIntervalId);
+}
+
+
+
+function handleModifiersClick() {
+  setHamsterBackAnimation("dior", "eat");
+  setHamsterBackAnimation("coco", "eat");
+  setHamsterBackAnimation("biggie", "eat");
+}
+
+modifiersInformation.addEventListener("click", handleModifiersClick);
+
+function setHamsterBackAnimation(idHamster, action){
+  let thisHamster = document.getElementById(idHamster);
+  isOnAction = true;
+  resetHmasterClassList(thisHamster);
+
+  thisHamster.classList.add("pointingBack");
+
+
+
+  setTimeout(() => {
+    thisHamster.style.animation = "actionGoBack 3s forwards";
+  }, 500);
+  
+  setTimeout(() => {
+    thisHamster.classList.add("headMove");
+  }, 3000);
+
+  if(thisHamster.id === "dior"){
+
+  }else if(thisHamster.id === "coco"){
+    thisHamster.style.setProperty('--puff', "url('img/hamster/coco/puffCocoEating.png')");
+    thisHamster.style.setProperty('--puff-pointingBack-head', "url('img/hamster/coco/puffCocoEatingHead.png')");
+  }else if(thisHamster.id === "biggie"){
+    thisHamster.style.setProperty('--puff', "url('img/hamster/biggie/puffBiggieEating.png')");
+    thisHamster.style.setProperty('--puff-pointingBack-head', "url('img/hamster/biggie/puffBiggieEatingHead.png')");
+  }
 }
 
 
@@ -7481,6 +7524,7 @@ function setPositionHamster(currentHamster, hitbox, originalContainer) {
 
   // Función para caminar el hamster
   function walk(distance, direction) {
+    if(isOnAction){return;}
     const step = 0.2 * speedFactor; // Tamaño del paso ajustado por velocidad
     let targetPos = pos + direction * distance; // Posición objetivo inicial
 
@@ -7868,7 +7912,7 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
       showTooltipHamsterForce(currentHamster);
       setPositionHamster(currentHamster, hitbox, hitbox);
       resetHmasterClassList(currentHamster);
-    }, setTimeoutMs);/**/
+    }, setTimeoutMs);
 
 }
 
@@ -7884,6 +7928,8 @@ function resetHmasterClassList(currentHamster) {
   currentHamster.classList.remove("exhaust");
   currentHamster.classList.remove("tong");
   currentHamster.classList.remove("tongU");
+  currentHamster.classList.remove("pointingBack");
+  currentHamster.style.animation = "";
 }
 
 // Función para resetear las variables de arrastre
@@ -8542,7 +8588,6 @@ async function descontarMonedas(price, event) {
   }
 }
 
-
 async function añadirMonedasWheel(price) {
   try {
       let coinRestar = document.createElement("div");
@@ -8555,8 +8600,12 @@ async function añadirMonedasWheel(price) {
       let marginLeftCoinRestar = 50 + longitud * 30;
       coinRestar.style.marginLeft = `${marginLeftCoinRestar}px`;
 
-      // Posicionar el elemento en el cursor
-      incrementCoins(idLogeado);
+      
+      for (let i = 0; i < price; i++) {
+        setTimeout(() => {
+            incrementCoins(idLogeado);
+        }, i * 100);
+    }
 
       if (modifiersContainer.classList.contains("active")) {
         coinRestar.style.right = `calc(${Math.floor(Math.random() * 101) + 100}px + 15vw)`;
@@ -9455,6 +9504,30 @@ function fillThirst(hamsterId, speed) {
   }
 }
 
+function numeroDeHamsters() {
+  // Lista de IDs de los elementos a verificar
+  const ids = [
+    "hitboxSlotBuyDior",
+    "hitboxSlotBuyCoco",
+    "hitboxSlotBuyBiggie"
+  ];
+
+  let contador = 0;
+
+  // Itera sobre cada ID y verifica si el elemento tiene display none
+  ids.forEach(id => {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+      const estilo = window.getComputedStyle(elemento);
+      if (estilo.display === "none") {
+        contador++;
+      }
+    }
+  });
+
+  return contador;
+}
+
 /**
  * Decrementa energía en `amount` (ej: 16.7 por segundo)
  * y actualiza el atributo y slider en el DOM.
@@ -9496,7 +9569,8 @@ function decrementEnergy(hamsterId, amount) {
     }
 
     if(slider.value < 1000 && slider.value > 0){
-      añadirMonedasWheel(1);
+      let valor = numeroDeHamsters();
+      añadirMonedasWheel(valor);
     }
   }else{
       hamsterEl.classList.remove("exhaust");
