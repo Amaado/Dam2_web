@@ -4279,10 +4279,17 @@ canvas {
     transform: scale(1) translateY(0px);
   }
   100% {
-    transform: scale(0.9)  translateY(-3px);
+    transform: scale(0.95)  translateY(-3px);
   }
 }
-
+@keyframes actionGoBackDown {
+  0% {
+    transform: scale(1) translateY(0px);
+  }
+  100% {
+    transform: scale(0.95)  translateY(-10px);
+  }
+}
 
 .y{
   transform: rotateY(180deg);
@@ -4803,6 +4810,45 @@ canvas {
   left: 65px;
   top: 265px;
   transform: scaleY(1.25);
+}
+
+
+.comidaGif{
+  position: absolute;
+  width: auto;
+  height: 60px;
+  display: none;
+}
+#comida1Gif{
+  left: -10px;
+  top: 55px;
+}
+#comida2Gif{
+  left: 210px;
+  top: 55px;
+}
+#comida3Gif{
+  left: -10px;
+  top: 230px;
+}
+
+.bebiendoGif{
+  position: absolute;
+  width: auto;
+  height: 60px;
+  display: none;
+}
+#bebiendo1Gif{
+  left: -10px;
+  top: 55px;
+}
+#bebiendo2Gif{
+  left: 210px;
+  top: 55px;
+}
+#bebiendo3Gif{
+  left: -10px;
+  top: 230px;
 }
 
 .hitbox{

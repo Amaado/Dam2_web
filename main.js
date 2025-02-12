@@ -7181,40 +7181,260 @@ function setStrokeHamster(hamsterElement) {
 
 
 function handleModifiersClick() {
-  setHamsterBackAnimation("dior", "eat");
-  setHamsterBackAnimation("coco", "eat");
-  setHamsterBackAnimation("biggie", "eat");
+  setHamsterBackAnimation("dior", "drink", true);
+  setHamsterBackAnimation("coco", "eat", true);
+  setHamsterBackAnimation("biggie", "eat", true);
 }
 
 modifiersInformation.addEventListener("click", handleModifiersClick);
 
-function setHamsterBackAnimation(idHamster, action){
+function setHamsterBackAnimation(idHamster, action, moving){
   let thisHamster = document.getElementById(idHamster);
-  isOnAction = true;
-  resetHmasterClassList(thisHamster);
-
-  thisHamster.classList.add("pointingBack");
-
-
-
-  setTimeout(() => {
-    thisHamster.style.animation = "actionGoBack 3s forwards";
-  }, 500);
-  
-  setTimeout(() => {
-    thisHamster.classList.add("headMove");
-  }, 3000);
-
-  if(thisHamster.id === "dior"){
-
-  }else if(thisHamster.id === "coco"){
-    thisHamster.style.setProperty('--puff', "url('img/hamster/coco/puffCocoEating.png')");
-    thisHamster.style.setProperty('--puff-pointingBack-head', "url('img/hamster/coco/puffCocoEatingHead.png')");
-  }else if(thisHamster.id === "biggie"){
-    thisHamster.style.setProperty('--puff', "url('img/hamster/biggie/puffBiggieEating.png')");
-    thisHamster.style.setProperty('--puff-pointingBack-head', "url('img/hamster/biggie/puffBiggieEatingHead.png')");
+  if(thisHamster.parentElement.id === "hitboxSlowWorld"
+  || thisHamster.parentElement.id === "hitboxSlotBuyBiggie"
+  || thisHamster.parentElement.id === "hitboxSlotBuyCoco"
+  || thisHamster.parentElement.id === "hitboxSlotBuyDior"
+  || thisHamster.parentElement.classList.contains("wheel")
+  || thisHamster.parentElement.id === "filterUnderwater"){
+    return;
   }
+
+  isOnAction = true;
+
+  if(!moving){
+    resetHmasterClassList(thisHamster);
+
+    thisHamster.classList.add("pointingBack");
+    setTimeout(() => {
+      if(thisHamster.parentElement.id === "hitboxSlotDown"){
+        thisHamster.style.animation = "actionGoBackDown 2s forwards";
+      }else{
+        thisHamster.style.animation = "actionGoBack 2s forwards";
+      }
+    }, 500);
+
+    setTimeout(() => {
+      thisHamster.classList.add("headMove");
+      if(thisHamster.parentElement.id === "hitboxSlotUpLeft"){
+        if(action == "eat"){
+          let comida1Gif = document.getElementById("comida1Gif");
+          comida1Gif.style.display = "block";
+          comida1Gif.src = 'img/hamster/eatPraticles.gif' + "?t=" + new Date().getTime();
+          setTimeout(() => {
+            comida1Gif.style.display = "none";
+            resetHmasterClassList(thisHamster);
+            isOnAction = false;
+          }, 13000);
+
+        }else if(action == "drink"){
+          let bebiendo1Gif = document.getElementById("bebiendo1Gif");
+          bebiendo1Gif.style.display = "block";
+          bebiendo1Gif.src = 'img/hamster/drinkPraticles.gif' + "?t=" + new Date().getTime();
+          setTimeout(() => {
+            bebiendo1Gif.style.display = "none";
+            resetHmasterClassList(thisHamster);
+            isOnAction = false;
+          }, 13000);
+        }
+       
+      }else if(thisHamster.parentElement.id === "hitboxSlotUpRight"){
+        if(action == "eat"){
+          let comida2Gif = document.getElementById("comida2Gif");
+          comida2Gif.style.display = "block";
+          comida2Gif.src = 'img/hamster/eatPraticles.gif' + "?t=" + new Date().getTime();
+          setTimeout(() => {
+            comida2Gif.style.display = "none";
+            resetHmasterClassList(thisHamster);
+            isOnAction = false;
+          }, 13000);
+
+        }else if(action == "drink"){
+          let bebiendo2Gif = document.getElementById("bebiendo2Gif");
+          bebiendo2Gif.style.display = "block";
+          bebiendo2Gif.src = 'img/hamster/drinkPraticles.gif' + "?t=" + new Date().getTime();
+          setTimeout(() => {
+            bebiendo2Gif.style.display = "none";
+            resetHmasterClassList(thisHamster);
+            isOnAction = false;
+          }, 13000);
+        }
+      }else if(thisHamster.parentElement.id === "hitboxSlotDown"){
+        if(action == "eat"){
+          let comida3Gif = document.getElementById("comida3Gif");
+          comida3Gif.style.display = "block";
+          comida3Gif.src = 'img/hamster/eatPraticles.gif' + "?t=" + new Date().getTime();
+          setTimeout(() => {
+            comida3Gif.style.display = "none";
+            resetHmasterClassList(thisHamster);
+            isOnAction = false;
+          }, 13000);
+
+        }else if(action == "drink"){
+          let bebiendo3Gif = document.getElementById("bebiendo3Gif");
+          bebiendo3Gif.style.display = "block";
+          bebiendo3Gif.src = 'img/hamster/drinkPraticles.gif' + "?t=" + new Date().getTime();
+          setTimeout(() => {
+            bebiendo3Gif.style.display = "none";
+            resetHmasterClassList(thisHamster);
+            isOnAction = false;
+          }, 13000);
+        }
+      }
+    }, 2500);
+  
+    if(thisHamster.id === "dior"){
+      thisHamster.style.setProperty('--puff', "url('img/hamster/dior/puffDiorEating.png')");
+      thisHamster.style.setProperty('--puff-pointingBack-head', "url('img/hamster/dior/puffDiorEatingHead.png')");
+      thisHamster.style.setProperty('--ear', "url('img/hamster/dior/earDiorEating.png')");
+    }else if(thisHamster.id === "coco"){
+      thisHamster.style.setProperty('--puff', "url('img/hamster/coco/puffCocoEating.png')");
+      thisHamster.style.setProperty('--puff-pointingBack-head', "url('img/hamster/coco/puffCocoEatingHead.png')");
+    }else if(thisHamster.id === "biggie"){
+      thisHamster.style.setProperty('--puff', "url('img/hamster/biggie/puffBiggieEating.png')");
+      thisHamster.style.setProperty('--puff-pointingBack-head', "url('img/hamster/biggie/puffBiggieEatingHead.png')");
+    }
+
+  }else{
+    //right en %
+    if(thisHamster.parentElement.id === "hitboxSlotUpLeft"){
+      console.log("setHamsterBackAnimation: hitboxSlotUpLeft");
+      //rightBeber: 48%
+      //rightComer: 77%
+      if(action == "drink"){
+        moveHamsterTo(thisHamster, 48, "drink");
+      }else if(action == "eat"){
+        moveHamsterTo(thisHamster, 77, "eat");
+      }
+
+    }else if(thisHamster.parentElement.id === "hitboxSlotUpRight"){
+      console.log("setHamsterBackAnimation: hitboxSlotUpRight");
+      //rightBeber: 37%
+      //rightComer: 13%
+      if(action == "drink"){
+        moveHamsterTo(thisHamster, 37, "drink");
+      }else if(action == "eat"){
+        moveHamsterTo(thisHamster, 13, "eat");
+      }
+
+    }else if(thisHamster.parentElement.id === "hitboxSlotDown"){
+      console.log("setHamsterBackAnimation: hitboxSlotDown");
+      //rightBeber: 46%
+      //rightComer: 72%
+      if(action == "drink"){
+        moveHamsterTo(thisHamster, 46, "drink");
+      }else if(action == "eat"){
+        moveHamsterTo(thisHamster, 72, "eat");
+      }
+
+    }
+  }
+  
+
+
 }
+
+function moveHamsterTo(hamster, targetRight, action) {
+  console.log("moveHamsterTo() llamado con targetRight =", targetRight, "y action =", action);
+
+  // Definir factor de velocidad (puedes ajustar este valor)
+  let speedFactor = parseFloat(5) || 1; 
+
+  // Aseguramos que targetRight esté entre 0 y 100%
+  targetRight = Math.max(0, Math.min(100, targetRight));
+  console.log("targetRight tras limitar:", targetRight);
+
+  // Obtener la posición actual usando el atributo "pos"
+  let currentPos = parseFloat(hamster.getAttribute("pos"));
+  if (isNaN(currentPos)) {
+    currentPos = 0;
+    hamster.setAttribute("pos", "0");
+    console.log("El atributo pos no era un número. Se inicializa en 0.");
+  }
+  console.log("Posición actual (currentPos):", currentPos);
+
+  // Si ya está en la posición deseada, finalizar y llamar a setHamsterBackAnimation
+  if (currentPos === targetRight) {
+    console.log("Ya se alcanzó el destino. currentPos == targetRight");
+    setHamsterBackAnimation(hamster.id, action, false);
+    return;
+  }
+
+  // Determinar la dirección de movimiento
+  let direction = targetRight > currentPos ? 1 : -1;
+  console.log("Dirección del movimiento:", direction);
+
+  // Verificar que speedFactor esté definido y sea mayor que cero
+  if (typeof speedFactor === "undefined" || speedFactor <= 0) {
+    console.error("speedFactor no está definido o es <= 0. Abortando movimiento.");
+    return;
+  }
+
+  // Calcular el tamaño del paso y el número total de pasos
+  const step = 0.2 * speedFactor;
+  const totalDistance = Math.abs(targetRight - currentPos);
+  const totalSteps = Math.ceil(totalDistance / step);
+  let currentStep = 0;
+
+  console.log("Valor de step:", step);
+  console.log("Distancia total:", totalDistance, "Número total de pasos:", totalSteps);
+
+  // Agregar la clase que indica movimiento
+  hamster.classList.add("walkAnim");
+
+  const moveInterval = setInterval(() => {
+    console.log("Iteración", currentStep, "- currentPos =", currentPos);
+
+    // Si se han completado los pasos necesarios, finalizar el movimiento
+    if (currentStep >= totalSteps) {
+      console.log("Se han completado los pasos necesarios. Finalizando movimiento.");
+      clearInterval(moveInterval);
+      hamster.classList.remove("walkAnim");
+      console.log("Posición final:", currentPos, "(destino =", targetRight, ")");
+      setHamsterBackAnimation(hamster.id, action, false);
+      // Se ha eliminado la llamada a startCycle() para que no interfiera una vez finalizado el movimiento.
+      return;
+    }
+
+    // Actualizar la posición según el paso y la dirección
+    currentPos += direction * step;
+    // Evitar sobrepasar el destino
+    if ((direction > 0 && currentPos > targetRight) || (direction < 0 && currentPos < targetRight)) {
+      currentPos = targetRight;
+      console.log("Limitando currentPos al destino:", targetRight);
+    }
+    currentPos = Math.max(0, Math.min(100, currentPos));
+
+    // Actualizar el estilo visual y el atributo "pos"
+    hamster.style.right = `${currentPos}%`;
+    hamster.setAttribute("pos", currentPos);
+    console.log("Actualizado currentPos:", currentPos);
+
+    // Actualizar clases según la dirección (opcional)
+    if (direction < 0) {
+      hamster.setAttribute("y", "true");
+      hamster.classList.add("y");
+      // Si tienes definido hamsterTooltipContainer, también actualízalo; de lo contrario, comenta estas líneas.
+      if (typeof hamsterTooltipContainer !== "undefined") {
+        hamsterTooltipContainer.classList.add("y");
+      }
+    } else {
+      hamster.setAttribute("y", "");
+      hamster.classList.remove("y");
+      if (typeof hamsterTooltipContainer !== "undefined") {
+        hamsterTooltipContainer.classList.remove("y");
+      }
+    }
+
+    currentStep++;
+  }, 50); // Actualización cada 50ms
+}
+
+
+
+
+
+
+
 
 
 let explosionTimeoutId;
