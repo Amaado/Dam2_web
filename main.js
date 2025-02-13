@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var cursor = document.getElementById("customCursor");
   var cursorPurpleish = document.getElementById("customCursorPurpleish");
   const fondo = document.getElementById("fondoGalaxy");
+  const fondoGalaxySkin = document.getElementById("fondoGalaxySkin");
   const fondoGreen = document.getElementById("fondoGalaxyGreen");
   const cursorSize = 200;
   let checkbox = document.getElementById("toggle");
@@ -4021,7 +4022,11 @@ function setNormalPrice(skinContainer, price) {
         e.target.closest(".sliderPaint") ||
         e.target.closest("#page-number")
       ) {
+        if (e.target.closest(".hamster") && isOnAction){
+          return;
+        }
         cursorPurpleish.style.opacity = "100%";
+        fondoGreen.style.opacity = "70%";
         isCursorOverSpecialElement = true;
       }
     });
@@ -4061,7 +4066,11 @@ function setNormalPrice(skinContainer, price) {
         e.target.closest(".sliderPaint") ||
         e.target.closest("#page-number")
       ) {
+        if (e.target.closest(".hamster") && isOnAction){
+          return;
+        }
         cursorPurpleish.style.opacity = "1%";
+        fondoGreen.style.opacity = "1%";
         isCursorOverSpecialElement = false;
       }
     });
@@ -4407,50 +4416,6 @@ function setNormalPrice(skinContainer, price) {
 
       let lastEvent = null;
 
-      document.addEventListener("mouseover", function (e) {
-        if (
-          e.target.tagName === "A" ||
-          e.target.closest(".card") ||
-          e.target.closest(".material-icons-round") ||
-          e.target.closest(".background") ||
-          e.target.closest(".sun-moon") ||
-          e.target.closest("span") ||
-          e.target.closest("#flechaaSkins") ||
-          e.target.closest("#flechaaModifiers") ||
-          e.target.closest(".buttonTheme") ||
-          e.target.closest("#logoutButton") ||
-          e.target.closest("#rtxContainer") ||
-          e.target.closest("#volumenImg") ||
-          e.target.closest("#volumeSlider") ||
-          e.target.closest("#settingsImgContainer")
-        ) {
-          fondoGreen.style.opacity = "70%";
-          isCursorOverSpecialElement = true;
-        }
-      });
-
-      document.addEventListener("mouseout", function (e) {
-        if (
-          e.target.tagName === "A" ||
-          e.target.closest(".card") ||
-          e.target.closest(".material-icons-round") ||
-          e.target.closest(".background") ||
-          e.target.closest(".sun-moon") ||
-          e.target.closest("span") ||
-          e.target.closest("#flechaaSkins") ||
-          e.target.closest("#flechaaModifiers") ||
-          e.target.closest(".buttonTheme") ||
-          e.target.closest("#logoutButton") ||
-          e.target.closest("#rtxContainer") ||
-          e.target.closest("#volumenImg") ||
-          e.target.closest("#volumeSlider") ||
-          e.target.closest("#settingsImgContainer")
-        ) {
-          fondoGreen.style.opacity = "1%";
-          isCursorOverSpecialElement = false;
-        }
-      });
-
       if (skinsContainer) {
         skinsContainer.addEventListener("mousemove", function (e) {
           if (!isCursorOverSpecialElement) {
@@ -4492,6 +4457,38 @@ function setNormalPrice(skinContainer, price) {
       console.error("syncTransition: Uno o ambos elementos no existen.");
     }
   }
+
+
+
+  const scrollThreshold = 0.5;
+  const startPosY = 100;
+  const endPosY = 0;
+
+  function updateBackgroundPositionGalaxyPortada() {
+    const scrollTop = skinsContainer.scrollTop;
+    const maxScroll = skinsContainer.scrollHeight - skinsContainer.clientHeight;
+    const progress = scrollTop / maxScroll;
+    
+    // Remapea el progreso: cuando progress es igual a scrollThreshold (50%), effectiveProgress = 0
+    // y cuando progress es 1 (100%), effectiveProgress = 1.
+    let effectiveProgress = (progress - scrollThreshold) / (1 - scrollThreshold);
+    if (effectiveProgress < 0) effectiveProgress = 0;
+    if (effectiveProgress > 1) effectiveProgress = 1;
+    
+    // Mapea effectiveProgress al rango deseado (startPosY a endPosY)
+    const posY = startPosY + effectiveProgress * (endPosY - startPosY);
+    
+    fondoGalaxySkin.style.backgroundPosition = `center ${posY}%`;
+  }
+
+  // Actualiza en cada scroll
+  skinsContainer.addEventListener('scroll', updateBackgroundPositionGalaxyPortada);
+  // Llamada inicial
+  updateBackgroundPositionGalaxyPortada();
+
+
+
+
 
   /* CREAR ILUMINACION TEMA OSCURO / OVALO */
 
@@ -4583,6 +4580,7 @@ function setNormalPrice(skinContainer, price) {
     skinsContainer.classList.add("active");
     flechaHitbloxPlusSkins.classList.add("active");
     menuLabelSkins.classList.add("active");
+    logoutButton.style.left = "16vw";
 
     if (skinsContainer.classList.contains("active")) {
       coinsContainer.style.marginLeft = "15vw";
@@ -4596,6 +4594,7 @@ function setNormalPrice(skinContainer, price) {
     skinsContainer.classList.remove("active");
     flechaHitbloxPlusSkins.classList.remove("active");
     menuLabelSkins.classList.remove("active");
+    logoutButton.style.left = "30px";
 
     if (!skinsContainer.classList.contains("active")) {
       coinsContainer.style.marginLeft = "0vw";
@@ -4626,7 +4625,6 @@ function setNormalPrice(skinContainer, price) {
     activateMouseListenerTendero();
 
     if (modifiersContainer.classList.contains("active")) {
-      logoutButton.style.right = "16vw";
       if (settingsContainer.classList.contains("active")) {
         settingsContainer.style.marginRight = "15vw";
       }
@@ -4670,7 +4668,6 @@ function setNormalPrice(skinContainer, price) {
 
 
     if (!modifiersContainer.classList.contains("active")) {
-      logoutButton.style.right = "30px";
       if (settingsContainer.classList.contains("active")) {
         settingsContainer.style.marginRight = "0vw";
       }
@@ -7224,7 +7221,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
             comida1Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
             isOnAction = false;
-          }, 13000);
+          }, 10000);
 
         }else if(action == "drink"){
           let bebiendo1Gif = document.getElementById("bebiendo1Gif");
@@ -7234,7 +7231,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
             bebiendo1Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
             isOnAction = false;
-          }, 13000);
+          }, 10000);
         }
        
       }else if(thisHamster.parentElement.id === "hitboxSlotUpRight"){
@@ -7246,7 +7243,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
             comida2Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
             isOnAction = false;
-          }, 13000);
+          }, 10000);
 
         }else if(action == "drink"){
           let bebiendo2Gif = document.getElementById("bebiendo2Gif");
@@ -7256,7 +7253,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
             bebiendo2Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
             isOnAction = false;
-          }, 13000);
+          }, 10000);
         }
       }else if(thisHamster.parentElement.id === "hitboxSlotDown"){
         if(action == "eat"){
@@ -7267,7 +7264,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
             comida3Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
             isOnAction = false;
-          }, 13000);
+          }, 10000);
 
         }else if(action == "drink"){
           let bebiendo3Gif = document.getElementById("bebiendo3Gif");
@@ -7277,7 +7274,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
             bebiendo3Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
             isOnAction = false;
-          }, 13000);
+          }, 10000);
         }
       }
     }, 2500);
@@ -7286,12 +7283,22 @@ function setHamsterBackAnimation(idHamster, action, moving){
       thisHamster.style.setProperty('--puff', "url('img/hamster/dior/puffDiorEating.png')");
       thisHamster.style.setProperty('--puff-pointingBack-head', "url('img/hamster/dior/puffDiorEatingHead.png')");
       thisHamster.style.setProperty('--ear', "url('img/hamster/dior/earDiorEating.png')");
+      setTimeout(() => {
+        thisHamster.style.setProperty('--puff', "url('img/hamster/dior/puffDior.png')");
+        thisHamster.style.setProperty('--ear', "url('img/hamster/dior/earDior.png')");
+      }, 12500);
     }else if(thisHamster.id === "coco"){
       thisHamster.style.setProperty('--puff', "url('img/hamster/coco/puffCocoEating.png')");
       thisHamster.style.setProperty('--puff-pointingBack-head', "url('img/hamster/coco/puffCocoEatingHead.png')");
+      setTimeout(() => {
+        thisHamster.style.setProperty('--puff', "url('img/hamster/coco/puffCoco.png')");
+      }, 12500);
     }else if(thisHamster.id === "biggie"){
       thisHamster.style.setProperty('--puff', "url('img/hamster/biggie/puffBiggieEating.png')");
       thisHamster.style.setProperty('--puff-pointingBack-head', "url('img/hamster/biggie/puffBiggieEatingHead.png')");
+      setTimeout(() => {
+        thisHamster.style.setProperty('--puff', "url('img/hamster/biggie/puffBiggie.png')");
+      }, 12500);
     }
 
   }else{
@@ -7334,34 +7341,27 @@ function setHamsterBackAnimation(idHamster, action, moving){
 }
 
 function moveHamsterTo(hamster, targetRight, action) {
-  console.log("moveHamsterTo() llamado con targetRight =", targetRight, "y action =", action);
-
   // Definir factor de velocidad (puedes ajustar este valor)
   let speedFactor = parseFloat(5) || 1; 
 
   // Aseguramos que targetRight esté entre 0 y 100%
   targetRight = Math.max(0, Math.min(100, targetRight));
-  console.log("targetRight tras limitar:", targetRight);
 
   // Obtener la posición actual usando el atributo "pos"
   let currentPos = parseFloat(hamster.getAttribute("pos"));
   if (isNaN(currentPos)) {
     currentPos = 0;
     hamster.setAttribute("pos", "0");
-    console.log("El atributo pos no era un número. Se inicializa en 0.");
   }
-  console.log("Posición actual (currentPos):", currentPos);
 
   // Si ya está en la posición deseada, finalizar y llamar a setHamsterBackAnimation
   if (currentPos === targetRight) {
-    console.log("Ya se alcanzó el destino. currentPos == targetRight");
     setHamsterBackAnimation(hamster.id, action, false);
     return;
   }
 
   // Determinar la dirección de movimiento
   let direction = targetRight > currentPos ? 1 : -1;
-  console.log("Dirección del movimiento:", direction);
 
   // Verificar que speedFactor esté definido y sea mayor que cero
   if (typeof speedFactor === "undefined" || speedFactor <= 0) {
@@ -7375,21 +7375,15 @@ function moveHamsterTo(hamster, targetRight, action) {
   const totalSteps = Math.ceil(totalDistance / step);
   let currentStep = 0;
 
-  console.log("Valor de step:", step);
-  console.log("Distancia total:", totalDistance, "Número total de pasos:", totalSteps);
-
   // Agregar la clase que indica movimiento
   hamster.classList.add("walkAnim");
 
   const moveInterval = setInterval(() => {
-    console.log("Iteración", currentStep, "- currentPos =", currentPos);
 
     // Si se han completado los pasos necesarios, finalizar el movimiento
     if (currentStep >= totalSteps) {
-      console.log("Se han completado los pasos necesarios. Finalizando movimiento.");
       clearInterval(moveInterval);
       hamster.classList.remove("walkAnim");
-      console.log("Posición final:", currentPos, "(destino =", targetRight, ")");
       setHamsterBackAnimation(hamster.id, action, false);
       // Se ha eliminado la llamada a startCycle() para que no interfiera una vez finalizado el movimiento.
       return;
@@ -7400,34 +7394,32 @@ function moveHamsterTo(hamster, targetRight, action) {
     // Evitar sobrepasar el destino
     if ((direction > 0 && currentPos > targetRight) || (direction < 0 && currentPos < targetRight)) {
       currentPos = targetRight;
-      console.log("Limitando currentPos al destino:", targetRight);
     }
     currentPos = Math.max(0, Math.min(100, currentPos));
 
     // Actualizar el estilo visual y el atributo "pos"
     hamster.style.right = `${currentPos}%`;
     hamster.setAttribute("pos", currentPos);
-    console.log("Actualizado currentPos:", currentPos);
 
+    const hamsterTooltipContainer = hamster.querySelector(".hamsterTooltipContainer");
     // Actualizar clases según la dirección (opcional)
     if (direction < 0) {
       hamster.setAttribute("y", "true");
       hamster.classList.add("y");
-      // Si tienes definido hamsterTooltipContainer, también actualízalo; de lo contrario, comenta estas líneas.
-      if (typeof hamsterTooltipContainer !== "undefined") {
-        hamsterTooltipContainer.classList.add("y");
-      }
+      hamsterTooltipContainer.classList.add("y");
     } else {
       hamster.setAttribute("y", "");
       hamster.classList.remove("y");
-      if (typeof hamsterTooltipContainer !== "undefined") {
-        hamsterTooltipContainer.classList.remove("y");
-      }
+      hamsterTooltipContainer.classList.remove("y");
     }
 
     currentStep++;
   }, 50); // Actualización cada 50ms
 }
+
+
+
+/* COMEDEROS */
 
 
 
@@ -7441,6 +7433,7 @@ let explosionTimeoutId;
 let isResetToContainer = false;
 // Funciones para manejar el arrastre
 function startDragHamster(e, hamsterElement) {
+  if (isOnAction) return;
   if (isDragging) return; // Prevenir arrastre si ya está en proceso
 
   isDragging = true;
@@ -7744,7 +7737,12 @@ function setPositionHamster(currentHamster, hitbox, originalContainer) {
 
   // Función para caminar el hamster
   function walk(distance, direction) {
-    if(isOnAction){return;}
+    if(isOnAction){
+      //console.log("walk: return");
+      return;
+    }else{
+      //console.log("walk: else");
+    }
     const step = 0.2 * speedFactor; // Tamaño del paso ajustado por velocidad
     let targetPos = pos + direction * distance; // Posición objetivo inicial
 

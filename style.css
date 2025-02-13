@@ -304,6 +304,31 @@ body {
   mask-size: 300px; /* Asegura que la máscara se ajuste sin cortar partes, manteniendo proporciones */
 }
 
+#fondoGalaxySkin {
+  position: absolute; /* Para que cubra siempre la pantalla, independientemente del scroll */
+  top: 10px;
+  width: 148px;
+  height: 111px;
+  pointer-events: none;
+  
+  background: url("img/fondo.gif");
+  background-size: 450px 450px;
+  background-repeat: no-repeat;
+  background-position: center;
+  
+  -webkit-mask-image: url("img/cursors/portadas/cccc_galaxyMask.png");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 300%;
+  -webkit-mask-position: center;
+  
+  mask-image: url("img/cursors/portadas/cccc_galaxyMask.png");
+  mask-repeat: no-repeat;
+  mask-size: 300%;
+  mask-position: center;
+  
+  z-index: -1;
+}
+
 #fondoGalaxyGreen {
   width: 100vw; /* Anchura completa de la ventana */
   height: 100vh; /* Altura completa de la ventana */
@@ -2107,7 +2132,7 @@ div.img img {
   max-height: 280px;
   border: 2px solid #bfd4e9;
   border-radius: 25px;
-  overflow: visible;
+  overflow: hidden;
 
   transform: perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy)) scale(1);
   transition: transform 150ms linear;
@@ -2467,10 +2492,10 @@ div.img img {
   display: none;
   position: absolute;
   bottom: 20px;
-  right: 30px;
+  left: 30px;
   width: 60px;
   height: 60px;
-  transition: right 0.5s ease;
+  transition: left 0.5s ease;
   z-index: 2;
 }
 
@@ -4630,6 +4655,333 @@ canvas {
   -webkit-user-drag: none;
   image-rendering: pixelated;
 }
+#tubo{
+  position: absolute;
+  width: auto;
+  height: 95%;
+  -webkit-user-drag: none;
+  image-rendering: pixelated;
+  left: 70px;
+  top: -4px;
+  z-index: 0;
+  filter: drop-shadow(2px 5px 2px rgba(0, 0, 0, 0.4));
+}
+#tuboGradientUp{
+  position: absolute;
+  width: 417.83px;
+  height: 334.96px;
+  image-rendering: pixelated;
+  left: 70px;
+  top: -4px;
+  z-index: 0;
+
+  background: repeating-linear-gradient(
+    -35deg,
+    #22588f 0%,
+    #22588f 2%,
+    #3b9caa 2%,
+    #3b9caa 4%,
+  
+    #22588f 4%,
+    #22588f 6%,
+    #3b9caa 6%,
+    #3b9caa 8%,
+  
+    #22588f 8%,
+    #22588f 10%,
+    #3b9caa 10%,
+    #3b9caa 12%,
+  
+    #22588f 12%,
+    #22588f 14%,
+    #3b9caa 14%,
+    #3b9caa 16%,
+  
+    #22588f 16%,
+    #22588f 18%,
+    #3b9caa 18%,
+    #3b9caa 20%,
+  
+    #22588f 20%,
+    #22588f 22%,
+    #3b9caa 22%,
+    #3b9caa 24%,
+  
+    #22588f 24%,
+    #22588f 26%,
+    #3b9caa 26%,
+    #3b9caa 28%,
+  
+    #22588f 28%,
+    #22588f 30%,
+    #3b9caa 30%,
+    #3b9caa 32%,
+  
+    #22588f 32%,
+    #22588f 34%,
+    #3b9caa 34%,
+    #3b9caa 36%,
+  
+    #22588f 36%,
+    #22588f 38%,
+    #3b9caa 38%,
+    #3b9caa 40%,
+  
+    #22588f 40%,
+    #22588f 42%,
+    #3b9caa 42%,
+    #3b9caa 44%,
+  
+    #22588f 44%,
+    #22588f 46%,
+    #3b9caa 46%,
+    #3b9caa 48%,
+  
+    #22588f 48%,
+    #22588f 50%,
+    #3b9caa 50%,
+    #3b9caa 52%,
+  
+    #22588f 52%,
+    #22588f 54%,
+    #3b9caa 54%,
+    #3b9caa 56%,
+  
+    #22588f 56%,
+    #22588f 58%,
+    #3b9caa 58%,
+    #3b9caa 60%,
+  
+    #22588f 60%,
+    #22588f 62%,
+    #3b9caa 62%,
+    #3b9caa 64%,
+  
+    #22588f 64%,
+    #22588f 66%,
+    #3b9caa 66%,
+    #3b9caa 68%,
+  
+    #22588f 68%,
+    #22588f 70%,
+    #3b9caa 70%,
+    #3b9caa 72%,
+  
+    #22588f 72%,
+    #22588f 74%,
+    #3b9caa 74%,
+    #3b9caa 76%,
+  
+    #22588f 76%,
+    #22588f 78%,
+    #3b9caa 78%,
+    #3b9caa 80%,
+  
+    #22588f 80%,
+    #22588f 82%,
+    #3b9caa 82%,
+    #3b9caa 84%,
+  
+    #22588f 84%,
+    #22588f 86%,
+    #3b9caa 86%,
+    #3b9caa 88%,
+  
+    #22588f 88%,
+    #22588f 90%,
+    #3b9caa 90%,
+    #3b9caa 92%,
+  
+    #22588f 92%,
+    #22588f 94%,
+    #3b9caa 94%,
+    #3b9caa 96%,
+  
+    #22588f 96%,
+    #22588f 98%,
+    #3b9caa 98%,
+    #3b9caa 100%
+  );
+  
+  filter: blur(5px);
+
+    /*  */
+  mask-image: url("img/hamster/tuboUp.png");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+
+  background-size: 200% 200%;
+
+  animation: degradeMove 10s linear infinite;
+}
+#tuboGradientDown{
+  position: absolute;
+  width: 417.83px;
+  height: 334.96px;
+  image-rendering: pixelated;
+  left: 70px;
+  top: -4px;
+  z-index: 0;
+
+  background: repeating-linear-gradient(
+    35deg,
+    #22588f 0%,
+    #22588f 2%,
+    #3b9caa 2%,
+    #3b9caa 4%,
+  
+    #22588f 4%,
+    #22588f 6%,
+    #3b9caa 6%,
+    #3b9caa 8%,
+  
+    #22588f 8%,
+    #22588f 10%,
+    #3b9caa 10%,
+    #3b9caa 12%,
+  
+    #22588f 12%,
+    #22588f 14%,
+    #3b9caa 14%,
+    #3b9caa 16%,
+  
+    #22588f 16%,
+    #22588f 18%,
+    #3b9caa 18%,
+    #3b9caa 20%,
+  
+    #22588f 20%,
+    #22588f 22%,
+    #3b9caa 22%,
+    #3b9caa 24%,
+  
+    #22588f 24%,
+    #22588f 26%,
+    #3b9caa 26%,
+    #3b9caa 28%,
+  
+    #22588f 28%,
+    #22588f 30%,
+    #3b9caa 30%,
+    #3b9caa 32%,
+  
+    #22588f 32%,
+    #22588f 34%,
+    #3b9caa 34%,
+    #3b9caa 36%,
+  
+    #22588f 36%,
+    #22588f 38%,
+    #3b9caa 38%,
+    #3b9caa 40%,
+  
+    #22588f 40%,
+    #22588f 42%,
+    #3b9caa 42%,
+    #3b9caa 44%,
+  
+    #22588f 44%,
+    #22588f 46%,
+    #3b9caa 46%,
+    #3b9caa 48%,
+  
+    #22588f 48%,
+    #22588f 50%,
+    #3b9caa 50%,
+    #3b9caa 52%,
+  
+    #22588f 52%,
+    #22588f 54%,
+    #3b9caa 54%,
+    #3b9caa 56%,
+  
+    #22588f 56%,
+    #22588f 58%,
+    #3b9caa 58%,
+    #3b9caa 60%,
+  
+    #22588f 60%,
+    #22588f 62%,
+    #3b9caa 62%,
+    #3b9caa 64%,
+  
+    #22588f 64%,
+    #22588f 66%,
+    #3b9caa 66%,
+    #3b9caa 68%,
+  
+    #22588f 68%,
+    #22588f 70%,
+    #3b9caa 70%,
+    #3b9caa 72%,
+  
+    #22588f 72%,
+    #22588f 74%,
+    #3b9caa 74%,
+    #3b9caa 76%,
+  
+    #22588f 76%,
+    #22588f 78%,
+    #3b9caa 78%,
+    #3b9caa 80%,
+  
+    #22588f 80%,
+    #22588f 82%,
+    #3b9caa 82%,
+    #3b9caa 84%,
+  
+    #22588f 84%,
+    #22588f 86%,
+    #3b9caa 86%,
+    #3b9caa 88%,
+  
+    #22588f 88%,
+    #22588f 90%,
+    #3b9caa 90%,
+    #3b9caa 92%,
+  
+    #22588f 92%,
+    #22588f 94%,
+    #3b9caa 94%,
+    #3b9caa 96%,
+  
+    #22588f 96%,
+    #22588f 98%,
+    #3b9caa 98%,
+    #3b9caa 100%
+  );
+  
+  filter: blur(5px);
+
+
+  mask-image: url("img/hamster/tuboDown.png");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+     /* */
+  background-size: 200% 200%;
+
+  animation: degradeMove 20s linear infinite;
+}
+
+
+@keyframes degradeMove {
+  0%   { background-position: 0%   50%; }
+  100% { background-position: 100% 50%; }
+}
+
+#grifo{
+  position: absolute;
+  width: auto;
+  height: 95%;
+  -webkit-user-drag: none;
+  image-rendering: pixelated;
+  left: 70px;
+  top: -4px;
+  z-index: -1;
+  filter: drop-shadow(2px 5px 2px rgba(0, 0, 0, 0.4));
+}
 #glassLeft{
   position: absolute;
   z-index: 1100;
@@ -4837,17 +5189,19 @@ canvas {
   width: auto;
   height: 60px;
   display: none;
+  filter: brightness(1.2) contrast(0.7);
+  mix-blend-mode: hard-light;
 }
 #bebiendo1Gif{
-  left: -10px;
+  left: 29px;
   top: 55px;
 }
 #bebiendo2Gif{
-  left: 210px;
+  left: 178px;
   top: 55px;
 }
 #bebiendo3Gif{
-  left: -10px;
+  left: 31px;
   top: 230px;
 }
 
