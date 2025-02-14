@@ -162,8 +162,6 @@ document.addEventListener("DOMContentLoaded", function () {
   let defaultFavicon = "img/favicon.png";
   let favicon = document.querySelector("link[rel*='icon']");
 
-  let isOnAction = false;
-
 
 /* BUBBLES */
 let animationFrameId;
@@ -2719,7 +2717,7 @@ async function actualizarTomatosSliceUsuario(id, nuevaCantidad) {
           throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
       }
 
-      console.log(`Tomatos_slice actualizados correctamente a ${nuevaCantidad} para el usuario con ID ${id}`);
+      //console.log(`Tomatos_slice actualizados correctamente a ${nuevaCantidad} para el usuario con ID ${id}`);
   } catch (error) {
       console.error("Error actualizando tomatos_slice:", error);
   }
@@ -4022,7 +4020,7 @@ function setNormalPrice(skinContainer, price) {
         e.target.closest(".sliderPaint") ||
         e.target.closest("#page-number")
       ) {
-        if (e.target.closest(".hamster") && isOnAction){
+        if (e.target.closest(".hamster") && e.target.closest(".hamster").dataset.onAction){
           return;
         }
         cursorPurpleish.style.opacity = "100%";
@@ -4066,7 +4064,7 @@ function setNormalPrice(skinContainer, price) {
         e.target.closest(".sliderPaint") ||
         e.target.closest("#page-number")
       ) {
-        if (e.target.closest(".hamster") && isOnAction){
+        if (e.target.closest(".hamster") && e.target.closest(".hamster").dataset.onAction){
           return;
         }
         cursorPurpleish.style.opacity = "1%";
@@ -7047,7 +7045,7 @@ function hideTooltipHamsterForce(hamsterElement){
 
 
 function setHamster(hamsterElement){
-  if(isOnAction){return;}
+  if(hamsterElement.dataset.onAction){return;}
 
   let type = getHamsterType(hamsterElement);
   const intervalId = hamsterIntervals.get(hamsterElement);
@@ -7124,7 +7122,7 @@ window.addEventListener("load", preloadHamsterImages);
 
 
 function setStrokeHamster(hamsterElement) {
-  if(isOnAction){return;}
+  if(hamsterElement.dataset.onAction){return;}
   let type = getHamsterType(hamsterElement);
 
   const intervalId = hamsterIntervals.get(hamsterElement);
@@ -7178,7 +7176,7 @@ function setStrokeHamster(hamsterElement) {
 
 
 function handleModifiersClick() {
-  setHamsterBackAnimation("dior", "drink", true);
+  setHamsterBackAnimation("dior", "eat", true);
   setHamsterBackAnimation("coco", "eat", true);
   setHamsterBackAnimation("biggie", "eat", true);
 }
@@ -7196,7 +7194,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
     return;
   }
 
-  isOnAction = true;
+  thisHamster.dataset.onAction = "true";
 
   if(!moving){
     resetHmasterClassList(thisHamster);
@@ -7220,7 +7218,11 @@ function setHamsterBackAnimation(idHamster, action, moving){
           setTimeout(() => {
             comida1Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
-            isOnAction = false;
+            let tooltip1 = document.getElementById("comida1Tooltip");
+            modifyFood("1", tooltip1, "-");
+            fillHunger(thisHamster);
+            startDecreasingStats(thisHamster);
+            delete thisHamster.dataset.onAction;
           }, 10000);
 
         }else if(action == "drink"){
@@ -7230,7 +7232,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
           setTimeout(() => {
             bebiendo1Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
-            isOnAction = false;
+            delete thisHamster.dataset.onAction;
           }, 10000);
         }
        
@@ -7242,7 +7244,11 @@ function setHamsterBackAnimation(idHamster, action, moving){
           setTimeout(() => {
             comida2Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
-            isOnAction = false;
+            let tooltip2 = document.getElementById("comida2Tooltip");
+            modifyFood("2", tooltip2, "-");
+            fillHunger(thisHamster);
+            startDecreasingStats(thisHamster);
+            delete thisHamster.dataset.onAction;
           }, 10000);
 
         }else if(action == "drink"){
@@ -7252,7 +7258,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
           setTimeout(() => {
             bebiendo2Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
-            isOnAction = false;
+            delete thisHamster.dataset.onAction;
           }, 10000);
         }
       }else if(thisHamster.parentElement.id === "hitboxSlotDown"){
@@ -7263,7 +7269,11 @@ function setHamsterBackAnimation(idHamster, action, moving){
           setTimeout(() => {
             comida3Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
-            isOnAction = false;
+            let tooltip3 = document.getElementById("comida3Tooltip");
+            modifyFood("3", tooltip3, "-");
+            fillHunger(thisHamster);
+            startDecreasingStats(thisHamster);
+            delete thisHamster.dataset.onAction;
           }, 10000);
 
         }else if(action == "drink"){
@@ -7273,7 +7283,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
           setTimeout(() => {
             bebiendo3Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
-            isOnAction = false;
+            delete thisHamster.dataset.onAction;
           }, 10000);
         }
       }
@@ -7341,6 +7351,8 @@ function setHamsterBackAnimation(idHamster, action, moving){
 }
 
 function moveHamsterTo(hamster, targetRight, action) {
+  const hamsterTooltipContainer = hamster.querySelector(".hamsterTooltipContainer");
+
   // Definir factor de velocidad (puedes ajustar este valor)
   let speedFactor = parseFloat(5) || 1; 
 
@@ -7356,6 +7368,10 @@ function moveHamsterTo(hamster, targetRight, action) {
 
   // Si ya está en la posición deseada, finalizar y llamar a setHamsterBackAnimation
   if (currentPos === targetRight) {
+    hamster.classList.remove("walkAnim");
+    hamster.setAttribute("y", "");
+    hamster.classList.remove("y");
+    hamsterTooltipContainer.classList.remove("y");
     setHamsterBackAnimation(hamster.id, action, false);
     return;
   }
@@ -7384,6 +7400,9 @@ function moveHamsterTo(hamster, targetRight, action) {
     if (currentStep >= totalSteps) {
       clearInterval(moveInterval);
       hamster.classList.remove("walkAnim");
+      hamster.setAttribute("y", "");
+      hamster.classList.remove("y");
+      hamsterTooltipContainer.classList.remove("y");
       setHamsterBackAnimation(hamster.id, action, false);
       // Se ha eliminado la llamada a startCycle() para que no interfiera una vez finalizado el movimiento.
       return;
@@ -7401,7 +7420,6 @@ function moveHamsterTo(hamster, targetRight, action) {
     hamster.style.right = `${currentPos}%`;
     hamster.setAttribute("pos", currentPos);
 
-    const hamsterTooltipContainer = hamster.querySelector(".hamsterTooltipContainer");
     // Actualizar clases según la dirección (opcional)
     if (direction < 0) {
       hamster.setAttribute("y", "true");
@@ -7421,6 +7439,262 @@ function moveHamsterTo(hamster, targetRight, action) {
 
 /* COMEDEROS */
 
+const comidaHitboxes = document.querySelectorAll(".comidaHitbox");
+
+// Variable global para almacenar el objeto de resourcesFoodDrink
+let currentResourcesFoodDrink = null;
+
+comidaHitboxes.forEach(hitbox => {
+  // Obtenemos el id del tooltip correspondiente, por ejemplo "comida1Tooltip"
+  const tooltipId = hitbox.id.replace('Hitbox', 'Tooltip');
+  const tooltip = document.getElementById(tooltipId);
+
+  hitbox.addEventListener('mouseenter', () => {
+    tooltip.style.transition = "clip-path 0.3s ease 0.1s, margin-top 0.7s ease";
+    tooltip.classList.add('active');
+  });
+
+  hitbox.addEventListener('mouseleave', () => {
+    tooltip.style.transition = "clip-path 0.3s ease 0.18s, margin-top 0.7s ease";
+    tooltip.classList.remove('active');
+  });
+
+  hitbox.addEventListener('click', () => {
+    const indexStr = hitbox.id.match(/\d+/)[0];
+    modifyFood(indexStr, tooltip, "+");
+  });
+});
+
+function modifyFood(indexStr, tooltip, action){
+  const currentTooltipValue = Number(tooltip.textContent);
+  const currentTomatoSliceValue = Number(tomatoSliceLabel.textContent);
+
+  if (currentTooltipValue <= 10 && currentTooltipValue >= 0) {
+    let newTooltipValue;
+    if (action === "+") {
+      if (currentTooltipValue >= 10) { return; }
+      if(parseInt(tomatoSliceLabel.textContent) < 1){return;}
+      newTooltipValue = currentTooltipValue + 1;
+    } else if (action === "-") {
+      if (currentTooltipValue <= 0) { return; }
+      newTooltipValue = currentTooltipValue - 1;
+    }    
+    tooltip.textContent = newTooltipValue;
+    tomatoSliceLabel.textContent = currentTomatoSliceValue - 1;
+    actualizarTomatosSliceUsuario(idLogeado, currentTomatoSliceValue - 1);
+    setResourcesFoodDrinkInDB(idLogeado, indexStr, newTooltipValue);
+
+    let comida = document.getElementById("comida" + indexStr);
+    
+    if (newTooltipValue === 0) {
+      // Si el nuevo valor es 0, ocultamos la imagen y removemos el src
+      comida.style.display = "none";
+      comida.removeAttribute("src");
+    } else {
+      // Si es mayor que 0, mostramos la imagen y asignamos el src correcto
+      comida.style.display = "block";
+      comida.src = "img/hamster/comida/comida" + newTooltipValue + ".png";
+    }
+  }
+}
+
+getResourcesFoodDrinkFromDB(idLogeado);
+
+
+
+
+
+
+/******************************************************
+ * 1) OBTENER RESOURCES FOOD DRINK DE LA BASE DE DATOS
+ * - Se sigue la misma estructura de conexión que en los métodos iniciales.
+ * - Si no existe o es inválido, se crea un objeto por defecto.
+ * - Se asigna cada valor del arreglo "feeders" a los tooltips (.comidaTooltip)
+ ******************************************************/
+async function getResourcesFoodDrinkFromDB(idLogeado) {
+  try {
+    const url = `${supabaseUrl}?id=eq.${idLogeado}`;
+    
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        "Content-Type": "application/json",
+      },
+    });
+    
+    if (!response.ok) {
+      console.error("Error al obtener resourcesFoodDrink:", response.statusText);
+      return null;
+    }
+    
+    const data = await response.json();
+    
+    // Si no existe el registro, se crea uno por defecto
+    if (data.length === 0) {
+      console.warn("No se encontró el registro del usuario. Creando por defecto...");
+      const defaultResources = getDefaultResourcesFoodDrink();
+      await setResourcesFoodDrinkInDB(idLogeado, defaultResources);
+      assignFeedersToTooltips(defaultResources.feeders);
+      currentResourcesFoodDrink = defaultResources;
+      return defaultResources;
+    }
+    
+    // Se obtiene el contenido del campo resourcesFoodDrink (almacenado como JSON)
+    let resourcesText = data[0].resourcesFoodDrink;
+    
+    // Si el campo está vacío, se crea el objeto por defecto
+    if (!resourcesText) {
+      console.warn("El campo resourcesFoodDrink está nulo/vacío. Creando por defecto...");
+      const defaultResources = getDefaultResourcesFoodDrink();
+      await setResourcesFoodDrinkInDB(idLogeado, defaultResources);
+      assignFeedersToTooltips(defaultResources.feeders);
+      currentResourcesFoodDrink = defaultResources;
+      return defaultResources;
+    }
+    
+    // Intentamos parsear el texto a objeto
+    let resourcesObj;
+    try {
+      resourcesObj = JSON.parse(resourcesText);
+    } catch (err) {
+      console.error("Error al parsear JSON de resourcesFoodDrink. Se usará objeto por defecto:", err);
+      const defaultResources = getDefaultResourcesFoodDrink();
+      await setResourcesFoodDrinkInDB(idLogeado, defaultResources);
+      assignFeedersToTooltips(defaultResources.feeders);
+      currentResourcesFoodDrink = defaultResources;
+      return defaultResources;
+    }
+    
+    // Validamos la estructura: debe tener un arreglo "feeders"
+    if (!resourcesObj.feeders || !Array.isArray(resourcesObj.feeders)) {
+      console.warn("Estructura inválida en resourcesFoodDrink. Creando por defecto...");
+      const defaultResources = getDefaultResourcesFoodDrink();
+      await setResourcesFoodDrinkInDB(idLogeado, defaultResources);
+      assignFeedersToTooltips(defaultResources.feeders);
+      currentResourcesFoodDrink = defaultResources;
+      return defaultResources;
+    }
+    
+    // Asignamos cada valor del arreglo a los tooltips (.comidaTooltip)
+    assignFeedersToTooltips(resourcesObj.feeders);
+    currentResourcesFoodDrink = resourcesObj;
+    
+    return resourcesObj;
+  } catch (error) {
+    console.error("Error en getResourcesFoodDrinkFromDB:", error);
+    return null;
+  }
+}
+
+/**
+ * Asigna los valores del arreglo "feeders" a los elementos con la clase .comidaTooltip,
+ * en el orden en que se encuentren en el DOM.
+ */
+function assignFeedersToTooltips(feedersArray) {
+  const tooltips = document.querySelectorAll('.comidaTooltip');
+  for (let i = 0; i < feedersArray.length && i < tooltips.length; i++) {
+    tooltips[i].textContent = feedersArray[i];
+    
+    // Obtenemos la imagen correspondiente (usando i+1, ya que los IDs son comida1, comida2, etc.)
+    let comida = document.getElementById("comida" + (i + 1));
+    if (feedersArray[i] === 0) {
+      // Si el valor es 0, ocultamos la imagen y removemos el src
+      comida.style.display = "none";
+      comida.removeAttribute("src");
+    } else {
+      // Si es mayor que 0, mostramos la imagen y actualizamos el src
+      comida.style.display = "block";
+      comida.src = "img/hamster/comida/comida" + feedersArray[i] + ".png";
+    }
+  }
+}
+
+/******************************************************
+ * 2) GUARDAR RESOURCES FOOD DRINK EN LA BASE DE DATOS
+ * Permite dos formas de uso:
+ *   a) Actualizar el objeto completo (se pasa un objeto como segundo argumento).
+ *   b) Actualizar un único valor: se pasa una cadena ("1", "2" o "3") y, como tercer argumento,
+ *      el nuevo valor para esa posición.
+ * En ambos casos, NO se re-asignan los tooltips.
+ ******************************************************/
+async function setResourcesFoodDrinkInDB(idLogeado, param, newValue) {
+  // Caso (a): Se actualiza el objeto completo.
+  if (typeof param === "object" && newValue === undefined) {
+    currentResourcesFoodDrink = param;
+    return await patchResourcesFoodDrink(idLogeado, currentResourcesFoodDrink);
+  }
+  // Caso (b): Se actualiza un único valor.
+  else if (typeof param === "string" && newValue !== undefined) {
+    // Usamos la variable global en lugar de llamar nuevamente a getResourcesFoodDrinkFromDB
+    let resourcesObj = currentResourcesFoodDrink;
+    if (!resourcesObj) {
+      resourcesObj = getDefaultResourcesFoodDrink();
+      currentResourcesFoodDrink = resourcesObj;
+    }
+    // Convertimos la cadena "1", "2" o "3" en un índice (0, 1 o 2)
+    const index = parseInt(param, 10) - 1;
+    if (index < 0 || index >= resourcesObj.feeders.length) {
+      console.error("Índice inválido para feeders:", param);
+      return null;
+    }
+    // Actualizamos el valor del feeder en la posición indicada (aseguramos que sea numérico)
+    resourcesObj.feeders[index] = Number(newValue);
+    currentResourcesFoodDrink = resourcesObj;
+    return await patchResourcesFoodDrink(idLogeado, resourcesObj);
+  } else {
+    console.error("Parámetros inválidos para setResourcesFoodDrinkInDB");
+    return null;
+  }
+}
+
+/**
+ * Función auxiliar que envía la petición PATCH para actualizar resourcesFoodDrink en la base de datos.
+ * No se actualizan los tooltips aquí, ya que se hace manualmente en el click.
+ */
+async function patchResourcesFoodDrink(idLogeado, resourcesObj) {
+  try {
+    const url = `${supabaseUrl}?id=eq.${idLogeado}`;
+    const body = {
+      resourcesFoodDrink: JSON.stringify(resourcesObj),
+    };
+    
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify(body),
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error("Error al guardar resourcesFoodDrink:", response.statusText, errorData);
+      throw new Error("Error en la actualización de resourcesFoodDrink: " + response.statusText);
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en patchResourcesFoodDrink:", error);
+    return null;
+  }
+}
+
+/******************************************************
+ * 3) OBJETO POR DEFECTO (resourcesFoodDrink)
+ * Inicializa:
+ *   - feeders: Arreglo con tres valores 0 (cada valor representa un comedero, rango 0-10)
+ ******************************************************/
+function getDefaultResourcesFoodDrink() {
+  return {
+    feeders: [0, 0, 0],
+  };
+}
 
 
 
@@ -7433,8 +7707,13 @@ let explosionTimeoutId;
 let isResetToContainer = false;
 // Funciones para manejar el arrastre
 function startDragHamster(e, hamsterElement) {
-  if (isOnAction) return;
+  if (hamsterElement.dataset.onAction) return;
   if (isDragging) return; // Prevenir arrastre si ya está en proceso
+
+  if (hamsterElement.checkForNeedFoodInterval) {
+    clearInterval(hamsterElement.checkForNeedFoodInterval);
+    delete hamsterElement.checkForNeedFoodInterval;
+  }
 
   isDragging = true;
   currentHamster = hamsterElement;
@@ -7523,7 +7802,6 @@ function startDragHamster(e, hamsterElement) {
   e.preventDefault();
 }
 
-
 function onDragHamster(e) {
   if (!isDragging || !currentHamster) return;
 
@@ -7550,7 +7828,6 @@ function estaOcupadoHitbox(currentHamster, hitbox) {
     return hitboxHamsters.length > 0 ? 1 : 0;
   }
 }
-
 
 let isStoppingDrag = false;
 function stopDragHamster(e) {
@@ -7613,6 +7890,7 @@ function stopDragHamster(e) {
 
           stopSpecificInterval(currentHamster.id, "energy");
           startFillingEnergy(currentHamster.id);
+          checkForNeedFood(currentHamster);
           resetDragVariables();
         }
         //console.log("Return if wheel ocupate");
@@ -7664,6 +7942,7 @@ function stopDragHamster(e) {
 
       stopSpecificInterval(currentHamster.id, "energy");
       startFillingEnergy(currentHamster.id);
+      checkForNeedFood(currentHamster);
       resetDragVariables();
       return;
     }
@@ -7687,6 +7966,7 @@ function stopDragHamster(e) {
 
       stopSpecificInterval(currentHamster.id, "energy");
       startFillingEnergy(currentHamster.id);
+      checkForNeedFood(currentHamster);
       resetDragVariables();
     }
   }
@@ -7735,17 +8015,15 @@ function setPositionHamster(currentHamster, hitbox, originalContainer) {
     restFactor = parseFloat(6) || 1; // Factor de tiempo de detención
   }
 
-  // Función para caminar el hamster
   function walk(distance, direction) {
-    if(isOnAction){
-      //console.log("walk: return");
+    if (currentHamster.dataset.onAction) {
+      // Si ya está en acción, detenemos cualquier proceso de caminata.
       return;
-    }else{
-      //console.log("walk: else");
     }
+    
     const step = 0.2 * speedFactor; // Tamaño del paso ajustado por velocidad
     let targetPos = pos + direction * distance; // Posición objetivo inicial
-
+  
     // Asegurar que el hamster llegue al borde si es necesario
     if (targetPos > 100) {
       targetPos = 100;
@@ -7754,63 +8032,60 @@ function setPositionHamster(currentHamster, hitbox, originalContainer) {
       targetPos = 0;
       direction = 1; // Cambiar dirección después de llegar al borde izquierdo
     }
-
+  
     const totalDistance = Math.abs(targetPos - pos);
     const totalSteps = Math.ceil(totalDistance / step); // Número total de pasos
     let currentStep = 0;
     currentHamster.classList.add("walkAnim");
-
+  
     const walkInterval = setInterval(() => {
+      // Si en cualquier momento se activa la acción, detener el proceso
+      if (currentHamster.dataset.onAction) {
+        clearInterval(walkInterval);
+        currentHamster.classList.remove("walkAnim");
+        return;
+      }
+  
       // Pausa aleatoria durante el movimiento
-      if (Math.random() < 0.02) { // 5% de probabilidad de pausa
-        //console.log("Hamster hace una pausa momentánea.");
+      if (Math.random() < 0.02) { // 2% de probabilidad de pausa
         clearInterval(walkInterval);
         currentHamster.classList.remove("walkAnim");
         setTimeout(() => {
-          //console.log("Hamster reanuda el movimiento.");
           walk(targetPos - pos, direction); // Continúa desde donde pausó
-        }, Math.random() * 3000 + 500); // Pausa de entre 0.5s y 2s
+        }, Math.random() * 3000 + 500); // Pausa entre 0.5s y 3.5s
         return;
       }
-
+  
       // Simular interacción con otros hamsters
       if (Math.random() < 0.05) { // 5% de probabilidad de interacción
-        //console.log("Hamster interactuó con otro hamster y cambió de dirección.");
         direction = -direction; // Cambiar dirección al cruzarse
         clearInterval(walkInterval);
         currentHamster.classList.remove("walkAnim");
         walk(distance, direction); // Reiniciar movimiento en la nueva dirección
         return;
       }
-
+  
       if (currentStep >= totalSteps) {
         clearInterval(walkInterval);
         currentHamster.classList.remove("walkAnim");
-        //console.log("Hamster terminó de caminar.");
-
         // Detenerse entre 1 y 5 segundos ajustado por el factor de detención
         const restTime = (Math.random() * 9000 + 1000) * restFactor;
         setTimeout(() => {
           // 50% de probabilidad de girar
           if (Math.random() < 0.5) {
-            //console.log("Hamster se giró.");
-            direction = -direction; // Cambiar dirección
-          } else {
-            //console.log("Hamster no se giró.");
+            direction = -direction;
           }
-
-          //console.log("Hamster reanuda su ciclo.");
           startCycle(); // Reiniciar el ciclo
         }, restTime);
         return;
       }
-
+  
       // Actualizar posición
       pos += direction * step;
       pos = Math.max(0, Math.min(100, pos)); // Limitar la posición entre 0% y 100%
       currentHamster.style.right = `${pos}%`;
       currentHamster.setAttribute("pos", pos);
-
+  
       // Actualizar clases y atributos en cada paso
       if (direction < 0) {
         currentHamster.setAttribute("y", "true");
@@ -7821,7 +8096,7 @@ function setPositionHamster(currentHamster, hitbox, originalContainer) {
         currentHamster.classList.remove("y");
         hamsterTooltipContainer.classList.remove("y");
       }
-
+  
       currentStep++;
     }, 50); // Actualización cada 50ms
   }
@@ -9370,6 +9645,7 @@ async function cargarHamstersDesdeBD() {
           currentHamster.style.display = 'flex';
           handleWheelContainer(contenedor, contenedor);
           modifyHamsterSpeed(currentHamster, setHamsterSpeed, 1.5, false);
+          stopSpecificInterval(currentHamster.id, "energy");
           startDecreasingEnergy(currentHamster.id);
 
           resetDragVariables(); 
@@ -9447,6 +9723,7 @@ async function cargarHamstersDesdeBD() {
 
           stopSpecificInterval(currentHamster.id, "energy");
           startFillingEnergy(currentHamster.id);
+          checkForNeedFood(currentHamster);
           resetDragVariables();
           
           break;
@@ -9658,7 +9935,7 @@ function getDefaultHamsterStats() {
  ******************************************************/
 
 function fillEnergy(hamsterId, speed) {
-  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  const hamsterEl = document.getElementById(hamsterId);
   if (!hamsterEl) return;
 
   // Llenar progresivamente la energía en función de la velocidad
@@ -9681,39 +9958,85 @@ function fillEnergy(hamsterId, speed) {
 }
 
 // Función para llenar el hambre con velocidad
-function fillHunger(hamsterId, speed) {
-  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+function fillHunger(hamsterEl) {
   if (!hamsterEl) return;
-
-  // Llenar progresivamente el hambre en función de la velocidad
   let currentHunger = Number(hamsterEl.getAttribute("hunger")) || 0;
-  const maxHunger = 1000;  // Valor máximo de hambre
-  if (currentHunger < maxHunger) {
-    currentHunger += speed;
-    if (currentHunger > maxHunger) currentHunger = maxHunger;
-  }
+  let newHunger = currentHunger + 300;
 
-  hamsterEl.setAttribute("hunger", currentHunger);
+  hamsterEl.setAttribute("hunger", newHunger);
   const slider = hamsterEl.querySelector(".sliderHunger");
   if (slider) {
-    slider.value = currentHunger;
+    slider.value = newHunger;
     actualizarSlider(slider);
   }
 }
 
+function checkForNeedFood(hamsterEl) {
+  // Guardamos el id del intervalo en el propio elemento
+  hamsterEl.checkForNeedFoodInterval = setInterval(() => {
+    if (!hamsterEl) {
+      console.log("checkForNeedFood return1");
+      return;
+    }
+    if (!hamsterEl.parentElement.id) {
+      console.log("checkForNeedFood return2");
+      return;
+    }
+    if (
+      hamsterEl.parentElement.id === "hitboxSlowWorld" ||
+      hamsterEl.parentElement.id === "hitboxSlotBuyBiggie" ||
+      hamsterEl.parentElement.id === "hitboxSlotBuyCoco" ||
+      hamsterEl.parentElement.id === "hitboxSlotBuyDior" ||
+      hamsterEl.parentElement.classList.contains("wheel") ||
+      hamsterEl.parentElement.id === "filterUnderwater"
+    ) {
+      console.log("checkForNeedFood return3");
+      return;
+    }
+
+    let tooltip;
+    if (hamsterEl.parentElement.id === "hitboxSlotUpLeft") {
+      tooltip = document.getElementById("comida1Tooltip");
+    } else if (hamsterEl.parentElement.id === "hitboxSlotUpRight") {
+      tooltip = document.getElementById("comida2Tooltip");
+    } else if (hamsterEl.parentElement.id === "hitboxSlotDown") {
+      tooltip = document.getElementById("comida3Tooltip");
+    }
+
+    let currentHunger = Number(hamsterEl.getAttribute("hunger")) || 0;
+
+    // Si el hamster ya está en cooldown, salimos sin hacer nada.
+    if (hamsterEl.dataset.eatingCooldown) return;
+
+    // Solo se actúa si el hunger es menor a 750 y el tooltip muestra un valor >= 1
+    if (currentHunger < 700 && Number(tooltip.textContent) >= 1) {
+      console.log("Puede comer");
+      // La probabilidad será:
+      // - 50% cuando currentHunger es 750,
+      // - 100% cuando currentHunger es 0,
+      // y de forma lineal entre esos extremos.
+      let probability = 0.5 + ((700 - currentHunger) / 700) * 0.5;
+      if (Math.random() < probability) {
+        // Ejecutar la animación de comer
+        setHamsterBackAnimation(hamsterEl.id, "eat", true);
+        // Activar el cooldown: no podrá comer de nuevo hasta 20 segundos.
+        hamsterEl.dataset.eatingCooldown = "true";
+        hamsterEl.dataset.onAction = "true";
+        setTimeout(() => {
+          delete hamsterEl.dataset.eatingCooldown;
+        }, 20000);
+      }
+    }
+  }, 5000);
+}
+
+
 // Función para llenar la sed con velocidad
 function fillThirst(hamsterId, speed) {
-  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  const hamsterEl = document.getElementById(hamsterId);
   if (!hamsterEl) return;
 
-  // Llenar progresivamente la sed en función de la velocidad
   let currentThirst = Number(hamsterEl.getAttribute("thirst")) || 0;
-  const maxThirst = 1000;  // Valor máximo de sed
-  if (currentThirst < maxThirst) {
-    currentThirst += speed;
-    if (currentThirst > maxThirst) currentThirst = maxThirst;
-  }
-
   hamsterEl.setAttribute("thirst", currentThirst);
   const slider = hamsterEl.querySelector(".sliderWater");
   if (slider) {
@@ -9751,7 +10074,7 @@ function numeroDeHamsters() {
  * y actualiza el atributo y slider en el DOM.
  */
 function decrementEnergy(hamsterId, amount) {
-  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  const hamsterEl = document.getElementById(hamsterId);
   if (!hamsterEl) return;
 
   // Leer valor actual (string -> number)
@@ -9803,7 +10126,7 @@ function decrementEnergy(hamsterId, amount) {
  * y actualiza en el DOM.
  */
 function decrementHunger(hamsterId, amount) {
-  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  const hamsterEl = document.getElementById(hamsterId);
   if (!hamsterEl) return;
 
   let currentHunger = Number(hamsterEl.getAttribute("hunger")) || 0;
@@ -9821,7 +10144,7 @@ function decrementHunger(hamsterId, amount) {
  * y actualiza en el DOM.
  */
 function decrementThirst(hamsterId, amount) {
-  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  const hamsterEl = document.getElementById(hamsterId);
   if (!hamsterEl) return;
 
   let currentThirst = Number(hamsterEl.getAttribute("thirst")) || 0;
@@ -9836,7 +10159,7 @@ function decrementThirst(hamsterId, amount) {
 
 
 function fillFullStats(hamsterId){
-  const hamsterEl = document.querySelector(`.hamster.${hamsterId}`);
+  const hamsterEl = document.getElementById(hamsterId);
   if (!hamsterEl) return;
 
   let currentMax = Number(1000);
@@ -10001,36 +10324,6 @@ document.querySelectorAll('.sliderHamster').forEach(slider => {
 // Objeto que contiene los intervalos para cada hamster
 const hamsterIntervalsStats = {};
 
-// Función global para asignar los intervalos de llenado
-function startFillingHunger(hamsterId) {
-  // Asegurarnos de que no haya intervalos duplicados
-  if (!hamsterIntervalsStats[hamsterId]) {
-    hamsterIntervalsStats[hamsterId] = {};
-  }
-
-  // Intervalo para llenar el hambre
-  if (!hamsterIntervalsStats[hamsterId].hunger) {
-    hamsterIntervalsStats[hamsterId].hunger = setInterval(() => {
-      fillHunger(hamsterId, speed);
-    }, 1000);
-  }
-}
-
-
-function startFillingThirst(hamsterId) {
-  // Asegurarnos de que no haya intervalos duplicados
-  if (!hamsterIntervalsStats[hamsterId]) {
-    hamsterIntervalsStats[hamsterId] = {};
-  }
-
-  // Intervalo para llenar la sed
-  if (!hamsterIntervalsStats[hamsterId].thirst) {
-    hamsterIntervalsStats[hamsterId].thirst = setInterval(() => {
-      fillThirst(hamsterId, speed);
-    }, 1000);
-  }
-}
-
 function startFillingEnergy(hamsterId) {
   // Asegurarnos de que no haya intervalos duplicados
   if (!hamsterIntervalsStats[hamsterId]) {
@@ -10180,11 +10473,21 @@ const onMouseUpdate = (e, el, container) => {
 
     setProp(el, '--dy', `${YAngle}deg`);
     setProp(el, '--dx', `${XAngle}deg`);
+
+    // Calcular el drop-shadow en función de la perspectiva
+    const shadowFactor = 2; // Ajusta este valor para modificar la intensidad de la sombra
+    const offsetX = -YAngle * shadowFactor;
+    const offsetY = XAngle * shadowFactor;
+    const shadowBlur = 10; // Valor de desenfoque de la sombra
+    const shadowColor = 'rgba(0, 0, 0, 0.4)'; // Color de la sombra
+
+    el.style.filter = `drop-shadow(${offsetX}px ${offsetY}px ${shadowBlur}px ${shadowColor})`;
 };
 
 const resetProps = (el) => {
     el.style.setProperty('--dy', '0');
     el.style.setProperty('--dx', '0');
+    el.style.filter = 'drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.4))'; // Restablece el drop-shadow
 };
 
 const container = document.getElementById("skinsContainer");
@@ -10193,7 +10496,6 @@ const elements = container.querySelectorAll('.skinContainer');
 const adjustHitboxes = (activeEl) => {
     elements.forEach(el => {
         if (el !== activeEl) {
-            el.style.height = "80%"; // Reduce la hitbox
             el.style.pointerEvents = "none"; // Desactiva eventos para evitar colisiones
         }
     });
@@ -10243,12 +10545,14 @@ tomatoContainerHitbox.addEventListener("click", function () {
 glassLeftHitbox.addEventListener("mouseleave", function(event) {
   if (!isDragging) {return;}
   const hamsters = document.querySelectorAll('.hamster');
+  const comidaHitboxs = document.querySelectorAll('.comidaHitbox');
   if (
     glassRight.contains(event.relatedTarget) ||
     glassLeft.contains(event.relatedTarget) ||
     glassRightHitbox.contains(event.relatedTarget) ||
     glassLeftHitbox.contains(event.relatedTarget) ||
     Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+    Array.from(comidaHitboxs).some(comidaHitbox => comidaHitbox.contains(event.relatedTarget)) ||
     wrapper.contains(event.relatedTarget)
   ) {
     return;
@@ -10261,12 +10565,14 @@ glassLeftHitbox.addEventListener("mouseleave", function(event) {
 glassRightHitbox.addEventListener("mouseleave", function(event) {
   if (!isDragging) {return;}
   const hamsters = document.querySelectorAll('.hamster');
+  const comidaHitboxs = document.querySelectorAll('.comidaHitbox');
   if (
     glassRight.contains(event.relatedTarget) ||
     glassLeft.contains(event.relatedTarget) ||
     glassRightHitbox.contains(event.relatedTarget) ||
     glassLeftHitbox.contains(event.relatedTarget) ||
     Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+    Array.from(comidaHitboxs).some(comidaHitbox => comidaHitbox.contains(event.relatedTarget)) ||
     wrapper.contains(event.relatedTarget)
   ) {
     return;
@@ -10278,12 +10584,14 @@ glassRightHitbox.addEventListener("mouseleave", function(event) {
 glassLeft.addEventListener("mouseleave", function(event) {
   if (!isDragging) {return;}
   const hamsters = document.querySelectorAll('.hamster');
+  const comidaHitboxs = document.querySelectorAll('.comidaHitbox');
   if (
     glassRight.contains(event.relatedTarget) ||
     glassLeft.contains(event.relatedTarget) ||
     glassRightHitbox.contains(event.relatedTarget) ||
     glassLeftHitbox.contains(event.relatedTarget) ||
     Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+    Array.from(comidaHitboxs).some(comidaHitbox => comidaHitbox.contains(event.relatedTarget)) ||
     wrapper.contains(event.relatedTarget)
   ) {
     return;
@@ -10297,12 +10605,14 @@ glassLeft.addEventListener("mouseleave", function(event) {
 glassRight.addEventListener("mouseleave", function(event) {
   if (!isDragging) {return;}
   const hamsters = document.querySelectorAll('.hamster');
+  const comidaHitboxs = document.querySelectorAll('.comidaHitbox');
   if (
     glassRight.contains(event.relatedTarget) ||
     glassLeft.contains(event.relatedTarget) ||
     glassRightHitbox.contains(event.relatedTarget) ||
     glassLeftHitbox.contains(event.relatedTarget) ||
     Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
+    Array.from(comidaHitboxs).some(comidaHitbox => comidaHitbox.contains(event.relatedTarget)) ||
     wrapper.contains(event.relatedTarget)
   ) {
     return;

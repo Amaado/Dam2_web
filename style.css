@@ -2135,7 +2135,7 @@ div.img img {
   overflow: hidden;
 
   transform: perspective(525px) translateZ(0) rotateX(var(--dx)) rotateY(var(--dy)) scale(1);
-  transition: transform 150ms linear;
+  transition: transform 150ms linear, filter 150ms linear;
 }
 
 
@@ -4294,7 +4294,7 @@ canvas {
   transition: transform 1s ease-in-out; /* Transición para `transform` */
   will-change: transform;
   pointer-events: all;
-  z-index: 1000;
+  z-index: 1002;
 }
 .pointingBack.hamster{
   transform: scale(1) translateY(0px);
@@ -5123,6 +5123,60 @@ canvas {
   left: 21.8px;
   top: 252.6px;
 }
+
+.comidaHitbox{
+  position: absolute;
+  width: 45px;
+  height: 70px;
+  pointer-events: all;
+  z-index: 1001;
+}
+#comida1Hitbox{
+  left: 25px;
+  top: 40px;
+}
+#comida2Hitbox{
+  left: 242px;
+  top: 38px;
+}
+#comida3Hitbox{
+  left: 29px;
+  top: 221px;
+}
+
+.comidaTooltip{
+  position: absolute;
+  width: 32px;
+  height: 25px;
+  background-color: #8a8662a4;
+  filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.459));
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  padding: 2px;
+  border-radius: 5px;
+  opacity: 0.8;
+  clip-path: inset(0 0 25px 0);
+  margin-top: 35px;
+}
+.comidaTooltip.active{
+  clip-path: inset(0 0 0 0);
+  margin-top: 0px;
+}
+#comida1Tooltip{
+  left: 32px;
+  top: 40px;
+}
+#comida2Tooltip{
+  left: 249px;
+  top: 38px;
+}
+#comida3Tooltip{
+  left: 36px;
+  top: 221px;
+}
+
 .bebida{
   position: absolute;
   width: auto;
