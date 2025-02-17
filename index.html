@@ -247,6 +247,14 @@
 
     <div id="skinsContainer">
       <div class="titulo">SKINS</div>
+      <div id="skinsSearchContainer">
+        <div class="searchLabel">Buscar: </div>
+        <div id="skinsSearch" contenteditable="true"></div>
+      </div>
+      <div id="filterParentCont">
+        <div class="filterLabel">Filtrar por: </div>
+        <div id="filterCont" class="night">Precio (Asc)</div>
+      </div>
       <div class="hr"></div>
 
       <div class="skinContainer skinContainerFirst" skinId="1">
@@ -1491,9 +1499,7 @@
       content: skinsContainer   // (opcional) también indicamos que el contenido a desplazar es el mismo
     });
 
-    lenis.on('scroll', (e) => {
-      console.log(e);
-    });
+    lenis.on('scroll', () => {});
 
     function raf(time) {
       lenis.raf(time);

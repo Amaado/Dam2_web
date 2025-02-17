@@ -2578,7 +2578,6 @@ let localTomatosCounter = 0; // Contador local para manejar la última cifra en 
 
 async function actualizarTomatos(idLogeado) {
   try {
-    console.log("ID logeado:", idLogeado);
     const tomatosLogeado = await obtenerTomatosDeUsuario(idLogeado);
     await atualizarTomatoContainerHitboxWidth(tomatosLogeado);
     tomatoLabel.textContent = tomatosLogeado;
@@ -3402,28 +3401,30 @@ async function actualizarTomatosSliceUsuario(id, nuevaCantidad) {
     }
   }
 
-  function quitarCandadosIniciales(codigo) {
-    const candados = document.querySelectorAll(".candado");
-
-    codigo.split("").forEach((caracter, index) => {
-      if (caracter === "1" && candados[index]) {
-        const candado = candados[index];
-        const skinContainer = candado.closest(".skinContainer");
-        const skinContainerLock =
-          skinContainer.querySelector(".skinContainerLock");
-        const skinContainerNotVisible = skinContainer.querySelector(
-          ".skinContainerNotVisible"
-        );
-
-        // Ocultar y deshabilitar eventos de puntero
+  function quitarCandadosIniciales(skinsUnlock) {
+    // Convertimos el string en un array de IDs (si no hay, es un array vacío)
+    const unlockedSkinIds = skinsUnlock && skinsUnlock.trim() !== ""
+      ? skinsUnlock.split(",")
+      : [];
+  
+    // Recorremos cada contenedor de skin
+    const skinContainers = document.querySelectorAll(".skinContainer");
+    skinContainers.forEach((skinContainer) => {
+      const skinId = skinContainer.getAttribute("skinId");
+      if (unlockedSkinIds.includes(skinId)) {
+        // Si la skin está desbloqueada, quitamos los candados
+        const candado = skinContainer.querySelector(".candado");
+        const skinContainerLock = skinContainer.querySelector(".skinContainerLock");
+        const skinContainerNotVisible = skinContainer.querySelector(".skinContainerNotVisible");
+  
         candado.style.opacity = "0%";
         candado.style.visibility = "hidden";
         candado.style.pointerEvents = "none";
-
+  
         skinContainerLock.style.opacity = "0%";
         skinContainerLock.style.visibility = "hidden";
         skinContainerLock.style.pointerEvents = "none";
-
+  
         skinContainerNotVisible.style.opacity = "0%";
         skinContainerNotVisible.style.visibility = "hidden";
         skinContainerNotVisible.style.pointerEvents = "none";
@@ -3434,87 +3435,70 @@ async function actualizarTomatosSliceUsuario(id, nuevaCantidad) {
   let isUnlocking = false;
 
   // Función para manejar los candados de las skins
-  async function manejarCandados(idLogeado, skinsUnlock) {
-    if (!idLogeado) {
-      console.error("No se encontró idLogeado");
-      return;
-    }
-
-    const candados = document.querySelectorAll(".candado");
-    const totalSkins = candados.length;
-
-    // Asegurar que skinsUnlock tiene la longitud correcta
-    if (!skinsUnlock || skinsUnlock.length < totalSkins) {
-      skinsUnlock = skinsUnlock.padEnd(totalSkins, "L");
-    }
-
-    for (let [index, candado] of candados.entries()) {
-      candado.src = "img/lock.png";
-
-      let skinContainer = candado.closest(".skinContainer");
-      let skinContainerLock = skinContainer.querySelector(".skinContainerLock");
-      let skinContainerNotVisible = skinContainer.querySelector(
-        ".skinContainerNotVisible"
-      );
-
-      let priceElement = skinContainerNotVisible.querySelector(".price");
-      let price; // Declaramos la variable fuera del if-else
-
-      if (priceElement.textContent === "FREE") {
-        price = 0; // Asignamos 0 si el texto es "FREE"
-      } else {
-        price = parseInt(priceElement.textContent); // Convertimos el precio en número si no es "FREE"
-      }
-
-      // Comprobar si la skin está desbloqueada
-      if (skinsUnlock[index] === "1") {
-        // La skin está desbloqueada; ocultar y deshabilitar eventos de puntero
-        candado.style.opacity = "0%";
-        candado.style.visibility = "hidden";
-        candado.style.pointerEvents = "none";
-
-        skinContainerLock.style.opacity = "0%";
-        skinContainerLock.style.visibility = "hidden";
-        skinContainerLock.style.pointerEvents = "none";
-
-        skinContainerNotVisible.style.opacity = "0%";
-        skinContainerNotVisible.style.visibility = "hidden";
-        skinContainerNotVisible.style.pointerEvents = "none";
-
-        continue; // Pasar a la siguiente iteración
-      }
-
-      try {
-        // Agregar event listeners solo a skins bloqueadas
-        candado.addEventListener("click", (event) =>
-          searchUnlockingStatus(
-            candado,
-            skinContainerLock,
-            skinContainerNotVisible,
-            price,
-            index,
-            idLogeado,
-            event
-          )
-        );
-        skinContainerNotVisible.addEventListener("click", (event) =>
-          searchUnlockingStatus(
-            candado,
-            skinContainerLock,
-            skinContainerNotVisible,
-            price,
-            index,
-            idLogeado,
-            event
-          )
-        );
-
-        //setNormalPrice(skinContainer, price);
-      } catch (error) {
-        console.error("Error al manejar los candados:", error);
-      }
-    }
+async function manejarCandados(idLogeado, skinsUnlock) {
+  if (!idLogeado) {
+    console.error("No se encontró idLogeado");
+    return;
   }
+
+  // Convertir el listado de skins desbloqueadas en un array.
+  const unlockedSkinIds = skinsUnlock && skinsUnlock.trim() !== ""
+    ? skinsUnlock.split(",")
+    : [];
+
+  const candados = document.querySelectorAll(".candado");
+
+  // Recorrer cada candado y configurar su funcionamiento.
+  candados.forEach((candado) => {
+    // Reiniciamos la imagen del candado
+    candado.src = "img/lock.png";
+
+    const skinContainer = candado.closest(".skinContainer");
+    const skinId = skinContainer.getAttribute("skinId");
+    const skinContainerLock = skinContainer.querySelector(".skinContainerLock");
+    const skinContainerNotVisible = skinContainer.querySelector(".skinContainerNotVisible");
+
+    let priceElement = skinContainerNotVisible.querySelector(".price");
+    let price = (priceElement.textContent === "FREE")
+      ? 0
+      : parseInt(priceElement.textContent);
+
+    // Si la skin ya está desbloqueada, quitar el candado y pasar a la siguiente.
+    if (unlockedSkinIds.includes(skinId)) {
+      candado.style.opacity = "0%";
+      candado.style.visibility = "hidden";
+      candado.style.pointerEvents = "none";
+
+      skinContainerLock.style.opacity = "0%";
+      skinContainerLock.style.visibility = "hidden";
+      skinContainerLock.style.pointerEvents = "none";
+
+      skinContainerNotVisible.style.opacity = "0%";
+      skinContainerNotVisible.style.visibility = "hidden";
+      skinContainerNotVisible.style.pointerEvents = "none";
+      return; // saltamos a la siguiente skin
+    }
+
+    try {
+      // Agregar event listeners para las skins bloqueadas, pasando skinId en lugar de un índice
+      const handler = (event) =>
+        searchUnlockingStatus(
+          candado,
+          skinContainerLock,
+          skinContainerNotVisible,
+          price,
+          skinId,
+          idLogeado,
+          event
+        );
+
+      candado.addEventListener("click", handler);
+      skinContainerNotVisible.addEventListener("click", handler);
+    } catch (error) {
+      console.error("Error al manejar los candados:", error);
+    }
+  });
+}
 
   /*
 function setNormalPrice(skinContainer, price) {
@@ -3525,45 +3509,45 @@ function setNormalPrice(skinContainer, price) {
   }
 }*/
 
-  async function searchUnlockingStatus(
-    candado,
-    skinContainerLock,
-    skinContainerNotVisible,
-    price,
-    skinIndex,
-    idLogeado,
-    event
-  ) {
-    if (isUnlocking) return;
+async function searchUnlockingStatus(
+  candado,
+  skinContainerLock,
+  skinContainerNotVisible,
+  price,
+  skinId,
+  idLogeado,
+  event
+) {
+  if (isUnlocking) return;
 
-    let monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
+  let monedasLogeado = await obtenerMonedasDeUsuario(idLogeado);
 
-    if (monedasLogeado >= price) {
-      isUnlocking = true;
-      await unlockAnimation(
-        candado,
-        skinContainerLock,
-        skinContainerNotVisible,
-        price,
-        monedasLogeado,
-        idLogeado,
-        skinIndex,
-        event
-      );
-      actualizarLocalCoinsCounter(idLogeado);
-    } else {
-      lockedAnimation(candado);
-    }
+  if (monedasLogeado >= price) {
+    isUnlocking = true;
+    await unlockAnimation(
+      candado,
+      skinContainerLock,
+      skinContainerNotVisible,
+      price,
+      monedasLogeado,
+      idLogeado,
+      skinId,
+      event
+    );
+    actualizarLocalCoinsCounter(idLogeado);
+  } else {
+    lockedAnimation(candado);
   }
+}
 
-  async function unlockAnimation(
+async function unlockAnimation(
     candado,
     skinContainerLock,
     skinContainerNotVisible,
     price,
     monedasLogeado,
     idLogeado,
-    skinIndex,
+    skinId,
     event
   ) {
     candado.src = "img/lock.gif";
@@ -3615,71 +3599,37 @@ function setNormalPrice(skinContainer, price) {
       candado.style.opacity = "0%";
       candado.style.visibility = "hidden";
       candado.style.pointerEvents = "none";
-
+  
       skinContainerLock.style.opacity = "0%";
       skinContainerLock.style.visibility = "hidden";
       skinContainerLock.style.pointerEvents = "none";
-
+  
       skinContainerNotVisible.style.opacity = "0%";
       skinContainerNotVisible.style.visibility = "hidden";
       skinContainerNotVisible.style.pointerEvents = "none";
-
+  
       isUnlocking = false;
-
-      // Actualizar el código de skinsUnlock en la base de datos
-      await unlockSkin(idLogeado, skinIndex);
+  
+      // Actualizar el listado de skins desbloqueadas en la base de datos usando skinId
+      await unlockSkin(idLogeado, skinId);
     }, 1100);
   }
 
-  async function unlockSkin(idLogin, skinIndex) {
+  async function unlockSkin(idLogin, skinId) {
     try {
-      // Obtener el código actual de skinsUnlock del usuario
+      // Obtener el listado actual de skins desbloqueadas, por ejemplo "1,3,5"
       let skinsUnlock = await obtenerSkinsUnlockDeUsuario(idLogin);
-
-      const totalSkins = document.querySelectorAll(".candado").length;
-
-      // Inicializar skinsUnlock si es necesario
-      if (
-        !skinsUnlock ||
-        typeof skinsUnlock !== "string" ||
-        skinsUnlock.length === 0
-      ) {
-        skinsUnlock = "L".repeat(totalSkins);
-        console.warn("skinsUnlock no válido, inicializando con:", skinsUnlock);
-      }
-
-      // Ajustar la longitud de skinsUnlock si es necesario
-      if (skinsUnlock.length < totalSkins) {
-        skinsUnlock = skinsUnlock.padEnd(totalSkins, "L");
-        console.warn(
-          "skinsUnlock de longitud insuficiente, ajustando a:",
-          skinsUnlock
-        );
-      }
-
-      // Convertir a array para modificar
-      let skinsArray = skinsUnlock.split("");
-
-      // Verificar que skinIndex es válido
-      if (skinIndex < 0 || skinIndex >= skinsArray.length) {
-        console.error("skinIndex fuera de rango:", skinIndex);
-        return;
-      }
-
-      // Actualizar el carácter correspondiente a '1'
-      if (skinsArray[skinIndex] === "L") {
-        skinsArray[skinIndex] = "1";
+      let unlockedSkinIds = skinsUnlock && skinsUnlock.trim() !== ""
+        ? skinsUnlock.split(",")
+        : [];
+  
+      if (!unlockedSkinIds.includes(skinId)) {
+        unlockedSkinIds.push(skinId);
       } else {
-        console.warn(
-          "La skin ya está desbloqueada o tiene un valor inesperado:",
-          skinsArray[skinIndex]
-        );
+        console.warn("La skin ya está desbloqueada:", skinId);
       }
-
-      // Unir el array en una cadena
-      let nuevoSkinsUnlock = skinsArray.join("");
-
-      // Actualizar en la base de datos
+  
+      let nuevoSkinsUnlock = unlockedSkinIds.join(",");
       await actualizarSkinsUnlockDeUsuario(idLogin, nuevoSkinsUnlock);
     } catch (error) {
       console.error("Error al desbloquear la skin:", error);
@@ -6290,7 +6240,7 @@ function resetPag() {
         },
       });
       const data = await response.json();
-      console.log("Dibujos obtenidos de la base de datos:", data);
+      //console.log("Dibujos obtenidos de la base de datos:", data);
       return data.length > 0 ? data[0].dibujos : null;
     } catch (error) {
       console.error("Error al obtener los dibujos:", error);
@@ -6795,27 +6745,36 @@ function updateTooltipVisibility(){
 
   // Actualizar la visibilidad de las tooltips de los nombres
   hamsterTooltipContainers.forEach((tooltip) => {
-    if (checkboxTooltipsNamesShown) {
-      tooltip.style.opacity = "1"; // Mostrar el tooltip de nombre
-    } else {
-      tooltip.style.opacity = "0"; // Ocultar el tooltip de nombre
+    let hamster = tooltip.closest('.hamster');
+    let hitbox = hamster.parentElement.id;
+    if (hitbox === 'hitboxSlotBuyDior' ||
+        hitbox === 'hitboxSlotBuyCoco' ||
+        hitbox === 'hitboxSlotBuyBiggie'){
+          
+      tooltip.style.opacity = "0";
+    }else{
+      if (checkboxTooltipsNamesShown) {
+        tooltip.style.opacity = "1";
+      } else {
+        tooltip.style.opacity = "0";
+      }
     }
   });
 
   // Actualizar la visibilidad de las tooltips de los estados
   sliderHamsterContainers.forEach((container) => {
     if (checkboxTooltipsStatesShown) {
-      container.style.opacity = "1"; // Mostrar el tooltip de estado
+      container.style.opacity = "1";
     } else {
-      container.style.opacity = "0"; // Ocultar el tooltip de estado
+      container.style.opacity = "0";
     }
   });
 
   sliderHamsterWarningIconss.forEach((container) => {
     if (checkboxTooltipsStatesShown) {
-      container.style.opacity = "1"; // Mostrar el tooltip de estado
+      container.style.opacity = "1";
     } else {
-      container.style.opacity = "0"; // Ocultar el tooltip de estado
+      container.style.opacity = "0";
     }
   });
 }
@@ -7024,6 +6983,7 @@ function showTooltipHamsterForce(hamsterElement){
   let tooltipStates = hamsterElement.querySelector(".sliderHamsterContainer");
   let sliderHamsterWarningIcons = hamsterElement.querySelector(".sliderHamsterWarningIcons");
 
+  
   tooltip.style.visibility = "visible";
   tooltipStates.style.visibility = "visible";
   sliderHamsterWarningIcons.style.visibility = "visible";
@@ -7918,9 +7878,9 @@ function stopDragHamster(e) {
       if (hitbox.id === 'hitboxSlotWorld') {
         //console.log("stopDragHamster: Moviendo a hitboxSlotWorld");
 
-        currentHamster.setAttribute("pos", "");
         hideTooltipHamsterForce(currentHamster);
         isResetToContainer = false;
+        currentHamster.setAttribute("pos", "");
         cloneHamsterToContainer(hitbox, offsetX, offsetY);
         actualizarSlotHamster(currentHamster, hitbox);
 
@@ -8023,11 +7983,6 @@ function setPositionHamster(currentHamster, hitbox, originalContainer) {
   }
 
   function walk(distance, direction) {
-    if (currentHamster.dataset.onAction) {
-      // Si ya está en acción, detenemos cualquier proceso de caminata.
-      return;
-    }
-    
     const step = 0.2 * speedFactor; // Tamaño del paso ajustado por velocidad
     let targetPos = pos + direction * distance; // Posición objetivo inicial
   
@@ -8046,10 +8001,19 @@ function setPositionHamster(currentHamster, hitbox, originalContainer) {
     currentHamster.classList.add("walkAnim");
   
     const walkInterval = setInterval(() => {
-      // Si en cualquier momento se activa la acción, detener el proceso
+      // Si se activa la acción, detener el ciclo y esperar a que vuelva a ser false
       if (currentHamster.dataset.onAction) {
         clearInterval(walkInterval);
         currentHamster.classList.remove("walkAnim");
+        // Esperar a que se desactive onAction para reiniciar el ciclo desde la posición actual
+        const waitForActionFalse = setInterval(() => {
+          if (!currentHamster.dataset.onAction) {
+            clearInterval(waitForActionFalse);
+            // Actualizamos la variable pos a la posición actual del hamster
+            pos = parseFloat(currentHamster.getAttribute("pos"));
+            startCycle(); // Inicia un nuevo ciclo desde el pos actual
+          }
+        }, 100); // Comprobar cada 100ms
         return;
       }
   
@@ -8093,7 +8057,7 @@ function setPositionHamster(currentHamster, hitbox, originalContainer) {
       currentHamster.style.right = `${pos}%`;
       currentHamster.setAttribute("pos", pos);
   
-      // Actualizar clases y atributos en cada paso
+      // Actualizar clases y atributos según la dirección
       if (direction < 0) {
         currentHamster.setAttribute("y", "true");
         currentHamster.classList.add("y");
@@ -8107,32 +8071,29 @@ function setPositionHamster(currentHamster, hitbox, originalContainer) {
       currentStep++;
     }, 50); // Actualización cada 50ms
   }
-
+  
   // Función para iniciar un ciclo de movimiento
   function startCycle() {
-    // Generar una distancia aleatoria entre 70 y 10
+    // Generar una distancia aleatoria entre 10 y 70
     const distance = Math.random() * (70 - 10) + 10;
-
+  
     // Determinar dirección: 1 para derecha, -1 para izquierda
     let direction = Math.random() < 0.5 ? -1 : 1;
-
+  
     // Ajustar dirección si el hamster está cerca de un borde
     if (pos + direction * distance > 100) {
       direction = -1;
     } else if (pos + direction * distance < 0) {
       direction = 1;
     }
-
-    //console.log(`Hamster comenzará a caminar ${distance.toFixed(2)} en dirección ${direction > 0 ? "derecha" : "izquierda"}`);
-
-    // Iniciar el movimiento
+  
+    // Iniciar el movimiento desde la posición actual (guardada en pos)
     walk(distance, direction);
   }
-
+  
   // Iniciar el primer ciclo
   startCycle();
 }
-
 
 
 
@@ -8655,18 +8616,7 @@ modifiersSettingsContextMenu.addEventListener('click', (event) => {
   if (event.target.tagName === 'LI') {
     const itemText = event.target.textContent.trim();
   
-    // Opción: Mostrar estadísticas en las etiquetas
-    if (itemText.includes("Mostrar estadísticas en las etiquetas")) {
-      if (itemText.startsWith("✔")) {
-        event.target.textContent = "Mostrar estadísticas en las etiquetas";
-        desactivarShowStatsInTags();
-      } else {
-        event.target.textContent = "✔ Mostrar estadísticas en las etiquetas";
-        activarShowStatsInTags();
-      }
-    } 
-    // Opción: Mostrar etiquetas
-    else if (itemText.includes("Mostrar etiquetas") && !itemText.includes("estadísticas")) {
+    if (itemText.includes("Mostrar etiquetas") && !itemText.includes("estadísticas")) {
       if (itemText.startsWith("✔")) {
         event.target.textContent = "Mostrar etiquetas";
         desactivarShowTags();
@@ -8675,7 +8625,17 @@ modifiersSettingsContextMenu.addEventListener('click', (event) => {
         activarShowTags();
       }
     } 
-    // Opción: Ayuda icono de venana para warnings
+
+    else if (itemText.includes("Mostrar estadísticas en las etiquetas")) {
+      if (itemText.startsWith("✔")) {
+        event.target.textContent = "Mostrar estadísticas en las etiquetas";
+        desactivarShowStatsInTags();
+      } else {
+        event.target.textContent = "✔ Mostrar estadísticas en las etiquetas";
+        activarShowStatsInTags();
+      }
+    } 
+    
     else if (itemText.includes("Ayuda icono de venana para warnings")) {
       if (itemText.startsWith("✔")) {
         event.target.textContent = "Ayuda icono de venana para warnings";
@@ -9657,7 +9617,6 @@ async function cargarHamstersDesdeBD() {
           break;
 
         case "hitboxSlotWorld":
-          showTooltipHamsterForce(currentHamster);
           isResetToContainer = false;
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
           wrapper.style.setProperty('--wheel-speed', '0');
@@ -9674,7 +9633,6 @@ async function cargarHamstersDesdeBD() {
         case "hitboxSlotBuyBiggie":
           currentHamster.setAttribute("pos", "");
           isResetToContainer = false;
-          showTooltipHamsterForce(currentHamster);
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
           wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
@@ -9690,7 +9648,6 @@ async function cargarHamstersDesdeBD() {
         case "hitboxSlotBuyDior":
           currentHamster.setAttribute("pos", "");
           isResetToContainer = false;
-          showTooltipHamsterForce(currentHamster);
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
           wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
@@ -9706,7 +9663,6 @@ async function cargarHamstersDesdeBD() {
         case "hitboxSlotBuyCoco":
           currentHamster.setAttribute("pos", "");
           isResetToContainer = false;
-          showTooltipHamsterForce(currentHamster);
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
           wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
@@ -9721,7 +9677,6 @@ async function cargarHamstersDesdeBD() {
 
         default:
           isResetToContainer = false;
-          showTooltipHamsterForce(currentHamster);
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
           wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
@@ -9736,7 +9691,8 @@ async function cargarHamstersDesdeBD() {
           break;
       }
 
-      console.log(`Hámster ${hamster} posicionado en el slot ${slotId}.`);
+      updateTooltipVisibility();
+      //console.log(`Hámster ${hamster} posicionado en el slot ${slotId}.`);
     });
   } catch (error) {
     console.error("Error al cargar los hámsters desde la base de datos:", error);
@@ -9784,18 +9740,17 @@ async function cargarHamstersDesdeBDF(){
   
       if (!hamsterEnContenedor) {
         isResetToContainer = false;
-        showTooltipHamsterForce(currentHamster);
         cloneHamsterToContainer(contenedor, offsetX, offsetY);
         wrapper.style.setProperty('--wheel-speed', '0');
-        currentHamster.style.display = 'flex';
-        currentHamster.style.
         actualizarSlotHamster(currentHamster, contenedor);
         
         stopSpecificInterval(currentHamster.id, "energy");
         startFillingEnergy(currentHamster.id);
         startDecreasingStats(currentHamster.id);
         checkForNeedFood(currentHamster);
-  
+        
+        showTooltipHamsterForce(currentHamster);
+        updateTooltipVisibility();
         resetDragVariables();
       }
   
@@ -10192,7 +10147,7 @@ function fillFullStats(hamsterId){
 function startPeriodicStatsUpdate(idLogeado) {
   // Si ya se inició el intervalo, no creamos uno nuevo.
   if (startPeriodicStatsUpdate.intervalId) {
-    console.log("La actualización periódica ya está en ejecución.");
+    //console.log("La actualización periódica ya está en ejecución.");
     return;
   }
 
@@ -10401,7 +10356,7 @@ function stopSpecificInterval(hamsterId, stat) {
     delete hamsterIntervalsStats[hamsterId][stat];  // Limpiar el objeto del intervalo de esa estadística
     //console.log(`Intervalo de ${stat} para el hamster con id: ${hamsterId} detenido.`);
   } else {
-    console.log(`No se encontró el intervalo de ${stat} para el hamster con id: ${hamsterId}.`);
+    //console.log(`No se encontró el intervalo de ${stat} para el hamster con id: ${hamsterId}.`);
   }
 }
 
