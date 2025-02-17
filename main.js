@@ -3089,7 +3089,7 @@ async function actualizarTomatosSliceUsuario(id, nuevaCantidad) {
 
     if (settingsEstado) {
       if (modifiersContainer.classList.contains("active")) {
-        settingsContainer.style.marginRight = "15vw";
+        settingsContainer.style.marginRight = "30vh";
       }else{
         settingsContainer.style.marginRight = "0vw";
       }
@@ -7175,14 +7175,6 @@ function setStrokeHamster(hamsterElement) {
 
 
 
-function handleModifiersClick() {
-  setHamsterBackAnimation("dior", "eat", true);
-  setHamsterBackAnimation("coco", "eat", true);
-  setHamsterBackAnimation("biggie", "eat", true);
-}
-
-modifiersInformation.addEventListener("click", handleModifiersClick);
-
 function setHamsterBackAnimation(idHamster, action, moving){
   let thisHamster = document.getElementById(idHamster);
   if(thisHamster.parentElement.id === "hitboxSlowWorld"
@@ -7879,6 +7871,7 @@ function stopDragHamster(e) {
           stopSpecificInterval(currentHamster.id, "energy");
           startDecreasingEnergy(currentHamster.id);
 
+          startPeriodicStatsUpdate(idLogeado);
           resetDragVariables();
         }else{
           //console.log("!originalParent.closest('.wheel')");
@@ -7890,7 +7883,11 @@ function stopDragHamster(e) {
 
           stopSpecificInterval(currentHamster.id, "energy");
           startFillingEnergy(currentHamster.id);
-          checkForNeedFood(currentHamster);
+          startDecreasingStats(currentHamster.id);
+          if (originalParent.id === 'hitboxSlotWorld') {}else{
+            checkForNeedFood(currentHamster);
+          }
+
           resetDragVariables();
         }
         //console.log("Return if wheel ocupate");
@@ -7913,6 +7910,7 @@ function stopDragHamster(e) {
         stopSpecificInterval(currentHamster.id, "energy");
         startDecreasingEnergy(currentHamster.id);
 
+        startPeriodicStatsUpdate(idLogeado);
         resetDragVariables();
         return;
       }
@@ -7928,6 +7926,8 @@ function stopDragHamster(e) {
 
         stopSpecificInterval(currentHamster.id, "energy");
         startFillingEnergy(currentHamster.id);
+        startDecreasingStats(currentHamster.id);
+
         resetDragVariables();
         return;
       }
@@ -7942,7 +7942,9 @@ function stopDragHamster(e) {
 
       stopSpecificInterval(currentHamster.id, "energy");
       startFillingEnergy(currentHamster.id);
+      startDecreasingStats(currentHamster.id);
       checkForNeedFood(currentHamster);
+
       resetDragVariables();
       return;
     }
@@ -7959,6 +7961,7 @@ function stopDragHamster(e) {
       stopSpecificInterval(currentHamster.id, "energy");
       startDecreasingEnergy(currentHamster.id);
 
+      startPeriodicStatsUpdate(idLogeado);
       resetDragVariables();
     }else{
       isResetToContainer = true;
@@ -7966,7 +7969,11 @@ function stopDragHamster(e) {
 
       stopSpecificInterval(currentHamster.id, "energy");
       startFillingEnergy(currentHamster.id);
-      checkForNeedFood(currentHamster);
+      startDecreasingStats(currentHamster.id);
+      if (originalParent.id === 'hitboxSlotWorld') {}else{
+        checkForNeedFood(currentHamster);
+      }
+
       resetDragVariables();
     }
   }
@@ -8288,7 +8295,7 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
         hitbox.id === 'hitboxSlotBuyCoco' ||
         hitbox.id === 'hitboxSlotBuyBiggie'
       ) {
-        currentHamster.style.bottom = '10px';
+        currentHamster.style.bottom = '3px';
       }
     }else{
       currentHamster.style.right = `${rightPercentage}%`;
@@ -8349,7 +8356,7 @@ function posicionarHamsterAlDrop(currentHamster, offsetX, offsetY, hitbox) {
         hitbox.id === 'hitboxSlotBuyCoco' ||
         hitbox.id === 'hitboxSlotBuyBiggie'
       ) {
-        currentHamster.style.bottom = '10px';
+        currentHamster.style.bottom = '3px';
       }
     });
 
@@ -9177,7 +9184,7 @@ buttonV.addEventListener("click", async function (event) {
     currentHamster = document.querySelector(".biggie");
     await descontarMonedas(500, event);
     intentarClonarHamster3Hitbox(currentHamster);
-    resetDragVariables();/*
+    /*
         // Restar el precio y actualizar en la base de datos
         monedasLogeado -= 500;
         // Actualizar el contador de monedas en la interfaz
@@ -9200,7 +9207,6 @@ buttonV.addEventListener("click", async function (event) {
     currentHamster = document.querySelector(".dior");
     await descontarMonedas(500, event);
     intentarClonarHamster3Hitbox(currentHamster);
-    resetDragVariables();
 
   } else if (iconDialogElement.src.includes("iconCocco")) {
     if (monedasLogeado < 500) {
@@ -9221,7 +9227,6 @@ buttonV.addEventListener("click", async function (event) {
     currentHamster = document.querySelector(".coco");
     await descontarMonedas(500, event);
     intentarClonarHamster3Hitbox(currentHamster);
-    resetDragVariables();
 
   }else if (iconDialogElement.src.includes("iconTomato")) {
     if (monedasLogeado < countTomatos2Recive*10) {
@@ -9640,7 +9645,6 @@ async function cargarHamstersDesdeBD() {
 
       switch (contenedor.id) {
         case "hitboxSlotWeel":
-          currentHamster.setAttribute("pos", "");
           isResetToContainer = false;
           currentHamster.style.display = 'flex';
           handleWheelContainer(contenedor, contenedor);
@@ -9648,11 +9652,11 @@ async function cargarHamstersDesdeBD() {
           stopSpecificInterval(currentHamster.id, "energy");
           startDecreasingEnergy(currentHamster.id);
 
-          resetDragVariables(); 
+          startPeriodicStatsUpdate(idLogeado);
+          resetDragVariables();
           break;
 
         case "hitboxSlotWorld":
-          currentHamster.setAttribute("pos", "");
           showTooltipHamsterForce(currentHamster);
           isResetToContainer = false;
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
@@ -9661,6 +9665,8 @@ async function cargarHamstersDesdeBD() {
 
           stopSpecificInterval(currentHamster.id, "energy");
           startFillingEnergy(currentHamster.id);
+          startDecreasingStats(currentHamster.id);
+  
           resetDragVariables();
 
           break;
@@ -9714,7 +9720,6 @@ async function cargarHamstersDesdeBD() {
           break;
 
         default:
-          currentHamster.setAttribute("pos", "");
           isResetToContainer = false;
           showTooltipHamsterForce(currentHamster);
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
@@ -9723,7 +9728,9 @@ async function cargarHamstersDesdeBD() {
 
           stopSpecificInterval(currentHamster.id, "energy");
           startFillingEnergy(currentHamster.id);
+          startDecreasingStats(currentHamster.id);
           checkForNeedFood(currentHamster);
+    
           resetDragVariables();
           
           break;
@@ -9776,13 +9783,19 @@ async function cargarHamstersDesdeBDF(){
       const hamsterEnContenedor = contenedor.querySelector(".hamster");
   
       if (!hamsterEnContenedor) {
-        currentHamster.setAttribute("pos", "");
         isResetToContainer = false;
         showTooltipHamsterForce(currentHamster);
         cloneHamsterToContainer(contenedor, offsetX, offsetY);
         wrapper.style.setProperty('--wheel-speed', '0');
         currentHamster.style.display = 'flex';
+        currentHamster.style.
         actualizarSlotHamster(currentHamster, contenedor);
+        
+        stopSpecificInterval(currentHamster.id, "energy");
+        startFillingEnergy(currentHamster.id);
+        startDecreasingStats(currentHamster.id);
+        checkForNeedFood(currentHamster);
+  
         resetDragVariables();
       }
   
@@ -9975,11 +9988,11 @@ function checkForNeedFood(hamsterEl) {
   // Guardamos el id del intervalo en el propio elemento
   hamsterEl.checkForNeedFoodInterval = setInterval(() => {
     if (!hamsterEl) {
-      console.log("checkForNeedFood return1");
+      //console.log("checkForNeedFood return1");
       return;
     }
     if (!hamsterEl.parentElement.id) {
-      console.log("checkForNeedFood return2");
+      //console.log("checkForNeedFood return2");
       return;
     }
     if (
@@ -9990,7 +10003,7 @@ function checkForNeedFood(hamsterEl) {
       hamsterEl.parentElement.classList.contains("wheel") ||
       hamsterEl.parentElement.id === "filterUnderwater"
     ) {
-      console.log("checkForNeedFood return3");
+      //console.log("checkForNeedFood return3");
       return;
     }
 
@@ -10010,12 +10023,12 @@ function checkForNeedFood(hamsterEl) {
 
     // Solo se actúa si el hunger es menor a 750 y el tooltip muestra un valor >= 1
     if (currentHunger < 700 && Number(tooltip.textContent) >= 1) {
-      console.log("Puede comer");
+      //console.log("Puede comer");
       // La probabilidad será:
-      // - 50% cuando currentHunger es 750,
+      // - 30% cuando currentHunger es 750,
       // - 100% cuando currentHunger es 0,
       // y de forma lineal entre esos extremos.
-      let probability = 0.5 + ((700 - currentHunger) / 700) * 0.5;
+      let probability = 0.3 + ((750 - currentHunger) / 750) * 0.7;
       if (Math.random() < probability) {
         // Ejecutar la animación de comer
         setHamsterBackAnimation(hamsterEl.id, "eat", true);
@@ -10177,15 +10190,20 @@ function fillFullStats(hamsterId){
 
 
 function startPeriodicStatsUpdate(idLogeado) {
+  // Si ya se inició el intervalo, no creamos uno nuevo.
+  if (startPeriodicStatsUpdate.intervalId) {
+    console.log("La actualización periódica ya está en ejecución.");
+    return;
+  }
+
   // Se ejecutará cada 5 segundos
-  setInterval(async () => {
+  startPeriodicStatsUpdate.intervalId = setInterval(async () => {
     // 1) Tomar todos los hamsters del DOM
     const hamsterEls = document.querySelectorAll(".hamster");
     const statsObj = { hamsters: [] };
 
     hamsterEls.forEach((el) => {
       // Identifica el hamsterId por la clase dior, coco, biggie, etc.
-      // Asumiendo solo uno de estos estará presente en su classList
       let hamsterId = "";
       if (el.classList.contains("dior")) {
         hamsterId = "dior";
@@ -10195,21 +10213,20 @@ function startPeriodicStatsUpdate(idLogeado) {
         hamsterId = "biggie";
       }
 
-      // Lee los atributos:
-          const energy = Number.isNaN(Number(el.getAttribute("energy")))
-      ? (console.warn("Fallo al guardar: energy"), 0)
-      : Number(el.getAttribute("energy"));
+      // Lee los atributos y convierte a número
+      const energy = Number.isNaN(Number(el.getAttribute("energy")))
+        ? (console.warn("Fallo al guardar: energy"), 0)
+        : Number(el.getAttribute("energy"));
 
-    const hunger = Number.isNaN(Number(el.getAttribute("hunger")))
-      ? (console.warn("Fallo al guardar: hunger"), 0)
-      : Number(el.getAttribute("hunger"));
+      const hunger = Number.isNaN(Number(el.getAttribute("hunger")))
+        ? (console.warn("Fallo al guardar: hunger"), 0)
+        : Number(el.getAttribute("hunger"));
 
-    const thirst = Number.isNaN(Number(el.getAttribute("thirst")))
-      ? (console.warn("Fallo al guardar: thirst"), 0)
-      : Number(el.getAttribute("thirst"));
+      const thirst = Number.isNaN(Number(el.getAttribute("thirst")))
+        ? (console.warn("Fallo al guardar: thirst"), 0)
+        : Number(el.getAttribute("thirst"));
 
-
-      // Añade al array
+      // Añade los datos al array
       statsObj.hamsters.push({
         id: hamsterId,
         energy,
@@ -10218,7 +10235,7 @@ function startPeriodicStatsUpdate(idLogeado) {
       });
     });
 
-    // 2) Enviar con UNA sola petición
+    // 2) Enviar con UNA sola petición a la base de datos
     await setHamsterStatsInDB(idLogeado, statsObj);
     //console.log('%c Actualización global de stats en BD: %o', 'background: blue; color: white; padding: 4px;', statsObj);
   }, 5000);
@@ -10358,6 +10375,8 @@ function startDecreasingStats(hamsterId) {
       decrementThirst(hamsterId, 1.11);
     }, 1000);
   }
+
+  startPeriodicStatsUpdate(idLogeado);
 }
 
 // Función para asignar el intervalo de energía
@@ -10446,7 +10465,6 @@ async function updateStatsHamsters() {
       } else {
         // 2.5) Si está fuera de la tienda, iniciamos decrementos y la actualización periódica
         startDecreasingStats(hamsterId);  // Inicia todos los intervalos para el hamster con id
-        startPeriodicStatsUpdate(idLogeado);
       }
     });
   }, 2000);

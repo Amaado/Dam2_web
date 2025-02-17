@@ -7,16 +7,16 @@
 
 @font-face {
     font-family: "kemco";
-    src: url("../img/Kemco Pixel Bold.ttf") format("woff2"),
-      url("../img/Kemco Pixel Bold.ttf") format("woff");
+    src: url("../fonts/Kemco Pixel Bold.ttf") format("woff2"),
+      url("../fonts/Kemco Pixel Bold.ttf") format("woff");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: "dogica";
-    src: url("../img/dogica.ttf") format("woff2"),
-      url("../img/dogicabold.ttf") format("woff");
+    src: url("../fonts/dogica.ttf") format("woff2"),
+      url("../fonts/dogicabold.ttf") format("woff");
     font-weight: normal;
     font-style: normal;
 }

@@ -28,32 +28,40 @@
 
 @font-face {
   font-family: "verti";
-  src: url("img/verti.ttf") format("woff2"), url("img/verti.ttf") format("woff");
+  src: url("fonts/verti.ttf") format("woff2"), url("fonts/verti.ttf") format("woff");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "register";
-  src: url("img/Login.ttf") format("woff2"), url("img/Login.ttf") format("woff");
+  src: url("fonts/Login.ttf") format("woff2"), url("fonts/Login.ttf") format("woff");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "kemco";
-  src: url("img/Kemco Pixel Bold.ttf") format("woff2"),
-    url("img/Kemco Pixel Bold.ttf") format("woff");
+  src: url("fonts/Kemco Pixel Bold.ttf") format("woff2"),
+    url("fonts/Kemco Pixel Bold.ttf") format("woff");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "geek";
-  src: url("img/geek.ttf") format("woff2"), url("img/geek.ttf") format("woff");
+  src: url("fonts/geek.ttf") format("woff2"), url("fonts/geek.ttf") format("woff");
   font-weight: normal;
   font-style: normal;
 }
+
+@font-face {
+  font-family: "pixelmix";
+  src: url("fonts/pixelmix.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 
 * {
   padding: 0;
@@ -1461,7 +1469,7 @@ div.img img {
 
 #modifiersContainer {
   position: fixed;
-  width: 15vw;
+  width: 30vh;
   height: 100vh;
   align-items: center;
   justify-content: top;
@@ -1509,13 +1517,13 @@ div.img img {
   position: fixed;
   top: calc(50vh - 20px);
   right: 12vw;
-  transform: rotate(90deg) rotateX(0deg) translateY(-11vw);
+  transform: rotate(90deg) rotateX(0deg) translateY(-19vh);
   transition: transform 0.75s ease;
   z-index: 2;
 }
 
 #flechaaModifiers.active {
-  transform: rotate(90deg) rotateX(180deg) translateY(-5vw);
+  transform: rotate(90deg) rotateX(180deg) translateY(-10vh);
 }
 
 #flechaHitbloxPlusModifiers {
@@ -1544,14 +1552,14 @@ div.img img {
   z-index: 0;
   pointer-events: all;
   /*background-color: rgba(77, 77, 185, 0.596);*/
-  right: 100vw;
+  right: 102vw;
   top: 0px;
   z-index: 10;
 }
 
 
 #flechaHitbloxPlusModifiers2.active {
-  right: 20vw;
+  right: 35vh;
 }
 
 #flechaHitbloxPlusModifiers3 {
@@ -1563,7 +1571,7 @@ div.img img {
   z-index: 0;
   pointer-events: all;
   /*background-color: rgba(77, 185, 140, 0.596);*/
-  right: 100vw;
+  right: 102vw;
   bottom: 0px;
   z-index: 10;
 
@@ -1571,7 +1579,7 @@ div.img img {
 
 
 #flechaHitbloxPlusModifiers3.active {
-  right: calc(420px + 15vw);
+  right: calc(420px + 28vh);
 }
 
 #menuLabelModifiers {
@@ -1943,6 +1951,14 @@ div.img img {
   margin-left: -3px;
 }
 
+.sliceItIcon{
+  position: absolute;
+  top: 22px;
+  left: 23px;
+  width: 90px;
+  height: auto;
+}
+
 .infoLogo{
   width: 30px;
   height: auto;
@@ -1956,37 +1972,42 @@ div.img img {
   filter: brightness(0) saturate(100%) invert(37%) sepia(52%) saturate(525%) hue-rotate(318deg) brightness(108%) contrast(102%);
 }
 .infoLogo.tomatoSliceContainerHitboxLogo{
-  filter: brightness(0) saturate(100%) invert(35%) sepia(14%) saturate(2863%) hue-rotate(316deg) brightness(94%) contrast(89%);
+  filter: brightness(0) saturate(100%) invert(35%) sepia(14%) saturate(2863%) hue-rotate(316deg) brightness(85%) contrast(89%);
 }
 .infoLogo.tomatoContainerHitboxLogo{
   margin-top: -20px;
 }
 
 .infoTextUsage{
-  font-family: verti;
-  font-size: 18px;
-  width: 360px;
-  margin-top: 25px;
+  font-family: pixelmix;
+  font-size: 14px;
+  width: 380px;
+  margin-top: 15px;
+
   text-align: left;
+
   letter-spacing: 3px;
-  line-height: 1.2;
+  line-height: 2.2;
 }
 
 .infoText{
-  font-family: verti;
-  font-size: 18px;
-  width: 310px;
-  margin-top: 85px;
+  font-family: pixelmix;
+  font-size: 14px;
+  width: 350px;
+  margin-top: 70px;
+
   text-align: left;
+
   letter-spacing: 3px;
-  line-height: 1.2;
+  line-height: 1.7;
 }
 .tomatoContainer .infoText{
-  margin-top: 105px;
+  margin-top: 150px;
   width: 350px;
+  line-height: 2;
 }
 .tomatoSliceContainer .infoText{
-  margin-top: 20px;
+  margin-top: 30px;
   width: 350px;
 }
 
@@ -2107,7 +2128,7 @@ div.img img {
   position: relative;
   display: flex;
   min-height: 2px;
-  width: 80%;
+  width: 85%;
   background-color: #bfd4e9;
   margin-top: 95px;
 }
@@ -6196,7 +6217,7 @@ canvas {
   display: flex;
   flex-direction: row;
   gap: 3vh;
-  width: 90%;
+  width: 96%;
 }
 
 
