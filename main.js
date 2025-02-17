@@ -10712,20 +10712,14 @@ startRandomGifRefreshIndividually();
 
 
 
-  //TODO !: hacer que el hamster reste enetrgía entra en la rueda y sume cuando sale de la rueda 
-  //TODO !: hacer que se empicen a restar Stats cuando compras un hamster
-  //TODO !: sumar monedas con el giro de la rueda
   //TODO !: ocultar y guardar caja -> congelarla temporalmente
+  //TODO !: fondos en las skinsCc cuando estén activas
+  //TODo !: skins animadas en la portada
 
-  //TODO: arreglar css de los sliders cuando llegan a 0...
-  //TODO: crear sliceTomatosContainer
   //TODO: posibilidad de mover los containers de tomates/sliceTomates a dentro de Modifiers (opción en modifiersSettings)
-  //TODO: fondos en las skinsCc cuando estén activas
 
   //TODOmini: infoButtonModifiersContainer: tutorial
-  //TODOmini: hover en coinsContainer && tomatosContainer && sliceTomatosContainer
   
-  //TOCREATE: skins animadas en la portada
   //TOCREATE: rareza animada en la portada
   //TOCREATE: manera para ordenar skins
   //TOCREATE: cerrar grocery por las noches (+posibilidad de tocar al timbre)
