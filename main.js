@@ -4408,7 +4408,7 @@ async function unlockAnimation(
 
 
 
-  const scrollThreshold = 0.5;
+  const scrollThreshold = 0;
   const startPosY = 100;
   const endPosY = 0;
 
@@ -6694,6 +6694,7 @@ function loadTooltipSettings() {
   // Actualizar la visibilidad de los tooltips en base a los valores cargados
   updateTooltipVisibility();
   updateContextMenu(); // Actualizar el menú contextual al cargar
+  updateContextMenuFilter();
 }
 
 // Función para guardar los valores en localStorage
@@ -6814,6 +6815,39 @@ function updateContextMenu() {
   });
 }
 
+function updateContextMenuFilter() {
+  const contextMenuItems = document.querySelectorAll('.contextMenuFil li');
+  
+  contextMenuItems.forEach((item) => {
+    // Obtenemos el texto actual sin espacios extra
+    const itemText = item.textContent.trim();
+
+    // Opción 1: Mostrar etiquetas (tooltips de nombres)
+    if (itemText.includes("Mostrar etiquetas") || itemText.includes("✔ Mostrar etiquetas")) {
+      if (checkboxTooltipsNamesShown) {
+        item.textContent = "✔ Mostrar etiquetas";
+      } else {
+        item.textContent = "Mostrar etiquetas";
+      }
+    }
+    // Opción 2: Mostrar estadísticas en las etiquetas (tooltips de estados)
+    else if (itemText.includes("Mostrar estadísticas en las etiquetas") || itemText.includes("✔ Mostrar estadísticas en las etiquetas")) {
+      if (checkboxTooltipsStatesShown) {
+        item.textContent = "✔ Mostrar estadísticas en las etiquetas";
+      } else {
+        item.textContent = "Mostrar estadísticas en las etiquetas";
+      }
+    }
+    // Opción 3: Ayuda nombre de venana para warnings (opción general)
+    else if (itemText.includes("Ayuda icono de venana para warnings")) {
+      if (helpIconWarnings) {
+        item.textContent = "✔ Ayuda icono de venana para warnings";
+      } else {
+        item.textContent = "Ayuda icono de venana para warnings";
+      }
+    }
+  });
+}
 
 
 
@@ -7421,7 +7455,7 @@ function modifyFood(indexStr, tooltip, action){
   const currentTooltipValue = Number(tooltip.textContent);
   const currentTomatoSliceValue = Number(tomatoSliceLabel.textContent);
 
-  if (currentTooltipValue <= 10 && currentTooltipValue >= 0) {
+  if (currentTooltipValue <= 10 && currentTooltipValue >= 0 && currentTomatoSliceValue > 0) {
     let newTooltipValue;
     if (action === "+") {
       if (currentTooltipValue >= 10) { return; }
@@ -8567,24 +8601,24 @@ const showContextMenuGorcery = (event) => {
   gorceryContextMenu.style.top = `${event.clientY}px`;
   gorceryContextMenu.style.left = `${event.clientX}px`;
   gorceryContextMenu.style.display = 'block';
+  filterContContextMenu.style.display = 'none';
 };
 
 const showContextMenuModifiersSettings = (event) => {
-event.preventDefault(); // Evita el menú contextual predeterminado
-gorceryContextMenu.style.display = 'none';
-modifiersSettingsContextMenu.style.display = 'block';
+  event.preventDefault(); // Evita el menú contextual predeterminado
+  gorceryContextMenu.style.display = 'none';
+  filterContContextMenu.style.display = 'none';
+  modifiersSettingsContextMenu.style.display = 'block';
 };
 
-// Mostrar el menú para "grocery" con clic derecho
 gorceryHiboxAreaContextMenu.addEventListener('contextmenu', (event) => {
-showContextMenuGorcery(event);
+  showContextMenuGorcery(event);
 });
 
-// Mostrar el menú para "modifiersSettings" con clic izquierdo
 modifiersSettingsHiboxAreaContextMenu.addEventListener('click', (event) => {
-//console.log("modifiersSettingsHiboxAreaContextMenu.addEventListener('click'"); 
-showContextMenuModifiersSettings(event);
+  showContextMenuModifiersSettings(event);
 });
+
 
 // Ocultar los menús cuando se hace clic en cualquier lugar de la página
 document.addEventListener('click', (event) => {
@@ -8598,6 +8632,220 @@ document.addEventListener('click', (event) => {
   gorceryContextMenu.style.display = 'none';
   modifiersSettingsContextMenu.style.display = 'none';
 });
+
+
+
+const filterCont = document.getElementById("filterCont");
+const filterContSelected = document.getElementById("filterContSelected");
+const filterContContextMenu = document.getElementById("filterContContextMenu");
+const flechaComboBox = document.querySelector(".flechaComboBox");
+const filterContImg = document.getElementById("filterContImg");
+const skinsSearch = document.getElementById("skinsSearch");
+
+filterCont.addEventListener("click", (event) => {
+  event.preventDefault();
+  if (event.target.tagName === "LI") return;
+  
+  if (filterContContextMenu.style.display === "block") {
+    filterContContextMenu.style.display = "none";
+    flechaComboBox.classList.remove("rotate");
+  } else {
+    filterContContextMenu.style.display = "block";
+    flechaComboBox.classList.add("rotate");
+  }
+});
+
+
+function simulateStartFilter(){
+  const options = document.querySelectorAll("#filterContContextMenu li");
+  
+  // Busca el LI que contenga "Rareza ⭡"
+  const targetOption = Array.from(options).find(option =>
+    option.textContent.trim().includes("Rareza ⭡")
+  );
+  
+  if (targetOption) {
+    // Simula un clic en ese elemento
+    targetOption.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+  }
+}
+setTimeout(() => {
+  simulateStartFilter();
+}, 100);
+
+filterContContextMenu.addEventListener("click", (event) => {
+  if (event.target.tagName === 'LI') {
+    filterContSelected.textContent = event.target.textContent;
+
+    if (event.target.textContent.includes("Precio ⭣")) {
+      filterContImg.src="img/iconCoin.png";
+    } else if (event.target.textContent.includes("Precio ⭡")) {
+      filterContImg.src="img/iconCoin.png";
+    } else if (event.target.textContent.includes("Rareza ⭣")) {
+      filterContImg.src="img/iconTier.png";
+    } else if (event.target.textContent.includes("Rareza ⭡")) {
+      filterContImg.src="img/iconTier.png";
+    } else if (event.target.textContent.includes("Fecha ⭣")) {
+      filterContImg.src="img/iconDate.png";
+    } else if (event.target.textContent.includes("Fecha ⭡")) {
+      filterContImg.src="img/iconDate.png";
+    } else if (event.target.textContent.includes("Grupo ⭣")) {
+      filterContImg.src="img/iconGroup.png";
+    } else if (event.target.textContent.includes("Grupo ⭡")) {
+      filterContImg.src="img/iconGroup.png";
+    }
+
+    // Determina el criterio y el orden basándote en el texto de la opción
+    let criteria, order;
+    if (event.target.textContent.includes("Precio")) {
+      criteria = "Precio";
+    } else if (event.target.textContent.includes("Rareza")) {
+      criteria = "Rareza";
+    } else if (event.target.textContent.includes("Fecha")) {
+      criteria = "Fecha";
+    } else if (event.target.textContent.includes("Grupo")) {
+      criteria = "Grupo";
+    }
+    // Suponiendo que "⭣" indica orden descendente y "⭡" indica ascendente:
+    order = event.target.textContent.includes("⭣") ? "desc" : "asc";
+
+    // Llamamos a la función auxiliar para ordenar las skins
+    sortSkins(criteria, order);
+
+    filterContContextMenu.style.display = "none";
+    flechaComboBox.classList.remove("rotate");
+  }
+});
+
+
+skinsSearch.addEventListener('input', function() {
+  // Función auxiliar para quitar todos los espacios y pasar a minúsculas
+  const cleanString = (str) => str.replace(/\s+/g, '').toLowerCase();
+  
+  // Obtenemos la cadena de búsqueda "limpia"
+  const query = cleanString(this.textContent);
+  
+  // Seleccionamos todos los contenedores de skins
+  const skinContainers = document.querySelectorAll('.skinContainer');
+  
+  skinContainers.forEach((skin) => {
+    let match = false;
+    
+    // Comprobamos el título de la skin
+    const titleEl = skin.querySelector('.tituloSkin');
+    if (titleEl) {
+      const titleText = cleanString(titleEl.textContent);
+      if (titleText.includes(query)) {
+        match = true;
+      }
+    }
+    
+    // Comprobamos también el atributo "skinSearch" del contenedor
+    const skinSearchAttr = skin.getAttribute('skinSearch');
+    if (skinSearchAttr) {
+      const skinSearchText = cleanString(skinSearchAttr);
+      if (skinSearchText.includes(query)) {
+        match = true;
+      }
+    }
+    
+    // Si coincide en alguno, se muestra; si no, se oculta.
+    skin.style.display = match ? "" : "none";
+  });
+});
+
+
+document.addEventListener("click", (event) => {
+  if (filterCont.contains(event.target) || filterContSelected.contains(event.target)) {
+    if(event.target.tagName === 'LI'){
+      filterContContextMenu.style.display = "none";
+      flechaComboBox.classList.remove("rotate");
+    }
+    return;
+  }else{
+    filterContContextMenu.style.display = "none";
+    flechaComboBox.classList.remove("rotate");
+  }
+});
+
+
+function sortSkins(criteria, order) {
+  const skinsContainer = document.getElementById("skinsContainer");
+  // Convertimos la NodeList en array para poder ordenarlo
+  const skinElements = Array.from(skinsContainer.querySelectorAll('.skinContainer'));
+
+  skinElements.sort((a, b) => {
+    let aValue, bValue;
+    
+    if (criteria === "Precio") {
+      // Primero comprobamos si el título contiene "?" para asignarle el mayor precio.
+      const titleA = a.querySelector(".tituloSkin").textContent.trim();
+      const titleB = b.querySelector(".tituloSkin").textContent.trim();
+      
+      if (titleA.includes('?')) {
+        aValue = Infinity;
+      } else {
+        aValue = a.querySelector(".priceNormal") 
+          ? a.querySelector(".priceNormal").textContent.trim() 
+          : a.querySelector(".price").textContent.trim();
+        aValue = aValue.toUpperCase() === "FREE" ? 0 : parseFloat(aValue);
+      }
+      
+      if (titleB.includes('?')) {
+        bValue = Infinity;
+      } else {
+        bValue = b.querySelector(".priceNormal") 
+          ? b.querySelector(".priceNormal").textContent.trim() 
+          : b.querySelector(".price").textContent.trim();
+        bValue = bValue.toUpperCase() === "FREE" ? 0 : parseFloat(bValue);
+      }
+      
+    } else if (criteria === "Rareza") {
+      // Obtenemos la rareza, pero si el título contiene "?", asignamos el valor máximo.
+      const titleA = a.querySelector(".tituloSkin").textContent.trim();
+      const titleB = b.querySelector(".tituloSkin").textContent.trim();
+      const tierTextA = a.querySelector(".tier").textContent.trim();
+      const tierTextB = b.querySelector(".tier").textContent.trim();
+      
+      const tierOrder = { "Common": 1, "Rare": 2, "Epic": 3, "Legendary": 4 };
+      
+      aValue = titleA.includes('?') ? Infinity : (tierOrder[tierTextA] || 0);
+      bValue = titleB.includes('?') ? Infinity : (tierOrder[tierTextB] || 0);
+      
+    } else if (criteria === "Fecha") {
+      // Obtenemos la fecha desde el elemento "releaseDate"
+      // Se asume el formato "Released: dd/mm/yyyy"
+      const aDateStr = a.querySelector(".releaseDate").textContent.replace("Released:", "").trim();
+      const bDateStr = b.querySelector(".releaseDate").textContent.replace("Released:", "").trim();
+      const parseDate = (str) => {
+        const parts = str.split("/");
+        return new Date(parts[2], parts[1] - 1, parts[0]).getTime();
+      };
+      aValue = parseDate(aDateStr);
+      bValue = parseDate(bDateStr);
+      
+    } else if (criteria === "Grupo") {
+      // Usamos el contenido del elemento con clase "tituloSkin" para ordenar alfabéticamente
+      aValue = a.querySelector(".tituloSkin").textContent.trim().toLowerCase();
+      bValue = b.querySelector(".tituloSkin").textContent.trim().toLowerCase();
+    }
+    
+    let comparison = 0;
+    if (aValue < bValue) {
+      comparison = -1;
+    } else if (aValue > bValue) {
+      comparison = 1;
+    }
+    // Si el orden es ascendente, devolvemos comparison, si es descendente, lo invertimos
+    return order === "asc" ? comparison : -comparison;
+  });
+
+  // Reinsertamos los elementos ordenados en el contenedor
+  skinElements.forEach(el => skinsContainer.appendChild(el));
+}
+
+
+
 
 // Manejar clics en las opciones de los menús
 gorceryContextMenu.addEventListener('click', (event) => {
