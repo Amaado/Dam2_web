@@ -335,6 +335,9 @@ body {
   mask-position: center;
   
   z-index: -1;
+
+  will-change: transform, background-position;
+  transform: translateZ(0);
 }
 
 #fondoGalaxyGreen {

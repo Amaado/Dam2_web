@@ -4408,6 +4408,7 @@ async function unlockAnimation(
 
 
 
+
   const scrollThreshold = 0;
   const startPosY = 100;
   const endPosY = 0;
@@ -8711,6 +8712,7 @@ filterContContextMenu.addEventListener("click", (event) => {
 
     // Llamamos a la función auxiliar para ordenar las skins
     sortSkins(criteria, order);
+    updateBackgroundPositionGalaxyPortada();
 
     filterContContextMenu.style.display = "none";
     flechaComboBox.classList.remove("rotate");
@@ -8836,8 +8838,23 @@ function sortSkins(criteria, order) {
     } else if (aValue > bValue) {
       comparison = 1;
     }
-    // Si el orden es ascendente, devolvemos comparison, si es descendente, lo invertimos
-    return order === "asc" ? comparison : -comparison;
+    // Si el orden es ascendente, usamos 'comparison', si es descendente lo invertimos.
+    comparison = order === "asc" ? comparison : -comparison;
+
+    // Si los valores son iguales, se aplica la subordenación por skinId de forma ascendente
+    if (comparison === 0) {
+      const skinIdA = parseInt(a.getAttribute("skinId"), 10);
+      const skinIdB = parseInt(b.getAttribute("skinId"), 10);
+      
+      if (skinIdA < skinIdB) {
+        comparison = -1;
+      } else if (skinIdA > skinIdB) {
+        comparison = 1;
+      }
+      // En caso de igualdad completa, comparison seguirá siendo 0.
+    }
+    
+    return comparison;
   });
 
   // Reinsertamos los elementos ordenados en el contenedor
