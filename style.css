@@ -289,6 +289,30 @@ body {
   transform: scale(1.5);
 }
 
+#customCursorReflect {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: width 0.1s ease-in-out, height 0.1s ease-in-out,
+    transform 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease,
+    margin-top 0.5s ease;
+  z-index: 199;
+  transform: scale(0.85) translate(10px, 10px);
+  filter: url(#pixelate);
+   image-rendering: pixelated;
+  visibility: visible;
+  opacity: 1%;
+
+  mask: url(#myMask);
+  -webkit-mask: url(#myMask);
+}
+
+#customCursorReflect.clicked {
+  transform: scale(1.35) translate(10px, 10px);
+}
+
 #fondoGalaxy {
   width: 100vw; /* Anchura completa de la ventana */
   height: 100vh; /* Altura completa de la ventana */
@@ -4586,6 +4610,18 @@ canvas {
   height: auto;
   transform: rotateY(180deg);
 }
+/**/
+.hamster .exhaustSingleGif{
+  display: none;
+}
+.hamster.exhaustSingle .exhaustSingleGif{
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: -4px;
+  width: 30px;
+  height: auto;
+}
 .hamster.exhaust.tong .bum.puff.pix:before{
   width: 6px;
   height: 2px;
@@ -4838,6 +4874,18 @@ canvas {
   top: -4px;
   z-index: 0;
   filter: drop-shadow(2px 5px 2px rgba(0, 0, 0, 0.4));
+}
+.sombraTubo{
+  position: absolute;
+  right: 98px;
+  bottom: 10px;
+  width: 40px;
+  height: 20px;
+  background-color: #00000050;
+  border-radius: 100%;
+  transform: scaleY(0.4);
+  filter: blur(5px);
+  z-index: -10;
 }
 #tuboGradientUp{
   position: absolute;

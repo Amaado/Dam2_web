@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   var cursor = document.getElementById("customCursor");
   var cursorPurpleish = document.getElementById("customCursorPurpleish");
+  var cursorReflect = document.getElementById("customCursorReflect");
   const fondo = document.getElementById("fondoGalaxy");
   const fondoGalaxySkin = document.getElementById("fondoGalaxySkin");
   const fondoGreen = document.getElementById("fondoGalaxyGreen");
@@ -490,6 +491,8 @@ function updateBubbles() {
         cursor.src =
           cursorSrc ||
           (theme === "day" ? DEFAULT_DAY_CURSOR : DEFAULT_NIGHT_CURSOR);
+          
+        cursorReflect.src = insertReflejoBeforeExtension(cursor.src);
         const cursorPurpleishSrc = insertPurpleishBeforeExtension(cursor.src);
 
         if (cursorPurpleishSrc.includes("cccc_krillin") || cursorPurpleishSrc.includes("cccc_jefeEstudios")) {
@@ -509,20 +512,38 @@ function updateBubbles() {
     handleSpecialCursor(cursorSrc, theme);
   }
 
-  function insertPurpleishBeforeExtension(filename) {
+  function insertReflejoBeforeExtension(filename) {
     const lastDotIndex = filename.lastIndexOf(".");
     if (lastDotIndex === -1) {
-      // Si no hay extensión, agregamos 'Purpleish' al final
-      return filename + "Purpleish";
+      // Si no hay extensión, agregamos 'Reflejo' al final
+      return filename + "Reflejo";
     } else {
-      // Insertamos 'Purpleish' antes de la extensión
+      // Insertamos 'Reflejo' antes de la extensión
       return (
         filename.substring(0, lastDotIndex) +
-        "Purpleish" +
+        "Reflejo" +
         filename.substring(lastDotIndex)
       );
     }
   }
+
+  function insertPurpleishBeforeExtension(filename) {
+    // Si el nombre contiene "Reflejo.", reemplázalo por "Purpleish."
+    if (filename.includes("Reflejo.")) {
+      return filename.replace("Reflejo.", "Purpleish.");
+    }
+    
+    // Si no se encuentra "Reflejo.", busca el último punto para ubicar la extensión
+    const lastDotIndex = filename.lastIndexOf('.');
+    if (lastDotIndex === -1) {
+      // No hay extensión, se añade "Purpleish" al final
+      return filename + "Purpleish";
+    } else {
+      // Se inserta "Purpleish" antes de la extensión
+      return filename.substring(0, lastDotIndex) + "Purpleish" + filename.substring(lastDotIndex);
+    }
+  }
+
 
   // Función para guardar la selección del cursor en la base de datos y en localStorage
   async function saveCursorSelection(idLogeado, theme, cursorSrc) {
@@ -721,6 +742,7 @@ function updateBubbles() {
 
       if (cursor && cursorPurpleish) {
         cursor.src = dayCursorSrc;
+        cursorReflect.src = insertReflejoBeforeExtension(dayCursorSrc);
         if (dayCursorSrc.includes("cccc_krillin") || dayCursorSrc.includes("cccc_jefeEstudios")) {
           cursorPurpleish.style.display = "none";
         }else{
@@ -791,6 +813,7 @@ function updateBubbles() {
 
       if (cursor && cursorPurpleish) {
         cursor.src = nightCursorSrc;
+        cursorReflect.src = insertReflejoBeforeExtension(nightCursorSrc);
         if (nightCursorSrc.includes("cccc_krillin") || nightCursorSrc.includes("cccc_jefeEstudios")) {
           cursorPurpleish.style.display = "none";
         }else{
@@ -3899,6 +3922,7 @@ async function unlockAnimation(
       soloInicio++;
       if (soloInicio == 1) {
         cursor.style.opacity = "100%";
+        cursorReflect.style.opacity = "100%";
       }
 
       // Cambiar la posición para centrar el cursor
@@ -3907,6 +3931,8 @@ async function unlockAnimation(
       const cursorPaintSizeY = 218;
       cursor.style.left = e.clientX - cursorSize / 2 + "px"; // Centrar en X
       cursor.style.top = e.clientY - cursorSize / 2 + "px"; // Centrar en Y
+      cursorReflect.style.left = e.clientX - cursorSize / 2 + "px"; // Centrar en X
+      cursorReflect.style.top = e.clientY - cursorSize / 2 + "px"; // Centrar en Y
       cursorPurpleish.style.left = e.clientX - cursorSize / 2 + "px"; // Centrar en X
       cursorPurpleish.style.top = e.clientY - cursorSize / 2 + "px"; // Centrar en Y
       cursorPaint.style.left = e.clientX - cursorPaintSizeX / 2 + "px";
@@ -3921,6 +3947,7 @@ async function unlockAnimation(
 
     document.addEventListener("mousedown", function () {
       cursor.classList.add("clicked");
+      cursorReflect.classList.add("clicked");
       cursorPurpleish.classList.add("clicked");
       if(checkboxland){
         checkboxland.classList.add("clicked");
@@ -3929,6 +3956,7 @@ async function unlockAnimation(
 
     document.addEventListener("mouseup", function () {
       cursor.classList.remove("clicked");
+      cursorReflect.classList.remove("clicked");
       cursorPurpleish.classList.remove("clicked");
       if(checkboxland){
         checkboxland.classList.remove("clicked");
@@ -4075,7 +4103,10 @@ async function unlockAnimation(
     }
     if (!cursorSrc.includes("cccc_galaxy")) {
       cursor.style.opacity = "100%";
+      cursorReflect.style.opacity = "100%";
       cursor.style.transition =
+        "width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease, margin-top 0.5s ease";
+      cursorReflect.style.transition =
         "width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease, margin-top 0.5s ease";
       fondo.style.display = "none";
       fondoGreen.style.display = "none";
@@ -4094,6 +4125,7 @@ async function unlockAnimation(
     }
     if (!cursorSrc.includes("cccc_checkbox")) {
       cursor.style.display = "block";
+      cursorReflect.style.display = "block";
       cursorPurpleish.style.display = "block";
       checkboxland.style.display = "none";
       checkboxlandBackground.style.display = "none";
@@ -4290,6 +4322,7 @@ async function unlockAnimation(
     /* SKIN GALAXY */
     if (cursorSrc.includes("cccc_galaxy")) {
       cursor.src = "img/cursors/cccc_galaxy.webp";
+      cursorReflect.src = "img/cursors/cccc_galaxyReflejo.webp";
       cursor.style.opacity = "70%";
       fondo.style.display = "block";
       fondo.src = "img/fondo.gif";
@@ -5343,6 +5376,8 @@ function resetPag() {
     } else {
       cursor.style.marginLeft = "0px";
       cursor.style.marginTop = "0px";
+      cursorReflect.style.marginLeft = "0px";
+      cursorReflect.style.marginTop = "0px";
       cursorPurpleish.style.marginLeft = "0px";
       cursorPurpleish.style.marginTop = "0px";
       fondo.style.marginLeft = "0px";
@@ -5625,6 +5660,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/0.png";
           cursor.style.marginLeft = "50px";
           cursor.style.marginTop = "50px";
+          cursorReflect.style.marginLeft = "50px";
+          cursorReflect.style.marginTop = "50px";
           cursorPurpleish.style.marginLeft = "50px";
           cursorPurpleish.style.marginTop = "50px";
           fondo.style.marginLeft = "50px";
@@ -5638,6 +5675,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/1.png";
           cursor.style.marginLeft = "53.3px";
           cursor.style.marginTop = "53.3px";
+          cursorReflect.style.marginLeft = "53.3px";
+          cursorReflect.style.marginTop = "53.3px";
           cursorPurpleish.style.marginLeft = "53.3px";
           cursorPurpleish.style.marginTop = "53.3px";
           fondo.style.marginLeft = "53.3px";
@@ -5651,6 +5690,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/2.png";
           cursor.style.marginLeft = "56.6px";
           cursor.style.marginTop = "56.6px";
+          cursorReflect.style.marginLeft = "56.6px";
+          cursorReflect.style.marginTop = "56.6px";
           cursorPurpleish.style.marginLeft = "56.6px";
           cursorPurpleish.style.marginTop = "56.6px";
           fondo.style.marginLeft = "56.6px";
@@ -5664,6 +5705,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/3.png";
           cursor.style.marginLeft = "60px";
           cursor.style.marginTop = "60px";
+          cursorReflect.style.marginLeft = "60px";
+          cursorReflect.style.marginTop = "60px";
           cursorPurpleish.style.marginLeft = "60px";
           cursorPurpleish.style.marginTop = "60px";
           fondo.style.marginLeft = "60px";
@@ -5677,6 +5720,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/4.png";
           cursor.style.marginLeft = "63.3px";
           cursor.style.marginTop = "63.3px";
+          cursorReflect.style.marginLeft = "63.3px";
+          cursorReflect.style.marginTop = "63.3px";
           cursorPurpleish.style.marginLeft = "63.3px";
           cursorPurpleish.style.marginTop = "63.3px";
           fondo.style.marginLeft = "63.3px";
@@ -5690,6 +5735,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/5.png";
           cursor.style.marginLeft = "66.6px";
           cursor.style.marginTop = "66.6px";
+          cursorReflect.style.marginLeft = "66.6px";
+          cursorReflect.style.marginTop = "66.6px";
           cursorPurpleish.style.marginLeft = "66.6px";
           cursorPurpleish.style.marginTop = "66.6px";
           fondo.style.marginLeft = "66.6px";
@@ -5703,8 +5750,10 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/6.png";
           cursor.style.marginLeft = "70px";
           cursor.style.marginTop = "70px";
-          cursorPurpleish.style.marginLeft = "70px";
-          cursorPurpleish.style.marginTop = "70px";
+          cursor.style.marginLeft = "70px";
+          cursor.style.marginTop = "70px";
+          cursorReflect.style.marginLeft = "70px";
+          cursorReflect.style.marginTop = "70px";
           fondo.style.marginLeft = "70px";
           fondo.style.marginTop = "70px";
           fondoGreen.style.marginLeft = "70px";
@@ -5716,6 +5765,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/7.png";
           cursor.style.marginLeft = "73.3px";
           cursor.style.marginTop = "73.3px";
+          cursorReflect.style.marginLeft = "73.3px";
+          cursorReflect.style.marginTop = "73.3px";
           cursorPurpleish.style.marginLeft = "73.3px";
           cursorPurpleish.style.marginTop = "73.3px";
           fondo.style.marginLeft = "73.3px";
@@ -5729,6 +5780,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/8.png";
           cursor.style.marginLeft = "76.6px";
           cursor.style.marginTop = "76.6px";
+          cursorReflect.style.marginLeft = "76.6px";
+          cursorReflect.style.marginTop = "76.6px";
           cursorPurpleish.style.marginLeft = "76.6px";
           cursorPurpleish.style.marginTop = "76.6px";
           fondo.style.marginLeft = "76.6px";
@@ -5742,6 +5795,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/9.png";
           cursor.style.marginLeft = "80px";
           cursor.style.marginTop = "80px";
+          cursorReflect.style.marginLeft = "80px";
+          cursorReflect.style.marginTop = "80px";
           cursorPurpleish.style.marginLeft = "80px";
           cursorPurpleish.style.marginTop = "80px";
           fondo.style.marginLeft = "80px";
@@ -5755,6 +5810,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/10.png";
           cursor.style.marginLeft = "83.3px";
           cursor.style.marginTop = "83.3px";
+          cursorReflect.style.marginLeft = "83.3px";
+          cursorReflect.style.marginTop = "83.3px";
           cursorPurpleish.style.marginLeft = "83.3px";
           cursorPurpleish.style.marginTop = "83.3px";
           fondo.style.marginLeft = "83.3px";
@@ -5768,6 +5825,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/11.png";
           cursor.style.marginLeft = "86.6px";
           cursor.style.marginTop = "86.6px";
+          cursorReflect.style.marginLeft = "86.6px";
+          cursorReflect.style.marginTop = "86.6px";
           cursorPurpleish.style.marginLeft = "86.6px";
           cursorPurpleish.style.marginTop = "86.6px";
           fondo.style.marginLeft = "86.6px";
@@ -5781,6 +5840,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/12.png";
           cursor.style.marginLeft = "90px";
           cursor.style.marginTop = "90px";
+          cursorReflect.style.marginLeft = "90px";
+          cursorReflect.style.marginTop = "90px";
           cursorPurpleish.style.marginLeft = "90px";
           cursorPurpleish.style.marginTop = "90px";
           fondo.style.marginLeft = "90px";
@@ -5794,6 +5855,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/13.png";
           cursor.style.marginLeft = "93.3px";
           cursor.style.marginTop = "93.3px";
+          cursorReflect.style.marginLeft = "93.3px";
+          cursorReflect.style.marginTop = "93.3px";
           cursorPurpleish.style.marginLeft = "93.3px";
           cursorPurpleish.style.marginTop = "93.3px";
           fondo.style.marginLeft = "93.3px";
@@ -5807,6 +5870,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/14.png";
           cursor.style.marginLeft = "96.6px";
           cursor.style.marginTop = "96.6px";
+          cursorReflect.style.marginLeft = "96.6px";
+          cursorReflect.style.marginTop = "96.6px";
           cursorPurpleish.style.marginLeft = "96.6px";
           cursorPurpleish.style.marginTop = "96.6px";
           fondo.style.marginLeft = "96.6px";
@@ -5823,6 +5888,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/0.png";
           cursor.style.marginLeft = "50px";
           cursor.style.marginTop = "50px";
+          cursorReflect.style.marginLeft = "50px";
+          cursorReflect.style.marginTop = "50px";
           cursorPurpleish.style.marginLeft = "50px";
           cursorPurpleish.style.marginTop = "50px";
           fondo.style.marginLeft = "50px";
@@ -5836,6 +5903,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/1.png";
           cursor.style.marginLeft = "53.3px";
           cursor.style.marginTop = "53.3px";
+          cursorReflect.style.marginLeft = "53.3px";
+          cursorReflect.style.marginTop = "53.3px";
           cursorPurpleish.style.marginLeft = "53.3px";
           cursorPurpleish.style.marginTop = "53.3px";
           fondo.style.marginLeft = "53.3px";
@@ -5849,6 +5918,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/2.png";
           cursor.style.marginLeft = "56.6px";
           cursor.style.marginTop = "56.6px";
+          cursorReflect.style.marginLeft = "56.6px";
+          cursorReflect.style.marginTop = "56.6px";
           cursorPurpleish.style.marginLeft = "56.6px";
           cursorPurpleish.style.marginTop = "56.6px";
           fondo.style.marginLeft = "56.6px";
@@ -5862,6 +5933,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/3.png";
           cursor.style.marginLeft = "60px";
           cursor.style.marginTop = "60px";
+          cursorReflect.style.marginLeft = "60px";
+          cursorReflect.style.marginTop = "60px";
           cursorPurpleish.style.marginLeft = "60px";
           cursorPurpleish.style.marginTop = "60px";
           fondo.style.marginLeft = "60px";
@@ -5875,6 +5948,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/4.png";
           cursor.style.marginLeft = "63.3px";
           cursor.style.marginTop = "63.3px";
+          cursorReflect.style.marginLeft = "63.3px";
+          cursorReflect.style.marginTop = "63.3px";
           cursorPurpleish.style.marginLeft = "63.3px";
           cursorPurpleish.style.marginTop = "63.3px";
           fondo.style.marginLeft = "63.3px";
@@ -5888,6 +5963,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/5.png";
           cursor.style.marginLeft = "66.6px";
           cursor.style.marginTop = "66.6px";
+          cursorReflect.style.marginLeft = "66.6px";
+          cursorReflect.style.marginTop = "66.6px";
           cursorPurpleish.style.marginLeft = "66.6px";
           cursorPurpleish.style.marginTop = "66.6px";
           fondo.style.marginLeft = "66.6px";
@@ -5901,6 +5978,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/6.png";
           cursor.style.marginLeft = "70px";
           cursor.style.marginTop = "70px";
+          cursorReflect.style.marginLeft = "70px";
+          cursorReflect.style.marginTop = "70px";
           cursorPurpleish.style.marginLeft = "70px";
           cursorPurpleish.style.marginTop = "70px";
           fondo.style.marginLeft = "70px";
@@ -5914,6 +5993,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/7.png";
           cursor.style.marginLeft = "73.3px";
           cursor.style.marginTop = "73.3px";
+          cursorReflect.style.marginLeft = "73.3px";
+          cursorReflect.style.marginTop = "73.3px";
           cursorPurpleish.style.marginLeft = "73.3px";
           cursorPurpleish.style.marginTop = "73.3px";
           fondo.style.marginLeft = "73.3px";
@@ -5927,6 +6008,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/8.png";
           cursor.style.marginLeft = "76.6px";
           cursor.style.marginTop = "76.6px";
+          cursorReflect.style.marginLeft = "76.6px";
+          cursorReflect.style.marginTop = "76.6px";
           cursorPurpleish.style.marginLeft = "76.6px";
           cursorPurpleish.style.marginTop = "76.6px";
           fondo.style.marginLeft = "76.6px";
@@ -5940,6 +6023,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/9.png";
           cursor.style.marginLeft = "80px";
           cursor.style.marginTop = "80px";
+          cursorReflect.style.marginLeft = "80px";
+          cursorReflect.style.marginTop = "80px";
           cursorPurpleish.style.marginLeft = "80px";
           cursorPurpleish.style.marginTop = "80px";
           fondo.style.marginLeft = "80px";
@@ -5953,6 +6038,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/10.png";
           cursor.style.marginLeft = "83.3px";
           cursor.style.marginTop = "83.3px";
+          cursorReflect.style.marginLeft = "83.3px";
+          cursorReflect.style.marginTop = "83.3px";
           cursorPurpleish.style.marginLeft = "83.3px";
           cursorPurpleish.style.marginTop = "83.3px";
           fondo.style.marginLeft = "83.3px";
@@ -5966,6 +6053,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/11.png";
           cursor.style.marginLeft = "86.6px";
           cursor.style.marginTop = "86.6px";
+          cursorReflect.style.marginLeft = "86.6px";
+          cursorReflect.style.marginTop = "86.6px";
           cursorPurpleish.style.marginLeft = "86.6px";
           cursorPurpleish.style.marginTop = "86.6px";
           fondo.style.marginLeft = "86.6px";
@@ -5979,6 +6068,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/12.png";
           cursor.style.marginLeft = "90px";
           cursor.style.marginTop = "90px";
+          cursorReflect.style.marginLeft = "90px";
+          cursorReflect.style.marginTop = "90px";
           cursorPurpleish.style.marginLeft = "90px";
           cursorPurpleish.style.marginTop = "90px";
           fondo.style.marginLeft = "90px";
@@ -5992,6 +6083,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/13.png";
           cursor.style.marginLeft = "93.3px";
           cursor.style.marginTop = "93.3px";
+          cursorReflect.style.marginLeft = "93.3px";
+          cursorReflect.style.marginTop = "93.3px";
           cursorPurpleish.style.marginLeft = "93.3px";
           cursorPurpleish.style.marginTop = "93.3px";
           fondo.style.marginLeft = "93.3px";
@@ -6005,6 +6098,8 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/14.png";
           cursor.style.marginLeft = "96.6px";
           cursor.style.marginTop = "96.6px";
+          cursorReflect.style.marginLeft = "96.6px";
+          cursorReflect.style.marginTop = "96.6px";
           cursorPurpleish.style.marginLeft = "96.6px";
           cursorPurpleish.style.marginTop = "96.6px";
           fondo.style.marginLeft = "96.6px";
@@ -6093,6 +6188,8 @@ function resetPag() {
 
     cursor.style.marginLeft = "0px";
     cursor.style.marginTop = "0px";
+    cursorReflect.style.marginLeft = "0px";
+    cursorReflect.style.marginTop = "0px";
     cursorPurpleish.style.marginLeft = "0px";
     cursorPurpleish.style.marginTop = "0px";
     fondo.style.marginLeft = "0px";
@@ -7708,6 +7805,7 @@ function startDragHamster(e, hamsterElement) {
 
   if (hamsterElement.closest('.wrapper')) {
     currentHamster.classList.remove("exhaust");
+    currentHamster.classList.remove("exhaustSingle");
     currentHamster.classList.remove("tong");
     currentHamster.classList.remove("tongU");
     modifyHamsterSpeed(hamster, setHamsterSpeed, 0.0, true);
@@ -8422,6 +8520,7 @@ function resetHmasterClassList(currentHamster) {
   currentHamster.classList.remove("fallingAnimY");
   currentHamster.classList.remove("walkAnim");
   currentHamster.classList.remove("exhaust");
+  currentHamster.classList.remove("exhaustSingle");
   currentHamster.classList.remove("tong");
   currentHamster.classList.remove("tongU");
   currentHamster.classList.remove("pointingBack");
@@ -9851,6 +9950,7 @@ async function cargarHamstersDesdeBD() {
     }
 
     
+    let foundHamsterInWheel = false;
     // Clonar y posicionar los hámsters según sus slots
     Object.entries(slotsHamsters).forEach(([hamster, slotId]) => {
       const hamsterElemento = document.querySelector(`.hamster.${hamster}`);
@@ -9870,6 +9970,7 @@ async function cargarHamstersDesdeBD() {
 
       switch (contenedor.id) {
         case "hitboxSlotWeel":
+          foundHamsterInWheel = true;
           isResetToContainer = false;
           currentHamster.style.display = 'flex';
           handleWheelContainer(contenedor, contenedor);
@@ -9884,7 +9985,6 @@ async function cargarHamstersDesdeBD() {
         case "hitboxSlotWorld":
           isResetToContainer = false;
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
-          wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
 
           stopSpecificInterval(currentHamster.id, "energy");
@@ -9899,10 +9999,8 @@ async function cargarHamstersDesdeBD() {
           currentHamster.setAttribute("pos", "");
           isResetToContainer = false;
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
-          wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
 
-          fillFullStats(currentHamster.id);
           resetDragVariables();
 
           hitboxSlotBuyBiggieClick.style.display = "block";
@@ -9914,10 +10012,8 @@ async function cargarHamstersDesdeBD() {
           currentHamster.setAttribute("pos", "");
           isResetToContainer = false;
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
-          wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
 
-          fillFullStats(currentHamster.id);
           resetDragVariables();
 
           hitboxSlotBuyDiorClick.style.display = "block";
@@ -9929,10 +10025,8 @@ async function cargarHamstersDesdeBD() {
           currentHamster.setAttribute("pos", "");
           isResetToContainer = false;
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
-          wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
 
-          fillFullStats(currentHamster.id);
           resetDragVariables();
 
           hitboxSlotBuyCocoClick.style.display = "block";
@@ -9943,7 +10037,6 @@ async function cargarHamstersDesdeBD() {
         default:
           isResetToContainer = false;
           cloneHamsterToContainer(contenedor, offsetX, offsetY);
-          wrapper.style.setProperty('--wheel-speed', '0');
           currentHamster.style.display = 'flex';
 
           stopSpecificInterval(currentHamster.id, "energy");
@@ -9959,6 +10052,10 @@ async function cargarHamstersDesdeBD() {
       updateTooltipVisibility();
       //console.log(`Hámster ${hamster} posicionado en el slot ${slotId}.`);
     });
+
+    if (!foundHamsterInWheel) {
+      wrapper.style.setProperty('--wheel-speed', '0');
+    }
   } catch (error) {
     console.error("Error al cargar los hámsters desde la base de datos:", error);
   }
@@ -10187,6 +10284,7 @@ function fillEnergy(hamsterId, speed) {
   }
 
   hamsterEl.classList.remove("exhaust");
+  hamsterEl.classList.remove("exhaustSingle");
   hamsterEl.classList.remove("tong");
 }
 
@@ -10321,35 +10419,45 @@ function decrementEnergy(hamsterId, amount) {
   if (slider) slider.value = currentEnergy;
   actualizarSlider(slider);
 
-  if (hamsterEl.closest('.wrapper')) {
-    if (slider.value <= 0) {
-      hamsterEl.classList.add("tong");
-      hamsterEl.classList.add("exhaust");
-      hamsterEl.classList.remove("tongU");
-      if (hamsterEl.closest('.wrapper')) {
-        modifyHamsterSpeed(hamster, setHamsterSpeed, 0.0, true);
-      }
-    } else if (slider.value < 150) {
-      hamsterEl.classList.add("exhaust");
-      hamsterEl.classList.remove("tong");
-      hamsterEl.classList.add("tongU");
-      modifyHamsterSpeed(hamsterEl, setHamsterSpeed, 1.5, false);
-    } else {
-      // 150 en adelante
-      hamsterEl.classList.remove("exhaust");
-      hamsterEl.classList.remove("tong");
-      hamsterEl.classList.add("tongU");
-      modifyHamsterSpeed(hamsterEl, setHamsterSpeed, 1.5, false);
-    }
+  startStatsUpdate(idLogeado);
 
-    if(slider.value < 1000 && slider.value > 0){
-      let valor = numeroDeHamsters();
-      añadirMonedasWheel(valor);
+  if (slider.value <= 0) {
+    hamsterEl.classList.add("tong");
+    hamsterEl.classList.remove("tongU");
+    hamsterEl.classList.add("exhaust");
+    hamsterEl.classList.remove("exhaustSingle");
+    if (hamsterEl.closest('.wrapper')) {
+      modifyHamsterSpeed(hamster, setHamsterSpeed, 0.0, true);
     }
-  }else{
-      hamsterEl.classList.remove("exhaust");
-      hamsterEl.classList.remove("tong");
-      hamsterEl.classList.add("tongU");
+  } else if (slider.value < 250) {
+    hamsterEl.classList.remove("tong");
+    hamsterEl.classList.add("tongU");
+    hamsterEl.classList.add("exhaust");
+    hamsterEl.classList.remove("exhaustSingle");
+    modifyHamsterSpeed(hamsterEl, setHamsterSpeed, 1.5, false);
+  } else if (slider.value < 500) {
+    hamsterEl.classList.remove("tong");
+    hamsterEl.classList.add("tongU");
+    hamsterEl.classList.remove("exhaust");
+    hamsterEl.classList.add("exhaustSingle");
+    modifyHamsterSpeed(hamsterEl, setHamsterSpeed, 1.5, false);
+  } else if (slider.value < 750) {
+    hamsterEl.classList.remove("tong");
+    hamsterEl.classList.add("tongU");
+    hamsterEl.classList.remove("exhaust");
+    hamsterEl.classList.remove("exhaustSingle");
+    modifyHamsterSpeed(hamsterEl, setHamsterSpeed, 1.5, false);
+  } else {
+    hamsterEl.classList.remove("tong");
+    hamsterEl.classList.remove("tongU");
+    hamsterEl.classList.remove("exhaust");
+    hamsterEl.classList.remove("exhaustSingle");
+    modifyHamsterSpeed(hamsterEl, setHamsterSpeed, 1.5, false);
+  }
+
+  if(slider.value < 1000 && slider.value > 0){
+    let valor = numeroDeHamsters();
+    añadirMonedasWheel(valor);
   }
   
 }
@@ -10370,6 +10478,7 @@ function decrementHunger(hamsterId, amount) {
   const slider = hamsterEl.querySelector(".sliderHunger");
   if (slider) slider.value = currentHunger;
   actualizarSlider(slider);
+  startStatsUpdate(idLogeado);
 }
 
 /**
@@ -10388,6 +10497,7 @@ function decrementThirst(hamsterId, amount) {
   const slider = hamsterEl.querySelector(".sliderWater");
   if (slider) slider.value = currentThirst;
   actualizarSlider(slider);
+  startStatsUpdate(idLogeado);
 }
 
 
@@ -10405,11 +10515,13 @@ function fillFullStats(hamsterId){
     if (slider) slider.value = currentMax;
     actualizarSlider(slider);
   });
+  startStatsUpdate(idLogeado);
 }
 
 
 
 function startPeriodicStatsUpdate(idLogeado) {
+  return;
   // Si ya se inició el intervalo, no creamos uno nuevo.
   if (startPeriodicStatsUpdate.intervalId) {
     //console.log("La actualización periódica ya está en ejecución.");
@@ -10459,6 +10571,48 @@ function startPeriodicStatsUpdate(idLogeado) {
     await setHamsterStatsInDB(idLogeado, statsObj);
     //console.log('%c Actualización global de stats en BD: %o', 'background: blue; color: white; padding: 4px;', statsObj);
   }, 5000);
+}
+
+async function startStatsUpdate(idLogeado) {
+  // 1) Tomar todos los hamsters del DOM
+  const hamsterEls = document.querySelectorAll(".hamster");
+  const statsObj = { hamsters: [] };
+
+  hamsterEls.forEach((el) => {
+    // Identifica el hamsterId por la clase dior, coco, biggie, etc.
+    let hamsterId = "";
+    if (el.classList.contains("dior")) {
+      hamsterId = "dior";
+    } else if (el.classList.contains("coco")) {
+      hamsterId = "coco";
+    } else if (el.classList.contains("biggie")) {
+      hamsterId = "biggie";
+    }
+
+    // Lee los atributos y convierte a número
+    const energy = Number.isNaN(Number(el.getAttribute("energy")))
+      ? (console.warn("Fallo al guardar: energy"), 0)
+      : Number(el.getAttribute("energy"));
+
+    const hunger = Number.isNaN(Number(el.getAttribute("hunger")))
+      ? (console.warn("Fallo al guardar: hunger"), 0)
+      : Number(el.getAttribute("hunger"));
+
+    const thirst = Number.isNaN(Number(el.getAttribute("thirst")))
+      ? (console.warn("Fallo al guardar: thirst"), 0)
+      : Number(el.getAttribute("thirst"));
+
+    // Añade los datos al array
+    statsObj.hamsters.push({
+      id: hamsterId,
+      energy,
+      hunger,
+      thirst,
+    });
+  });
+
+  // 2) Enviar con UNA sola petición a la base de datos
+  await setHamsterStatsInDB(idLogeado, statsObj);
 }
 
 
