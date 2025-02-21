@@ -17,8 +17,7 @@
   <img id="fondoGalaxy" src="" />
   <img id="customCursor" alt="Custom Cursor" />
   <img id="customCursorPurpleish" alt="Custom Cursor" />
-  <img id="customCursorReflect" alt="picsum.photos"/>
-  <svg>
+  <svg style="position:absolute">
     <filter id="pixelate" x="0" y="0">
       <feFlood x="2" y="2" height="1" width="1"/>
       <feComposite width="3" height="3"/>
@@ -817,9 +816,26 @@
       <img id="bebiendo2Gif" class="bebiendoGif" src="img/hamster/drinkPraticles.gif">
       <img id="bebiendo3Gif" class="bebiendoGif" src="img/hamster/drinkPraticles.gif">
       <div class="sombraTubo"></div>
-      <div id="glassLeft"></div>
+      <!--
+      <svg width="800px" height="600px" style="display: none;">
+        <defs>
+          <filter id="fakeOverlay">
+            <feColorMatrix type="luminanceToAlpha" result="L2A"/>
+            <feFlood flood-color="green" result="colorfield"/>
+            <feBlend mode="multiply" in="L2A" in2="colorfield"/>
+            <feComposite operator="in" in2="SourceGraphic"/>
+          </filter>
+          </defs>
+      </svg>-->
+      <div id="glassLeft">
+        <img id="customCursorReflectLeft" class="customCursorReflect" />
+        <div id="customCursorReflectLeftBlue" class="glassBlue"></div>
+      </div>
       <div id="glassLeftHitbox"></div>
-      <div id="glassRight"></div>
+      <div id="glassRight">
+        <img id="customCursorReflectRight" class="customCursorReflect" />
+        <div id="customCursorReflectRightBlue" class="glassBlue"></div>
+      </div>
       <div id="glassRightHitbox"></div>
       <div id="hitboxSlotUpLeft" class="hitbox"></div>
       <div id="hitboxSlotUpRight" class="hitbox"></div>

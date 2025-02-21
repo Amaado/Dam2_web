@@ -289,7 +289,7 @@ body {
   transform: scale(1.5);
 }
 
-#customCursorReflect {
+.customCursorReflect {
   position: absolute;
   width: 200px;
   height: 200px;
@@ -299,18 +299,15 @@ body {
     transform 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease,
     margin-top 0.5s ease;
   z-index: 199;
-  transform: scale(0.85) translate(10px, 10px);
-  filter: url(#pixelate);
-   image-rendering: pixelated;
+  transform: scale(0.9) translate(0px, -30px);
+  image-rendering: pixelated;
   visibility: visible;
-  opacity: 1%;
+  opacity: 1;
 
-  mask: url(#myMask);
-  -webkit-mask: url(#myMask);
 }
 
-#customCursorReflect.clicked {
-  transform: scale(1.35) translate(10px, 10px);
+.customCursorReflect.clicked {
+  transform: scale(1.35) translate(0px, -30px);
 }
 
 #fondoGalaxy {
@@ -5192,6 +5189,18 @@ canvas {
   100% { background-position: 100% 50%; }
 }
 
+
+.glassBlue{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: blue;
+  mask:"";
+  mask-size: 200px;
+  mask-repeat: no-repeat;
+  transform: scale(0.9) translate(0px, -30px);
+  z-index: 200;
+}
 #grifo{
   position: absolute;
   width: auto;
@@ -5219,6 +5228,7 @@ canvas {
   transform-origin: left center;
   transform: perspective(1300px) (0deg);
   transition: all 0.7s ease;
+  filter: url(#pixelate);
 }
 #glassLeft.active{
   transform: perspective(1300px) rotateY(-180deg);
@@ -5291,6 +5301,7 @@ canvas {
   transform-origin: right center;
   transform: perspective(1300px) rotateY(0deg);
   transition: all 0.7s ease;
+  filter: url(#pixelate);
 }
 #glassRight.active{
   transform: perspective(1300px) rotateY(180deg);

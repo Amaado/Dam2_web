@@ -1,7 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
   var cursor = document.getElementById("customCursor");
   var cursorPurpleish = document.getElementById("customCursorPurpleish");
-  var cursorReflect = document.getElementById("customCursorReflect");
+  var cursorReflectLeft = document.getElementById("customCursorReflectLeft");
+  var cursorReflectRight = document.getElementById("customCursorReflectRight");
+  var reflectLeftBlue = document.getElementById("customCursorReflectLeftBlue");
+  var reflectRightBlue = document.getElementById("customCursorReflectRightBlue");
   const fondo = document.getElementById("fondoGalaxy");
   const fondoGalaxySkin = document.getElementById("fondoGalaxySkin");
   const fondoGreen = document.getElementById("fondoGalaxyGreen");
@@ -492,7 +495,9 @@ function updateBubbles() {
           cursorSrc ||
           (theme === "day" ? DEFAULT_DAY_CURSOR : DEFAULT_NIGHT_CURSOR);
           
-        cursorReflect.src = insertReflejoBeforeExtension(cursor.src);
+        cursorReflectLeft.src = insertReflejoBeforeExtension(cursor.src);
+        cursorReflectRight.src = insertReflejoBeforeExtension(cursor.src);
+        reflectLeftBlue.style.mask = "url(" + insertReflejoBeforeExtension(cursor.src) + ")";
         const cursorPurpleishSrc = insertPurpleishBeforeExtension(cursor.src);
 
         if (cursorPurpleishSrc.includes("cccc_krillin") || cursorPurpleishSrc.includes("cccc_jefeEstudios")) {
@@ -742,7 +747,10 @@ function updateBubbles() {
 
       if (cursor && cursorPurpleish) {
         cursor.src = dayCursorSrc;
-        cursorReflect.src = insertReflejoBeforeExtension(dayCursorSrc);
+        cursorReflectLeft.src = insertReflejoBeforeExtension(dayCursorSrc);
+        cursorReflectRight.src = insertReflejoBeforeExtension(dayCursorSrc);
+        reflectLeftBlue.style.mask = "url(" + insertReflejoBeforeExtension(dayCursorSrc) + ")";
+
         if (dayCursorSrc.includes("cccc_krillin") || dayCursorSrc.includes("cccc_jefeEstudios")) {
           cursorPurpleish.style.display = "none";
         }else{
@@ -813,7 +821,10 @@ function updateBubbles() {
 
       if (cursor && cursorPurpleish) {
         cursor.src = nightCursorSrc;
-        cursorReflect.src = insertReflejoBeforeExtension(nightCursorSrc);
+        cursorReflectLeft.src = insertReflejoBeforeExtension(nightCursorSrc);
+        cursorReflectRight.src = insertReflejoBeforeExtension(nightCursorSrc);
+        reflectLeftBlue.style.mask = "url(" + insertReflejoBeforeExtension(nightCursorSrc) + ")";
+
         if (nightCursorSrc.includes("cccc_krillin") || nightCursorSrc.includes("cccc_jefeEstudios")) {
           cursorPurpleish.style.display = "none";
         }else{
@@ -3922,8 +3933,17 @@ async function unlockAnimation(
       soloInicio++;
       if (soloInicio == 1) {
         cursor.style.opacity = "100%";
-        cursorReflect.style.opacity = "100%";
+        cursorReflectLeft.style.opacity = "1";
+        cursorReflectRight.style.opacity = "1";
       }
+
+      const containerRectLeft = cursorReflectLeft.parentNode.getBoundingClientRect();
+      const relativeXLeft = e.clientX - containerRectLeft.left;
+      const relativeYLeft = e.clientY - containerRectLeft.top;
+
+      const containerRectRight = cursorReflectRight.parentNode.getBoundingClientRect();
+      const relativeXRight = e.clientX - containerRectRight.left;
+      const relativeYRight = e.clientY - containerRectRight.top;
 
       // Cambiar la posición para centrar el cursor
       const cursorSize = 200;
@@ -3931,8 +3951,10 @@ async function unlockAnimation(
       const cursorPaintSizeY = 218;
       cursor.style.left = e.clientX - cursorSize / 2 + "px"; // Centrar en X
       cursor.style.top = e.clientY - cursorSize / 2 + "px"; // Centrar en Y
-      cursorReflect.style.left = e.clientX - cursorSize / 2 + "px"; // Centrar en X
-      cursorReflect.style.top = e.clientY - cursorSize / 2 + "px"; // Centrar en Y
+      cursorReflectLeft.style.left = (relativeXLeft - cursorSize / 2) + "px";
+      cursorReflectLeft.style.top = (relativeYLeft - cursorSize / 2) + "px";
+      cursorReflectRight.style.left = (relativeXRight - cursorSize / 2) + "px";
+      cursorReflectRight.style.top = (relativeYRight - cursorSize / 2) + "px";
       cursorPurpleish.style.left = e.clientX - cursorSize / 2 + "px"; // Centrar en X
       cursorPurpleish.style.top = e.clientY - cursorSize / 2 + "px"; // Centrar en Y
       cursorPaint.style.left = e.clientX - cursorPaintSizeX / 2 + "px";
@@ -3947,7 +3969,8 @@ async function unlockAnimation(
 
     document.addEventListener("mousedown", function () {
       cursor.classList.add("clicked");
-      cursorReflect.classList.add("clicked");
+      cursorReflectLeft.classList.add("clicked");
+      cursorReflectRight.classList.add("clicked");
       cursorPurpleish.classList.add("clicked");
       if(checkboxland){
         checkboxland.classList.add("clicked");
@@ -3956,7 +3979,8 @@ async function unlockAnimation(
 
     document.addEventListener("mouseup", function () {
       cursor.classList.remove("clicked");
-      cursorReflect.classList.remove("clicked");
+      cursorReflectLeft.classList.remove("clicked");
+      cursorReflectRight.classList.remove("clicked");
       cursorPurpleish.classList.remove("clicked");
       if(checkboxland){
         checkboxland.classList.remove("clicked");
@@ -4103,10 +4127,13 @@ async function unlockAnimation(
     }
     if (!cursorSrc.includes("cccc_galaxy")) {
       cursor.style.opacity = "100%";
-      cursorReflect.style.opacity = "100%";
+      cursorReflectLeft.style.opacity = "1";
+      cursorReflectRight.style.opacity = "1";
       cursor.style.transition =
         "width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease, margin-top 0.5s ease";
-      cursorReflect.style.transition =
+      cursorReflectLeft.style.transition =
+        "width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease, margin-top 0.5s ease";
+      cursorReflectRight.style.transition =
         "width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease, margin-top 0.5s ease";
       fondo.style.display = "none";
       fondoGreen.style.display = "none";
@@ -4125,7 +4152,8 @@ async function unlockAnimation(
     }
     if (!cursorSrc.includes("cccc_checkbox")) {
       cursor.style.display = "block";
-      cursorReflect.style.display = "block";
+      cursorReflectLeft.style.display = "block";
+      cursorReflectRight.style.display = "block";
       cursorPurpleish.style.display = "block";
       checkboxland.style.display = "none";
       checkboxlandBackground.style.display = "none";
@@ -4322,7 +4350,8 @@ async function unlockAnimation(
     /* SKIN GALAXY */
     if (cursorSrc.includes("cccc_galaxy")) {
       cursor.src = "img/cursors/cccc_galaxy.webp";
-      cursorReflect.src = "img/cursors/cccc_galaxyReflejo.webp";
+      cursorReflectLeft.src = "img/cursors/cccc_galaxyReflejo.webp";
+      cursorReflectRight.src = "img/cursors/cccc_galaxyReflejo.webp";
       cursor.style.opacity = "70%";
       fondo.style.display = "block";
       fondo.src = "img/fondo.gif";
@@ -5376,8 +5405,6 @@ function resetPag() {
     } else {
       cursor.style.marginLeft = "0px";
       cursor.style.marginTop = "0px";
-      cursorReflect.style.marginLeft = "0px";
-      cursorReflect.style.marginTop = "0px";
       cursorPurpleish.style.marginLeft = "0px";
       cursorPurpleish.style.marginTop = "0px";
       fondo.style.marginLeft = "0px";
@@ -5660,8 +5687,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/0.png";
           cursor.style.marginLeft = "50px";
           cursor.style.marginTop = "50px";
-          cursorReflect.style.marginLeft = "50px";
-          cursorReflect.style.marginTop = "50px";
           cursorPurpleish.style.marginLeft = "50px";
           cursorPurpleish.style.marginTop = "50px";
           fondo.style.marginLeft = "50px";
@@ -5675,8 +5700,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/1.png";
           cursor.style.marginLeft = "53.3px";
           cursor.style.marginTop = "53.3px";
-          cursorReflect.style.marginLeft = "53.3px";
-          cursorReflect.style.marginTop = "53.3px";
           cursorPurpleish.style.marginLeft = "53.3px";
           cursorPurpleish.style.marginTop = "53.3px";
           fondo.style.marginLeft = "53.3px";
@@ -5690,8 +5713,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/2.png";
           cursor.style.marginLeft = "56.6px";
           cursor.style.marginTop = "56.6px";
-          cursorReflect.style.marginLeft = "56.6px";
-          cursorReflect.style.marginTop = "56.6px";
           cursorPurpleish.style.marginLeft = "56.6px";
           cursorPurpleish.style.marginTop = "56.6px";
           fondo.style.marginLeft = "56.6px";
@@ -5705,8 +5726,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/3.png";
           cursor.style.marginLeft = "60px";
           cursor.style.marginTop = "60px";
-          cursorReflect.style.marginLeft = "60px";
-          cursorReflect.style.marginTop = "60px";
           cursorPurpleish.style.marginLeft = "60px";
           cursorPurpleish.style.marginTop = "60px";
           fondo.style.marginLeft = "60px";
@@ -5720,8 +5739,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/4.png";
           cursor.style.marginLeft = "63.3px";
           cursor.style.marginTop = "63.3px";
-          cursorReflect.style.marginLeft = "63.3px";
-          cursorReflect.style.marginTop = "63.3px";
           cursorPurpleish.style.marginLeft = "63.3px";
           cursorPurpleish.style.marginTop = "63.3px";
           fondo.style.marginLeft = "63.3px";
@@ -5735,8 +5752,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/5.png";
           cursor.style.marginLeft = "66.6px";
           cursor.style.marginTop = "66.6px";
-          cursorReflect.style.marginLeft = "66.6px";
-          cursorReflect.style.marginTop = "66.6px";
           cursorPurpleish.style.marginLeft = "66.6px";
           cursorPurpleish.style.marginTop = "66.6px";
           fondo.style.marginLeft = "66.6px";
@@ -5752,8 +5767,6 @@ function resetPag() {
           cursor.style.marginTop = "70px";
           cursor.style.marginLeft = "70px";
           cursor.style.marginTop = "70px";
-          cursorReflect.style.marginLeft = "70px";
-          cursorReflect.style.marginTop = "70px";
           fondo.style.marginLeft = "70px";
           fondo.style.marginTop = "70px";
           fondoGreen.style.marginLeft = "70px";
@@ -5765,8 +5778,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/7.png";
           cursor.style.marginLeft = "73.3px";
           cursor.style.marginTop = "73.3px";
-          cursorReflect.style.marginLeft = "73.3px";
-          cursorReflect.style.marginTop = "73.3px";
           cursorPurpleish.style.marginLeft = "73.3px";
           cursorPurpleish.style.marginTop = "73.3px";
           fondo.style.marginLeft = "73.3px";
@@ -5780,8 +5791,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/8.png";
           cursor.style.marginLeft = "76.6px";
           cursor.style.marginTop = "76.6px";
-          cursorReflect.style.marginLeft = "76.6px";
-          cursorReflect.style.marginTop = "76.6px";
           cursorPurpleish.style.marginLeft = "76.6px";
           cursorPurpleish.style.marginTop = "76.6px";
           fondo.style.marginLeft = "76.6px";
@@ -5795,8 +5804,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/9.png";
           cursor.style.marginLeft = "80px";
           cursor.style.marginTop = "80px";
-          cursorReflect.style.marginLeft = "80px";
-          cursorReflect.style.marginTop = "80px";
           cursorPurpleish.style.marginLeft = "80px";
           cursorPurpleish.style.marginTop = "80px";
           fondo.style.marginLeft = "80px";
@@ -5810,8 +5817,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/10.png";
           cursor.style.marginLeft = "83.3px";
           cursor.style.marginTop = "83.3px";
-          cursorReflect.style.marginLeft = "83.3px";
-          cursorReflect.style.marginTop = "83.3px";
           cursorPurpleish.style.marginLeft = "83.3px";
           cursorPurpleish.style.marginTop = "83.3px";
           fondo.style.marginLeft = "83.3px";
@@ -5825,8 +5830,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/11.png";
           cursor.style.marginLeft = "86.6px";
           cursor.style.marginTop = "86.6px";
-          cursorReflect.style.marginLeft = "86.6px";
-          cursorReflect.style.marginTop = "86.6px";
           cursorPurpleish.style.marginLeft = "86.6px";
           cursorPurpleish.style.marginTop = "86.6px";
           fondo.style.marginLeft = "86.6px";
@@ -5840,8 +5843,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/12.png";
           cursor.style.marginLeft = "90px";
           cursor.style.marginTop = "90px";
-          cursorReflect.style.marginLeft = "90px";
-          cursorReflect.style.marginTop = "90px";
           cursorPurpleish.style.marginLeft = "90px";
           cursorPurpleish.style.marginTop = "90px";
           fondo.style.marginLeft = "90px";
@@ -5855,8 +5856,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/13.png";
           cursor.style.marginLeft = "93.3px";
           cursor.style.marginTop = "93.3px";
-          cursorReflect.style.marginLeft = "93.3px";
-          cursorReflect.style.marginTop = "93.3px";
           cursorPurpleish.style.marginLeft = "93.3px";
           cursorPurpleish.style.marginTop = "93.3px";
           fondo.style.marginLeft = "93.3px";
@@ -5870,8 +5869,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/day/14.png";
           cursor.style.marginLeft = "96.6px";
           cursor.style.marginTop = "96.6px";
-          cursorReflect.style.marginLeft = "96.6px";
-          cursorReflect.style.marginTop = "96.6px";
           cursorPurpleish.style.marginLeft = "96.6px";
           cursorPurpleish.style.marginTop = "96.6px";
           fondo.style.marginLeft = "96.6px";
@@ -5888,8 +5885,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/0.png";
           cursor.style.marginLeft = "50px";
           cursor.style.marginTop = "50px";
-          cursorReflect.style.marginLeft = "50px";
-          cursorReflect.style.marginTop = "50px";
           cursorPurpleish.style.marginLeft = "50px";
           cursorPurpleish.style.marginTop = "50px";
           fondo.style.marginLeft = "50px";
@@ -5903,8 +5898,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/1.png";
           cursor.style.marginLeft = "53.3px";
           cursor.style.marginTop = "53.3px";
-          cursorReflect.style.marginLeft = "53.3px";
-          cursorReflect.style.marginTop = "53.3px";
           cursorPurpleish.style.marginLeft = "53.3px";
           cursorPurpleish.style.marginTop = "53.3px";
           fondo.style.marginLeft = "53.3px";
@@ -5918,8 +5911,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/2.png";
           cursor.style.marginLeft = "56.6px";
           cursor.style.marginTop = "56.6px";
-          cursorReflect.style.marginLeft = "56.6px";
-          cursorReflect.style.marginTop = "56.6px";
           cursorPurpleish.style.marginLeft = "56.6px";
           cursorPurpleish.style.marginTop = "56.6px";
           fondo.style.marginLeft = "56.6px";
@@ -5933,8 +5924,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/3.png";
           cursor.style.marginLeft = "60px";
           cursor.style.marginTop = "60px";
-          cursorReflect.style.marginLeft = "60px";
-          cursorReflect.style.marginTop = "60px";
           cursorPurpleish.style.marginLeft = "60px";
           cursorPurpleish.style.marginTop = "60px";
           fondo.style.marginLeft = "60px";
@@ -5948,8 +5937,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/4.png";
           cursor.style.marginLeft = "63.3px";
           cursor.style.marginTop = "63.3px";
-          cursorReflect.style.marginLeft = "63.3px";
-          cursorReflect.style.marginTop = "63.3px";
           cursorPurpleish.style.marginLeft = "63.3px";
           cursorPurpleish.style.marginTop = "63.3px";
           fondo.style.marginLeft = "63.3px";
@@ -5963,8 +5950,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/5.png";
           cursor.style.marginLeft = "66.6px";
           cursor.style.marginTop = "66.6px";
-          cursorReflect.style.marginLeft = "66.6px";
-          cursorReflect.style.marginTop = "66.6px";
           cursorPurpleish.style.marginLeft = "66.6px";
           cursorPurpleish.style.marginTop = "66.6px";
           fondo.style.marginLeft = "66.6px";
@@ -5978,8 +5963,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/6.png";
           cursor.style.marginLeft = "70px";
           cursor.style.marginTop = "70px";
-          cursorReflect.style.marginLeft = "70px";
-          cursorReflect.style.marginTop = "70px";
           cursorPurpleish.style.marginLeft = "70px";
           cursorPurpleish.style.marginTop = "70px";
           fondo.style.marginLeft = "70px";
@@ -5993,8 +5976,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/7.png";
           cursor.style.marginLeft = "73.3px";
           cursor.style.marginTop = "73.3px";
-          cursorReflect.style.marginLeft = "73.3px";
-          cursorReflect.style.marginTop = "73.3px";
           cursorPurpleish.style.marginLeft = "73.3px";
           cursorPurpleish.style.marginTop = "73.3px";
           fondo.style.marginLeft = "73.3px";
@@ -6008,8 +5989,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/8.png";
           cursor.style.marginLeft = "76.6px";
           cursor.style.marginTop = "76.6px";
-          cursorReflect.style.marginLeft = "76.6px";
-          cursorReflect.style.marginTop = "76.6px";
           cursorPurpleish.style.marginLeft = "76.6px";
           cursorPurpleish.style.marginTop = "76.6px";
           fondo.style.marginLeft = "76.6px";
@@ -6023,8 +6002,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/9.png";
           cursor.style.marginLeft = "80px";
           cursor.style.marginTop = "80px";
-          cursorReflect.style.marginLeft = "80px";
-          cursorReflect.style.marginTop = "80px";
           cursorPurpleish.style.marginLeft = "80px";
           cursorPurpleish.style.marginTop = "80px";
           fondo.style.marginLeft = "80px";
@@ -6038,8 +6015,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/10.png";
           cursor.style.marginLeft = "83.3px";
           cursor.style.marginTop = "83.3px";
-          cursorReflect.style.marginLeft = "83.3px";
-          cursorReflect.style.marginTop = "83.3px";
           cursorPurpleish.style.marginLeft = "83.3px";
           cursorPurpleish.style.marginTop = "83.3px";
           fondo.style.marginLeft = "83.3px";
@@ -6053,8 +6028,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/11.png";
           cursor.style.marginLeft = "86.6px";
           cursor.style.marginTop = "86.6px";
-          cursorReflect.style.marginLeft = "86.6px";
-          cursorReflect.style.marginTop = "86.6px";
           cursorPurpleish.style.marginLeft = "86.6px";
           cursorPurpleish.style.marginTop = "86.6px";
           fondo.style.marginLeft = "86.6px";
@@ -6068,8 +6041,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/12.png";
           cursor.style.marginLeft = "90px";
           cursor.style.marginTop = "90px";
-          cursorReflect.style.marginLeft = "90px";
-          cursorReflect.style.marginTop = "90px";
           cursorPurpleish.style.marginLeft = "90px";
           cursorPurpleish.style.marginTop = "90px";
           fondo.style.marginLeft = "90px";
@@ -6083,8 +6054,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/13.png";
           cursor.style.marginLeft = "93.3px";
           cursor.style.marginTop = "93.3px";
-          cursorReflect.style.marginLeft = "93.3px";
-          cursorReflect.style.marginTop = "93.3px";
           cursorPurpleish.style.marginLeft = "93.3px";
           cursorPurpleish.style.marginTop = "93.3px";
           fondo.style.marginLeft = "93.3px";
@@ -6098,8 +6067,6 @@ function resetPag() {
           sizeVisualizer.src = "img/paintCursor/night/14.png";
           cursor.style.marginLeft = "96.6px";
           cursor.style.marginTop = "96.6px";
-          cursorReflect.style.marginLeft = "96.6px";
-          cursorReflect.style.marginTop = "96.6px";
           cursorPurpleish.style.marginLeft = "96.6px";
           cursorPurpleish.style.marginTop = "96.6px";
           fondo.style.marginLeft = "96.6px";
@@ -6188,8 +6155,6 @@ function resetPag() {
 
     cursor.style.marginLeft = "0px";
     cursor.style.marginTop = "0px";
-    cursorReflect.style.marginLeft = "0px";
-    cursorReflect.style.marginTop = "0px";
     cursorPurpleish.style.marginLeft = "0px";
     cursorPurpleish.style.marginTop = "0px";
     fondo.style.marginLeft = "0px";
