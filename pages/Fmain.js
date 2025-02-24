@@ -54,6 +54,12 @@ const matchInfoContainer = document.getElementById("matchInfoContainer");
 const slicesInfoContainer = document.getElementById("slicesInfoContainer");
 const slicesDB = document.getElementById("slicesDB");
 
+const nav = document.querySelector("nav");
+const a = document.getElementById("a");
+const escText = document.getElementById("escText");
+const esc = document.getElementById("esc");
+const esc2 = document.getElementById("esc2");
+
 const mistakeImgs = document.querySelectorAll(".mistakeImg");
 const warningMessageContainer = document.querySelector(".warningMessageContainer");
 const warningMessage = document.querySelector(".warningMessage");
@@ -1504,6 +1510,7 @@ async function hideMenu(menuPass) {
         sliceIt.classList.add("out");
         mistakerContainer.classList.add("active");
         slicesInfoContainer.classList.remove("active");
+        nav.classList.remove("active");
 
         for (let index = 0; index < 3; index++) {
             let container;
@@ -1551,6 +1558,7 @@ async function hideMenu(menuPass) {
 
         matchInfoContainer.classList.remove("active");
         slicesInfoContainer.classList.add("active");
+        nav.classList.add("active");
 
         setTimeout(() => {
             mistakeImgs.forEach(mistakeImg => {
@@ -2412,6 +2420,7 @@ document.addEventListener("DOMContentLoaded", function () {
             hideMenu(startMatchContainer);
             matchInfoContainer.classList.add("active");
             slicesInfoContainer.classList.remove("active");
+            nav.classList.remove("active");
             warningMessageContainer.style.display = "none";
             tomatosBet.textContent = sliderTomatoes.value;
             gameActive = true;
@@ -2905,6 +2914,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+
+    // Manejador de eventos para la tecla 'Escape'
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && nav.classList.contains("active")) {
+            if (a && escText && esc) {
+                a.classList.add("aNight-hover");
+                escText.classList.add("escTextNight-hover");
+                esc.classList.add("escNight-hover");
+                esc2.classList.add("esc2Night-hover");
+
+                setTimeout(() => {
+                    a.click();
+                }, 200);
+            }
+        }
+    });
 
 
 

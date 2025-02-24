@@ -93,7 +93,7 @@ img {
 
 #slicesInfoContainer{
     position: absolute;
-    left: -200px;
+    right: -200px;
     top: -200px;
     width: auto;
     font-weight: bold;
@@ -106,7 +106,7 @@ img {
     color: #FC8591;
 }
 #slicesInfoContainer.active{
-    left: 40px;
+    right: 40px;
     top: 35px;
 }
 #slicesInfoContainer > div{
@@ -1331,4 +1331,155 @@ img {
     font-family: "Roboto";
     pointer-events: all;
     transition: all 0.5s ease-in-out;
+}
+
+
+
+nav{
+    position: absolute;
+    left: -200px;
+    top: -200px;
+    transition: all 0.7s ease-in-out;
+
+}
+nav.active{
+    top: 25px;
+    left: 1px;
+}
+nav a span {
+    padding: 10px;
+    left: 100px;
+    border-radius: 100px;
+}
+
+
+/* Hover para #escText */
+.escTextNight:hover,
+.escNight:hover ~ .escTextNight,
+.esc2Night:hover ~ .escTextNight,
+.aNight:hover ~ .escTextNight {
+    transform: scaleX(1.03) scaleY(0.97);
+    top: 3px;
+    color: rgb(241, 241, 241);
+    background-color: transparent;
+}
+
+/* Hover para #escText */
+.escTextNight-hover,
+.escNight-hover ~ .escTextNight,
+.esc2Night-hover ~ .escTextNight,
+.aNight-hover ~ .escTextNight {
+    transform: scaleX(1.03) scaleY(0.97);
+    top: 3px;
+    color: rgb(241, 241, 241);
+    background-color: transparent;
+}
+
+
+/* Estilos para #escText */
+.escTextNight {
+    color: rgb(255, 255, 255);
+    background-color: transparent;
+    position: absolute;
+    left: 2px;
+    top: 1px;
+    width: 30px;
+    height: 17px;
+    border-radius: 4px;
+    z-index: 7;
+    transition: top 0.1s ease, transform 0.05s ease, background-color 1s ease; /* Transición suave */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: "Roboto";
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* Hover para #esc */
+.escNight:hover,
+.escTextNight:hover ~ .escNight,
+.esc2Night:hover ~ .escNight,
+.aNight:hover ~ .escNight {
+    background-color: #9ea9bb;
+    top: 3px;
+}
+
+.escNight-hover,
+.escTextNight-hover ~ .escNight,
+.esc2Night-hover ~ .escNight,
+.aNight-hover ~ .escNight {
+    background-color: #9ea9bb;
+    top: 3px;
+}
+
+/* Estilos para #esc */
+.escNight {
+    background-color: #9ea9bb;
+    color: rgb(255, 255, 255);
+    position: absolute;
+    left: 2px;
+    top: 1px;
+    width: 30px;
+    height: 17px;
+    border-radius: 4px;
+    z-index: 5;
+    transition: top 0.1s ease, box-shadow 0.1s ease,  background-color 1s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: "Roboto";
+    font-weight: bold;
+    font-size: 20px;
+    box-shadow: -1px -2px 2px -1px rgba(0, 0, 0, 0.5) inset;
+    -webkit-box-shadow: -1px -2px 2px -1px rgba(0, 0, 0, 0.5) inset;
+    -moz-box-shadow: -1px -2px 2px -1px rgba(0, 0, 0, 0.5) inset;
+}
+
+/* Estilos para #esc2 */
+.esc2Night {
+    background-color: #415066;
+    position: absolute;
+    left: 0px;
+    width: 35px;
+    height: 24px;
+    border-radius: 6px;
+    z-index: 4;
+    transition: box-shadow 0.3s ease,  background-color 1s ease;
+    box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.3) inset;
+    -webkit-box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.3) inset;
+    -moz-box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.3) inset;
+}
+
+.esc2Night:hover,
+.esc2Night-hover{
+    background-color: #415066;
+}
+
+/* Estilos de enlaces */
+.aNight:link,
+.aNight:visited {
+    background-color: transparent;
+    text-decoration: none;
+    color: currentColor;
+    width: 35px;
+    height: 22px;
+    position: absolute;
+    left: 50px;
+    border-radius: 6px;
+    z-index: 6;
+}
+
+/* Hover de los enlaces que también activan #esc y #escText */
+.aNight:hover ~ #escTextNight,
+.aNight:hover ~ #escNight,
+.aNight-hover ~ #escTextNight,
+.aNight-hover ~ #escNight{
+    background-color: transparent;
+    top: 3px;
+    transform: scaleX(1.05) scaleY(0.95); /* Para escText */
+    box-shadow: -1px -2px 5px -1px rgba(0, 0, 0, 0.5) inset,
+                0px 1px 1.5px 0.5px rgba(0, 0, 0, 0.3); /* Para esc */
 }
