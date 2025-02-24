@@ -3,8 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
   var cursorPurpleish = document.getElementById("customCursorPurpleish");
   var cursorReflectLeft = document.getElementById("customCursorReflectLeft");
   var cursorReflectRight = document.getElementById("customCursorReflectRight");
-  var reflectLeftBlue = document.getElementById("customCursorReflectLeftBlue");
-  var reflectRightBlue = document.getElementById("customCursorReflectRightBlue");
   const fondo = document.getElementById("fondoGalaxy");
   const fondoGalaxySkin = document.getElementById("fondoGalaxySkin");
   const fondoGreen = document.getElementById("fondoGalaxyGreen");
@@ -497,7 +495,6 @@ function updateBubbles() {
           
         cursorReflectLeft.src = insertReflejoBeforeExtension(cursor.src);
         cursorReflectRight.src = insertReflejoBeforeExtension(cursor.src);
-        reflectLeftBlue.style.mask = "url(" + insertReflejoBeforeExtension(cursor.src) + ")";
         const cursorPurpleishSrc = insertPurpleishBeforeExtension(cursor.src);
 
         if (cursorPurpleishSrc.includes("cccc_krillin") || cursorPurpleishSrc.includes("cccc_jefeEstudios")) {
@@ -749,7 +746,6 @@ function updateBubbles() {
         cursor.src = dayCursorSrc;
         cursorReflectLeft.src = insertReflejoBeforeExtension(dayCursorSrc);
         cursorReflectRight.src = insertReflejoBeforeExtension(dayCursorSrc);
-        reflectLeftBlue.style.mask = "url(" + insertReflejoBeforeExtension(dayCursorSrc) + ")";
 
         if (dayCursorSrc.includes("cccc_krillin") || dayCursorSrc.includes("cccc_jefeEstudios")) {
           cursorPurpleish.style.display = "none";
@@ -823,7 +819,6 @@ function updateBubbles() {
         cursor.src = nightCursorSrc;
         cursorReflectLeft.src = insertReflejoBeforeExtension(nightCursorSrc);
         cursorReflectRight.src = insertReflejoBeforeExtension(nightCursorSrc);
-        reflectLeftBlue.style.mask = "url(" + insertReflejoBeforeExtension(nightCursorSrc) + ")";
 
         if (nightCursorSrc.includes("cccc_krillin") || nightCursorSrc.includes("cccc_jefeEstudios")) {
           cursorPurpleish.style.display = "none";
@@ -3933,17 +3928,22 @@ async function unlockAnimation(
       soloInicio++;
       if (soloInicio == 1) {
         cursor.style.opacity = "100%";
-        cursorReflectLeft.style.opacity = "1";
-        cursorReflectRight.style.opacity = "1";
       }
 
       const containerRectLeft = cursorReflectLeft.parentNode.getBoundingClientRect();
       const relativeXLeft = e.clientX - containerRectLeft.left;
       const relativeYLeft = e.clientY - containerRectLeft.top;
 
+      const relativeXLeftMarginRight = e.clientX - containerRectLeft.right;
+      let distanceRecLeftMarginRight = relativeXLeftMarginRight / 7;
+      let distanceRecTopMarginTop = relativeYLeft / 5;
+
       const containerRectRight = cursorReflectRight.parentNode.getBoundingClientRect();
       const relativeXRight = e.clientX - containerRectRight.left;
       const relativeYRight = e.clientY - containerRectRight.top;
+
+      const relativeXRightMarginRight = e.clientX - containerRectRight.left;
+      let distanceRecRightMarginRight = relativeXRightMarginRight / 7;
 
       // Cambiar la posición para centrar el cursor
       const cursorSize = 200;
@@ -3951,10 +3951,26 @@ async function unlockAnimation(
       const cursorPaintSizeY = 218;
       cursor.style.left = e.clientX - cursorSize / 2 + "px"; // Centrar en X
       cursor.style.top = e.clientY - cursorSize / 2 + "px"; // Centrar en Y
-      cursorReflectLeft.style.left = (relativeXLeft - cursorSize / 2) + "px";
-      cursorReflectLeft.style.top = (relativeYLeft - cursorSize / 2) + "px";
-      cursorReflectRight.style.left = (relativeXRight - cursorSize / 2) + "px";
-      cursorReflectRight.style.top = (relativeYRight - cursorSize / 2) + "px";
+      if(!isTransitioning){
+        cursorReflectLeft.style.display = "block";
+        cursorReflectRight.style.display = "block";
+      }
+      if(glassLeft.classList.contains("active")){
+        cursorReflectLeft.style.removeProperty("left");
+        cursorReflectLeft.style.right = ((relativeXLeft - cursorSize / 2) + distanceRecLeftMarginRight) + "px";
+      }else{
+        cursorReflectLeft.style.removeProperty("right");
+        cursorReflectLeft.style.left = ((relativeXLeft - cursorSize / 2) + distanceRecLeftMarginRight) + "px";
+      }
+      cursorReflectLeft.style.top = ((relativeYLeft - cursorSize / 2) + distanceRecTopMarginTop) + "px";
+      if(glassRight.classList.contains("active")){
+        cursorReflectRight.style.removeProperty("left");
+        cursorReflectRight.style.right = ((relativeXRight - cursorSize / 2)+distanceRecRightMarginRight) + "px";
+      }else{
+        cursorReflectRight.style.removeProperty("right");
+        cursorReflectRight.style.left = ((relativeXRight - cursorSize / 2)+distanceRecRightMarginRight) + "px";
+      }
+      cursorReflectRight.style.top = ((relativeYRight - cursorSize / 2)+distanceRecTopMarginTop) + "px";
       cursorPurpleish.style.left = e.clientX - cursorSize / 2 + "px"; // Centrar en X
       cursorPurpleish.style.top = e.clientY - cursorSize / 2 + "px"; // Centrar en Y
       cursorPaint.style.left = e.clientX - cursorPaintSizeX / 2 + "px";
@@ -4127,8 +4143,6 @@ async function unlockAnimation(
     }
     if (!cursorSrc.includes("cccc_galaxy")) {
       cursor.style.opacity = "100%";
-      cursorReflectLeft.style.opacity = "1";
-      cursorReflectRight.style.opacity = "1";
       cursor.style.transition =
         "width 0.1s ease-in-out, height 0.1s ease-in-out, transform 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease, margin-top 0.5s ease";
       cursorReflectLeft.style.transition =
@@ -4176,6 +4190,8 @@ async function unlockAnimation(
     if (cursorSrc.includes("cccc_checkbox")) {
       cursor.style.display = "none";
       cursorPurpleish.style.display = "none";
+      cursorReflectLeft.style.display = "none";
+      cursorReflectRight.style.display = "none";
       checkboxland.style.display = "block";
       checkboxlandBackground.style.display = "block";
       if(checkbox.checked){
@@ -6740,6 +6756,8 @@ let originalParent = null;
 // Variables globales para controlar la visibilidad de las tooltips
 let checkboxTooltipsNamesShown = false;
 let checkboxTooltipsStatesShown = false;
+let fillComederosAuto = false;
+let payWaterAuto = false;
 let helpIconWarnings = false;
 
 // Función para cargar los valores desde localStorage
@@ -6747,17 +6765,20 @@ function loadTooltipSettings() {
   // Cargar los valores del localStorage o usar los valores predeterminados (false)
   const savedNamesShown = localStorage.getItem('checkboxTooltipsNamesShown');
   const savedStatesShown = localStorage.getItem('checkboxTooltipsStatesShown');
+  const savedFillComederosAuto = localStorage.getItem('fillComederosAuto');
+  const savedPayWaterAuto = localStorage.getItem('payWaterAuto');
   const savedIconHelpShown = localStorage.getItem('helpIconWarnings');
 
   // Si no hay valores guardados en el localStorage, se usan los valores predeterminados (false)
   checkboxTooltipsNamesShown = savedNamesShown !== null ? JSON.parse(savedNamesShown) : false;
   checkboxTooltipsStatesShown = savedStatesShown !== null ? JSON.parse(savedStatesShown) : false;
+  fillComederosAuto = savedFillComederosAuto !== null ? JSON.parse(savedFillComederosAuto) : false;
+  payWaterAuto = savedPayWaterAuto !== null ? JSON.parse(savedPayWaterAuto) : false;
   helpIconWarnings = savedIconHelpShown !== null ? JSON.parse(savedIconHelpShown) : false;
 
   // Actualizar la visibilidad de los tooltips en base a los valores cargados
   updateTooltipVisibility();
   updateContextMenu(); // Actualizar el menú contextual al cargar
-  updateContextMenuFilter();
 }
 
 // Función para guardar los valores en localStorage
@@ -6765,6 +6786,8 @@ function saveTooltipSettings() {
   // Guardar los valores actuales de las variables en el localStorage
   localStorage.setItem('checkboxTooltipsNamesShown', JSON.stringify(checkboxTooltipsNamesShown));
   localStorage.setItem('checkboxTooltipsStatesShown', JSON.stringify(checkboxTooltipsStatesShown));
+  localStorage.setItem('fillComederosAuto', JSON.stringify(fillComederosAuto));
+  localStorage.setItem('payWaterAuto', JSON.stringify(payWaterAuto));
   localStorage.setItem('helpIconWarnings', JSON.stringify(helpIconWarnings));
 }
 
@@ -6791,6 +6814,26 @@ function desactivarShowStatsInTags(){
   saveTooltipSettings(); // Guardar el estado en el localStorage
   updateTooltipVisibility(); // Actualizar la visibilidad de los tooltips
 }
+
+function desactivarFillComederosAuto(){
+  fillComederosAuto = false;
+  saveTooltipSettings();
+}
+function activarFillComederosAuto(){
+  fillComederosAuto = true;
+  saveTooltipSettings();
+  autoFillComederos();
+}
+
+function desactivarPayWaterAuto(){
+  payWaterAuto = false;
+  saveTooltipSettings();
+}
+function activarPayWaterAuto(){
+  payWaterAuto = true;
+  saveTooltipSettings();
+}
+
 
 function desactivarhelpIconWarnings(){
   helpIconWarnings = false;
@@ -6848,10 +6891,8 @@ function updateContextMenu() {
   const contextMenuItems = document.querySelectorAll('.contextMenu li');
   
   contextMenuItems.forEach((item) => {
-    // Obtenemos el texto actual sin espacios extra
     const itemText = item.textContent.trim();
 
-    // Opción 1: Mostrar etiquetas (tooltips de nombres)
     if (itemText.includes("Mostrar etiquetas") || itemText.includes("✔ Mostrar etiquetas")) {
       if (checkboxTooltipsNamesShown) {
         item.textContent = "✔ Mostrar etiquetas";
@@ -6859,7 +6900,7 @@ function updateContextMenu() {
         item.textContent = "Mostrar etiquetas";
       }
     }
-    // Opción 2: Mostrar estadísticas en las etiquetas (tooltips de estados)
+
     else if (itemText.includes("Mostrar estadísticas en las etiquetas") || itemText.includes("✔ Mostrar estadísticas en las etiquetas")) {
       if (checkboxTooltipsStatesShown) {
         item.textContent = "✔ Mostrar estadísticas en las etiquetas";
@@ -6867,8 +6908,32 @@ function updateContextMenu() {
         item.textContent = "Mostrar estadísticas en las etiquetas";
       }
     }
-    // Opción 3: Ayuda nombre de venana para warnings (opción general)
-    else if (itemText.includes("Ayuda icono de venana para warnings")) {
+
+    else if (itemText.includes("Rellenar comederos automáticamente") || itemText.includes("✔ Rellenar comederos automáticamente")) {
+      if (fillComederosAuto) {
+        item.textContent = "✔ Rellenar comederos automáticamente";
+      } else {
+        item.textContent = "Rellenar comederos automáticamente";
+      }
+    }
+
+    else if (itemText.includes("Pagar factura del agua automáticamente") || itemText.includes("✔ Pagar factura del agua automáticamente")) {
+      if (payWaterAuto) {
+        item.textContent = "✔ Pagar factura del agua automáticamente";
+      } else {
+        item.textContent = "Pagar factura del agua automáticamente";
+      }
+    }
+
+    else if (itemText.includes("Mostrar estadísticas en las etiquetas") || itemText.includes("✔ Mostrar estadísticas en las etiquetas")) {
+      if (checkboxTooltipsStatesShown) {
+        item.textContent = "✔ Mostrar estadísticas en las etiquetas";
+      } else {
+        item.textContent = "Mostrar estadísticas en las etiquetas";
+      }
+    }
+
+    else if (itemText.includes("Ayuda icono de venana para warnings") || itemText.includes("✔ Ayuda icono de venana para warnings" )) {
       if (helpIconWarnings) {
         item.textContent = "✔ Ayuda icono de venana para warnings";
       } else {
@@ -6878,39 +6943,6 @@ function updateContextMenu() {
   });
 }
 
-function updateContextMenuFilter() {
-  const contextMenuItems = document.querySelectorAll('.contextMenuFil li');
-  
-  contextMenuItems.forEach((item) => {
-    // Obtenemos el texto actual sin espacios extra
-    const itemText = item.textContent.trim();
-
-    // Opción 1: Mostrar etiquetas (tooltips de nombres)
-    if (itemText.includes("Mostrar etiquetas") || itemText.includes("✔ Mostrar etiquetas")) {
-      if (checkboxTooltipsNamesShown) {
-        item.textContent = "✔ Mostrar etiquetas";
-      } else {
-        item.textContent = "Mostrar etiquetas";
-      }
-    }
-    // Opción 2: Mostrar estadísticas en las etiquetas (tooltips de estados)
-    else if (itemText.includes("Mostrar estadísticas en las etiquetas") || itemText.includes("✔ Mostrar estadísticas en las etiquetas")) {
-      if (checkboxTooltipsStatesShown) {
-        item.textContent = "✔ Mostrar estadísticas en las etiquetas";
-      } else {
-        item.textContent = "Mostrar estadísticas en las etiquetas";
-      }
-    }
-    // Opción 3: Ayuda nombre de venana para warnings (opción general)
-    else if (itemText.includes("Ayuda icono de venana para warnings")) {
-      if (helpIconWarnings) {
-        item.textContent = "✔ Ayuda icono de venana para warnings";
-      } else {
-        item.textContent = "Ayuda icono de venana para warnings";
-      }
-    }
-  });
-}
 
 
 
@@ -7271,6 +7303,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
             modifyFood("1", tooltip1, "-");
             fillHunger(thisHamster);
             startDecreasingStats(thisHamster);
+            autoFillComederos("comida1");
             delete thisHamster.dataset.onAction;
           }, 10000);
 
@@ -7297,6 +7330,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
             modifyFood("2", tooltip2, "-");
             fillHunger(thisHamster);
             startDecreasingStats(thisHamster);
+            autoFillComederos("comida2");
             delete thisHamster.dataset.onAction;
           }, 10000);
 
@@ -7322,6 +7356,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
             modifyFood("3", tooltip3, "-");
             fillHunger(thisHamster);
             startDecreasingStats(thisHamster);
+            autoFillComederos("comida3");
             delete thisHamster.dataset.onAction;
           }, 10000);
 
@@ -7363,7 +7398,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
   }else{
     //right en %
     if(thisHamster.parentElement.id === "hitboxSlotUpLeft"){
-      console.log("setHamsterBackAnimation: hitboxSlotUpLeft");
+      //console.log("setHamsterBackAnimation: hitboxSlotUpLeft");
       //rightBeber: 48%
       //rightComer: 77%
       if(action == "drink"){
@@ -7373,7 +7408,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
       }
 
     }else if(thisHamster.parentElement.id === "hitboxSlotUpRight"){
-      console.log("setHamsterBackAnimation: hitboxSlotUpRight");
+      //console.log("setHamsterBackAnimation: hitboxSlotUpRight");
       //rightBeber: 37%
       //rightComer: 13%
       if(action == "drink"){
@@ -7383,7 +7418,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
       }
 
     }else if(thisHamster.parentElement.id === "hitboxSlotDown"){
-      console.log("setHamsterBackAnimation: hitboxSlotDown");
+      //console.log("setHamsterBackAnimation: hitboxSlotDown");
       //rightBeber: 46%
       //rightComer: 72%
       if(action == "drink"){
@@ -7524,13 +7559,14 @@ function modifyFood(indexStr, tooltip, action){
       if (currentTooltipValue >= 10) { return; }
       if(parseInt(tomatoSliceLabel.textContent) < 1){return;}
       newTooltipValue = currentTooltipValue + 1;
+
+      tomatoSliceLabel.textContent = currentTomatoSliceValue - 1;
+      actualizarTomatosSliceUsuario(idLogeado, currentTomatoSliceValue - 1);
     } else if (action === "-") {
       if (currentTooltipValue <= 0) { return; }
       newTooltipValue = currentTooltipValue - 1;
     }    
     tooltip.textContent = newTooltipValue;
-    tomatoSliceLabel.textContent = currentTomatoSliceValue - 1;
-    actualizarTomatosSliceUsuario(idLogeado, currentTomatoSliceValue - 1);
     setResourcesFoodDrinkInDB(idLogeado, indexStr, newTooltipValue);
 
     let comida = document.getElementById("comida" + indexStr);
@@ -8963,6 +8999,26 @@ modifiersSettingsContextMenu.addEventListener('click', (event) => {
         event.target.textContent = "✔ Mostrar estadísticas en las etiquetas";
         activarShowStatsInTags();
       }
+    }
+
+    else if (itemText.includes("Rellenar comederos automáticamente")) {
+      if (itemText.startsWith("✔")) {
+        event.target.textContent = "Rellenar comederos automáticamente";
+        desactivarFillComederosAuto();
+      } else {
+        event.target.textContent = "✔ Rellenar comederos automáticamente";
+        activarFillComederosAuto();
+      }
+    } 
+
+    else if (itemText.includes("Pagar factura del agua automáticamente")) {
+      if (itemText.startsWith("✔")) {
+        event.target.textContent = "Pagar factura del agua automáticamente";
+        desactivarPayWaterAuto();
+      } else {
+        event.target.textContent = "✔ Pagar factura del agua automáticamente";
+        activarPayWaterAuto();
+      }
     } 
     
     else if (itemText.includes("Ayuda icono de venana para warnings")) {
@@ -10326,6 +10382,50 @@ function checkForNeedFood(hamsterEl) {
   }, 5000);
 }
 
+function autoFillComederos(comedero){
+  if(fillComederosAuto){
+    if(comedero){
+      let thisComedero = document.getElementById(comedero+"Hitbox");
+      let thisComederoNumber = Number(document.getElementById(comedero+"Tooltip").textContent);
+      if(thisComederoNumber < 1){
+
+        //Se intenta rellenar 10 veces
+        let count = 0;
+        const interval = setInterval(() => {
+          thisComedero.click();
+          count++;
+          if (count === 10) {
+            clearInterval(interval);
+          }
+        }, 200);
+
+      }
+    }else{
+      const comidaHitboxes = document.querySelectorAll(".comidaHitbox");
+
+      comidaHitboxes.forEach(hitbox => {
+        // Obtenemos el id del tooltip correspondiente, por ejemplo "comida1Tooltip"
+        const tooltipId = hitbox.id.replace('Hitbox', 'Tooltip');
+        const tooltip = Number(document.getElementById(tooltipId).textContent);
+
+        if(tooltip < 1){
+          //Se intenta rellenar 10 veces
+          let count = 0;
+          const interval = setInterval(() => {
+            hitbox.click();
+            count++;
+            if (count === 10) {
+              clearInterval(interval);
+            }
+          }, 200);
+        }
+
+      });
+    }
+
+  }
+}
+
 
 // Función para llenar la sed con velocidad
 function fillThirst(hamsterId, speed) {
@@ -10899,8 +10999,31 @@ tomatoContainerHitbox.addEventListener("click", function () {
 
 
     /* CAGE CRISTALS */
-glassLeftHitbox.addEventListener("mouseleave", function(event) {
-  if (!isDragging) {return;}
+let isTransitioning = false;
+let transitionTimeout;
+let leftHideTimeout;
+let rightHideTimeout;
+
+function triggerTransitioning() {
+  isTransitioning = true;
+  clearTimeout(transitionTimeout);
+  transitionTimeout = setTimeout(() => {
+    isTransitioning = false;
+  }, 700);
+}
+
+function hideLeftCursor() {
+  clearTimeout(leftHideTimeout);
+  cursorReflectLeft.style.display = "none";
+}
+
+function hideRightCursor() {
+  clearTimeout(rightHideTimeout);
+  cursorReflectRight.style.display = "none";
+}
+
+function handleLeave(event) {
+  if (!isDragging) return;
   const hamsters = document.querySelectorAll('.hamster');
   const comidaHitboxs = document.querySelectorAll('.comidaHitbox');
   if (
@@ -10914,101 +11037,65 @@ glassLeftHitbox.addEventListener("mouseleave", function(event) {
   ) {
     return;
   }
-
-  // Si no está en ningún elemento de la lista anterior, se quitan las clases
   glassLeft.classList.remove("active");
   glassRight.classList.remove("active");
-});
-glassRightHitbox.addEventListener("mouseleave", function(event) {
-  if (!isDragging) {return;}
-  const hamsters = document.querySelectorAll('.hamster');
-  const comidaHitboxs = document.querySelectorAll('.comidaHitbox');
-  if (
-    glassRight.contains(event.relatedTarget) ||
-    glassLeft.contains(event.relatedTarget) ||
-    glassRightHitbox.contains(event.relatedTarget) ||
-    glassLeftHitbox.contains(event.relatedTarget) ||
-    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
-    Array.from(comidaHitboxs).some(comidaHitbox => comidaHitbox.contains(event.relatedTarget)) ||
-    wrapper.contains(event.relatedTarget)
-  ) {
-    return;
-  }
+  cursorReflectLeft.classList.remove("right");
+  cursorReflectRight.classList.remove("right");
+  hideLeftCursor();
+  hideRightCursor();
+  triggerTransitioning();
+}
 
-  glassLeft.classList.remove("active");
-  glassRight.classList.remove("active");
-});
-glassLeft.addEventListener("mouseleave", function(event) {
-  if (!isDragging) {return;}
-  const hamsters = document.querySelectorAll('.hamster');
-  const comidaHitboxs = document.querySelectorAll('.comidaHitbox');
-  if (
-    glassRight.contains(event.relatedTarget) ||
-    glassLeft.contains(event.relatedTarget) ||
-    glassRightHitbox.contains(event.relatedTarget) ||
-    glassLeftHitbox.contains(event.relatedTarget) ||
-    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
-    Array.from(comidaHitboxs).some(comidaHitbox => comidaHitbox.contains(event.relatedTarget)) ||
-    wrapper.contains(event.relatedTarget)
-  ) {
-    return;
-  }
+glassLeftHitbox.addEventListener("mouseleave", handleLeave);
+glassRightHitbox.addEventListener("mouseleave", handleLeave);
+glassLeft.addEventListener("mouseleave", handleLeave);
+glassRight.addEventListener("mouseleave", handleLeave);
 
-  // Si no está en ningún elemento de la lista anterior, se quitan las clases
-  glassLeft.classList.remove("active");
-  glassRight.classList.remove("active");
-});
-
-glassRight.addEventListener("mouseleave", function(event) {
-  if (!isDragging) {return;}
-  const hamsters = document.querySelectorAll('.hamster');
-  const comidaHitboxs = document.querySelectorAll('.comidaHitbox');
-  if (
-    glassRight.contains(event.relatedTarget) ||
-    glassLeft.contains(event.relatedTarget) ||
-    glassRightHitbox.contains(event.relatedTarget) ||
-    glassLeftHitbox.contains(event.relatedTarget) ||
-    Array.from(hamsters).some(hamster => hamster.contains(event.relatedTarget)) ||
-    Array.from(comidaHitboxs).some(comidaHitbox => comidaHitbox.contains(event.relatedTarget)) ||
-    wrapper.contains(event.relatedTarget)
-  ) {
-    return;
-  }
-
-  glassLeft.classList.remove("active");
-  glassRight.classList.remove("active");
-});
-glassLeftHitbox.addEventListener("mouseenter", function(){
-  if (!isDragging) {return;}
+glassLeftHitbox.addEventListener("mouseenter", function() {
+  if (!isDragging) return;
   glassLeft.classList.add("active");
+  cursorReflectLeft.classList.add("right");
+  hideLeftCursor();
 });
 
-glassRightHitbox.addEventListener("mouseenter", function(){
-  if (!isDragging) {return;}
+glassRightHitbox.addEventListener("mouseenter", function() {
+  if (!isDragging) return;
   glassRight.classList.add("active");
+  cursorReflectRight.classList.add("right");
+  hideRightCursor();
+  triggerTransitioning();
 });
 
-glassLeft.addEventListener("mouseenter", function(){
-  if (!isDragging) {return;}
+glassLeft.addEventListener("mouseenter", function() {
+  if (!isDragging) return;
   glassLeft.classList.add("active");
+  cursorReflectLeft.classList.add("right");
+  hideLeftCursor();
+  triggerTransitioning();
 });
 
-glassRight.addEventListener("mouseenter", function(){
-  if (!isDragging) {return;}
+glassRight.addEventListener("mouseenter", function() {
+  if (!isDragging) return;
   glassRight.classList.add("active");
+  cursorReflectRight.classList.add("right");
+  hideRightCursor();
+  triggerTransitioning();
 });
 
-
-
-glassLeft.addEventListener("click", function(){
-  if (isDragging) {return;}
-  // Aquí puedes definir la lógica para alternar la clase 'active'
+glassLeft.addEventListener("click", function() {
+  if (isDragging) return;
   glassLeft.classList.toggle("active");
+  cursorReflectLeft.classList.toggle("right");
+  hideLeftCursor();
+  triggerTransitioning();
 });
 
-glassRight.addEventListener("click", function(){
-  if (isDragging) {return;}
+glassRight.addEventListener("click", function() {
+  if (isDragging) return;
   glassRight.classList.toggle("active");
+  cursorReflectRight.classList.toggle("right");
+  hideRightCursor();
+  triggerTransitioning();
 });
 
 
@@ -11050,7 +11137,7 @@ function startRandomGifRefreshIndividually() {
 startRandomGifRefreshIndividually();
 
 
-
+  //TODO !: tooltip-text in perspective with skins
   //TODO !: ocultar y guardar caja -> congelarla temporalmente
   //TODO !: fondos en las skinsCc cuando estén activas
   //TODo !: skins animadas en la portada

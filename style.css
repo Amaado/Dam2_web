@@ -289,6 +289,7 @@ body {
   transform: scale(1.5);
 }
 
+
 .customCursorReflect {
   position: absolute;
   width: 200px;
@@ -299,16 +300,25 @@ body {
     transform 0.1s ease-in-out, opacity 0.1s ease-in-out, margin-left 0.5s ease,
     margin-top 0.5s ease;
   z-index: 199;
-  transform: scale(0.9) translate(0px, -30px);
+  transform: scale(0.9) translate(0px, -45px) rotateY(0deg);
+  filter: url(#pixelate);
   image-rendering: pixelated;
   visibility: visible;
-  opacity: 1;
-
+  opacity: 0.5;
 }
 
 .customCursorReflect.clicked {
-  transform: scale(1.35) translate(0px, -30px);
+  transform: scale(1.35) translate(0px, -45px);
 }
+
+.customCursorReflect.right.clicked {
+  transform: scale(1.35) translate(2px, -45px) rotateY(180deg);
+}
+
+.customCursorReflect.right{
+  transform: scale(0.9) translate(2px, -45px) rotateY(180deg);
+}
+
 
 #fondoGalaxy {
   width: 100vw; /* Anchura completa de la ventana */
@@ -336,7 +346,7 @@ body {
 #fondoGalaxySkin {
   position: absolute; /* Para que cubra siempre la pantalla, independientemente del scroll */
   top: 10px;
-  width: 148px;
+  width: 145px;
   height: 111px;
   pointer-events: none;
   
@@ -5190,17 +5200,6 @@ canvas {
 }
 
 
-.glassBlue{
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: blue;
-  mask:"";
-  mask-size: 200px;
-  mask-repeat: no-repeat;
-  transform: scale(0.9) translate(0px, -30px);
-  z-index: 200;
-}
 #grifo{
   position: absolute;
   width: auto;
@@ -5228,7 +5227,6 @@ canvas {
   transform-origin: left center;
   transform: perspective(1300px) (0deg);
   transition: all 0.7s ease;
-  filter: url(#pixelate);
 }
 #glassLeft.active{
   transform: perspective(1300px) rotateY(-180deg);
@@ -5301,7 +5299,6 @@ canvas {
   transform-origin: right center;
   transform: perspective(1300px) rotateY(0deg);
   transition: all 0.7s ease;
-  filter: url(#pixelate);
 }
 #glassRight.active{
   transform: perspective(1300px) rotateY(180deg);

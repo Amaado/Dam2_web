@@ -203,6 +203,8 @@
       <ul id="modifiersSettingsContextMenu" class="contextMenu">
         <li>Mostrar etiquetas</li>
         <li>Mostrar estadísticas en las etiquetas</li>
+        <li>Rellenar comederos automáticamente</li>
+        <li>Pagar factura del agua automáticamente</li>
         <li>Ayuda icono de venana para warnings</li>
       </ul>
       <!--
@@ -596,7 +598,7 @@
           </div>
         </div>
         <img src="img/info.png" class="information tooltip-container tooltip-textTimerInfo" data-tooltip="Este elemento puede causar realentización de la página. " data-tooltipState="Media">
-        <img class="skinPortada" style="opacity: 70%;" src="img/cursors/portadas/cccc_galaxy.png" draggable="false" />
+        <img class="skinPortada" style="opacity: 70%; margin-left: 2px;" src="img/cursors/portadas/cccc_galaxy.png" draggable="false" />
         <img id="fondoGalaxySkin" src="" />
         <div class="tituloSkin">Cc Galaxy</div>
         <div class="releaseDate">Released: 01/10/2024</div>
@@ -816,27 +818,17 @@
       <img id="bebiendo2Gif" class="bebiendoGif" src="img/hamster/drinkPraticles.gif">
       <img id="bebiendo3Gif" class="bebiendoGif" src="img/hamster/drinkPraticles.gif">
       <div class="sombraTubo"></div>
-      <!--
-      <svg width="800px" height="600px" style="display: none;">
-        <defs>
-          <filter id="fakeOverlay">
-            <feColorMatrix type="luminanceToAlpha" result="L2A"/>
-            <feFlood flood-color="green" result="colorfield"/>
-            <feBlend mode="multiply" in="L2A" in2="colorfield"/>
-            <feComposite operator="in" in2="SourceGraphic"/>
-          </filter>
-          </defs>
-      </svg>-->
+
       <div id="glassLeft">
         <img id="customCursorReflectLeft" class="customCursorReflect" />
-        <div id="customCursorReflectLeftBlue" class="glassBlue"></div>
       </div>
       <div id="glassLeftHitbox"></div>
+
       <div id="glassRight">
         <img id="customCursorReflectRight" class="customCursorReflect" />
-        <div id="customCursorReflectRightBlue" class="glassBlue"></div>
       </div>
       <div id="glassRightHitbox"></div>
+
       <div id="hitboxSlotUpLeft" class="hitbox"></div>
       <div id="hitboxSlotUpRight" class="hitbox"></div>
       <div id="hitboxSlotDown" class="hitbox"></div>

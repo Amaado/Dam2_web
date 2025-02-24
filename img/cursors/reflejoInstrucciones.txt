@@ -1,0 +1,9 @@
+empieza frame 50
+flip horizontal
+color: #1893fb 50% opacity
+30% webp opacity
+
+Para glow:
+Ovalos contorno skin - 30% opacity
+	1. Gaussian blur: 40px
+	2. Gaussian blur: 90px
