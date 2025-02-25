@@ -6861,7 +6861,7 @@ function updateTooltipVisibility(){
       tooltip.style.opacity = "0";
     }else{
       if (checkboxTooltipsNamesShown) {
-        tooltip.style.opacity = "1";
+        tooltip.style.opacity = "0.8";
       } else {
         tooltip.style.opacity = "0";
       }
@@ -6882,6 +6882,20 @@ function updateTooltipVisibility(){
       container.style.opacity = "1";
     } else {
       container.style.opacity = "0";
+    }
+  });
+
+  const comidaHitboxes = document.querySelectorAll(".comidaHitbox");
+  comidaHitboxes.forEach(hitbox => {
+    // Obtenemos el id del tooltip correspondiente, por ejemplo "comida1Tooltip"
+    const tooltipId = hitbox.id.replace('Hitbox', 'Tooltip');
+    const tooltip = document.getElementById(tooltipId);
+    if (checkboxTooltipsStatesShown) {
+      tooltip.style.transition = "clip-path 0.3s ease 0.1s, margin-top 0.7s ease";
+      tooltip.classList.add('active');
+    }else{
+      tooltip.style.transition = "clip-path 0.3s ease 0.18s, margin-top 0.7s ease";
+      tooltip.classList.remove('active');
     }
   });
 }
@@ -7304,6 +7318,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
             fillHunger(thisHamster);
             startDecreasingStats(thisHamster);
             autoFillComederos("comida1");
+            eructo(thisHamster);
             delete thisHamster.dataset.onAction;
           }, 10000);
 
@@ -7331,6 +7346,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
             fillHunger(thisHamster);
             startDecreasingStats(thisHamster);
             autoFillComederos("comida2");
+            eructo(thisHamster);
             delete thisHamster.dataset.onAction;
           }, 10000);
 
@@ -7357,6 +7373,7 @@ function setHamsterBackAnimation(idHamster, action, moving){
             fillHunger(thisHamster);
             startDecreasingStats(thisHamster);
             autoFillComederos("comida3");
+            eructo(thisHamster);
             delete thisHamster.dataset.onAction;
           }, 10000);
 
@@ -7432,6 +7449,29 @@ function setHamsterBackAnimation(idHamster, action, moving){
   
 
 
+}
+
+modifiersInformationCont.addEventListener("click", serAllEructo);
+
+function serAllEructo(){
+  const hamsters = document.querySelectorAll(".hamster");
+  hamsters.forEach(hamster => {
+    eructo(hamster);
+  });
+}
+
+function eructo(hamster) {
+  if (Math.random() <= 0.4) {
+    hamster.classList.add("eructando");
+    hamster.classList.add("eructandokrp");
+
+    setTimeout(() => {
+      hamster.classList.remove("eructando");
+    }, 1000);
+    setTimeout(() => {
+      hamster.classList.remove("eructandokrp");
+    }, 2000);
+  }
 }
 
 function moveHamsterTo(hamster, targetRight, action) {
@@ -7539,6 +7579,7 @@ comidaHitboxes.forEach(hitbox => {
   });
 
   hitbox.addEventListener('mouseleave', () => {
+    if(checkboxTooltipsStatesShown){return;}
     tooltip.style.transition = "clip-path 0.3s ease 0.18s, margin-top 0.7s ease";
     tooltip.classList.remove('active');
   });
@@ -10494,27 +10535,21 @@ function decrementEnergy(hamsterId, amount) {
     if (hamsterEl.closest('.wrapper')) {
       modifyHamsterSpeed(hamster, setHamsterSpeed, 0.0, true);
     }
-  } else if (slider.value < 250) {
+  } else if (slider.value < 333) {
     hamsterEl.classList.remove("tong");
     hamsterEl.classList.add("tongU");
     hamsterEl.classList.add("exhaust");
     hamsterEl.classList.remove("exhaustSingle");
     modifyHamsterSpeed(hamsterEl, setHamsterSpeed, 1.5, false);
-  } else if (slider.value < 500) {
+  } else if (slider.value < 666) {
     hamsterEl.classList.remove("tong");
     hamsterEl.classList.add("tongU");
     hamsterEl.classList.remove("exhaust");
     hamsterEl.classList.add("exhaustSingle");
     modifyHamsterSpeed(hamsterEl, setHamsterSpeed, 1.5, false);
-  } else if (slider.value < 750) {
+  } else{
     hamsterEl.classList.remove("tong");
     hamsterEl.classList.add("tongU");
-    hamsterEl.classList.remove("exhaust");
-    hamsterEl.classList.remove("exhaustSingle");
-    modifyHamsterSpeed(hamsterEl, setHamsterSpeed, 1.5, false);
-  } else {
-    hamsterEl.classList.remove("tong");
-    hamsterEl.classList.remove("tongU");
     hamsterEl.classList.remove("exhaust");
     hamsterEl.classList.remove("exhaustSingle");
     modifyHamsterSpeed(hamsterEl, setHamsterSpeed, 1.5, false);
@@ -10712,7 +10747,10 @@ function actualizarSlider(slider) {
     const warningIcon = warningIcons[index];
     // Convertir el valor del slider a número
     const value = Number(slider.value);
-        
+
+    /* CODIGO BACKDROP FILTER WARNINGS */
+    backdropFilterWarnings(value);
+
     // Actualizar clases según el valor del slider (las clases se asignan siempre)
     if (value < 150) {
       // Valor crítico: rojo
@@ -10720,6 +10758,7 @@ function actualizarSlider(slider) {
       warningIcon.classList.remove("yellow");
     } else if (value < 350) {
       // Advertencia: amarillo
+      warningContainer.classList.add();
       warningIcon.classList.add("yellow");
       warningIcon.classList.remove("red");
     } else {
@@ -10758,7 +10797,43 @@ function actualizarSlider(slider) {
   }
 }
 
-
+function backdropFilterWarnings(value) {
+  const sliderHamsterWarningIcons = document.querySelector('.sliderHamsterWarningIcons');
+  // Selecciona todos los elementos de advertencia dentro del contenedor
+  const warningIcons = sliderHamsterWarningIcons.querySelectorAll('img.warning');
+  
+  // Variables para determinar si hay warning de hambre o de agua
+  let tieneHambre = false;
+  let tieneAgua = false;
+  
+  warningIcons.forEach(icon => {
+    if (icon.classList.contains("warningHunger")) {
+      tieneHambre = true;
+    }
+    if (icon.classList.contains("warningWater")) {
+      tieneAgua = true;
+    }
+  });
+  
+  if (value < 350) {
+    // Se agrega o remueve la clase en el contenedor de forma independiente
+    if (tieneHambre) {
+      sliderHamsterWarningIcons.classList.add("warningHunger");
+    } else {
+      sliderHamsterWarningIcons.classList.remove("warningHunger");
+    }
+    
+    if (tieneAgua) {
+      sliderHamsterWarningIcons.classList.add("warningWater");
+    } else {
+      sliderHamsterWarningIcons.classList.remove("warningWater");
+    }
+  } else {
+    // Si el valor no cumple la condición, se quitan ambas advertencias (opcional)
+    sliderHamsterWarningIcons.classList.remove("warningHunger");
+    sliderHamsterWarningIcons.classList.remove("warningWater");
+  }
+}
 
 
 // Asignamos el event listener a cada slider y forzamos la actualización inicial
