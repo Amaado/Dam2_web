@@ -5448,13 +5448,13 @@ function resetPag() {
   }
 
   // Muestra el tooltipVolume cuando el ratón está presionado
-  function showTooltip() {
+  function showTooltipSliderPaint() {
     tooltipPaint.style.opacity = "1";
     isMouseDown = true;
   }
 
   // Oculta el tooltipVolume cuando el ratón se suelta
-  function hideTooltip() {
+  function hideTooltipSliderPaint() {
     tooltipPaint.style.opacity = "0";
     isMouseDown = false;
   }
@@ -5467,8 +5467,8 @@ function resetPag() {
   }
 
   // Añadir los eventos de mostrar y ocultar tooltipVolume
-  sliderPaint.addEventListener("mousedown", showTooltip);
-  document.addEventListener("mouseup", hideTooltip);
+  sliderPaint.addEventListener("mousedown", showTooltipSliderPaint);
+  document.addEventListener("mouseup", hideTooltipSliderPaint);
   sliderPaint.addEventListener("input", handleSliderMove);
 
   // Iniciar el tooltipVolume con el valor del slider si está en localStorage
@@ -6611,128 +6611,128 @@ function resetPag() {
 
   /* TOOLTIPS */
 
-const tooltipContainers = document.querySelectorAll('.tooltip-container');
+  const tooltipContainers = document.querySelectorAll('.tooltip-container');
 
-tooltipContainers.forEach(tooltipContainer => {
-  let timer; 
-  let lastMousePosition = { x: 0, y: 0 };
-  let tooltipVisible = false;
-  let tooltip;
-
-  tooltipContainer.addEventListener('mouseenter', function(e) {
-    clearTimeout(timer);
-    resetTimer(e);
-  });
-
-  tooltipContainer.addEventListener('mousemove', function(ev) {
-    lastMousePosition.x = ev.clientX;
-    lastMousePosition.y = ev.clientY;
-    if (!tooltipVisible) {
-      resetTimer(ev);
-    } else if (tooltip) {
-      positionTooltip(tooltip, ev.clientX, ev.clientY);
+  tooltipContainers.forEach(tooltipContainer => {
+    let timer; 
+    let lastMousePosition = { x: 0, y: 0 };
+    let tooltipVisible = false;
+    let tooltip;
+  
+    tooltipContainer.addEventListener('mouseenter', function(e) {
+      clearTimeout(timer);
+      resetTimer(e);
+    });
+  
+    tooltipContainer.addEventListener('mousemove', function(ev) {
+      lastMousePosition.x = ev.clientX;
+      lastMousePosition.y = ev.clientY;
+      if (!tooltipVisible) {
+        resetTimer(ev);
+      } else if (tooltip) {
+        positionTooltip(tooltip, ev.clientX, ev.clientY);
+      }
+    });
+  
+    tooltipContainer.addEventListener('mouseleave', function() {
+      clearTimeout(timer);
+      if (tooltip) {
+        tooltip.style.opacity = '0';  // Inicia la transición de desaparición
+        setTimeout(() => removeTooltip(), 100);  // Espera brevemente antes de eliminar
+      }
+      tooltipVisible = false;
+    });
+  
+    function resetTimer(event) {
+      clearTimeout(timer);
+      if (tooltipContainer.classList.contains("tooltip-textTimerRtx")) {
+        timer = setTimeout(() => showTooltip(lastMousePosition.x, lastMousePosition.y), 500);
+      } else if (tooltipContainer.classList.contains("tooltip-textTimerInfo")) {
+        timer = setTimeout(() => showTooltip(lastMousePosition.x, lastMousePosition.y), 10);
+      }/* else {
+        timer = setTimeout(() => showTooltip(lastMousePosition.x, lastMousePosition.y), 1500);
+      }*/
+    }
+  
+    function showTooltip(mouseX, mouseY) {
+      if (!tooltipVisible) {
+        tooltip = createTooltip();
+        positionTooltip(tooltip, mouseX, mouseY);
+        tooltip.style.visibility = 'visible';
+        tooltip.style.opacity = '1';
+        tooltipVisible = true;
+      }
+    }
+  
+    function createTooltip() {
+      let newTooltip = document.createElement('div');
+      newTooltip.className = 'tooltip-text';
+    
+      if (tooltipContainer.classList.contains("tooltip-text-left")) {
+        newTooltip.classList.add('tooltip-text-left');
+      }
+    
+      const mainText = document.createElement('div');
+      mainText.textContent = tooltipContainer.getAttribute('data-tooltip');
+      newTooltip.appendChild(mainText);
+    
+      const newTooltipHighlight = document.createElement('span');
+      newTooltipHighlight.className = 'tooltip-textHighlight';
+      newTooltipHighlight.textContent = "Intensidad: ";
+      newTooltip.appendChild(newTooltipHighlight);
+    
+      const newTooltipState = document.createElement('span');
+      newTooltipState.className = 'tooltip-textState';
+      newTooltipState.textContent = tooltipContainer.getAttribute('data-tooltipState');
+    
+      if (newTooltipState.textContent == "Media") {
+        newTooltipState.classList.add("media");
+    
+      }else if (newTooltipState.textContent == "Alta") {
+        newTooltipState.style.width = "55px";
+        newTooltipState.classList.add("alta");
+        const imgAlta = document.createElement('img');
+        imgAlta.src = 'img/tooltipFireEmoji.gif';
+        imgAlta.className = 'tooltipFireEmoji tooltipFireEmojiAlta';
+        
+        newTooltipState.appendChild(imgAlta);
+    
+      } else if (newTooltipState.textContent == "Muy alta") {
+        newTooltipState.style.width = "90px";
+        newTooltipState.classList.add("muyAlta");
+        const imgMuyAlta1 = document.createElement('img');
+        imgMuyAlta1.src = 'img/tooltipFireEmoji.gif';
+        imgMuyAlta1.className = 'tooltipFireEmoji tooltipFireEmojiMuyAlta';
+  
+        newTooltipState.appendChild(imgMuyAlta1);
+  
+      }else if (newTooltipState.textContent == "Extrema") {
+        newTooltipState.classList.add("extrema");
+        const imgExtrema = document.createElement('img');
+        imgExtrema.src = 'img/tooltipFireSimulation.webp';
+        imgExtrema.className = 'tooltipFireSimulation';
+    
+        newTooltipState.appendChild(imgExtrema);
+      }
+    
+      newTooltipHighlight.appendChild(newTooltipState);
+      document.body.appendChild(newTooltip);
+      newTooltip.style.opacity = '0';
+      return newTooltip;
+    }
+  
+    function removeTooltip() {
+      if (tooltip) {
+        tooltip.remove();
+        tooltip = null;
+      }
+    }
+  
+    function positionTooltip(tooltip, mouseX, mouseY) {
+      tooltip.style.left = `${mouseX + 15}px`;
+      tooltip.style.top = `${mouseY - 30}px`;
     }
   });
-
-  tooltipContainer.addEventListener('mouseleave', function() {
-    clearTimeout(timer);
-    if (tooltip) {
-      tooltip.style.opacity = '0';  // Inicia la transición de desaparición
-      setTimeout(() => removeTooltip(), 100);  // Espera brevemente antes de eliminar
-    }
-    tooltipVisible = false;
-  });
-
-  function resetTimer(event) {
-    clearTimeout(timer);
-    if (tooltipContainer.classList.contains("tooltip-textTimerRtx")) {
-      timer = setTimeout(() => showTooltip(lastMousePosition.x, lastMousePosition.y), 500);
-    } else if (tooltipContainer.classList.contains("tooltip-textTimerInfo")) {
-      timer = setTimeout(() => showTooltip(lastMousePosition.x, lastMousePosition.y), 10);
-    }/* else {
-      timer = setTimeout(() => showTooltip(lastMousePosition.x, lastMousePosition.y), 1500);
-    }*/
-  }
-
-  function showTooltip(mouseX, mouseY) {
-    if (!tooltipVisible) {
-      tooltip = createTooltip();
-      positionTooltip(tooltip, mouseX, mouseY);
-      tooltip.style.visibility = 'visible';
-      tooltip.style.opacity = '1';
-      tooltipVisible = true;
-    }
-  }
-
-  function createTooltip() {
-    let newTooltip = document.createElement('div');
-    newTooltip.className = 'tooltip-text';
-  
-    if (tooltipContainer.classList.contains("tooltip-text-left")) {
-      newTooltip.classList.add('tooltip-text-left');
-    }
-  
-    const mainText = document.createElement('div');
-    mainText.textContent = tooltipContainer.getAttribute('data-tooltip');
-    newTooltip.appendChild(mainText);
-  
-    const newTooltipHighlight = document.createElement('span');
-    newTooltipHighlight.className = 'tooltip-textHighlight';
-    newTooltipHighlight.textContent = "Intensidad: ";
-    newTooltip.appendChild(newTooltipHighlight);
-  
-    const newTooltipState = document.createElement('span');
-    newTooltipState.className = 'tooltip-textState';
-    newTooltipState.textContent = tooltipContainer.getAttribute('data-tooltipState');
-  
-    if (newTooltipState.textContent == "Media") {
-      newTooltipState.classList.add("media");
-  
-    }else if (newTooltipState.textContent == "Alta") {
-      newTooltipState.style.width = "55px";
-      newTooltipState.classList.add("alta");
-      const imgAlta = document.createElement('img');
-      imgAlta.src = 'img/tooltipFireEmoji.gif';
-      imgAlta.className = 'tooltipFireEmoji tooltipFireEmojiAlta';
-      
-      newTooltipState.appendChild(imgAlta);
-  
-    } else if (newTooltipState.textContent == "Muy alta") {
-      newTooltipState.style.width = "90px";
-      newTooltipState.classList.add("muyAlta");
-      const imgMuyAlta1 = document.createElement('img');
-      imgMuyAlta1.src = 'img/tooltipFireEmoji.gif';
-      imgMuyAlta1.className = 'tooltipFireEmoji tooltipFireEmojiMuyAlta';
-
-      newTooltipState.appendChild(imgMuyAlta1);
-
-    }else if (newTooltipState.textContent == "Extrema") {
-      newTooltipState.classList.add("extrema");
-      const imgExtrema = document.createElement('img');
-      imgExtrema.src = 'img/tooltipFireSimulation.webp';
-      imgExtrema.className = 'tooltipFireSimulation';
-  
-      newTooltipState.appendChild(imgExtrema);
-    }
-  
-    newTooltipHighlight.appendChild(newTooltipState);
-    document.body.appendChild(newTooltip);
-    newTooltip.style.opacity = '0';
-    return newTooltip;
-  }
-
-  function removeTooltip() {
-    if (tooltip) {
-      tooltip.remove();
-      tooltip = null;
-    }
-  }
-
-  function positionTooltip(tooltip, mouseX, mouseY) {
-    tooltip.style.left = `${mouseX + 15}px`;
-    tooltip.style.top = `${mouseY - 30}px`;
-  }
-});
 
 
 
@@ -10748,23 +10748,16 @@ function actualizarSlider(slider) {
     // Convertir el valor del slider a número
     const value = Number(slider.value);
 
-    /* CODIGO BACKDROP FILTER WARNINGS */
-    backdropFilterWarnings(value);
-
-    // Actualizar clases según el valor del slider (las clases se asignan siempre)
-    if (value < 150) {
-      // Valor crítico: rojo
-      warningIcon.classList.add("red");
-      warningIcon.classList.remove("yellow");
-    } else if (value < 350) {
-      // Advertencia: amarillo
-      warningContainer.classList.add();
-      warningIcon.classList.add("yellow");
-      warningIcon.classList.remove("red");
-    } else {
-      // Valor normal: sin clases de advertencia
-      warningIcon.classList.remove("yellow");
-      warningIcon.classList.remove("red");
+    if(warningIcon.classList.contains("warningWater") || warningIcon.classList.contains("warningHunger")){
+      if (value < 150) {
+        warningIcon.src = "img/errorRed.png";
+        warningIcon.classList.add("active");
+      } else if (value < 350) {
+        warningIcon.src = "img/errorYellow.png";
+        warningIcon.classList.add("active");
+      } else {
+        warningIcon.classList.remove("active");
+      }
     }
   }
 
@@ -10778,17 +10771,17 @@ function actualizarSlider(slider) {
     let redCount = 0;
     let yellowCount = 0;
     allWarningIcons.forEach(icon => {
-      if (icon.classList.contains("red")) redCount++;
-      if (icon.classList.contains("yellow")) yellowCount++;
+      if (icon.classList.contains("active") && icon.src.includes("Red")) redCount++;
+      if (icon.classList.contains("active") && icon.src.includes("Yellow")) yellowCount++;
     });
     
     // Si existe exactamente un icono rojo, usar el favicon rojo.
     // Si no, pero existe exactamente un icono amarillo, usar el favicon amarillo.
     // En cualquier otro caso se usa el favicon por defecto.
     if (redCount > 0) {
-      favicon.href = "img/errorRed.png";
+      favicon.href = "img/errorRedFav.png";
     } else if (yellowCount > 0) {
-      favicon.href = "img/errorYellow.png";
+      favicon.href = "img/errorYellowFav.png";
     } else {
       favicon.href = defaultFavicon;
     }
@@ -10797,43 +10790,6 @@ function actualizarSlider(slider) {
   }
 }
 
-function backdropFilterWarnings(value) {
-  const sliderHamsterWarningIcons = document.querySelector('.sliderHamsterWarningIcons');
-  // Selecciona todos los elementos de advertencia dentro del contenedor
-  const warningIcons = sliderHamsterWarningIcons.querySelectorAll('img.warning');
-  
-  // Variables para determinar si hay warning de hambre o de agua
-  let tieneHambre = false;
-  let tieneAgua = false;
-  
-  warningIcons.forEach(icon => {
-    if (icon.classList.contains("warningHunger")) {
-      tieneHambre = true;
-    }
-    if (icon.classList.contains("warningWater")) {
-      tieneAgua = true;
-    }
-  });
-  
-  if (value < 350) {
-    // Se agrega o remueve la clase en el contenedor de forma independiente
-    if (tieneHambre) {
-      sliderHamsterWarningIcons.classList.add("warningHunger");
-    } else {
-      sliderHamsterWarningIcons.classList.remove("warningHunger");
-    }
-    
-    if (tieneAgua) {
-      sliderHamsterWarningIcons.classList.add("warningWater");
-    } else {
-      sliderHamsterWarningIcons.classList.remove("warningWater");
-    }
-  } else {
-    // Si el valor no cumple la condición, se quitan ambas advertencias (opcional)
-    sliderHamsterWarningIcons.classList.remove("warningHunger");
-    sliderHamsterWarningIcons.classList.remove("warningWater");
-  }
-}
 
 
 // Asignamos el event listener a cada slider y forzamos la actualización inicial
