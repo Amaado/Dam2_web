@@ -6686,7 +6686,6 @@ canvas {
   width: 10vh;
 }
 
-
 .bumpImg{
   position: absolute;
   display: block;
@@ -6694,4 +6693,44 @@ canvas {
   height: auto;
   image-rendering: pixelated;
   transform: translateX(50px);
+}
+
+
+#mainModifierCont{
+  position: absolute;
+  width: 100%;
+  height: calc(62vh - 220px);
+  bottom: 38vh;
+  background-color: red;
+  display: flex;
+  flex-direction: row;
+  gap: 3vw;
+  align-items: center;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+}
+.modifierContScroll{
+  position: relative;
+  display: flex;
+  min-width: 100%;
+  /*height: calc(99% - 20px);*/
+  height: 100%;
+  scroll-snap-align: start;
+  background-color: purple;
+}
+
+.modifierCont{
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+}
+#statsModifierCont {
+  background-color: green;
+}
+#emailModifierCont {
+  background-color: blue;
+}
+#hospitalModifierCont{
+  background-color: goldenrod;
 }
