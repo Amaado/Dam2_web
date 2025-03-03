@@ -2484,6 +2484,21 @@ div.img img {
   top: -60px;
 }
 
+.skinPortadaGhostRiderCont{
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  overflow: hidden;
+}
+/*  top: -75px;*/
+.skinPortadaGhostRider{
+  position: relative;
+  display: flex;
+  width: 230px;
+  height: 230px;
+  transform: translateY(-75px);
+}
+
 .tituloSkin {
   position: relative;
   display: flex;

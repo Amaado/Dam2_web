@@ -4484,9 +4484,7 @@ async function unlockAnimation(
     }
   }
 
-
-
-
+  
   const scrollThreshold = 0;
   const startPosY = 100;
   const endPosY = 0;
