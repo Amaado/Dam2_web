@@ -2169,7 +2169,7 @@ div.img img {
 }
 
 .hr:nth-child(2){
-  margin-top: 95px;
+  margin-top: 85px;
   margin-bottom: 0px;
 }
 
@@ -5011,6 +5011,7 @@ canvas {
   z-index: -10;
 }
 #tuboGradientUp{
+  display: none;
   position: absolute;
   width: 417.83px;
   height: 334.96px;
@@ -5159,7 +5160,11 @@ canvas {
 
   animation: degradeMove 10s linear infinite;
 }
+#tuboGradientUp.active{
+  display: block;
+}
 #tuboGradientDown{
+  display: none;
   position: absolute;
   width: 417.83px;
   height: 334.96px;
@@ -5308,7 +5313,9 @@ canvas {
 
   animation: degradeMove 20s linear infinite;
 }
-
+#tuboGradientDown.active{
+  display: block;
+}
 
 @keyframes degradeMove {
   0%   { background-position: 0%   50%; }
@@ -5804,19 +5811,6 @@ canvas {
 }
 
 
-.sliderHamster{
-  
-}
-
-.sliderEnergy{
-  
-}
-
-.sliderHunger{
-  
-}
-
-
 
 .sliderHamsterContainer{
   display: flex;
@@ -5902,7 +5896,7 @@ canvas {
 }
 
 .sliderHunger::before {
-  background: #d3544b;
+  background: #f56359;
   /*box-shadow: -407px 0 0 400px #d3544b;*/
   box-shadow: inset 0px -0.5px 2px rgba(0, 0, 0, 0.8);
 }
@@ -6570,85 +6564,9 @@ canvas {
 #modifiersBar{
   display: flex;
   flex-direction: row;
-  gap: 3vh;
+  justify-content:  right;
   width: 96%;
 }
-
-
-#modifiersInformationCont{
-  position: relative;
-  min-width: 30px;
-  height: 30px;
-  pointer-events: all;
-  top: -10px;
-  left: 2vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 3px;
-}
-#modifiersInformationCont.day:hover{
-  background-color: #71604e4f;
-}
-#modifiersInformationCont.night:hover{
-  background-color: #bfd4e949;
-}
-
-#modifiersInformation{
-  position: relative;
-  width: 25px;
-  height: 25px;
-  pointer-events: all;
-}
-#modifiersInformation.day{
-  filter: brightness(0) saturate(100%) invert(18%) sepia(16%) saturate(607%) hue-rotate(176deg) brightness(96%) contrast(90%);
-}
-#modifiersInformation.night{
-  filter: brightness(0) saturate(100%) invert(91%) sepia(12%) saturate(5479%) hue-rotate(183deg) brightness(113%) contrast(83%);
-}
-
-
-#blank{
- width: 200%;
- /*background-color: red;*/
-}
-
-
-#modifiersEmailCont{
-  position: relative;
-  min-width: 30px;
-  height: 30px;
-  pointer-events: all;
-  top: -10px;
-  justify-content:  right;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 3px;
-}
-#modifiersEmailCont.day:hover{
-  background-color: #71604e4f;
-}
-#modifiersEmailCont.night:hover{
-  background-color: #bfd4e949;
-}
-
-
-#modifiersEmail{
-  position: relative;
-  width: 30px;
-  top: -5px;
-  left: 0.5px;
-  height: auto;
-  pointer-events: all;
-}
-#modifiersEmail.day{
-  filter: brightness(0) saturate(100%) invert(18%) sepia(16%) saturate(607%) hue-rotate(176deg) brightness(96%) contrast(90%);
-}
-#modifiersEmail.night{
-  filter: brightness(0) saturate(100%) invert(91%) sepia(12%) saturate(5479%) hue-rotate(183deg) brightness(113%) contrast(83%);
-}
-
 
 
 #modifiersSettingsCont{
@@ -6714,25 +6632,32 @@ canvas {
 #mainModifierCont{
   position: absolute;
   width: 100%;
-  height: calc(62vh - 220px);
-  bottom: 38vh;
+  height: calc(62vh - 240px);
+  bottom: 40.5vh;
   background-color: red;
   display: flex;
   flex-direction: row;
   gap: 3vw;
   align-items: center;
-  overflow-x: scroll;
-  overflow-y: hidden;
+  overflow-x: hidden; /* Oculta el scroll nativo, ya que moveremos con margin */
+  white-space: nowrap;
   scroll-snap-type: x mandatory;
+  justify-content: flex-start;
+  transition:  all 0.7s ease;
 }
+
+#mainModifierCont.email{
+  justify-content: flex-end;
+}
+
 .modifierContScroll{
   position: relative;
-  display: flex;
+  display: inline-block;
   min-width: 100%;
   /*height: calc(99% - 20px);*/
   height: 100%;
-  scroll-snap-align: start;
   background-color: purple;
+  transition: all 0.7s ease;
 }
 
 .modifierCont{
@@ -6740,12 +6665,94 @@ canvas {
   height: 100%;
   border-radius: 15px;
 }
-#statsModifierCont {
+#homeModifierCont {
   background-color: green;
 }
 #emailModifierCont {
   background-color: blue;
 }
-#hospitalModifierCont{
-  background-color: goldenrod;
+
+
+
+
+#barSlide{
+  position: absolute;
+  min-width: 3.3vh;
+  height: 3.3vh;
+  top: 2px;
+  border-radius: 0.5vh;
+  background-color: #bfd4e9;
+  z-index: -1;
+}
+#barSlide.pos1{
+  margin-right: 8.2vh;
+}
+#barSlide.pos2{
+  margin-left: 8vh;
+}
+#modifiersBarSlide{
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 96%;
+  height: 3.5vh;
+  bottom: 36.8vh;
+  gap: 5vh;
+}
+
+.modifiersBarSlideCont{
+  position: relative;
+  min-width: 4vh;
+  height: 4vh;
+  top: 2px;
+  pointer-events: all;
+  z-index: 1;
+  justify-content:  right;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5vh;
+  background-color: greenyellow;
+}
+
+/*HOME img*/
+#modifiersHome{
+  position: relative;
+  width: auto;
+  height: 3vh;
+  pointer-events: none;
+  z-index: 0;
+  transition: all 0.7s ease;
+}
+#modifiersHome.day{
+  filter: brightness(0) saturate(100%) invert(18%) sepia(16%) saturate(607%) hue-rotate(176deg) brightness(96%) contrast(90%);
+}
+#modifiersHome.night{
+  filter: brightness(0) saturate(100%) invert(91%) sepia(12%) saturate(5479%) hue-rotate(183deg) brightness(113%) contrast(83%);
+}
+#modifiersHome.active{
+  filter: brightness(0) saturate(100%) invert(3%) sepia(3%) saturate(7159%) hue-rotate(182deg) brightness(93%) contrast(89%);
+}
+
+/*EMAIL img*/
+#modifiersEmail{
+  position: relative;
+  width: auto;
+  height: 3vh;
+  margin-top: -9px;
+  pointer-events: none;
+  z-index: 0;
+  transition: all 0.7s ease;
+}
+#modifiersEmail.day.active{
+  filter: brightness(0) saturate(100%) invert(18%) sepia(16%) saturate(607%) hue-rotate(176deg) brightness(96%) contrast(90%);
+}
+#modifiersEmail.night{
+  filter: brightness(0) saturate(100%) invert(91%) sepia(12%) saturate(5479%) hue-rotate(183deg) brightness(113%) contrast(83%);
+}
+#modifiersEmail.active{
+  margin-top: 0px;
+  filter: brightness(0) saturate(100%) invert(3%) sepia(3%) saturate(7159%) hue-rotate(182deg) brightness(93%) contrast(89%);
 }

@@ -110,10 +110,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const modifiersSettingsContextMenu = document.getElementById('modifiersSettingsContextMenu');
   const modifiersSettingsCont = document.getElementById('modifiersSettingsCont');
   const modifiersSettingsHiboxAreaContextMenu = document.getElementById('modifiersSettings');
-  const modifiersEmailCont = document.getElementById('modifiersEmailCont');
   const modifiersEmail = document.getElementById('modifiersEmail');
-  const modifiersInformationCont = document.getElementById('modifiersInformationCont');
-  const modifiersInformation = document.getElementById('modifiersInformation');
+  const modifiersHome = document.getElementById('modifiersHome');
   const contextMenus = document.querySelectorAll('.contextMenu');
   
   const tomatoLabel = document.getElementById('tomatoLabel');
@@ -781,10 +779,10 @@ function updateBubbles() {
       menuLabelModifiers.style.color = "#313842";
       modifiersSettingsCont.className = "day";
       modifiersSettingsHiboxAreaContextMenu.className = "day";
-      modifiersEmailCont.className = "day";
-      modifiersEmail.className = "day";
-      modifiersInformationCont.className = "day";
-      modifiersInformation.className = "day";
+      modifiersEmail.classList.remove("night");
+      modifiersHome.classList.remove("night");
+      modifiersEmail.classList.add("day");
+      modifiersHome.classList.add("day");
       contextMenus.forEach((contextMenu) => {
         if (!contextMenu.classList.contains("day")) {
           contextMenu.classList.add("day");
@@ -854,10 +852,10 @@ function updateBubbles() {
       menuLabelModifiers.style.color = "#bfd4e9";
       modifiersSettingsCont.className = "night";
       modifiersSettingsHiboxAreaContextMenu.className = "night";
-      modifiersEmailCont.className = "night";
-      modifiersEmail.className = "night";
-      modifiersInformationCont.className = "night";
-      modifiersInformation.className = "night";
+      modifiersEmail.classList.add("night");
+      modifiersHome.classList.add("night");
+      modifiersEmail.classList.remove("day");
+      modifiersHome.classList.remove("day");
       contextMenus.forEach((contextMenu) => {
         if (!contextMenu.classList.contains("night")) {
           contextMenu.classList.add("night");
@@ -4029,8 +4027,6 @@ async function unlockAnimation(
         e.target.closest("#buttonMas") ||
         e.target.closest("#buttonMenos") ||
         e.target.closest("li") ||
-        e.target.closest("#modifiersInformationCont") ||
-        e.target.closest("#modifiersEmailCont") ||
         e.target.closest("#modifiersSettingsCont") ||
         e.target.closest(".paletteColor") ||
         e.target.closest("#writeButton") ||
@@ -4073,8 +4069,6 @@ async function unlockAnimation(
         e.target.closest("#buttonMas") ||
         e.target.closest("#buttonMenos") ||
         e.target.closest("li") ||
-        e.target.closest("#modifiersInformationCont") ||
-        e.target.closest("#modifiersEmailCont") ||
         e.target.closest("#modifiersSettingsCont") ||
         e.target.closest(".paletteColor") ||
         e.target.closest("#writeButton") ||
@@ -7327,6 +7321,8 @@ function setHamsterBackAnimation(idHamster, action, moving){
           setTimeout(() => {
             bebiendo1Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
+            fillWater(thisHamster);
+            startDecreasingStats(thisHamster);
             delete thisHamster.dataset.onAction;
           }, 10000);
         }
@@ -7355,6 +7351,8 @@ function setHamsterBackAnimation(idHamster, action, moving){
           setTimeout(() => {
             bebiendo2Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
+            fillWater(thisHamster);
+            startDecreasingStats(thisHamster);
             delete thisHamster.dataset.onAction;
           }, 10000);
         }
@@ -7382,6 +7380,8 @@ function setHamsterBackAnimation(idHamster, action, moving){
           setTimeout(() => {
             bebiendo3Gif.style.display = "none";
             resetHmasterClassList(thisHamster);
+            fillWater(thisHamster);
+            startDecreasingStats(thisHamster);
             delete thisHamster.dataset.onAction;
           }, 10000);
         }
@@ -7447,15 +7447,6 @@ function setHamsterBackAnimation(idHamster, action, moving){
   
 
 
-}
-
-modifiersInformationCont.addEventListener("click", serAllEructo);
-
-function serAllEructo(){
-  const hamsters = document.querySelectorAll(".hamster");
-  hamsters.forEach(hamster => {
-    eructo(hamster);
-  });
 }
 
 function eructo(hamster) {
@@ -8019,6 +8010,7 @@ function stopDragHamster(e) {
           startDecreasingStats(currentHamster.id);
           if (originalParent.id === 'hitboxSlotWorld') {}else{
             checkForNeedFood(currentHamster);
+            checkForNeedWater(currentHamster);
           }
 
           resetDragVariables();
@@ -8077,6 +8069,7 @@ function stopDragHamster(e) {
       startFillingEnergy(currentHamster.id);
       startDecreasingStats(currentHamster.id);
       checkForNeedFood(currentHamster);
+      checkForNeedWater(currentHamster);
 
       resetDragVariables();
       return;
@@ -8105,6 +8098,7 @@ function stopDragHamster(e) {
       startDecreasingStats(currentHamster.id);
       if (originalParent.id === 'hitboxSlotWorld') {}else{
         checkForNeedFood(currentHamster);
+        checkForNeedWater(currentHamster);
       }
 
       resetDragVariables();
@@ -10103,6 +10097,7 @@ async function cargarHamstersDesdeBD() {
           startFillingEnergy(currentHamster.id);
           startDecreasingStats(currentHamster.id);
           checkForNeedFood(currentHamster);
+          checkForNeedWater(currentHamster);
     
           resetDragVariables();
           
@@ -10170,6 +10165,7 @@ async function cargarHamstersDesdeBDF(){
         startFillingEnergy(currentHamster.id);
         startDecreasingStats(currentHamster.id);
         checkForNeedFood(currentHamster);
+        checkForNeedWater(currentHamster);
         
         showTooltipHamsterForce(currentHamster);
         updateTooltipVisibility();
@@ -10362,6 +10358,19 @@ function fillHunger(hamsterEl) {
   }
 }
 
+function fillWater(hamsterEl) {
+  if (!hamsterEl) return;
+  let currentThirst = Number(hamsterEl.getAttribute("thirst")) || 0;
+  let newThirst = currentThirst + 300;
+
+  hamsterEl.setAttribute("thirst", newThirst);
+  const slider = hamsterEl.querySelector(".sliderWater");
+  if (slider) {
+    slider.value = newThirst;
+    actualizarSlider(slider);
+  }
+}
+
 function checkForNeedFood(hamsterEl) {
   // Guardamos el id del intervalo en el propio elemento
   hamsterEl.checkForNeedFoodInterval = setInterval(() => {
@@ -10398,6 +10407,7 @@ function checkForNeedFood(hamsterEl) {
 
     // Si el hamster ya está en cooldown, salimos sin hacer nada.
     if (hamsterEl.dataset.eatingCooldown) return;
+    if (hamsterEl.dataset.drinkingCooldown) return;
 
     // Solo se actúa si el hunger es menor a 750 y el tooltip muestra un valor >= 1
     if (currentHunger < 700 && Number(tooltip.textContent) >= 1) {
@@ -10415,6 +10425,60 @@ function checkForNeedFood(hamsterEl) {
         hamsterEl.dataset.onAction = "true";
         setTimeout(() => {
           delete hamsterEl.dataset.eatingCooldown;
+        }, 20000);
+      }
+    }
+  }, 5000);
+}
+
+
+function checkForNeedWater(hamsterEl) {
+  // Guardamos el id del intervalo en el propio elemento
+  hamsterEl.checkForNeedFoodInterval = setInterval(() => {
+    if (!hamsterEl) {
+      //console.log("checkForNeedFood return1");
+      return;
+    }
+    if (!hamsterEl.parentElement.id) {
+      //console.log("checkForNeedFood return2");
+      return;
+    }
+    if (
+      hamsterEl.parentElement.id === "hitboxSlowWorld" ||
+      hamsterEl.parentElement.id === "hitboxSlotBuyBiggie" ||
+      hamsterEl.parentElement.id === "hitboxSlotBuyCoco" ||
+      hamsterEl.parentElement.id === "hitboxSlotBuyDior" ||
+      hamsterEl.parentElement.classList.contains("wheel") ||
+      hamsterEl.parentElement.id === "filterUnderwater"
+    ) {
+      //console.log("checkForNeedFood return3");
+      return;
+    }
+
+    if (!tuboGradientUp.classList.contains("active")) return;
+
+    let currentThirst = Number(hamsterEl.getAttribute("thirst")) || 0;
+
+    // Si el hamster ya está en cooldown, salimos sin hacer nada.
+    if (hamsterEl.dataset.eatingCooldown) return;
+    if (hamsterEl.dataset.drinkingCooldown) return;
+
+    // Solo se actúa si el hunger es menor a 750 y el tooltip muestra un valor >= 1
+    if (currentThirst < 700) {
+      //console.log("Puede comer");
+      // La probabilidad será:
+      // - 30% cuando currentThirst es 750,
+      // - 100% cuando currentThirst es 0,
+      // y de forma lineal entre esos extremos.
+      let probability = 0.3 + ((750 - currentThirst) / 750) * 0.7;
+      if (Math.random() < probability) {
+        // Ejecutar la animación de comer
+        setHamsterBackAnimation(hamsterEl.id, "drink", true);
+        // Activar el cooldown: no podrá comer de nuevo hasta 20 segundos.
+        hamsterEl.dataset.drinkingCooldown = "true";
+        hamsterEl.dataset.onAction = "true";
+        setTimeout(() => {
+          delete hamsterEl.dataset.drinkingCooldown;
         }, 20000);
       }
     }
@@ -10465,20 +10529,6 @@ function autoFillComederos(comedero){
   }
 }
 
-
-// Función para llenar la sed con velocidad
-function fillThirst(hamsterId, speed) {
-  const hamsterEl = document.getElementById(hamsterId);
-  if (!hamsterEl) return;
-
-  let currentThirst = Number(hamsterEl.getAttribute("thirst")) || 0;
-  hamsterEl.setAttribute("thirst", currentThirst);
-  const slider = hamsterEl.querySelector(".sliderWater");
-  if (slider) {
-    slider.value = currentThirst;
-    actualizarSlider(slider);
-  }
-}
 
 function numeroDeHamsters() {
   // Lista de IDs de los elementos a verificar
@@ -10913,7 +10963,7 @@ async function updateStatsHamsters() {
           sliderEnergy.value = hamsterData.energy;
           actualizarSlider(sliderEnergy);
         }
-
+        
         const sliderHunger = hamsterEl.querySelector(".sliderHunger");
         if (sliderHunger) {
           sliderHunger.value = hamsterData.hunger;
@@ -11164,6 +11214,36 @@ function startRandomGifRefreshIndividually() {
 
 // Llamada inicial, por ejemplo al cargar la página:
 startRandomGifRefreshIndividually();
+
+
+
+
+
+
+
+
+
+
+
+let mainModifierCont = document.getElementById("mainModifierCont");
+document.getElementById('modifiersHomeCont').addEventListener('click', function() {
+  positionContainerInScroll("modifiersHomeCont");
+});
+
+document.getElementById('modifiersEmailCont').addEventListener('click', function() {
+  positionContainerInScroll("modifiersEmailCont");
+});
+
+function positionContainerInScroll(elementClicked) {
+  if (elementClicked === "modifiersHomeCont") {
+    mainModifierCont.classList.remove("email");
+  } else if (elementClicked === "modifiersEmailCont") {
+    mainModifierCont.classList.add("email");
+  }
+  console.log(mainModifierCont.className);
+}
+
+
 
 
   //TODO !: tooltip-text in perspective with skins
