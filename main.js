@@ -11226,6 +11226,144 @@ startRandomGifRefreshIndividually();
 
 
 let mainModifierCont = document.getElementById("mainModifierCont");
+let blank2 = document.getElementById("blank2");
+let blank1 = document.getElementById("blank1");
+let barSlide = document.getElementById("barSlide");
+
+let startX = 0;
+let currentX = 0;
+let diff = 0;
+let maxDiff = 100;
+let threshold = 35; // umbral mínimo en píxeles para disparar el cambio
+let thresholdMove = 10;
+let dragging = false;
+let blank1W = blank1.offsetWidth;
+let blank2W = blank2.offsetWidth;
+
+// Inicia el arrastre
+mainModifierCont.addEventListener('mousedown', function(e) {
+  startX = e.clientX;
+  dragging = true;
+  diff = 0;
+  blank1W = blank1.offsetWidth;
+  blank2W = blank2.offsetWidth;
+});
+
+
+
+// Definición de la animación con keyframes
+const barSlideKeyframes = [
+  { // Estado inicial (por ejemplo, pos1)
+    marginRight: '9vh',
+    marginLeft: '0',
+    top: '2px',
+    minWidth: '3.3vh',
+    height: '3.3vh',
+    borderRadius: '0.5vh',
+    offset: 0
+  },
+  { // Estado intermedio (.stretch)
+    // Aquí se aplican las propiedades de .stretch
+    top: '10px',
+    minWidth: '1.5vh',
+    height: '1vh',
+    borderRadius: '60%',
+    // Si no necesitas modificar márgenes, déjalos sin definir o con valores deseados
+    offset: 0.5
+  },
+  { // Estado final (por ejemplo, pos2)
+    marginRight: '0',
+    marginLeft: '9vh',
+    top: '2px',
+    minWidth: '3.3vh',
+    height: '3.3vh',
+    borderRadius: '0.5vh',
+    offset: 1
+  }
+];
+
+// Crea la animación y la pausa para controlarla manualmente
+const barSlideAnimation = barSlide.animate(barSlideKeyframes, {
+  duration: 700,
+  fill: 'forwards'
+});
+barSlideAnimation.pause();
+
+
+
+document.addEventListener('mousemove', function(e) {
+  if (!dragging) return;
+  
+  currentX = e.clientX;  // Se actualiza la variable global
+  let rawDiff = currentX - startX;
+  
+  // Si el movimiento es menor que el umbral, diff es 0.
+  // Si se supera, se descuenta el umbral según la dirección.
+  if (Math.abs(rawDiff) < thresholdMove) {
+    diff = 0;
+  } else {
+    diff = rawDiff - (rawDiff > 0 ? thresholdMove : -thresholdMove);
+  }
+  
+  /*
+  modifiersBar.innerHTML = "Real diff: " + rawDiff + "<br>" +
+                           "diff: " + diff + "<br>" +
+                           "Blank1: " + blank1.offsetWidth + "<br>" +
+                           "Blank2: " + blank2.offsetWidth;
+  */
+  // Quita las transiciones para actualizar el ancho de forma inmediata
+  blank1.style.transition = "all 0s linear";
+  blank2.style.transition = "all 0s linear";
+
+  // Ajusta el ancho en función del movimiento y el estado de barSlide  
+  if (barSlide.classList.contains("pos1")) {
+    // En este caso, se usa diff "negativo" para modificar el ancho de blank1
+    blank1.style.minWidth = blank1W - (-diff) + "px";
+    blank2.style.minWidth = "0px";
+  } else {
+    blank2.style.minWidth = blank2W - diff + "px";
+    blank1.style.minWidth = "0px";
+  }
+
+  let progress = Math.min(Math.abs(diff) / maxDiff, 1);
+  barSlideAnimation.currentTime = progress * barSlideAnimation.effect.getTiming().duration;
+
+});
+
+
+// Finaliza el arrastre y decide qué acción tomar
+document.addEventListener('mouseup', function(e) {
+  if (!dragging) return;
+  dragging = false;
+  
+  // Actualiza currentX en el mouseup para asegurarnos del valor final
+  currentX = e.clientX;
+  diff = currentX - startX;
+
+  // Se reestablecen las transiciones para el efecto deslizante
+  blank1.style.transition = "all 0.7s ease";
+  blank2.style.transition = "all 0.7s ease";
+
+  if (Math.abs(diff) > threshold) {
+    // Según la dirección del arrastre, cambia la posición
+    if (diff > 0) {
+      positionContainerInScroll("modifiersHomeCont");
+    } else {
+      positionContainerInScroll("modifiersEmailCont");
+    }
+  } else {
+    // Si no se supera el umbral, se retorna a la posición original
+    if (barSlide.classList.contains("pos1")) {
+      positionContainerInScroll("modifiersHomeCont");
+    } else {
+      positionContainerInScroll("modifiersEmailCont");
+    }
+  }
+});
+
+
+
+
 document.getElementById('modifiersHomeCont').addEventListener('click', function() {
   positionContainerInScroll("modifiersHomeCont");
 });
@@ -11235,12 +11373,40 @@ document.getElementById('modifiersEmailCont').addEventListener('click', function
 });
 
 function positionContainerInScroll(elementClicked) {
-  if (elementClicked === "modifiersHomeCont") {
-    mainModifierCont.classList.remove("email");
-  } else if (elementClicked === "modifiersEmailCont") {
-    mainModifierCont.classList.add("email");
+  blank1.style.minWidth = "";
+  blank2.style.minWidth = "";
+
+  if (elementClicked==="modifiersHomeCont" && barSlide.classList.contains("pos1")
+      || elementClicked==="modifiersEmailCont" && barSlide.classList.contains("pos2")
+    ) {
+      return;
   }
-  console.log(mainModifierCont.className);
+
+  if (elementClicked === "modifiersHomeCont") {
+    blank2.classList.remove("active");
+    blank1.classList.add("active");
+    barSlide.classList.add("pos1");
+    barSlide.classList.remove("pos2");
+
+    modifiersEmail.src = "img/cartaC.png";
+    modifiersEmail.classList.remove("active");
+    modifiersHome.classList.add("active");
+
+    barSlideAnimation.currentTime = 0;
+  } else if (elementClicked === "modifiersEmailCont") {
+    blank2.classList.add("active");
+    blank1.classList.remove("active");
+    barSlide.classList.add("pos2");
+    barSlide.classList.remove("pos1");
+
+    setTimeout(() => {
+      modifiersEmail.src = "img/cartaO.png";
+    }, 400);
+    modifiersEmail.classList.add("active");
+    modifiersHome.classList.remove("active");
+
+    barSlideAnimation.currentTime = barSlideAnimation.effect.getTiming().duration;
+  }
 }
 
 
