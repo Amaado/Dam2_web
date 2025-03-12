@@ -11233,8 +11233,8 @@ let barSlide = document.getElementById("barSlide");
 let startX = 0;
 let currentX = 0;
 let diff = 0;
-let maxDiff = 100;
-let threshold = 50; // umbral mínimo en píxeles para disparar el cambio
+let maxDiff = 150;
+let threshold = 80; // umbral mínimo en píxeles para disparar el cambio
 let thresholdMove = 10;
 let dragging = false;
 let blank1W = blank1.offsetWidth;
@@ -11318,6 +11318,7 @@ document.addEventListener('mousemove', function(e) {
     blank2.style.minWidth = "0px";
     if (diff < 0) {
       barSlideAnimation.currentTime = progress * barSlideAnimation.effect.getTiming().duration;
+      monitorAnimationProgress();
     }
   } else {
     // Para pos2: se aumenta blank2 y se invierte el progreso para la animación
@@ -11325,15 +11326,16 @@ document.addEventListener('mousemove', function(e) {
     blank1.style.minWidth = "0px";
     if (diff > 0) {
       barSlideAnimation.currentTime = (1 - progress) * barSlideAnimation.effect.getTiming().duration;
-    }  
+      monitorAnimationProgress();
+    }
   }
 
-  /**/
+  /*
   modifiersBar.innerHTML = "Real diff: " + rawDiff + "<br>" +
                            "diff: " + diff + "<br>" +
                            "Blank1: " + blank1.offsetWidth + "<br>" +
                            "Blank2: " + blank2.offsetWidth;
-  
+  */
 });
 
 
@@ -11346,9 +11348,6 @@ document.addEventListener('mouseup', function(e) {
   currentX = e.clientX;
   diff = currentX - startX;
 
-  // Se reestablecen las transiciones para el efecto deslizante
-  blank1.style.transition = "all 0.7s ease";
-  blank2.style.transition = "all 0.7s ease";
 
   if (Math.abs(diff) > threshold) {
     // Según la dirección del arrastre, cambia la posición
@@ -11356,14 +11355,12 @@ document.addEventListener('mouseup', function(e) {
       if (barSlide.classList.contains("pos1")) {
         positionContainerInScroll("modifiersHomeCont", true);
       }else{
-        console.log("positionContainerInScroll: 1");
         positionContainerInScroll("modifiersHomeCont");
       }
     } else {
       if (barSlide.classList.contains("pos2")) {
         positionContainerInScroll("modifiersEmailCont", true);
       }else{
-        console.log("positionContainerInScroll: 2");
         positionContainerInScroll("modifiersEmailCont");
       }
     }
@@ -11381,10 +11378,12 @@ document.addEventListener('mouseup', function(e) {
 
 
 document.getElementById('modifiersHomeCont').addEventListener('click', function() {
+  diff = 81;
   positionContainerInScroll("modifiersHomeCont");
 });
 
 document.getElementById('modifiersEmailCont').addEventListener('click', function() {
+  diff = -81;
   positionContainerInScroll("modifiersEmailCont");
 });
 
@@ -11397,44 +11396,46 @@ function updateBaselines() {
   startX = currentX;
 }
 
-// Función que se encarga de reproducir la animación automáticamente
 function positionContainerInScroll(elementClicked, skipAnim) {
-  // Se limpian los estilos inline
+  // Limpia los estilos inline
   blank1.style.minWidth = "";
   blank2.style.minWidth = "";
 
-  /*
-  if ((elementClicked === "modifiersHomeCont" && barSlide.classList.contains("pos1")) ||
-      (elementClicked === "modifiersEmailCont" && barSlide.classList.contains("pos2"))) {
-    return;
-  }*/
+  blank1.style.transition = "all 0.7s ease";
+  blank2.style.transition = "all 0.7s ease";
 
   if (elementClicked === "modifiersHomeCont") {
     blank2.classList.remove("active");
     blank1.classList.add("active");
     barSlide.classList.add("pos1");
     barSlide.classList.remove("pos2");
-
+    /*
     modifiersEmail.src = "img/cartaC.png";
     modifiersEmail.classList.remove("active");
     modifiersHome.classList.add("active");
-
-    if(!skipAnim){
-      if(Math.abs(diff) < thresholdMove){return;}
-      // Para pos1: reproducir en reversa hasta offset 0
+    */
+    if (!skipAnim) {
+      if (Math.abs(diff) < thresholdMove) { return; }
+      const duration = barSlideAnimation.effect.getTiming().duration;
+      const tolerance = 10; // Tolerancia en ms
+      // Si la animación ya está en el frame destino (offset 0 para pos1)
+      if (barSlideAnimation.currentTime <= tolerance) {
+        //console.log("Animation already at destination for pos1");
+        return;
+      }
+      // Ejecuta la animación en reversa hacia offset 0
       barSlideAnimation.playbackRate = -1;
       barSlideAnimation.play();
-      // Al finalizar la animación, actualiza los valores base
+      monitorAnimationProgress();
       barSlideAnimation.onfinish = function() {
         updateBaselines();
-        // Detén la animación para que no siga modificando currentTime
         barSlideAnimation.pause();
         barSlideAnimation.onfinish = null;
       };
 
-      console.log("NOT skipAnim Para pos1");
-    }else{
-      console.log("skipAnim Para pos1");
+      //console.log("NOT skipAnim Para pos1");
+    } else {
+      //console.log("skipAnim Para pos1");
     }
     
   } else if (elementClicked === "modifiersEmailCont") {
@@ -11442,31 +11443,66 @@ function positionContainerInScroll(elementClicked, skipAnim) {
     blank1.classList.remove("active");
     barSlide.classList.add("pos2");
     barSlide.classList.remove("pos1");
-
+    /*
     setTimeout(() => {
       modifiersEmail.src = "img/cartaO.png";
     }, 400);
     modifiersEmail.classList.add("active");
     modifiersHome.classList.remove("active");
-    
-    if(!skipAnim){
-      if(Math.abs(diff) < thresholdMove){return;}
-      // Para pos2: reproducir hacia adelante hasta offset 1
+    */
+    if (!skipAnim) {
+      if (Math.abs(diff) < thresholdMove) { return; }
+      const duration = barSlideAnimation.effect.getTiming().duration;
+      const tolerance = 10; // Tolerancia en ms
+      // Si la animación ya está en el frame destino (offset 1 para pos2)
+      if (barSlideAnimation.currentTime >= duration - tolerance) {
+        //console.log("Animation already at destination for pos2");
+        return;
+      }
+      // Ejecuta la animación hacia adelante hasta offset 1
       barSlideAnimation.playbackRate = 1;
       barSlideAnimation.play();
+      monitorAnimationProgress();
       barSlideAnimation.onfinish = function() {
         updateBaselines();
         barSlideAnimation.pause();
         barSlideAnimation.onfinish = null;
       };
 
-      console.log("NOT skipAnim Para pos2");
-    }else{
-      console.log("skipAnim Para pos2");
+      //console.log("NOT skipAnim Para pos2");
+    } else {
+      //console.log("skipAnim Para pos2");
     }
-
   }
 }
+
+
+function monitorAnimationProgress() {
+  const duration = barSlideAnimation.effect.getTiming().duration;
+  // Normalizamos el progreso entre 0 y 1
+  let progress = barSlideAnimation.currentTime / duration;
+
+  // Entre 0% y 20%
+  if (progress >= 0 && progress <= 0.2) {
+    modifiersHome.classList.add("active");
+  } else {
+    modifiersHome.classList.remove("active");
+  }
+  
+  // Entre 80% y 100%
+  if (progress >= 0.8 && progress <= 1) {
+    modifiersEmail.classList.add("active");
+    modifiersEmail.src = "img/cartaO.png";
+  } else {
+    modifiersEmail.classList.remove("active");
+    modifiersEmail.src = "img/cartaC.png";
+  }
+  
+  if (!barSlideAnimation.paused) {
+    requestAnimationFrame(monitorAnimationProgress);
+  }
+ }
+
 
 
 

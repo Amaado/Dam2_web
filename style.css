@@ -6739,7 +6739,7 @@ canvas {
   height: 3vh;
   pointer-events: none;
   z-index: 0;
-  transition: all 0.3s ease 0.4s;
+  margin-top: -2px;
 }
 #modifiersHome.day{
   filter: brightness(0) saturate(100%) invert(18%) sepia(16%) saturate(607%) hue-rotate(176deg) brightness(96%) contrast(90%);
@@ -6759,7 +6759,7 @@ canvas {
   margin-top: -9px;
   pointer-events: none;
   z-index: 0;
-  transition: all 0.3s ease 0.4s;
+  transition: margin-top 0.3s ease;
 }
 #modifiersEmail.day.active{
   filter: brightness(0) saturate(100%) invert(18%) sepia(16%) saturate(607%) hue-rotate(176deg) brightness(96%) contrast(90%);
@@ -6768,6 +6768,6 @@ canvas {
   filter: brightness(0) saturate(100%) invert(91%) sepia(12%) saturate(5479%) hue-rotate(183deg) brightness(113%) contrast(83%);
 }
 #modifiersEmail.active{
-  margin-top: 0px;
+  margin-top: -2px;
   filter: brightness(0) saturate(100%) invert(3%) sepia(3%) saturate(7159%) hue-rotate(182deg) brightness(93%) contrast(89%);
 }
