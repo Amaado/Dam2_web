@@ -11234,7 +11234,7 @@ let startX = 0;
 let currentX = 0;
 let diff = 0;
 let maxDiff = 100;
-let threshold = 35; // umbral mínimo en píxeles para disparar el cambio
+let threshold = 50; // umbral mínimo en píxeles para disparar el cambio
 let thresholdMove = 10;
 let dragging = false;
 let blank1W = blank1.offsetWidth;
@@ -11285,7 +11285,7 @@ const barSlideKeyframes = [
 // Crea la animación y la pausa para controlarla manualmente
 const barSlideAnimation = barSlide.animate(barSlideKeyframes, {
   duration: 700,
-  fill: 'forwards'
+  fill: 'both'
 });
 barSlideAnimation.pause();
 
@@ -11294,40 +11294,46 @@ barSlideAnimation.pause();
 document.addEventListener('mousemove', function(e) {
   if (!dragging) return;
   
-  currentX = e.clientX;  // Se actualiza la variable global
+  currentX = e.clientX;
   let rawDiff = currentX - startX;
   
-  // Si el movimiento es menor que el umbral, diff es 0.
-  // Si se supera, se descuenta el umbral según la dirección.
+  // Si el movimiento es menor que el umbralMove, no se aplica efecto
   if (Math.abs(rawDiff) < thresholdMove) {
     diff = 0;
   } else {
     diff = rawDiff - (rawDiff > 0 ? thresholdMove : -thresholdMove);
   }
   
-  /*
+  // Durante el arrastre se quitan las transiciones para que los cambios sean inmediatos
+  blank1.style.transition = "none";
+  blank2.style.transition = "none";
+
+  // Calcula el progreso (valor entre 0 y 1) en función de diff y maxDiff
+  let progress = Math.min(Math.abs(diff) / maxDiff, 1);
+  
+  // Actualiza los anchos y la animación según el estado de barSlide (pos1 o pos2)
+  if (barSlide.classList.contains("pos1")) {
+    // Para pos1: se aumenta blank1 en función de diff y la animación avanza de 0 a 1
+    blank1.style.minWidth = (blank1W + diff) + "px";
+    blank2.style.minWidth = "0px";
+    if (diff < 0) {
+      barSlideAnimation.currentTime = progress * barSlideAnimation.effect.getTiming().duration;
+    }
+  } else {
+    // Para pos2: se aumenta blank2 y se invierte el progreso para la animación
+    blank2.style.minWidth = (blank2W - diff) + "px";
+    blank1.style.minWidth = "0px";
+    if (diff > 0) {
+      barSlideAnimation.currentTime = (1 - progress) * barSlideAnimation.effect.getTiming().duration;
+    }  
+  }
+
+  /**/
   modifiersBar.innerHTML = "Real diff: " + rawDiff + "<br>" +
                            "diff: " + diff + "<br>" +
                            "Blank1: " + blank1.offsetWidth + "<br>" +
                            "Blank2: " + blank2.offsetWidth;
-  */
-  // Quita las transiciones para actualizar el ancho de forma inmediata
-  blank1.style.transition = "all 0s linear";
-  blank2.style.transition = "all 0s linear";
-
-  // Ajusta el ancho en función del movimiento y el estado de barSlide  
-  if (barSlide.classList.contains("pos1")) {
-    // En este caso, se usa diff "negativo" para modificar el ancho de blank1
-    blank1.style.minWidth = blank1W - (-diff) + "px";
-    blank2.style.minWidth = "0px";
-  } else {
-    blank2.style.minWidth = blank2W - diff + "px";
-    blank1.style.minWidth = "0px";
-  }
-
-  let progress = Math.min(Math.abs(diff) / maxDiff, 1);
-  barSlideAnimation.currentTime = progress * barSlideAnimation.effect.getTiming().duration;
-
+  
 });
 
 
@@ -11347,9 +11353,19 @@ document.addEventListener('mouseup', function(e) {
   if (Math.abs(diff) > threshold) {
     // Según la dirección del arrastre, cambia la posición
     if (diff > 0) {
-      positionContainerInScroll("modifiersHomeCont");
+      if (barSlide.classList.contains("pos1")) {
+        positionContainerInScroll("modifiersHomeCont", true);
+      }else{
+        console.log("positionContainerInScroll: 1");
+        positionContainerInScroll("modifiersHomeCont");
+      }
     } else {
-      positionContainerInScroll("modifiersEmailCont");
+      if (barSlide.classList.contains("pos2")) {
+        positionContainerInScroll("modifiersEmailCont", true);
+      }else{
+        console.log("positionContainerInScroll: 2");
+        positionContainerInScroll("modifiersEmailCont");
+      }
     }
   } else {
     // Si no se supera el umbral, se retorna a la posición original
@@ -11372,15 +11388,26 @@ document.getElementById('modifiersEmailCont').addEventListener('click', function
   positionContainerInScroll("modifiersEmailCont");
 });
 
-function positionContainerInScroll(elementClicked) {
+// Función para actualizar los valores base después de la animación
+function updateBaselines() {
+  // Se actualizan los anchos y se establece startX como el valor actual del mouse (puedes ajustar según convenga)
+  blank1W = blank1.offsetWidth;
+  blank2W = blank2.offsetWidth;
+  // También podrías actualizar startX a currentX si eso tiene sentido en tu flujo
+  startX = currentX;
+}
+
+// Función que se encarga de reproducir la animación automáticamente
+function positionContainerInScroll(elementClicked, skipAnim) {
+  // Se limpian los estilos inline
   blank1.style.minWidth = "";
   blank2.style.minWidth = "";
 
-  if (elementClicked==="modifiersHomeCont" && barSlide.classList.contains("pos1")
-      || elementClicked==="modifiersEmailCont" && barSlide.classList.contains("pos2")
-    ) {
-      return;
-  }
+  /*
+  if ((elementClicked === "modifiersHomeCont" && barSlide.classList.contains("pos1")) ||
+      (elementClicked === "modifiersEmailCont" && barSlide.classList.contains("pos2"))) {
+    return;
+  }*/
 
   if (elementClicked === "modifiersHomeCont") {
     blank2.classList.remove("active");
@@ -11392,7 +11419,24 @@ function positionContainerInScroll(elementClicked) {
     modifiersEmail.classList.remove("active");
     modifiersHome.classList.add("active");
 
-    barSlideAnimation.currentTime = 0;
+    if(!skipAnim){
+      if(Math.abs(diff) < thresholdMove){return;}
+      // Para pos1: reproducir en reversa hasta offset 0
+      barSlideAnimation.playbackRate = -1;
+      barSlideAnimation.play();
+      // Al finalizar la animación, actualiza los valores base
+      barSlideAnimation.onfinish = function() {
+        updateBaselines();
+        // Detén la animación para que no siga modificando currentTime
+        barSlideAnimation.pause();
+        barSlideAnimation.onfinish = null;
+      };
+
+      console.log("NOT skipAnim Para pos1");
+    }else{
+      console.log("skipAnim Para pos1");
+    }
+    
   } else if (elementClicked === "modifiersEmailCont") {
     blank2.classList.add("active");
     blank1.classList.remove("active");
@@ -11404,11 +11448,25 @@ function positionContainerInScroll(elementClicked) {
     }, 400);
     modifiersEmail.classList.add("active");
     modifiersHome.classList.remove("active");
+    
+    if(!skipAnim){
+      if(Math.abs(diff) < thresholdMove){return;}
+      // Para pos2: reproducir hacia adelante hasta offset 1
+      barSlideAnimation.playbackRate = 1;
+      barSlideAnimation.play();
+      barSlideAnimation.onfinish = function() {
+        updateBaselines();
+        barSlideAnimation.pause();
+        barSlideAnimation.onfinish = null;
+      };
 
-    barSlideAnimation.currentTime = barSlideAnimation.effect.getTiming().duration;
+      console.log("NOT skipAnim Para pos2");
+    }else{
+      console.log("skipAnim Para pos2");
+    }
+
   }
 }
-
 
 
 
