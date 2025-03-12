@@ -472,7 +472,7 @@ function updateBubbles() {
   }
 
   // Función para aplicar el cambio de cursor
-  function applyCursorChange(cursorSrc, theme) {
+  function applyCursorChange(cursorSrc, theme) {    
     if (theme === "day") {
       // Actualizar el cursor para el tema de día
       dayCursorSrc = cursorSrc || DEFAULT_DAY_CURSOR;

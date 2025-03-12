@@ -2449,6 +2449,39 @@ div.img img {
   opacity: 100%;
 }
 
+.skinContainerDeprecated {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: top;
+  pointer-events: all;
+  width: 100%;
+  min-height: 100%;
+  border-radius: 25px;
+  background-color: rgba(119, 119, 119, 0.342);
+  backdrop-filter: blur(2px);
+  filter: saturate(0.5);
+  z-index: 21;
+  transition: opacity 0.2s ease;
+  opacity: 100%;
+}
+
+.deprecated{
+  position: absolute;
+  width: 90%;
+  top: 25%;
+  -webkit-user-drag: none;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.4));
+  z-index: 22;
+}
+
+.deprecatedBlock{
+  pointer-events: none;
+  backdrop-filter: none;
+  background-color: rgba(119, 119, 119, 0);
+}
+
 .candado {
   position: absolute;
   z-index: 20;
@@ -2516,6 +2549,7 @@ div.img img {
   font-size: 14px;
   opacity: 80%;
   white-space: nowrap;
+  z-index: 10;
 }
 
 .skinContainerNotVisible {
@@ -2616,6 +2650,7 @@ div.img img {
   padding-left: 6px;
   padding-right: 5px;
   border-radius: 4px;
+  z-index: 10;
 }
 
 .common {
