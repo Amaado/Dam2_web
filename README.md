@@ -1,6 +1,7 @@
 <a align="center" href="#">
   <img src="https://capsule-render.vercel.app/api?type=waving&height=280&color=0:020024,50:090979,100:146E80&text=2º%20DAM%20Web🌐&fontAlign=50&reversal=false&textBg=false&desc=A%20better%20main%20%20menu%20for%20my%20studies%20web%20page&descAlign=48&descAlignY=61&fontAlignY=42&fontColor=FFFFFF"/>
 </a>
+<hr>
 
 ### ⓘ General Information
 
@@ -12,6 +13,8 @@ This is the v2.
 
 If you have entered the website, you discovered that it is not just the main menu... I’ll say no more; if you want, you’ll discover it on your own.
 
+<br>
+<hr>
 
 ### ⚠︎ Disclaimer
 
@@ -19,6 +22,7 @@ I have nothing bad to say about bald people. In fact, I have a good relationship
 
 
 <br>
+<hr>
 
 ### 🔗 Social media & Contact
 
