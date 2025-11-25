@@ -74,9 +74,9 @@ if (!idLogeado || isNaN(parseInt(idLogeado)) || parseInt(idLogeado) === 0) {
 }
 
 const supabaseUrl =
-"https://jlinrmkailmfvzjkdfni.supabase.co/rest/v1/usuario";
+"https://ufijafafxtvuynkncctr.supabase.co/rest/v1/usuario";
 const supabaseKey =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsaW5ybWthaWxtZnZ6amtkZm5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc1MzMwNjUsImV4cCI6MjA0MzEwOTA2NX0.0BmL21nXr61WxALojF7kRk7glhB522Ss87zbBVzpSPo";
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmaWphZmFmeHR2dXlua25jY3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MTYzNjAsImV4cCI6MjA3OTQ5MjM2MH0.eyVmFo7uNehJWh3UcwmE95-B3kgNR13BMqRRsyML5nw";
 
 // 3. Obtener las monedas (coins) de un usuario por id
 async function obtenerMonedasDeUsuario(id) {
